@@ -35,7 +35,7 @@ export default async function ReportPage({ params }: ReportPageProps) {
 
   return (
     <div className="app-shell">
-      <DossierHeader metrics={data.metrics} variant="report" />
+      <DossierHeader active={report.group} />
       <main className="report-layout">
         <ReportIndex activeSlug={report.slug} reports={data.reports} />
         <ReportReader report={report} />

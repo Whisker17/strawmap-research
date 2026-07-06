@@ -10,7 +10,7 @@ import {
   stripMarkdown,
   urlHost,
 } from "./markdown"
-import { layerSummaries, mantleTracks } from "./roadmap"
+import { layerGuides, mantleTracks } from "./roadmap"
 import type {
   Dependency,
   LayerId,
@@ -176,7 +176,7 @@ export const getResearchData = cache((): ResearchData => {
         }),
       }),
     ),
-    layerSummaries,
+    layerGuides,
     mantleTracks,
     statusCorrections: parseBullets(indexSections["状态修正"] ?? ""),
     mantleReadingLines: parseBullets(indexSections["Mantle 最重要的阅读线索"] ?? ""),

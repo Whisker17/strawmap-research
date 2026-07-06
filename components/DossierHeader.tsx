@@ -1,14 +1,8 @@
-import { BookOpen, FileText, ShieldCheck } from "lucide-react"
+import { BookOpen } from "lucide-react"
 import Link from "next/link"
-import type { MetricSet } from "@/lib/types"
+import { layerGuides } from "@/lib/roadmap"
 
-export function DossierHeader({
-  metrics,
-  variant,
-}: {
-  readonly metrics: MetricSet
-  readonly variant: "overview" | "report"
-}) {
+export function DossierHeader({ active }: { readonly active?: string }) {
   return (
     <header className="dossier-header">
       <a className="skip-link" href="#content">
@@ -20,23 +14,24 @@ export function DossierHeader({
           <span>Ethereum Strawmap Dossier</span>
         </Link>
         <nav aria-label="主导航" className="header-links">
-          <Link aria-current={variant === "overview" ? "page" : undefined} href="/">
-            <FileText aria-hidden="true" size={16} />
-            Atlas
+          <Link aria-current={active === "home" ? "page" : undefined} href="/">
+            首页
           </Link>
-          <Link href="/REPORT_PACK.pdf">
-            <ShieldCheck aria-hidden="true" size={16} />
-            PDF
+          {layerGuides.map((guide) => (
+            <Link
+              aria-current={active === guide.id ? "page" : undefined}
+              data-group={guide.id}
+              href={`/layers/${guide.id}`}
+              key={guide.id}
+            >
+              {guide.label}
+            </Link>
+          ))}
+          <Link aria-current={active === "synthesis" ? "page" : undefined} href="/synthesis">
+            综合与证据
           </Link>
+          <Link href="/REPORT_PACK.pdf">PDF</Link>
         </nav>
-      </div>
-      <div className="status-strip" role="status">
-        <span>{metrics.numberedReports} 份主报告</span>
-        <span>{metrics.appendices} 个附录</span>
-        <span>{metrics.uniqueUrls} 个来源</span>
-        <span>
-          {metrics.sourceOk} OK / {metrics.sourceRestricted} restricted / {metrics.sourceBad} bad
-        </span>
       </div>
     </header>
   )

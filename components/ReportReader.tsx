@@ -1,6 +1,7 @@
 import { ArrowLeft, ExternalLink } from "lucide-react"
 import Link from "next/link"
 import { sections } from "@/lib/markdown"
+import { getLayerGuide } from "@/lib/roadmap"
 import type { Report } from "@/lib/types"
 import { MarkdownContent } from "./MarkdownContent"
 
@@ -28,12 +29,15 @@ export function ReportReader({ report }: { readonly report: Report }) {
   const reportSections = sections(report.markdown).filter(
     (section) => section.title !== "Sources" && section.title !== "逐项拆解",
   )
+  const guide = getLayerGuide(report.group)
+  const backHref = guide === undefined ? "/" : `/layers/${guide.id}`
+  const backLabel = guide === undefined ? "返回首页" : `返回${guide.label}导读`
 
   return (
     <article className="report-reader" id="content">
-      <Link className="back-link" href="/">
+      <Link className="back-link" href={backHref}>
         <ArrowLeft aria-hidden="true" size={16} />
-        返回路线图图册
+        {backLabel}
       </Link>
       <header className="report-head">
         <span className="eyebrow">

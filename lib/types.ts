@@ -56,12 +56,25 @@ export type Dependency = {
   readonly reports: readonly string[]
 }
 
-export type LayerSummary = {
-  readonly id: Exclude<LayerId, "appendix">
+export type GuideLayerId = Exclude<LayerId, "appendix">
+
+export type LayerDirection = {
+  readonly id: string
+  readonly title: string
+  readonly summary: string
+  readonly northStar?: string
+  readonly reportNumbers: readonly string[]
+}
+
+export type LayerGuide = {
+  readonly id: GuideLayerId
   readonly label: string
+  readonly enLabel: string
   readonly accent: string
-  readonly problem: string
-  readonly change: string
+  readonly tagline: string
+  readonly role: readonly string[]
+  readonly limits: readonly string[]
+  readonly directions: readonly LayerDirection[]
   readonly reportNumbers: readonly string[]
 }
 
@@ -84,7 +97,7 @@ export type ResearchData = {
   readonly metrics: MetricSet
   readonly reports: readonly Report[]
   readonly dependencies: readonly Dependency[]
-  readonly layerSummaries: readonly LayerSummary[]
+  readonly layerGuides: readonly LayerGuide[]
   readonly mantleTracks: readonly MantleTrack[]
   readonly statusCorrections: readonly string[]
   readonly mantleReadingLines: readonly string[]
