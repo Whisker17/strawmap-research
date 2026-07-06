@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    
+      <title>EIP-7999: Unified multidimensional fee market</title>
+      <meta property="og:title" content="EIP-7999: Unified multidimensional fee market" />
+    
+    <meta name="description" content="Let transactions specify one aggregate `max_fee` budget for all resources, unify fee markets, normalize gas, and generalize EIP-7918." />
+    <meta property="og:description" content="Let transactions specify one aggregate `max_fee` budget for all resources, unify fee markets, normalize gas, and generalize EIP-7918." />
+    <meta name="twitter:description" content="Let transactions specify one aggregate `max_fee` budget for all resources, unify fee markets, normalize gas, and generalize EIP-7918." />
+  
+  <meta name="generator" content="Jekyll" />
+  <meta property="og:locale" content="en_US" />
+  <link rel="canonical" href="https://eips.ethereum.org/EIPS/eip-7999" />
+  <meta property="og:url" content="https://eips.ethereum.org/EIPS/eip-7999" />
+  <meta property="og:site_name" content="Ethereum Improvement Proposals" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:site" content="@" />
+  <script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": "https://eips.ethereum.org",
+      "name": "Ethereum Improvement Proposals",
+      "description": "Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.",
+      "@context": "https://schema.org"
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://eips.ethereum.org/feed.xml" title="Ethereum Improvement Proposals" /><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/override.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    });
+  </script>
+  <script type="text/javascript">
+    window.MathJax = {
+      loader: {
+        load: ['input/tex-base', 'output/chtml']
+      },
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true,
+        processEnvironments: false,
+        processRefs: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js" integrity="sha384-/1zmJ1mBdfKIOnwPxpdG6yaRrxP6qu3eVYm0cz2nOx+AcL4d3AqEFrwcqGZVVroG" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/citation-js/0.6.7/citation.min.js" integrity="sha512-N+LDFMa9owHXGS+CyMrBvuxq2QuGl3fiB/7cys3aUEL7K6P1soHGqsS0sjHXZpwNd9Kz0m3R4IPy1HYRi6ROEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+    addEventListener('DOMContentLoaded', async () => {
+      const Cite = window.require('citation-js');
+      const citationElements = document.querySelectorAll('.language-csl-json');
+      for (let citationElement of citationElements) {
+        try {
+          const citation = await Cite.async(citationElement);
+          const template = document.createElement('template');
+          template.innerHTML = citation.format('bibliography', {
+            format: 'html',
+            template: 'apa',
+            lang: 'en-US'
+          });
+          if (citationElement.parentElement && citationElement.parentElement.matches('pre')) {
+            citationElement.parentElement.replaceWith(template.content);
+          } else {
+            citationElement.replaceWith(template.content);
+          }
+        } catch (e) {
+          console.error("unable to render citation", e);
+        }
+      }
+    });
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Ethereum Improvement Proposals</a><nav class="site-nav d-flex">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger row p-2"><a class="page-link col" href="/all">All</a><a class="page-link col" href="/core">Core</a><a class="page-link col" href="/networking">Networking</a><a class="page-link col" href="/interface">Interface</a><a class="page-link col" href="/erc">ERC</a><a class="page-link col" href="/meta">Meta</a><a class="page-link col" href="/informational">Informational</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="bi-megaphone-fill" fill="currentColor" viewBox="0 0 16 16">
+    <title>Alert</title>
+    <path d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0v-11zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25.222 25.222 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56V3.224zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009a68.14 68.14 0 0 1 .496.008 64 64 0 0 1 1.51.048zm1.39 1.081c.285.021.569.047.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a65.81 65.81 0 0 1 1.692.064c.327.017.65.037.966.06z"/>
+  </symbol>
+  <symbol id="bi-code" fill="currentColor" viewBox="0 0 16 16">
+    <title>Source</title>
+    <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/>
+  </symbol>
+  <svg id="bi-chat" fill="currentColor" viewBox="0 0 16 16">
+    <title>Discuss</title>
+    <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+  </svg>
+</svg>
+
+<div class="home">
+  
+  
+  
+ 
+  <span class="h5">
+    
+    
+    
+      <span class="badge text-light bg-warning" data-bs-toggle="tooltip" data-bs-title="This EIP is not yet recommended for general use or implementation, as it is subject to normative (breaking) changes.">⚠️ Draft</span>
+    
+    
+    
+       
+    
+      <a class="badge text-light bg-primary" data-bs-toggle="tooltip" data-bs-title="Improvements requiring a consensus fork, as well as changes that are not necessarily consensus critical but may be relevant to “core dev” discussions." href="../core">Standards Track: Core</a>
+    
+  </span>
+  <h1 class="page-heading">
+    EIP-7999: Unified multidimensional fee market
+    <a href="https://ethereum-magicians.org/t/eip-7999-unified-multidimensional-fee-market/25010" class="no-underline">
+      <svg role="img" aria-label="Discuss" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-chat"/>
+      </svg>
+    </a>
+    <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7999.md" class="no-underline">
+      <svg role="img" aria-label="Source" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-code"/>
+      </svg>
+    </a>
+  </h1>
+  <h3>Let transactions specify one aggregate `max_fee` budget for all resources, unify fee markets, normalize gas, and generalize EIP-7918.</h3>
+  <table class="table table-borderless preamble">
+    <tbody>
+      <tr>
+        <th scope="row">Authors</th>
+        <td>Anders Elowsson&nbsp;(<a href="https://github.com/anderselowsson">@anderselowsson</a>), Vitalik Buterin&nbsp;(<a href="https://github.com/vbuterin">@vbuterin</a>)</td>
+      </tr>
+      
+        <tr>
+          <th scope="row">Created</th>
+          <td>2025-08-04</td>
+        </tr>
+      
+      
+             
+      
+        <tr>
+          <th scope="row">Discussion Link</th>
+          <td><a href="https://ethereum-magicians.org/t/eip-7999-unified-multidimensional-fee-market/25010" target="_blank" rel="noopener">https://ethereum-magicians.org/t/eip-7999-unified-multidimensional-fee-market/25010</a></td>
+        </tr>
+      
+      
+        <tr>
+          <th scope="row">Requires</th>
+          <td>
+
+  <a href="eip-1559">EIP-1559</a>, 
+
+  <a href="eip-2718">EIP-2718</a>, 
+
+  <a href="eip-4844">EIP-4844</a>, 
+
+  <a href="eip-7516">EIP-7516</a>, 
+
+  <a href="eip-7691">EIP-7691</a>, 
+
+  <a href="eip-7840">EIP-7840</a>, 
+
+  <a href="eip-7918">EIP-7918</a>
+
+</td>
+        </tr>
+      
+    </tbody>
+  </table>
+  <br/>
+
+  
+
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#motivation">Motivation</a></li>
+  <li><a href="#specification">Specification</a>
+    <ul>
+      <li><a href="#parameters">Parameters</a></li>
+      <li><a href="#new-transaction-type">New transaction type</a></li>
+      <li><a href="#block-processing-and-transaction-fees">Block processing and transaction fees</a></li>
+      <li><a href="#block-structure">Block structure</a></li>
+      <li><a href="#gas-accounting">Gas accounting</a></li>
+      <li><a href="#calldatabasefee-instruction">CALLDATABASEFEE instruction</a></li>
+      <li><a href="#censorship-resistance">Censorship resistance</a></li>
+    </ul>
+  </li>
+  <li><a href="#rationale">Rationale</a>
+    <ul>
+      <li><a href="#why-go-multidimensional">Why go multidimensional?</a></li>
+      <li><a href="#user-experience">User experience</a></li>
+      <li><a href="#economic-efficiency">Economic efficiency</a></li>
+      <li><a href="#priority-fee">Priority fee</a></li>
+      <li><a href="#unified-gas-accounting-normalization-and-reserve-pricing-mechanism">Unified gas accounting, normalization, and reserve pricing mechanism</a></li>
+      <li><a href="#wallet-fee-estimation-logic">Wallet fee estimation logic</a></li>
+      <li><a href="#block-building">Block building</a></li>
+      <li><a href="#the-calldata-resource">The calldata resource</a></li>
+      <li><a href="#expansion-paths-for-multiple-evm-resources">Expansion paths for multiple EVM resources</a></li>
+    </ul>
+  </li>
+  <li><a href="#backwards-compatibility">Backwards Compatibility</a></li>
+  <li><a href="#security-considerations">Security Considerations</a></li>
+  <li><a href="#copyright">Copyright</a></li>
+</ul>
+
+  </div>
+
+  <h2 id="abstract">
+      
+      
+        <a href="#abstract" class="anchor-link"></a> Abstract
+      
+      
+    </h2>
+
+<p>A unified multidimensional fee market is introduced, where each transaction specifies the maximum amount of ETH it is willing to pay for inclusion using a single <code class="language-plaintext highlighter-rouge">max_fee</code>. Upon inclusion, the protocol ensures that the transaction is able to pay the gas for all dimensions, treating the <code class="language-plaintext highlighter-rouge">max_fee</code> as fungible across resources. This enables a more efficient use of capital, and enshrines the same representation that users have when they interact with Ethereum. The fee market is further unified in terms of a single update fraction under a single fee update mechanism, generalized reserve pricing, and a gas normalization that retains current percentage ranges while keeping the price stable whenever a gas limit changes. Calldata is proposed as the first resource to be added, with avenues for facilitating gas fungibility for EVM resources considered for further expansion.</p>
+  
+    <h2 id="motivation">
+      
+      
+        <a href="#motivation" class="anchor-link"></a> Motivation
+      
+      
+    </h2>
+
+<p>A multidimensional fee market enables precise control over resource consumption. It allows <em>the market</em> to fairly price resources according to targets and limits deemed safe by developers, and it allows resources to be consumed at maximum capacity within these limits. Directly expanding the current fee market design to the multidimensional setting can however have negative effects on the user experience (UX) and on economic efficiency. Users are forced to set a <code class="language-plaintext highlighter-rouge">max_fee_per_gas</code> for each resource, where a too low allocation in any dimension can render the transaction ineligible.</p>
+
+<p>This EIP leverages the natural fungibility of the user’s fee budget by letting users set a single unified <code class="language-plaintext highlighter-rouge">max_fee</code>. Instead of using non-fungible per-resource budgets, the single ETH budget can then be allocated dynamically to cover costs wherever they arise, ensuring a more efficient use of capital. Users will be able to specify a lower <code class="language-plaintext highlighter-rouge">max_fee</code> than the implied aggregate maximum unless all base fees are perfectly correlated (which reduces to the current design), because they do not need to buffer for spurious price movements in a single resource dimension.</p>
+
+<p>Ethereum’s current fee market has “tech debt” in that two separate mechanisms are used: one for regular gas (<a href="/EIPS/eip-1559">EIP-1559</a>) and the other for blob gas (<a href="/EIPS/eip-4844">EIP-4844</a>). The proposal unifies the fee market under the preferred EIP-4844 design. That design allows for exact control over long-run resource consumption. In a multidimensional setting with individual base fees, we can then for example achieve precise control over state growth, while accommodating temporary spikes. Excess gas of EIP-4844 is further normalized relative to the limit, allowing for a single update fraction across resources that retains current percentage ranges while keeping the price stable if any gas limit changes.</p>
+
+<p>Calldata is added first, to speed up worst-case payload propagation and expand available EVM gas—without compromising gas introspection. A method for facilitating gas aggregation across resources within the EVM is outlined as an avenue for preserving backward compatibility when expanding further. The logic of EIP-7918 is integrated into the multidimensional setting to ensure that calldata has a higher cost per byte than blob data.</p>
+  
+    <h2 id="specification">
+      
+      
+        <a href="#specification" class="anchor-link"></a> Specification
+      
+      
+    </h2>
+
+<p>The specification inherits its logic from <a href="/EIPS/eip-7706">EIP-7706</a>, incorporating the changes necessary for facilitating one aggregate fee, a multidimensional <a href="/EIPS/eip-7918">EIP-7918</a> logic, a systematic approach to <a href="/EIPS/eip-7805">EIP-7805</a>, and a stable gas normalization function, etc.</p>
+  
+    <h3 id="parameters">
+      
+      
+        <a href="#parameters" class="anchor-link"></a> Parameters
+      
+      
+    </h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Constant</th>
+      <th style="text-align: left">Value</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">MULTIDIM_TX_TYPE</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">TBD</code> <!-- TODO --></td>
+      <td style="text-align: left">Identifier for the new transaction type</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">EVM_LIMIT_TARGET_RATIO</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">2</code></td>
+      <td style="text-align: left">Ratio of EVM gas target to EVM gas limit</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">CALLDATA_GAS_PER_TOKEN</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">4</code></td>
+      <td style="text-align: left">Gas cost per token for calldata</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">TOKENS_PER_NONZERO_BYTE</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">4</code></td>
+      <td style="text-align: left">Tokens per non-zero byte of calldata</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">CALLDATA_GAS_LIMIT_RATIO</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">4</code></td>
+      <td style="text-align: left">Ratio of calldata limit to gas limit</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">CALLDATA_LIMIT_TARGET_RATIO</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">4</code></td>
+      <td style="text-align: left">Ratio of calldata target to calldata limit</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">GAS_RESERVE_FACTOR</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[0, 16, 12]</code></td>
+      <td style="text-align: left">Factor by which the base fee can be below the baseline</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">GAS_RESERVE_INDEX</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">[0, 0, 1]</code></td>
+      <td style="text-align: left">Index of the base fee to compare against</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">MIN_BASE_FEE_PER_GAS</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">1</code></td>
+      <td style="text-align: left">Minimum base fee per gas unit</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">GAS_NORMALIZATION_FACTOR</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">10**9</code></td>
+      <td style="text-align: left">Normalization factor for the delta excess gas</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">BASE_FEE_UPDATE_FRACTION</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">4_245_093_508</code></td>
+      <td style="text-align: left">≈ <code class="language-plaintext highlighter-rouge">GAS_NORMALIZATION_FACTOR / (2 * ln(1.125))</code></td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h3 id="new-transaction-type">
+      
+      
+        <a href="#new-transaction-type" class="anchor-link"></a> New transaction type
+      
+      
+    </h3>
+
+<p>Upon activation of this EIP via hard fork, a new <a href="/EIPS/eip-2718">EIP-2718</a> transaction is introduced with <code class="language-plaintext highlighter-rouge">TransactionType</code> = <code class="language-plaintext highlighter-rouge">MULTIDIM_TX_TYPE</code>.</p>
+
+<p>The <a href="/EIPS/eip-2718">EIP-2718</a> <code class="language-plaintext highlighter-rouge">TransactionPayload</code> for this transaction is</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[chain_id, nonce, gas_limit, to, value, data, access_list, blob_versioned_hashes, max_fee, max_priority_fee_per_gas, y_parity, r, s]
+</code></pre></div></div>
+
+<p>We require <code class="language-plaintext highlighter-rouge">max_fee</code> to be a scalar integer from <code class="language-plaintext highlighter-rouge">0</code> to <code class="language-plaintext highlighter-rouge">2**128-1</code> and <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code> to be a list of integers from <code class="language-plaintext highlighter-rouge">0</code> to <code class="language-plaintext highlighter-rouge">2**64-1</code>, either of length 1 or with the same length as the number of resources (initially 3). The <code class="language-plaintext highlighter-rouge">gas_limit</code> is initially specified only for the main EVM gas, since other limits can be inferred from the transaction. To facilitate further expansion, the Python spec uses a list with a single element at index 0. Each added integer will range from <code class="language-plaintext highlighter-rouge">0</code> to <code class="language-plaintext highlighter-rouge">2**64-1</code>.</p>
+
+<p>The intrinsic cost of the new transaction is inherited from EIP-4844, except that the calldata gas cost (16 per non-zero byte, 4 per zero byte) is removed.</p>
+  
+    <h3 id="block-processing-and-transaction-fees">
+      
+      
+        <a href="#block-processing-and-transaction-fees" class="anchor-link"></a> Block processing and transaction fees
+      
+      
+    </h3>
+
+<p>Helpers for vector operations:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">all_less_or_equal</span><span class="p">(</span><span class="n">v1</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">v2</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">vector_add</span><span class="p">(</span><span class="n">v1</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">v2</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)]</span>
+
+<span class="k">def</span> <span class="nf">vector_mul</span><span class="p">(</span><span class="n">v1</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">v2</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)]</span>
+</code></pre></div></div>
+
+<p>Helper functions for computing scalar max fees/priority fees for all transaction types:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_max_fee</span><span class="p">(</span><span class="n">tx</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">tx</span><span class="p">.</span><span class="nb">type</span> <span class="o">==</span> <span class="n">MULTIDIM_TX_TYPE</span><span class="p">:</span> <span class="c1"># New tx type already has a max_fee
+</span>        <span class="k">return</span> <span class="n">tx</span><span class="p">.</span><span class="n">max_fee</span>
+    <span class="k">elif</span> <span class="n">tx</span><span class="p">.</span><span class="nb">type</span> <span class="o">==</span> <span class="n">BLOB_TX_TYPE</span><span class="p">:</span> <span class="c1"># Account for blobs in blob txs
+</span>        <span class="n">blob_gas</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">blob_versioned_hashes</span><span class="p">)</span> <span class="o">*</span> <span class="n">GAS_PER_BLOB</span>
+        <span class="k">return</span> <span class="n">tx</span><span class="p">.</span><span class="n">max_fee_per_gas</span><span class="o">*</span><span class="n">tx</span><span class="p">.</span><span class="n">gas_limit</span> <span class="o">+</span> <span class="n">tx</span><span class="p">.</span><span class="n">max_fee_per_blob_gas</span><span class="o">*</span><span class="n">blob_gas</span>
+    <span class="k">elif</span> <span class="n">is_eip_1559</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="nb">type</span><span class="p">):</span> <span class="c1"># EIP-1559 txs have no blobs
+</span>        <span class="k">return</span> <span class="n">tx</span><span class="p">.</span><span class="n">max_fee_per_gas</span> <span class="o">*</span> <span class="n">tx</span><span class="p">.</span><span class="n">gas_limit</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># Legacy transactions have a gasprice
+</span>        <span class="k">return</span> <span class="n">tx</span><span class="p">.</span><span class="n">gasprice</span> <span class="o">*</span> <span class="n">tx</span><span class="p">.</span><span class="n">gas_limit</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_priority_fee</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="n">gas</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">base_fees</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">remaining_fee</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="c1"># Precalculate total gas and fees for non-blob resources
+</span>    <span class="n">tip_indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">tgas</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">gas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tip_indices</span><span class="p">)</span>
+    <span class="n">tfee</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">gas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">base_fees</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tip_indices</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">tx</span><span class="p">.</span><span class="nb">type</span> <span class="o">==</span> <span class="n">MULTIDIM_TX_TYPE</span><span class="p">:</span> <span class="c1"># New tx type: Single tip or full vector of tips
+</span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">max_priority_fee_per_gas</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">tmax_fee</span> <span class="o">=</span> <span class="n">tx</span><span class="p">.</span><span class="n">max_fee</span> <span class="o">-</span> <span class="n">gas</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">base_fees</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Ignore blobs (as now)
+</span>            <span class="n">tpriority_fee</span> <span class="o">=</span> <span class="n">tmax_fee</span> <span class="o">-</span> <span class="n">tfee</span> <span class="k">if</span> <span class="n">tmax_fee</span> <span class="o">&gt;</span> <span class="n">tfee</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">max_priority_fee</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">max_priority_fee_per_gas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tgas</span><span class="p">,</span> <span class="n">tpriority_fee</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">max_priority_fee</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">vector_mul</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">max_priority_fee_per_gas</span><span class="p">,</span> <span class="n">gas</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">max_priority_fee</span><span class="p">,</span> <span class="n">remaining_fee</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_legacy</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="nb">type</span><span class="p">):</span> <span class="c1"># Legacy tx: The remainder after base fees paid
+</span>        <span class="n">tmax_fee</span> <span class="o">=</span> <span class="n">tx</span><span class="p">.</span><span class="n">gasprice</span> <span class="o">*</span> <span class="n">tgas</span>
+        <span class="k">return</span> <span class="n">tmax_fee</span> <span class="o">-</span> <span class="n">tfee</span> <span class="k">if</span> <span class="n">tmax_fee</span> <span class="o">&gt;</span> <span class="n">tfee</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="c1"># EIP-1559 or Blob tx
+</span>    <span class="n">tmax_fee</span> <span class="o">=</span> <span class="n">tx</span><span class="p">.</span><span class="n">max_fee_per_gas</span> <span class="o">*</span> <span class="n">tgas</span>
+    <span class="n">tpriority_fee</span> <span class="o">=</span> <span class="n">tmax_fee</span> <span class="o">-</span> <span class="n">tfee</span> <span class="k">if</span> <span class="n">tmax_fee</span> <span class="o">&gt;</span> <span class="n">tfee</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">max_priority_fee</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">max_priority_fee_per_gas</span> <span class="o">*</span> <span class="n">tgas</span><span class="p">,</span> <span class="n">tpriority_fee</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tx</span><span class="p">.</span><span class="nb">type</span> <span class="o">==</span> <span class="n">BLOB_TX_TYPE</span><span class="p">:</span> <span class="c1"># Clamp since blobs reduce the shared max_fee budget
+</span>        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">max_priority_fee</span><span class="p">,</span> <span class="n">remaining_fee</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">max_priority_fee</span>
+</code></pre></div></div>
+
+<p>The calldata resource pricing under this EIP follows previous gas per byte constants but deprecates the floor pricing specified in <a href="/EIPS/eip-7623">EIP-7623</a>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_calldata_gas</span><span class="p">(</span><span class="n">calldata</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">calldata</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">calldata</span><span class="p">)</span> <span class="o">-</span> <span class="n">calldata</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">*</span> <span class="n">TOKENS_PER_NONZERO_BYTE</span>
+    <span class="k">return</span> <span class="n">tokens</span> <span class="o">*</span> <span class="n">CALLDATA_GAS_PER_TOKEN</span>
+</code></pre></div></div>
+
+<p>The helper for calculating gas limits from EIP-7706 is adjusted to subtract calldata gas from the gas limit of old transactions:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_gas_limits</span><span class="p">(</span><span class="n">tx</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="n">calldata_gas</span> <span class="o">=</span> <span class="n">get_calldata_gas</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">blob_gas</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="s">'blob_versioned_hashes'</span><span class="p">,</span> <span class="p">[]))</span> <span class="o">*</span> <span class="n">GAS_PER_BLOB</span>
+    <span class="k">if</span> <span class="n">tx</span><span class="p">.</span><span class="nb">type</span> <span class="o">==</span> <span class="n">MULTIDIM_TX_TYPE</span><span class="p">:</span> <span class="c1"># We use tx.gas_limit as is for new tx type
+</span>        <span class="k">return</span> <span class="p">[</span><span class="n">tx</span><span class="p">.</span><span class="n">gas_limit</span><span class="p">,</span> <span class="n">blob_gas</span><span class="p">,</span> <span class="n">calldata_gas</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># Partition old tx.gas_limit into its execution and calldata components.
+</span>        <span class="n">require</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">gas_limit</span> <span class="o">&gt;=</span> <span class="n">calldata_gas</span><span class="p">)</span>  
+        <span class="n">execution_gas</span> <span class="o">=</span> <span class="n">tx</span><span class="p">.</span><span class="n">gas_limit</span> <span class="o">-</span> <span class="n">calldata_gas</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">execution_gas</span><span class="p">,</span> <span class="n">blob_gas</span><span class="p">,</span> <span class="n">calldata_gas</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>The calculation for the <em>required</em> <code class="language-plaintext highlighter-rouge">max_fee</code> to process the transaction is done in a separate function for easy future expansion:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_required_max_fee</span><span class="p">(</span><span class="n">base_fees</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">tx_gas_limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">vector_mul</span><span class="p">(</span><span class="n">base_fees</span><span class="p">,</span> <span class="n">tx_gas_limits</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p><strong>At the start of processing a block</strong>:</p>
+
+<ul>
+  <li>initialize a vector <code class="language-plaintext highlighter-rouge">gas_used_so_far</code> to <code class="language-plaintext highlighter-rouge">[0, 0, 0]</code>,</li>
+  <li>derive the base fee <code class="language-plaintext highlighter-rouge">base_fees = get_block_base_fees(block.parent)</code>.</li>
+</ul>
+
+<p><strong>At the start of processing a transaction</strong>:</p>
+
+<ul>
+  <li>Derive basic properties of the tx:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">max_fee = get_max_fee(tx)</code>,</li>
+      <li><code class="language-plaintext highlighter-rouge">tx_gas_limits = get_gas_limits(tx)</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">max_base = get_required_max_fee(base_fees, tx_gas_limits)</code></li>
+    </ul>
+  </li>
+  <li>Require that
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">all_less_or_equal(vector_add(gas_used_so_far, tx_gas_limits), gas_limits)</code>. The block’s <code class="language-plaintext highlighter-rouge">gas_limits</code> are defined in the next subsection.</li>
+      <li><code class="language-plaintext highlighter-rouge">max_base &lt;= max_fee</code></li>
+    </ul>
+  </li>
+  <li>Compute the fees to deduct initially:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">max_priority_fee = get_priority_fee(tx, tx_gas_limits, base_fees, max_fee - max_base)</code></li>
+      <li><code class="language-plaintext highlighter-rouge">fee_to_deduct = max_base + max_priority_fee</code></li>
+    </ul>
+  </li>
+  <li>Deduct <code class="language-plaintext highlighter-rouge">fee_to_deduct</code> wei from the sender, which we define as the address recovered from the transaction’s signature.</li>
+</ul>
+
+<p><strong>At the end of processing a transaction</strong>:</p>
+
+<ul>
+  <li>Compute <code class="language-plaintext highlighter-rouge">tx_gas_consumed</code> as a three-item vector, where the first item is the amount of execution gas actually consumed, and the second and third items are the blob and calldata gas amounts, which are equal to their limits from <code class="language-plaintext highlighter-rouge">tx_gas_limits</code>.</li>
+  <li>Burn <code class="language-plaintext highlighter-rouge">base_fee_paid = sum(vector_mul(base_fees, tx_gas_consumed))</code>.</li>
+  <li>Transfer to the coinbase <code class="language-plaintext highlighter-rouge">priority_fee_paid = get_priority_fee(tx, tx_gas_consumed, base_fees, fee_to_deduct - base_fee_paid)</code></li>
+  <li>Refund the sender <code class="language-plaintext highlighter-rouge">fee_to_deduct - base_fee_paid - priority_fee_paid</code>.</li>
+  <li>Update <code class="language-plaintext highlighter-rouge">gas_used_so_far = vector_add(gas_used_so_far, tx_gas_consumed)</code>.</li>
+</ul>
+
+<p><strong>At the end of processing a block</strong>:</p>
+
+<ul>
+  <li>Require each element of <code class="language-plaintext highlighter-rouge">block.gas_used</code> (a vector field in the header) to equal the corresponding element in <code class="language-plaintext highlighter-rouge">gas_used_so_far</code>.</li>
+</ul>
+  
+    <h3 id="block-structure">
+      
+      
+        <a href="#block-structure" class="anchor-link"></a> Block structure
+      
+      
+    </h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">BlockHeader</code> is updated to remove the <code class="language-plaintext highlighter-rouge">blob_gas_used</code>, <code class="language-plaintext highlighter-rouge">gas_used</code>, <code class="language-plaintext highlighter-rouge">base_fee_per_gas</code>, <code class="language-plaintext highlighter-rouge">gas_limit</code> and <code class="language-plaintext highlighter-rouge">excess_blob_gas</code> fields, and the following new fields are added, all of the <code class="language-plaintext highlighter-rouge">[int, int, int]</code> type: <code class="language-plaintext highlighter-rouge">gas_limits</code>, <code class="language-plaintext highlighter-rouge">gas_used</code>, <code class="language-plaintext highlighter-rouge">excess_gas</code>. The header sequence of the new fields is <code class="language-plaintext highlighter-rouge">[..., withdrawals_root, gas_limits, gas_used, excess_gas]</code>.</p>
+
+<p>We define the <code class="language-plaintext highlighter-rouge">gas_limits</code></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">gas_limits[0]</code> follows the existing adjustment formula based on the parent <code class="language-plaintext highlighter-rouge">gas_limits[0]</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">gas_limits[1]</code> must equal <code class="language-plaintext highlighter-rouge">blobSchedule.max * GAS_PER_BLOB</code></li>
+  <li><code class="language-plaintext highlighter-rouge">gas_limits[2]</code> must equal <code class="language-plaintext highlighter-rouge">gas_limits[0] // CALLDATA_GAS_LIMIT_RATIO</code>.</li>
+</ul>
+
+<p>and the <code class="language-plaintext highlighter-rouge">gas_targets</code></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">gas_targets[0]</code> must equal <code class="language-plaintext highlighter-rouge">gas_limits[0] // EVM_LIMIT_TARGET_RATIO</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">gas_targets[1]</code> must equal <code class="language-plaintext highlighter-rouge">blobSchedule.target * GAS_PER_BLOB</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">gas_targets[2]</code> must equal <code class="language-plaintext highlighter-rouge">gas_limits[2] // CALLDATA_LIMIT_TARGET_RATIO</code>.</li>
+</ul>
+
+<p>The blobSchedule for referencing target and max blobs was introduced in <a href="/EIPS/eip-7840">EIP-7840</a>.</p>
+  
+    <h3 id="gas-accounting">
+      
+      
+        <a href="#gas-accounting" class="anchor-link"></a> Gas accounting
+      
+      
+    </h3>
+
+<p>We incorporate EIP-7918 to establish a dynamic reserve price for blob and calldata gas. When the market price for a resource drops below its reserve price, the mechanism for reducing its <code class="language-plaintext highlighter-rouge">excess_gas</code> (and thus lowering its base fee) is disabled. This leads the base fee to rise with usage until it meets the reserve price.</p>
+
+<p>We normalize the running excess gas so that all resources operate at the same scale with the same <code class="language-plaintext highlighter-rouge">BASE_FEE_UPDATE_FRACTION</code>, which also provides a smoother response when any limit is adjusted. Division by <code class="language-plaintext highlighter-rouge">gas_limits[i]</code> upholds the same price changes stipulated in EIP-4844 and <a href="/EIPS/eip-7691">EIP-7691</a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">calc_excess_gas</span><span class="p">(</span><span class="n">parent</span><span class="p">:</span> <span class="n">Header</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="n">base_fees</span> <span class="o">=</span> <span class="n">get_block_base_fees</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+    <span class="n">limits</span> <span class="o">=</span> <span class="n">parent</span><span class="p">.</span><span class="n">gas_limits</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="n">get_block_gas_targets</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+
+    <span class="n">new_excess</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parent</span><span class="p">.</span><span class="n">excess_gas</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">GAS_RESERVE_FACTOR</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="ow">and</span> <span class="n">base_fees</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">GAS_RESERVE_FACTOR</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">base_fees</span><span class="p">[</span><span class="n">GAS_RESERVE_INDEX</span><span class="p">[</span><span class="n">i</span><span class="p">]]):</span> 
+            <span class="c1"># EIP-7918 path. Excess gas rises with usage (up to limit), but cannot fall.
+</span>            <span class="n">delta</span> <span class="o">=</span> <span class="n">parent</span><span class="p">.</span><span class="n">gas_used</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">targets</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">//</span> <span class="n">limits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">excess</span> <span class="o">=</span> <span class="n">parent</span><span class="p">.</span><span class="n">excess_gas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">GAS_NORMALIZATION_FACTOR</span> <span class="o">//</span> <span class="n">limits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Regular path. Excess gas rises and falls with usage as normal
+</span>            <span class="k">if</span> <span class="n">parent</span><span class="p">.</span><span class="n">gas_used</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">targets</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="c1"># Add
+</span>                <span class="n">delta</span> <span class="o">=</span> <span class="n">parent</span><span class="p">.</span><span class="n">gas_used</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">targets</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">excess</span> <span class="o">=</span> <span class="n">parent</span><span class="p">.</span><span class="n">excess_gas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">GAS_NORMALIZATION_FACTOR</span> <span class="o">//</span> <span class="n">limits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># ..or subtract
+</span>                <span class="n">delta</span> <span class="o">=</span> <span class="n">targets</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">parent</span><span class="p">.</span><span class="n">gas_used</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">deltan</span> <span class="o">=</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">GAS_NORMALIZATION_FACTOR</span> <span class="o">//</span> <span class="n">limits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">excess</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">parent</span><span class="p">.</span><span class="n">excess_gas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">deltan</span> <span class="k">else</span> <span class="n">parent</span><span class="p">.</span><span class="n">excess_gas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">deltan</span>
+        <span class="n">new_excess</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">excess</span><span class="p">)</span>  
+    <span class="k">return</span> <span class="n">new_excess</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_block_base_fees</span><span class="p">(</span><span class="n">parent</span><span class="p">:</span> <span class="n">Header</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">fake_exponential</span><span class="p">(</span>
+            <span class="n">MIN_BASE_FEE_PER_GAS</span><span class="p">,</span>
+            <span class="n">excess</span><span class="p">,</span>
+            <span class="n">BASE_FEE_UPDATE_FRACTION</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">excess</span> <span class="ow">in</span> <span class="n">parent</span><span class="p">.</span><span class="n">excess_gas</span>
+    <span class="p">]</span>
+</code></pre></div></div>
+  
+    <h3 id="calldatabasefee-instruction">
+      
+      
+        <a href="#calldatabasefee-instruction" class="anchor-link"></a> CALLDATABASEFEE instruction
+      
+      
+    </h3>
+
+<p>We add a <code class="language-plaintext highlighter-rouge">CALLDATABASEFEE (0x4b)</code> instruction that returns the calldata base fee of the current block, following the same principles as specified in <a href="/EIPS/eip-7516">EIP-7516</a> for the blob base fee.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Op</th>
+      <th>Input</th>
+      <th>Output</th>
+      <th>Cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4b</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h3 id="censorship-resistance">
+      
+      
+        <a href="#censorship-resistance" class="anchor-link"></a> Censorship resistance
+      
+      
+    </h3>
+
+<p>In EIP-7805, <em>includers</em> propose inclusion-list (IL) transactions that the block builder must include, subject to rules evaluated post-execution once remaining capacity is known. We define three resource types based on these rules:</p>
+
+<ul>
+  <li><em>Conditional resource</em> – An IL transaction consuming this resource <em>must be included</em> if the block has sufficient remaining capacity. If such a transaction is excluded, the block should not be accepted, unless the available space (<code class="language-plaintext highlighter-rouge">gas_limit[i] - gas_used[i]</code>) for at least one of its required conditional resources was insufficient to fit the transaction.</li>
+  <li><em>Unconditional resource</em> – An IL transaction consuming this resource <em>must be included</em> as long as sufficient capacity remains for all <em>conditional</em> resources it also uses. A lack of available capacity in the unconditional resource itself is <em>not</em> a valid reason for exclusion.</li>
+  <li><em>Deconditional resource</em> – An IL transaction consuming this resource <em>can always be excluded</em>, regardless of available capacity. For this reason, there is no incentive for includers to list such a transaction.</li>
+</ul>
+
+<p>If EIP-7805 is implemented, it must: (i) continue to treat EVM gas as a conditional resource; (ii) continue to treat blob gas as a deconditional resource; (iii) treat calldata gas as an unconditional resource. Any transaction listed in an IL that consumes calldata and is excluded from the block, despite there being sufficient capacity in all conditional resources it uses, MUST produce an <code class="language-plaintext highlighter-rouge">INVALID_INCLUSION_LIST</code>.</p>
+  
+    <h2 id="rationale">
+      
+      
+        <a href="#rationale" class="anchor-link"></a> Rationale
+      
+      
+    </h2>
+  
+    <h3 id="why-go-multidimensional">
+      
+      
+        <a href="#why-go-multidimensional" class="anchor-link"></a> Why go multidimensional?
+      
+      
+    </h3>
+
+<p>Many Ethereum resources such as blobs, calldata, access, and compute are in limited supply each block, constrained by the need to, e.g., timely propagate data or run computations. Upholding the constraints on all these resources via a single meta-resource—”gas”—limits developers’ ability to control both supply <em>and</em> demand. By going multidimensional, developers gain a more fine-grained control over the supply of each resource, preventing one from encroaching on the allotment for another. Resources can then be consumed at maximum capacity within each specified target and limit. With separate base fees for each resource, the market can come to an agreement on the appropriate price that leads to consumption at maximum capacity, given a specific user demand and aforementioned constraints on its supply. A multidimensional fee market is thus inherently a tool for scaling Ethereum.</p>
+  
+    <h3 id="user-experience">
+      
+      
+        <a href="#user-experience" class="anchor-link"></a> User experience
+      
+      
+    </h3>
+
+<p>Ethereum currently uses <code class="language-plaintext highlighter-rouge">max_fee_per_gas</code> for EVM gas and <code class="language-plaintext highlighter-rouge">max_fee_per_blob_gas</code> for blob gas. A direct expansion of this approach is proposed in EIP-7706, with a vector of fees per gas for each resource. This may be considered unfortunate from a UX perspective, given that the vector will expand with expanding dimensionality. Our casual users tend to be moderately confused already by a single <code class="language-plaintext highlighter-rouge">max_fee_per_gas</code>. Most do not primarily think in terms of the individual prices for the resources that the transaction will consume. They think in terms of how much ETH they need to pay for their transactions (or in terms of dollars/fiat). A unified <code class="language-plaintext highlighter-rouge">max_fee</code> is in this context an improvement to UX. A unified <code class="language-plaintext highlighter-rouge">max_fee_per_gas</code> is possible, but might cause confusion in that the required gas price will differ from the base fees when using several resources—and thus also differ between transactions using different proportions of the resources.</p>
+
+<p>When it comes to the priority fee, the optimal UX between using <code class="language-plaintext highlighter-rouge">max_priority_fee</code> and <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code> is a bit more nuanced. We decided to use <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code>. Ethereum already today unifies the priority fee for blob gas and regular gas under a single <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code>. It is thus natural to retain this representation, if only for removing friction for wallets. Furthermore, the priority fee should be determined from actual gas usage and not the gas limit. This is however perfectly possible when using <code class="language-plaintext highlighter-rouge">max_priority_fee</code> as well, because the max priority fee can be treated as proportional to the limit during processing, thus falling if less gas is consumed.</p>
+
+<p>Retaining <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code> can be considered slightly safer for users, in that they will never risk manually submitting a <code class="language-plaintext highlighter-rouge">max_priority_fee</code> for an old transaction type. Advanced users may wish to specify one priority fee per resource, to granularly pay according to usage when consuming below the gas limit. This ability was therefore preserved as an optional vector-based priority fee.</p>
+  
+    <h3 id="economic-efficiency">
+      
+      
+        <a href="#economic-efficiency" class="anchor-link"></a> Economic efficiency
+      
+      
+    </h3>
+
+<p>Besides UX, resource-specific fee limits can also be unfortunate at a deeper economic level. Once a user has specified a <code class="language-plaintext highlighter-rouge">gas_limit</code> for any non-deterministic dimension, potentially with the assistance of their wallets, multiple separate <code class="language-plaintext highlighter-rouge">max_fee_per_gas</code> could exclude transactions that specify a sufficient aggregate fee, due to a drift in relative levels of the base fees.</p>
+
+<p>Consider a multidimensional transaction with a <code class="language-plaintext highlighter-rouge">gas_limit</code> vector $\mathbf{l} = (l_1, l_2,\dots, l_n)$, a <code class="language-plaintext highlighter-rouge">max_fee_per_gas</code> vector $\mathbf{f} = (f_1, f_2, \dots, f_n)$, and a <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code> vector $\mathbf{p} = (p_1, p_2, \dots, p_n)$. The consumed gas of the transaction is denoted $\mathbf{g} = (g_1, g_2, \dots, g_n)$, and the vector of base fees is denoted $\mathbf{b} = (b_1, b_2, \dots, b_n)$. The realized priority fee, after ensuring a sufficient base fee, is then</p>
+
+<p>$p{\prime}_i = \min(p_i, f_i-b_i)$</p>
+
+<p>for all resources $i$. Assume that when the transaction is submitted, the user specifies a <code class="language-plaintext highlighter-rouge">max_fee_per_gas</code> vector $\mathbf{f}$ such that all entries individually satisfy all base fee $\mathbf{b}$  criteria</p>
+
+<p>$f_i \ge b_i \quad \text{for all resources } i.$</p>
+
+<p>The gas limits also satisfy the actual gas consumption</p>
+
+<p>$l_i \ge g_i \quad \text{for all resources } i.$</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code> vector $\mathbf{p}$ is also considered sufficient by many proposers, when they jointly weigh the reward against competing transactions using a weight vector $\mathbf{w}$, considering contention across relevant resources:</p>
+
+<p>$\sum p{\prime}_i g_i \ge \sum w_i g_i.$</p>
+
+<p>While not evaluated in the existing EIP, the base fees $\mathbf{b}$ could also be satisfied in aggregate against the max fees:</p>
+
+<p>$\sum f_i l_i \ge \sum b_i l_i.$</p>
+
+<p>Now assume that the base fee for any of the resources rapidly rises before the transaction is included, such that it becomes higher than the <code class="language-plaintext highlighter-rouge">max_fee_per_gas</code> in that dimension. In this scenario, the transaction can no longer be included. This may happen, even though the <em>aggregate</em> fees that the user is offering to pay, $\sum f_i l_i$, remain at a level above the aggregate fees that the protocol demands to execute it, $\sum b_i l_i$, just as initially. The aggregate priority fees may still also satisfy the proposer. The welfare loss consists of a user, a proposer, and a protocol willing to process a transaction, hamstrung by rigidity in the protocol design.</p>
+
+<p>The analysis leads to the following conclusions, all of which apply with increasing emphasis the higher the dimensionality:</p>
+
+<ol>
+  <li>The UX would be simplified by one aggregate ETH fee.</li>
+  <li>The protocol would be best served by taking a single aggregate ETH fee from the user.</li>
+  <li>The proposer already considers the aggregate impact when making its inclusion decision.</li>
+</ol>
+
+<p>Thus, the proposal is that the user specifies a single ETH <code class="language-plaintext highlighter-rouge">max_fee</code>. The protocol first ensures that the <code class="language-plaintext highlighter-rouge">max_fee</code> $F$ covers the base fee across gas limits in all dimensions, $F &gt; \sum b_i l_i$, and finally charges the minimum aggregate fee possible. The total fee paid to the protocol is thus the same as in the original multidimensional fee market design. The design is future-proof in that additional dimensions easily are incorporated, retaining the single <code class="language-plaintext highlighter-rouge">max_fee</code>.</p>
+  
+    <h3 id="priority-fee">
+      
+      
+        <a href="#priority-fee" class="anchor-link"></a> Priority fee
+      
+      
+    </h3>
+
+<p>Considerations for the priority fee were already outlined in the UX section. Here, we first expand on why a vector <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code> <em>can</em> be beneficial to some users for fine-grained control, but not to most. The user has full control over the priority fee with a single input, as long as gas usage is deterministic across all resources. This input can be either <code class="language-plaintext highlighter-rouge">max_priority_fee</code> or <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code>—they are equivalent under deterministic gas usage. They are furthermore equivalent under any circumstances if the protocol makes sure to scale the <code class="language-plaintext highlighter-rouge">max_priority_fee</code> according to realized gas usage <em>relative</em> to the specified limit. Otherwise, the <code class="language-plaintext highlighter-rouge">max_priority_fee</code> will not be reduced when a transaction uses less gas than the limit (this is more often a drawback than a benefit for the user).</p>
+
+<p>The priority fee a user wishes to provide per gas for a resource depends on the (likelihood of) contention across this resource. We can thus expect it to differ between resources. It follows from the principle of degrees of freedom that to gain full control over the transaction’s priority fee, a user needs a separate parameter for each independent variable. When gas usage is non-deterministic in one resource—as today—the user needs two priority fees to achieve full granularity. When gas usage is non-deterministic in two resources (and their non-deterministic usage is not perfectly correlated), the user needs three priority fees, etc.</p>
+
+<p>It should here be noted that the required priority fee per gas for some resource cannot be directly ascertained from the priority fee per gas that has been stipulated for that resource in recent transactions. Assume that there are 10 resource and each transaction includes a vector stipulating <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code> for each. The builder will in its inclusion decision operate on the aggregate, and its requirements across dimensions can thus only be inferred, not observed directly. This means that per-resource estimates of required priority fees are not trivial, and most may still prefer the simplicity of a single one.</p>
+  
+    <h3 id="unified-gas-accounting-normalization-and-reserve-pricing-mechanism">
+      
+      
+        <a href="#unified-gas-accounting-normalization-and-reserve-pricing-mechanism" class="anchor-link"></a> Unified gas accounting, normalization, and reserve pricing mechanism
+      
+      
+    </h3>
+
+<p>Ethereum currently uses two separate fee mechanisms, one for execution gas (EIP-1559) and one for blob gas (EIP-4844). This EIP unifies these mechanisms under the EIP-4844 standard, similar to EIP-7706 but with a few additions. We normalize the excess gas delta by dividing by the gas limit in <code class="language-plaintext highlighter-rouge">calc_excess_gas</code>, thus enabling all resources to operate under the same <code class="language-plaintext highlighter-rouge">BASE_FEE_UPDATE_FRACTION</code> while also keeping each fee fixed during a hard fork whenever a limit changes.</p>
+
+<p>The reserve pricing mechanism from EIP-7918 is also generalized such that it can be applied to any resource, using another resource as an anchor. The mechanism imposes that if the base fee multiplied by <code class="language-plaintext highlighter-rouge">GAS_RESERVE_FACTOR</code> is less than the anchor base fee, the base fee cannot fall any further. Calldata uses blob data as an anchor to ensure that we do not charge less for calldata than blob data (see the separate section on the calldata resource for further details).</p>
+  
+    <h3 id="wallet-fee-estimation-logic">
+      
+      
+        <a href="#wallet-fee-estimation-logic" class="anchor-link"></a> Wallet fee estimation logic
+      
+      
+    </h3>
+
+<p>To suggest a <code class="language-plaintext highlighter-rouge">max_fee</code>, the wallet first simulates the transaction to obtain an estimate of the required limit(s) $\mathbf{l}$. It then queries the network for the current vector of base fees $\mathbf{b}$. The expected total fee is $\sum b_i l_i$. The wallet recommends a <code class="language-plaintext highlighter-rouge">max_fee</code> that consists of this expected total cost plus a single buffer to account for aggregate volatility in base fees before the transaction is included. To suggest a <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code>, the wallet analyzes recent blocks to determine the priority fees that ensure timely inclusion. It focuses on priority fees paid by recently included transactions consuming a similar distribution of resources, as well as overall network contention.</p>
+  
+    <h3 id="block-building">
+      
+      
+        <a href="#block-building" class="anchor-link"></a> Block building
+      
+      
+    </h3>
+
+<p>Historical data show that around 90% of blocks are below the gas limit. It is only when blocks are full that the builder is constrained in its block construction (disregarding timing games). Furthermore, a multidimensional knapsack problem only manifests in the event that a block is simultaneously full in multiple dimensions. Ignoring blobs, this is expected to be rare with the proposal, since calldata is assigned a limit four times above the target, which is already set higher than current consumption. The calldata limit is thus unlikely to be reached frequently. The blob dimension is a special case, in that this dimension already exists today, and the number of blob-carrying transactions is fairly low. Generally, the impact on revenue from sophisticated packing algorithms will likely be dwarfed by more significant MEV factors such as transaction ordering and private order flow.</p>
+  
+    <h3 id="the-calldata-resource">
+      
+      
+        <a href="#the-calldata-resource" class="anchor-link"></a> The calldata resource
+      
+      
+    </h3>
+  
+    <h4 id="byte-sizes">
+      
+      
+        <a href="#byte-sizes" class="anchor-link"></a> Byte sizes
+      
+      
+    </h4>
+
+<p>Calldata is separated into its own resource. With the proposed constants, at 60M execution gas, each block will on average contain <code class="language-plaintext highlighter-rouge">60M/(CALLDATA_GAS_LIMIT_RATIO * CALLDATA_LIMIT_TARGET_RATIO) = 3.75M</code> gas of calldata. Focusing on non-zero bytes that cannot be Snappy-compressed, this gas corresponds to around <code class="language-plaintext highlighter-rouge">3.75M/16 = 234kB</code>. The average block size has been around <code class="language-plaintext highlighter-rouge">90kB</code> at a 36M gas limit, which would expand to <code class="language-plaintext highlighter-rouge">150kB</code> at a 60M gas limit if the proportion of calldata in the block remains the same. Using basic assumptions, this proposal thus increases the amount of calldata that will be consumed by over 50%, from <code class="language-plaintext highlighter-rouge">150kB</code> to <code class="language-plaintext highlighter-rouge">234kB</code> at 60M gas. As pointed out in EIP-7706, this will serve to decrease the cost of calldata for our users.</p>
+
+<p>The limit is <code class="language-plaintext highlighter-rouge">60M/CALLDATA_GAS_LIMIT_RATIO = 15M</code> gas of calldata, corresponding to around <code class="language-plaintext highlighter-rouge">15M/16 = 938kB</code>. This is well below the limit under the current specification incorporating EIP‑7623, which is <code class="language-plaintext highlighter-rouge">60M/40 = 1.5MB</code> at 60M gas. Since calldata gas is also no longer accounted for as execution gas, the implied “aggregate” gas limit expands to <code class="language-plaintext highlighter-rouge">75M</code> gas, without materially affecting the maximum workload in terms of execution. In conclusion, the separation of calldata into its own resource increases calldata throughput while reducing costs. It furthermore facilitates scaling by allowing for faster payload propagation in the worst case and keeping all EVM gas available for other operations.</p>
+  
+    <h4 id="censorship-resistance-1">
+      
+      
+        <a href="#censorship-resistance-1" class="anchor-link"></a> Censorship resistance
+      
+      
+    </h4>
+
+<p>For censorship resistance (CR) purposes, under the currently proposed CR implementation EIP-7805, builders must include all transactions surfaced in any of the <code class="language-plaintext highlighter-rouge">16</code> inclusion lists (ILs) of each slot (each up to <code class="language-plaintext highlighter-rouge">8KiB</code>). However, if the block is full, builders can ignore the ILs, to not incentivize them to influence includers for MEV purposes.</p>
+
+<p>When resources have separate limits, the block is treated as “full” already when any single conditional resource reaches its limit. Transactions that use that resource can then be excluded, even if they were surfaced by an IL. This makes it potentially cheaper to “stuff the block” to censor transactions. Specifically, a builder can create dummy transactions consuming a single resource to fill that dimension, ensuring that the block is treated as “full” when evaluating IL transactions. When resources have separate base fees, the builder may target a resource with a lower base fee, at a cost of roughly $b_i \cdot \Delta g_i$, where $\Delta g_i$ is the additional gas in resource $i$ required to reach its limit.</p>
+
+<p>The good news is that calldata has properties allowing the builder to extract MEV while at the same time unconditionally adhering to its gas limit under EIP-7805. This means that this EIP does not impede censorship resistance. Specifically, in the case where all ILs are filled with disjoint transactions, the aggregate size of included transactions can still be at most <code class="language-plaintext highlighter-rouge">8KiB*16 = 131kB</code>. This leaves at the very minimum <code class="language-plaintext highlighter-rouge">938kB - 131kB = 807kB</code> of calldata for the builder to use as it sees fit when extracting MEV, which is sufficient according to the usage patterns we know.</p>
+
+<p>Accordingly, calldata is treated as an “unconditional” resource, as defined in the specification. An includer MUST therefore signal <code class="language-plaintext highlighter-rouge">INVALID_INCLUSION_LIST</code> if—and only if—a calldata‑using IL transaction is omitted despite sufficient capacity remaining in all conditional resources it uses. When considering expansion into further resources with tighter conditional limits, it may be necessary to adopt a version of FOCIL with ranked transactions (FOCILR).</p>
+  
+    <h4 id="reserve-price">
+      
+      
+        <a href="#reserve-price" class="anchor-link"></a> Reserve price
+      
+      
+    </h4>
+
+<p>An EIP-7918 reserve price is used for calldata just as for blobs. This ensures that the equilibrium price does not fall to levels where the fee market update mechanism stops working satisfactorily. Furthermore, the expiry window for blobs is much shorter than the planned rolling expiry window for calldata, making a modest relative reserve price motivated from a resource preservation perspective. Finally, without a reserve price on calldata, it could become cheaper than blob data (particularly below the blob reserve price), and thus a rational choice for L2s.</p>
+
+<p>The latter rationale also motivates the specific parameterization chosen. The EIP-7918 reserve price per byte for calldata is set 1/3 above the price per byte for blob data. This is achieved by tying the EIP-7918 if clause to the <em>blob base fee</em>. The gas per byte is 16 for calldata and 1 for blob data, and the price floor is triggered when <code class="language-plaintext highlighter-rouge">base_fees[1] &gt; GAS_RESERVE_FACTOR[2] * base_fees[2]</code>. Given <code class="language-plaintext highlighter-rouge">GAS_RESERVE_FACTOR[2] = 12</code>, the EIP-7918 condition activates when the blob base fee is more than <code class="language-plaintext highlighter-rouge">12</code> times higher than the calldata base fee, at which point calldata costs less than <code class="language-plaintext highlighter-rouge">16/12 = 1+1/3</code> of the blob price per byte. The calldata base fee is then imposed to not fall further.</p>
+  
+    <h4 id="relationship-to-previous-eips-and-other-resources">
+      
+      
+        <a href="#relationship-to-previous-eips-and-other-resources" class="anchor-link"></a> Relationship to previous EIPs and other resources
+      
+      
+    </h4>
+
+<p>We acknowledge that calldata already has been limited by EIP-7623, with further repricings proposed in <a href="/EIPS/eip-7976">EIP-7976</a>. These EIPs limit worst-case block sizes by metering and conditionally pricing calldata at the transaction level as opposed to at the block level, having the calldata price vary with a transaction’s execution usage. This may lead to secondary markets if users wish to combine different transactions to take advantage of the “rebate” on calldata when consumed together with EVM gas. Treating calldata as a separate resource with a price based on block usage would allow for a more precise control over usage, and transactors would not need to interact with a secondary market to achieve the best price.</p>
+
+<p>Given that the EIP-7623 design already achieves calldata moderation, it must be remembered that an individual fee market for calldata would merely be a first step toward a multidimensional fee market. Calldata is not an endgame. It is likely best to transition over several hard forks, and the options available at the present must then be considered, which leads to a focus on calldata. Another present consideration is block level access lists (BALs) and their interaction.</p>
+
+<p>A resource such as state is more attractive to separate than calldata. We could achieve exact control over state growth, while allowing temporary spikes many times above current gas limits. However, an expansion into other resources requires a multidimensional gas repricing, which has currently not yet been completed. The next section will further discuss remaining complexities of multidimensional EVM gas, and the strategies available for overcoming them.</p>
+  
+    <h3 id="expansion-paths-for-multiple-evm-resources">
+      
+      
+        <a href="#expansion-paths-for-multiple-evm-resources" class="anchor-link"></a> Expansion paths for multiple EVM resources
+      
+      
+    </h3>
+
+<p>This EIP has been designed to facilitate a future expansion into multiple EVM resources. We conclude by outlining the challenges inherent to such an expansion, and the different paths that it can take.</p>
+  
+    <h4 id="evm-without-gas-observability">
+      
+      
+        <a href="#evm-without-gas-observability" class="anchor-link"></a> EVM without gas observability
+      
+      
+    </h4>
+
+<p>One long-term vision for the EVM is to move away from gas observability. This is one of the features of EOF (<a href="/EIPS/eip-7692">EIP-7692</a>), e.g., through revamped <code class="language-plaintext highlighter-rouge">CALL</code> instructions in <a href="/EIPS/eip-7069">EIP-7069</a> such as <code class="language-plaintext highlighter-rouge">EXTCALL</code>. The new calls no longer accept a gas stipend as an input parameter, and the EVM instead makes available some reasonable fraction of all gas across dimensions (e.g., 63/64). Legitimate use cases previously handled via gas observability are then instead taken over by, e.g., the <code class="language-plaintext highlighter-rouge">PAY</code> opcode <a href="/EIPS/eip-5920">EIP-5920</a>.</p>
+
+<p>For compatibility with legacy code, the EVM can in this scenario reinterpret legacy subcalls with a gas parameter by forwarding the same fraction of the caller’s remaining budget in each resource dimension. Concretely, if the call stipulates $g_c$ and the aggregate remaining EVM-gas budget is $g_a$, the callee receives, for each EVM resource with remaining budget $g_r$, the amount $\bigl\lfloor g_r \cdot \min!\bigl(1,\tfrac{g_c}{g_a}\bigr) \bigr\rfloor$. For completeness, the <code class="language-plaintext highlighter-rouge">GAS</code> opcode could likewise return, e.g., $g_a$ (the per-call aggregate remaining budget at this point across all resource dimensions). Note, however, that reinterpreting legacy calls and <code class="language-plaintext highlighter-rouge">GAS</code> in this way can still change the behavior of contracts that rely on precise gas observability or gas-capped subcalls, and such contracts may break.</p>
+  
+    <h4 id="evm-that-retains-gas-observability">
+      
+      
+        <a href="#evm-that-retains-gas-observability" class="anchor-link"></a> EVM that retains gas observability
+      
+      
+    </h4>
+
+<p>It is possible to expand into multiple EVM resource dimensions without breaking existing contracts that rely on gas observability. By treating gas as <em>fungible across resources</em> (just as today), a single budget can be forwarded and counted toward any resource that consumes it. It should be noted that old contracts may still break due to repricing of the resources they use; indeed, a gas repricing effort is currently underway in Ethereum that likely will cause such breakage. But this may be treated as a separate concern.</p>
+  
+    <h4 id="transaction-types-under-multiple-evm-resources-with-non-deterministic-limits">
+      
+      
+        <a href="#transaction-types-under-multiple-evm-resources-with-non-deterministic-limits" class="anchor-link"></a> Transaction types under multiple EVM resources with non-deterministic limits
+      
+      
+    </h4>
+
+<p>A key difference between the new and old transaction types is that the old transaction types set only one limit, whereas the new can set several. When adding deterministic resources such as calldata, this is not a concern, because consumption of this resource can be deducted from the user-specified limit as a pre-processing step. But once there is more than one non-deterministic resource—as can be the case when EVM gas is separated into several resources—things get slightly more complicated. If we wish to ensure that old transaction types still can function properly under these circumstances, we must apply the single limit to multiple non-deterministic resources. The following subsections will outline how this can be achieved by aggregating the gas of these separate resources during EVM processing.</p>
+
+<p>The new transaction type can supply several limits, making expansion into multiple EVM resources more straightforward. However, it turns out that we may also wish to retain the ability of the new transaction type to set a single limit for EVM gas. The reason is that the single limit and aggregate processing facilitates backward compatibility for contracts that rely on gas observability. As previously noted, these contracts must be able to supply subcalls with an aggregate gas stipend, to be counted against any EVM resource. Furthermore, there is an inherent simplicity of the single limit that is not to be discounted.</p>
+
+<p>In all considered approaches below, the number of non-deterministic EVM resources still increases at the <em>block level</em>. To retain the ability to reject a transaction that may require more gas for a resource than its associated block limit, it becomes necessary to alter the check on <code class="language-plaintext highlighter-rouge">gas_used_so_far</code>. Specifically, when a transaction stipulates only the main EVM gas limit, then this limit must be conservatively counted toward all underspecified dimensions of <code class="language-plaintext highlighter-rouge">gas_used_so_far</code> before the limit check:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tx_gas_limits</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">gas_used_so_far</span><span class="p">)</span> <span class="c1"># Same check as previously
+</span>    <span class="n">all_less_or_equal</span><span class="p">(</span><span class="n">vector_add</span><span class="p">(</span><span class="n">gas_used_so_far</span><span class="p">,</span> <span class="n">tx_gas_limits</span><span class="p">),</span> <span class="n">gas_limits</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span> <span class="c1"># The joint EVM gas limit is expanded to cover all block resources
+</span>    <span class="n">tx_gas_limits_exp</span> <span class="o">=</span> <span class="p">[</span><span class="n">tx_gas_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">gas_limits</span><span class="p">)</span>
+    <span class="n">tx_gas_limits_exp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">tx_gas_limits_exp</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">tx_gas_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">tx_gas_limits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">all_less_or_equal</span><span class="p">(</span><span class="n">vector_add</span><span class="p">(</span><span class="n">gas_used_so_far</span><span class="p">,</span> <span class="n">tx_gas_limits_exp</span><span class="p">),</span> <span class="n">gas_limits</span><span class="p">)</span>
+</code></pre></div></div>
+  
+    <h4 id="multidimensional-gas-metering">
+      
+      
+        <a href="#multidimensional-gas-metering" class="anchor-link"></a> Multidimensional gas metering
+      
+      
+    </h4>
+
+<p>An existing proposal by Inês Silva and Crapis is <em>Multidimensional gas metering</em> (not yet submitted as an EIP), which prices gas in one dimension, but applies limits at the block level across several dimensions when updating the (single) EVM base fee. The EVM will thus track multidimensional gas consumption, but perform the limit check on the aggregate, which is also passed on in subcalls. The proposed EIP could be combined with Multidimensional gas metering, for example by using a single EVM gas and calculating metered block gas usage separately, before submitting the outcome as a single resource dimension to the revamped <code class="language-plaintext highlighter-rouge">calc_excess_gas()</code>.</p>
+  
+    <h4 id="multidimensional-fee-market-with-aggregate-evm-gas">
+      
+      
+        <a href="#multidimensional-fee-market-with-aggregate-evm-gas" class="anchor-link"></a> Multidimensional fee market with aggregate EVM gas
+      
+      
+    </h4>
+
+<p>To promote full resource utilization while maintaining backward compatibility for subcalls and old transaction formats, we could instead use <em>separate</em> gas prices for each EVM resource, while retaining within the EVM the ability to <em>aggregate the gas</em> consumption across resources. We refer to this as a <em>Multidimensional fee market with aggregate gas</em>. In the fully aggregated scenario, the user stipulates a single <code class="language-plaintext highlighter-rouge">gas_limit</code> for EVM gas, and the protocol must make sure that the <code class="language-plaintext highlighter-rouge">max_fee</code> covers the maximum possible fee, from consuming <code class="language-plaintext highlighter-rouge">gas_limit</code> of the EVM resource that has the most expensive base fee. Execution is then fully backward compatible, and the EVM operates the same way as with Multidimensional gas metering.</p>
+
+<p>The downside is that the user must stipulate an unnecessarily high <code class="language-plaintext highlighter-rouge">max_fee</code> allocation, if the most expensive resource is not used. We present three options for alleviating this. The first two options transfer to the block producer the responsibility to ensure that the <code class="language-plaintext highlighter-rouge">max_fee</code> indeed covers a transaction’s fees determined post-execution. The third option instead enables the transactor to alternatively provide better guarantees in the form of full gas limits.</p>
+
+<p><em>Option 1:</em> Invalidate a block when the post-transaction check shows that the total fee for a transaction exceeded <code class="language-plaintext highlighter-rouge">max_fee</code>. We could either completely remove the pre-execution check <code class="language-plaintext highlighter-rouge">max_fee &gt;= get_required_max_fee(base_fees, tx_gas_limits)</code>, or only check for deterministic resources in addition to EVM gas across the cheapest EVM resource. During processing, there would still be an aggregated check against the transaction’s gas limit, which is the sender’s responsibility. In extension, the block’s gas limit is already safeguarded pre-execution by conservatively counting <code class="language-plaintext highlighter-rouge">tx_gas_limits_exp</code> against it, as outlined in the previous subsection.</p>
+
+<p>Note that the inclusion guarantees of EIP-7805 will not apply to the transactions where the <code class="language-plaintext highlighter-rouge">max_fee</code> does not cover the worst-case pre-execution check. These transactions are to be ignored when validating the block post-execution.</p>
+
+<p><em>Option 2:</em> Give the block producer the ability and responsibility to supply any missing funds as part of the post-transaction check. This could potentially rely on staked builders currently envisioned in <a href="/EIPS/eip-7732">EIP-7732</a>, albeit it would be more intuitive to use execution layer balances for this purpose. Another alternative is to charge a block-based base fee at the end of processing a block rather than per transaction, as has been discussed in the past. This naturally extends to a multidimensional setting. Note that (2) reverts to (1) upon failure of the builder to ensure the base fees are covered.</p>
+
+<p><em>Option 3:</em> Give the transactor the ability to provide limits for all dimensions, if they so wish. The pre-execution check can then be more fine-grained, inheriting the higher capital efficiency previously outlined. This is a hybrid design, where the transactor can choose the option most suitable to their needs if they use the new transaction type.  This option will be discussed in more detail in the next subsection. Note that (3) can be combined with (1) if desirable.</p>
+  
+    <h4 id="multidimensional-fee-market-with-hybrid-evm-gas">
+      
+      
+        <a href="#multidimensional-fee-market-with-hybrid-evm-gas" class="anchor-link"></a> Multidimensional fee market with hybrid EVM gas
+      
+      
+    </h4>
+
+<p>In a <em>Multidimensional fee market with hybrid EVM gas</em>, the user has separate options:</p>
+
+<ol>
+  <li>Provide a single gas limit for the EVM resources. The EVM can then operate as in the aggregate gas model, after the initial restrictive fee allocation check.</li>
+  <li>Provide a gas limit for each EVM resource. Capital efficiency is then preserved. The EVM operates without gas observability as previously outlined, with the gas parameter of old subcalls converted to a multidimensional counterpart. The transaction is during processing checked against its multiple limits, as opposed to the aggregate.</li>
+</ol>
+
+<p>It is further possible to give the user the freedom to stipulate <em>some</em> EVM gas limits, but not all. The user can for example set the gas limit to 0 for any resource it knows that it will not use, instead of not setting a gas limit for that resource. The aggregation then takes place only across resources without an individual stipulated limit, reducing the required <code class="language-plaintext highlighter-rouge">max_fee</code> allocation while preserving full/a higher level of backward compatibility. These features come at a cost of somewhat increased complexity.</p>
+  
+    <h4 id="specification-for-aggregate-and-hybrid-evm-gas">
+      
+      
+        <a href="#specification-for-aggregate-and-hybrid-evm-gas" class="anchor-link"></a> Specification for aggregate and hybrid EVM gas
+      
+      
+    </h4>
+
+<p>For the hybrid model, the <code class="language-plaintext highlighter-rouge">get_gas_limits()</code> function must be updated to alternatively return multiple EVM gas limits, in the case the user stipulates the full list.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_gas_limits</span><span class="p">(</span><span class="n">tx</span><span class="p">:</span> <span class="n">Transaction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="p">...</span>
+    <span class="k">if</span> <span class="n">tx</span><span class="p">.</span><span class="nb">type</span> <span class="o">==</span> <span class="n">MULTIDIM_TX_TYPE</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">gas_limit</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">tx</span><span class="p">.</span><span class="n">gas_limit</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">blob_gas</span><span class="p">,</span> <span class="n">calldata_gas</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">tx</span><span class="p">.</span><span class="n">gas_limit</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">blob_gas</span><span class="p">,</span> <span class="n">calldata_gas</span><span class="p">]</span> <span class="o">+</span> <span class="n">tx</span><span class="p">.</span><span class="n">gas_limit</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="p">...</span>
+</code></pre></div></div>
+
+<p>For the aggregate model, the <code class="language-plaintext highlighter-rouge">get_required_max_fee()</code> must be updated such that the protocol applies the worst-case EVM base fees across the EVM gas. The new constant <code class="language-plaintext highlighter-rouge">EVM_INDICES</code> specifies the EVM resource indices. Note that <code class="language-plaintext highlighter-rouge">TX_BASE_COST</code> is treated as a deterministic component of the EVM gas to reduce required capital allocation. Note that even when pursuing Options 1-2 for aggregate gas, the aggregation step is still applied in consideration of EIP-7805.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_required_max_fee</span><span class="p">(</span><span class="n">base_fees</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">tx_gas_limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="c1"># Fully specified gas limits, apply baseline pattern
+</span>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">base_fees</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">tx_gas_limits</span><span class="p">):</span> 
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">vector_mul</span><span class="p">(</span><span class="n">base_fees</span><span class="p">,</span> <span class="n">tx_gas_limits</span><span class="p">))</span>
+    <span class="c1"># Otherwise: 1. TX_BASE_COST is treated deterministically (assumed resource 0)
+</span>    <span class="n">determ_evm_cost</span> <span class="o">=</span> <span class="n">TX_BASE_COST</span> <span class="o">*</span> <span class="n">base_fees</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">require</span><span class="p">(</span><span class="n">tx_gas_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">TX_BASE_COST</span><span class="p">)</span>   <span class="c1"># Limit MUST cover TX_BASE_COST.
+</span>    <span class="n">variable_evm_limit</span> <span class="o">=</span> <span class="n">tx_gas_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">TX_BASE_COST</span>
+    <span class="c1"># 2. Determine EVM cost based on most expensive resource
+</span>    <span class="n">max_evm_base_fee</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">base_fees</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">EVM_INDICES</span><span class="p">)</span>
+    <span class="n">evm_cost</span> <span class="o">=</span> <span class="n">determ_evm_cost</span> <span class="o">+</span> <span class="n">variable_evm_limit</span> <span class="o">*</span> <span class="n">max_evm_base_fee</span>
+    <span class="c1"># 3. Return total EVM cost + blob cost + calldata cost
+</span>    <span class="k">return</span> <span class="n">evm_cost</span> <span class="o">+</span> <span class="n">base_fees</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">tx_gas_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">base_fees</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">tx_gas_limits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>For the hybrid model, the line stipulating <code class="language-plaintext highlighter-rouge">tip_indices</code> in <code class="language-plaintext highlighter-rouge">get_max_priority_fee()</code> must be updated to include all new EVM resources <code class="language-plaintext highlighter-rouge">tip_indices = [2] + EVM_INDICES</code>. It is also feasible to adjust the functioning of legacy transactions, to let them tip only according to the headroom between the EVM resource with the highest base fee and the <code class="language-plaintext highlighter-rouge">gasprice</code>. The aim would be to prevent them from having to pay an excessive tip when the <code class="language-plaintext highlighter-rouge">gasprice</code> was set high merely to cover for the EVM resource with the highest base fee (of which they use little). The tip would then be calculated as the premium above the highest EVM resource base fee.</p>
+
+<p>To allow transactors to specify <em>some</em> limits, the <code class="language-plaintext highlighter-rouge">tx.gas_limit</code> list must instead have a nested format, where <code class="language-plaintext highlighter-rouge">gas_limit[0]</code> is the aggregate limit for unspecified EVM resources, and <code class="language-plaintext highlighter-rouge">[index, limit]</code> pairs then follow: <code class="language-plaintext highlighter-rouge">tx.gas_limit = [aggregate, [[index, limit], [index, limit],...]]</code>. The protocol then computes the required max fee from resources with both specified and unspecified limits. The maximum base fee among the resources with unspecified limits is in this case multiplied with the aggregate, and this fee is summed together with the fees of specified limits.</p>
+  
+    <h2 id="backwards-compatibility">
+      
+      
+        <a href="#backwards-compatibility" class="anchor-link"></a> Backwards Compatibility
+      
+      
+    </h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">max_fee_per_gas</code> of the EIP-1559 and EIP-4844 transaction types are converted to a <code class="language-plaintext highlighter-rouge">max_fee</code> by multiplication with the stipulated gas limit(s). The converted EIP-4844 transactions will no longer adhere to the individual <code class="language-plaintext highlighter-rouge">max_fee_per_gas</code> and <code class="language-plaintext highlighter-rouge">max_fee_per_blob_gas</code>, but instead to the aggregated <code class="language-plaintext highlighter-rouge">max_fee</code>. This is a deliberate choice since previous individual checks have lower economic efficiency to no clear benefit, but it should nevertheless be noted by transactors. The priority fee retains the same functionality as previously. The old <code class="language-plaintext highlighter-rouge">gasprice</code> can be used both for the <code class="language-plaintext highlighter-rouge">max_fee</code> and <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code>. The <code class="language-plaintext highlighter-rouge">gas_limit</code> is finally derived deterministically. The section on expansion paths outlined how old transactions can retain functionality as we expand into several non-deterministic EVM resources.</p>
+
+<p>Backward compatibility for contracts that rely on gas introspection can be resolved by giving users the ability to rely on aggregated EVM gas, while still potentially pricing EVM resources separately. Wallets must be updated to handle multidimensional gas accounting with several base fees.</p>
+  
+    <h2 id="security-considerations">
+      
+      
+        <a href="#security-considerations" class="anchor-link"></a> Security Considerations
+      
+      
+    </h2>
+
+<p>One concern is the risk of increasing builder centralization due to increased revenue from sophisticated packing algorithms. While the builder is constrained in its block construction when blocks are full, it is only when several limits are reached at the same time that packing complexity markedly changes from today. Given that around 90% of blocks are below the gas limit, and the calldata limit is set to be very permissive, we argue that this will happen very rarely.</p>
+
+<p>One reason for using <code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code> instead of <code class="language-plaintext highlighter-rouge">max_priority_fee</code> is to establish the priority fee as always having a non-aggregate representation. We could possibly otherwise imagine a scenario where a user in the old transaction format manually submits an aggregate <code class="language-plaintext highlighter-rouge">max_fee</code> and <code class="language-plaintext highlighter-rouge">max_priority_fee</code>, causing loss of funds.</p>
+  
+    <h2 id="copyright">
+      
+      
+        <a href="#copyright" class="anchor-link"></a> Copyright
+      
+      
+    </h2>
+
+<p>Copyright and related rights waived via <a href="/LICENSE">CC0</a>.</p>
+
+  <h2>Citation</h2>
+  <p>Please cite this document as:</p>
+  
+  <p>Anders Elowsson&nbsp;(<a href="https://github.com/anderselowsson">@anderselowsson</a>), Vitalik Buterin&nbsp;(<a href="https://github.com/vbuterin">@vbuterin</a>), "EIP-7999: Unified multidimensional fee market [DRAFT]," <em>Ethereum Improvement Proposals</em>, no. 7999, August 2025. Available: https://eips.ethereum.org/EIPS/eip-7999.</p>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "TechArticle",
+    "headline": "EIP-7999: Unified multidimensional fee market [DRAFT]",
+    "name": "EIP-7999: Unified multidimensional fee market [DRAFT]",
+    "author": "Anders Elowsson (@anderselowsson), Vitalik Buterin (@vbuterin)",
+    "dateCreated": "2025-08-04",
+    "datePublished": "2025-08-04",
+    
+    "discussionUrl": "https://ethereum-magicians.org/t/eip-7999-unified-multidimensional-fee-market/25010",
+    
+    "inLanguage": "en-US",
+    "license": "#copyright",
+    "copyrightYear": "2025"
+  }
+</script>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ethereum Improvement Proposals</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ethereum Improvement Proposals</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ethereum/EIPs"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ethereum/EIPs</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

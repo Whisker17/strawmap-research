@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>A pragmatic path towards Validity-Only Partial Statelessness (VOPS) - Execution Layer Research - Ethereum Research</title>
+    <meta name="description" content="Thanks to Julian Ma, Ignacio Hagopian, Carlos Perez, Guillaume Ballet, Justin Drake, Francesco D’Amato and Caspar Schwarz‑Schilling and for ideas, discussions, feedback, and contributions to the proposal. 
+Introdu&amp;hellip;">
+    <meta name="generator" content="Discourse 3.5.2 - https://github.com/discourse/discourse version cc8d3f6f74bb618b3594ddc8fabcfd7663f63723">
+<link rel="icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/b/b5d7a1aa2f70490e3de763bef97271864784994f_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/3/3483ad4ffed2ab2b130f3e81fdb188ea2c478643_2_180x180.png">
+<meta name="theme-color" media="all" content="#fff">
+
+<meta name="color-scheme" content="light">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://ethresear.ch/t/a-pragmatic-path-towards-validity-only-partial-statelessness-vops/22236" />
+
+<link rel="search" type="application/opensearchdescription+xml" href="https://ethresear.ch/opensearch.xml" title="Ethereum Research Search">
+
+    <link href="/stylesheets/color_definitions_light-default_-1_2_d93422173e6af31573562c9ff4e20afcb8a5ec7d.css?__ws=ethresear.ch" media="all" rel="stylesheet" class="light-scheme"/>
+
+<link href="/stylesheets/common_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common"  />
+
+  <link href="/stylesheets/desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop"  />
+
+
+
+    <link href="/stylesheets/checklist_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="checklist"  />
+    <link href="/stylesheets/discourse-details_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-details"  />
+    <link href="/stylesheets/discourse-graphviz_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-graphviz"  />
+    <link href="/stylesheets/discourse-lazy-videos_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+    <link href="/stylesheets/discourse-local-dates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+    <link href="/stylesheets/discourse-math_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-math"  />
+    <link href="/stylesheets/discourse-narrative-bot_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+    <link href="/stylesheets/discourse-presence_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-presence"  />
+    <link href="/stylesheets/discourse-solved_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-solved"  />
+    <link href="/stylesheets/discourse-templates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-templates"  />
+    <link href="/stylesheets/discourse-topic-voting_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+    <link href="/stylesheets/docker_manager_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="docker_manager"  />
+    <link href="/stylesheets/footnote_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="footnote"  />
+    <link href="/stylesheets/poll_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll"  />
+    <link href="/stylesheets/discourse-topic-voting_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting_desktop"  />
+    <link href="/stylesheets/poll_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="/stylesheets/common_theme_4_9581ecb7d67f268461f04d3d4e1b015ea2ad1983.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="4" data-theme-name="easy footer"/>
+    <link href="/stylesheets/desktop_theme_2_6e0603c5f6be3f943ee4806f79959c7a96ab67f5.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop_theme" data-theme-id="2" data-theme-name="default"/>
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;A pragmatic path towards Validity-Only Partial Statelessness (VOPS)&#39;" href="https://ethresear.ch/t/a-pragmatic-path-towards-validity-only-partial-statelessness-vops/22236.rss" />
+    <meta property="og:site_name" content="Ethereum Research" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://ethresear.ch/uploads/default/optimized/3X/7/8/7812ac088ae07c6faaafc7ee1162930a1bd79b6a_2_682x1024.jpeg" />
+<meta property="og:image" content="https://ethresear.ch/uploads/default/optimized/3X/7/8/7812ac088ae07c6faaafc7ee1162930a1bd79b6a_2_682x1024.jpeg" />
+<meta property="og:url" content="https://ethresear.ch/t/a-pragmatic-path-towards-validity-only-partial-statelessness-vops/22236" />
+<meta name="twitter:url" content="https://ethresear.ch/t/a-pragmatic-path-towards-validity-only-partial-statelessness-vops/22236" />
+<meta property="og:title" content="A pragmatic path towards Validity-Only Partial Statelessness (VOPS)" />
+<meta name="twitter:title" content="A pragmatic path towards Validity-Only Partial Statelessness (VOPS)" />
+<meta property="og:description" content="Thanks to Julian Ma, Ignacio Hagopian, Carlos Perez, Guillaume Ballet, Justin Drake, Francesco D’Amato and Caspar Schwarz‑Schilling and for ideas, discussions, feedback, and contributions to the proposal.  Introduction Ethereum has long pursued the goal of stateless validation: enabling participants to verify blocks without needing to store the entire state of the chain. Statelessness aims to reduce hardware requirements, promote greater decentralization among verifier nodes, and unlock s..." />
+<meta name="twitter:description" content="Thanks to Julian Ma, Ignacio Hagopian, Carlos Perez, Guillaume Ballet, Justin Drake, Francesco D’Amato and Caspar Schwarz‑Schilling and for ideas, discussions, feedback, and contributions to the proposal.  Introduction Ethereum has long pursued the goal of stateless validation: enabling participants to verify blocks without needing to store the entire state of the chain. Statelessness aims to reduce hardware requirements, promote greater decentralization among verifier nodes, and unlock s..." />
+<meta property="og:article:section" content="Execution Layer Research" />
+<meta property="og:article:section:color" content="9a8fa0" />
+<meta property="og:article:tag" content="stateless" />
+<meta name="twitter:label1" value="Reading time" />
+<meta name="twitter:data1" value="18 mins 🕑" />
+<meta name="twitter:label2" value="Likes" />
+<meta name="twitter:data2" value="18 ❤" />
+<meta property="article:published_time" content="2025-04-29T14:16:14+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+    
+  </head>
+  <body class="crawler ">
+    
+    <header>
+  <a href="/">Ethereum Research</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/a-pragmatic-path-towards-validity-only-partial-statelessness-vops/22236">A pragmatic path towards Validity-Only Partial Statelessness (VOPS)</a>
+    </h1>
+
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/execution-layer-research/37" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #9a8fa0'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>Execution Layer Research</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </span>
+      </div>
+
+      <div class="topic-category">
+        <div class='discourse-tags list-tags'>
+            <a href='https://ethresear.ch/tag/stateless' class='discourse-tag' rel="tag">stateless</a>
+        </div>
+      </div>
+  </div>
+
+  
+
+    <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+      <meta itemprop='headline' content='A pragmatic path towards Validity-Only Partial Statelessness (VOPS)'>
+      <link itemprop='url' href='https://ethresear.ch/t/a-pragmatic-path-towards-validity-only-partial-statelessness-vops/22236'>
+      <meta itemprop='datePublished' content='2025-04-29T14:16:14Z'>
+        <meta itemprop='articleSection' content='Execution Layer Research'>
+      <meta itemprop='keywords' content='stateless'>
+      <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop='name' content='Ethereum Foundation'>
+          <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+            <meta itemprop='url' content='https://ethresear.ch/uploads/default/original/2X/8/84d109b2d8dd6bc4fe5255cd44fc429e5649da32.png'>
+          </div>
+      </div>
+
+
+          <div id='post_1'  class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/soispoke'><span itemprop='name'>soispoke</span></a>
+                
+              </span>
+
+                <link itemprop="mainEntityOfPage" href="https://ethresear.ch/t/a-pragmatic-path-towards-validity-only-partial-statelessness-vops/22236">
+
+                <link itemprop="image" href="https://ethresear.ch/uploads/default/original/3X/7/8/7812ac088ae07c6faaafc7ee1162930a1bd79b6a.jpeg">
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2025-04-29T14:16:14Z' class='post-time'>
+                    April 29, 2025,  2:16pm
+                  </time>
+                  <meta itemprop='dateModified' content='2025-04-29T14:38:26Z'>
+              <span itemprop='position'>1</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>
+  <div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/7/8/7812ac088ae07c6faaafc7ee1162930a1bd79b6a.jpeg" data-download-href="https://ethresear.ch/uploads/default/7812ac088ae07c6faaafc7ee1162930a1bd79b6a" title="ChatGPT Image Apr 22, 2025, 11_26_48 AM"><img src="https://ethresear.ch/uploads/default/optimized/3X/7/8/7812ac088ae07c6faaafc7ee1162930a1bd79b6a_2_333x500.jpeg" data-base62-sha1="h8diFcsG9ADP53i0MVyAduJTKl4" width="333" height="500" alt="ChatGPT Image Apr 22, 2025, 11_26_48 AM" srcset="https://ethresear.ch/uploads/default/optimized/3X/7/8/7812ac088ae07c6faaafc7ee1162930a1bd79b6a_2_333x500.jpeg, https://ethresear.ch/uploads/default/optimized/3X/7/8/7812ac088ae07c6faaafc7ee1162930a1bd79b6a_2_499x750.jpeg 1.5x, https://ethresear.ch/uploads/default/optimized/3X/7/8/7812ac088ae07c6faaafc7ee1162930a1bd79b6a_2_666x1000.jpeg 2x" data-dominant-color="9B7E5A"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">ChatGPT Image Apr 22, 2025, 11_26_48 AM</span><span class="informations">1024×1536 148 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div>
+</p>
+<p><em>Thanks to <a href="https://x.com/_julianma" rel="noopener nofollow ugc">Julian Ma</a>, <a href="https://x.com/ignaciohagopian" rel="noopener nofollow ugc">Ignacio Hagopian</a>, <a href="https://x.com/CPerezz19" rel="noopener nofollow ugc">Carlos Perez</a>, <a href="https://x.com/gballet" rel="noopener nofollow ugc">Guillaume Ballet</a>, <a href="https://x.com/drakefjustin" rel="noopener nofollow ugc">Justin Drake</a>, <a href="https://x.com/fradamt" rel="noopener nofollow ugc">Francesco D’Amato</a> and <a href="https://x.com/casparschwa" rel="noopener nofollow ugc">Caspar Schwarz‑Schilling</a> and for ideas, discussions, feedback, and contributions to the proposal.</em></p>
+<h1><a name="p-54075-introduction-1" class="anchor" href="#p-54075-introduction-1"></a>Introduction</h1>
+<p>Ethereum has long pursued the goal of <a href="https://stateless.fyi/" rel="noopener nofollow ugc"><strong>stateless validation</strong></a>: enabling participants to verify blocks without needing to store the entire state of the chain. Statelessness aims to reduce hardware requirements, promote greater decentralization among verifier nodes, and unlock scalability by allowing larger blocks to be constructed and validated without requiring all nodes to replicate the full state.</p>
+<p>One leading proposal toward this vision is <a href="https://ethereum.org/en/roadmap/statelessness/" rel="noopener nofollow ugc"><strong>weak statelessness</strong></a>, where only block producers retain the full state and other nodes validate blocks using small state proofs. While attractive for its simplicity and efficiency, weak statelessness raises a critical challenge: <strong>How can Ethereum preserve its censorship resistance (CR) properties in a world where most nodes cannot independently validate transactions?</strong></p>
+<p>In this post, we explore why weak statelessness, on its own, undermines Ethereum’s censorship resistance guarantees, and propose a pragmatic solution: <strong>Validity-Only Partial Statelessness (VOPS)</strong>. By requiring nodes to store just enough account data to validate pending transactions, <strong>VOPS</strong> offers a <strong>25x storage reduction</strong> while preserving Ethereum’s censorship resistance.</p>
+<blockquote>
+<p><img src="https://ethresear.ch/images/emoji/facebook_messenger/light_bulb.png?v=14" title=":light_bulb:" class="emoji only-emoji" alt=":light_bulb:" loading="lazy" width="20" height="20"></p>
+<p>We argue that:</p>
+<ul>
+<li>Weak statelessness alone cannot guarantee strong censorship resistance.</li>
+<li>Future designs must revisit <strong>strong statelessness</strong>, and address practical questions, such as <a href="https://ethresear.ch/t/a-protocol-design-view-on-statelessness/22060">who generates these proofs</a>, what types of proofs are most efficient, and how bandwidth and proving costs impact node requirements.</li>
+<li>In the meantime, <strong>Validity-Only Partial Statelessness (VOPS)</strong> offers a simple and effective bridge: reducing local storage by <strong>25x</strong> while preserving a functional, censorship-resistant public mempool.<br>
+<strong>AA-VOPS</strong> extends VOPS to support full native account abstraction, offering a path toward strong statelessness by minimizing witness overhead through local caching and incremental updates.</li>
+</ul>
+</blockquote>
+<h1><a name="p-54075-the-why-2" class="anchor" href="#p-54075-the-why-2"></a>The why</h1>
+<p>We’ll start by explaining why weak statelessness (i.e., only relying on block producers to hold the state) doesn’t work well if we want to give strong censorship resistance guarantees for all transactions through mechanisms like <a href="https://eips.ethereum.org/EIPS/eip-7805" rel="noopener nofollow ugc">FOCIL</a>. Before diving deeper, here’s a quick recap of the main ingredients required for FOCIL to work in a stateful world. We’ll show how FOCIL’s current design relies on the assumption that the mempool can retain valid transactions while pruning out invalid ones:</p>
+<ul>
+<li><em><strong>Users</strong></em> send transactions that, if valid (i.e., passing nonce and balance checks), are broadcast across <em><strong>nodes</strong></em> and remain pending in the public mempool.<br>
+<em>Note: In this post, we use the term “node” to refer mempool maintainers via their execution layer client.</em></li>
+<li><strong><em>Includers</em>:</strong> Each slot, 16 includers observe the pending mempool transactions, add them to inclusion lists (ILs), and broadcast these ILs across the CL P2P network.</li>
+<li><em><strong>Block producers</strong></em> must include the union of valid transactions from all ILs in their blocks. An IL transaction can only be excluded from the block if it is invalid or if the block is full (i.e., conditional property).</li>
+<li><em><strong>Attesters</strong></em> verify whether all IL transactions are included in the block. If they are, the attesters vote for the block. Otherwise, they assess whether the block is full or whether the missing transactions were valid, in order to determine if the exclusions were justified or if the block was censoring.</li>
+</ul>
+<p>Now, imagine the protocol only expects <em><strong>block producers</strong></em> to hold the state. This would mean that <em><strong>users</strong></em>, <em><strong>nodes</strong></em> maintaining a mempool, <em><strong>includers</strong></em>, and <em><strong>attesters</strong></em> are unable to determine if transactions are valid against the <code>preStateRoot</code> on their own. Indeed, they would lack access to the complete, up-to-date state information necessary for critical validation checks, including confirming that the sender has sufficient <code>balance</code> and that the transaction’s <code>nonce</code> is correct. <em>Note that any smart contract conditions or state-dependent logic (for example, the current state of a Uniswap pool) are already provided by dApps today to help <strong>users</strong> avoid reverts.</em></p>
+<p>So, in a weak statelessness world:</p>
+<ul>
+<li><img src="https://ethresear.ch/images/emoji/facebook_messenger/white_check_mark.png?v=14" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> Everything actually works out for <strong>attesters:</strong> they don’t need to store anything at all since <em><strong>block producers</strong></em> generate <strong>block-level witnesses</strong>. These witnesses can take the form of <strong>aggregated Merkle/Verkle proofs</strong> (e.g., <a href="https://dankradfeist.de/ethereum/2021/06/18/pcs-multiproofs.html" rel="noopener nofollow ugc">IPA multiproofs</a>) or even SNARKs (more on this in a section later on), which show that all state accesses made by transactions included in the block are valid against <code>preStateRoot</code>. In other words, they prove that the provided data for the block execution exists in the previous block state root. Importantly, <em><strong>block producers</strong></em> must also attach witnesses for any IL transactions they exclude (either using witnesses submitted alongside the ILs or by reconstructing them), so that attesters can re-execute the block and verify whether each omission was justified.</li>
+<li>For <em><strong>nodes</strong></em> maintaining the mempool and <em><strong>includers</strong></em>, there is a fundamental problem if we want them to be stateless. When transactions are sent to the public mempool by <em><strong>users</strong></em>, <em><strong>nodes</strong></em> have no way of knowing if these transactions are valid against the <code>preStateRoot</code> as they can’t perform the usual <code>nonce</code> and <code>balance</code> checks to determine whether they should rebroadcast transactions or prune them from their local mempool:
+<ul>
+<li><img src="https://ethresear.ch/images/emoji/facebook_messenger/cross_mark.png?v=14" title=":cross_mark:" class="emoji" alt=":cross_mark:" loading="lazy" width="20" height="20"> This can be exploited to <strong>flood the mempool</strong> <strong>and IL</strong>s with invalid transactions, effectively <a href="https://hackmd.io/PrO6DT7qQEOvsIyMSOci4g" rel="noopener nofollow ugc">negating the benefits of FOCIL</a> and enabling the censorship of transactions that would have otherwise benefited from being included in ILs.</li>
+<li><img src="https://ethresear.ch/images/emoji/facebook_messenger/cross_mark.png?v=14" title=":cross_mark:" class="emoji" alt=":cross_mark:" loading="lazy" width="20" height="20"> The absence of <code>nonce</code> and <code>balance</code> checks as a first line of defense creates a new DoS vector: it allows <strong>anyone</strong> to submit invalid transactions to the mempool or ILs, degrading the quality of the mempool and making it harder for valid transactions to surface. This creates the same kind of disruption that would occur if <strong>includers were adversarial</strong> and filled ILs with garbage. The key difference is that today, <strong>only validators (with 32 ETH) can be includers</strong>, whereas without basic filtering, <strong>any participant</strong> can degrade mempool quality and interfere with inclusion list effectiveness—lowering the barrier to attack and weakening censorship resistance in practice.</li>
+</ul>
+</li>
+</ul>
+<h1><a name="p-54075-wat-do-3" class="anchor" href="#p-54075-wat-do-3"></a>Wat do?</h1>
+<p>In the following section, we explore potential options to overcome the challenges presented by the weak statelessness approach.</p>
+<h2><a name="p-54075-option-1-strong-statelessness-4" class="anchor" href="#p-54075-option-1-strong-statelessness-4"></a>Option 1: Strong statelessness</h2>
+<p>One seemingly straightforward approach is to require that user transactions be bundled with complete state accesses against the <code>preStateRoot</code> (e.g., Merkle or Verkle proofs), often referred to as strong statelessness. We could even relax the strict definition of strong statelessness by requiring each previous <em><strong>block producer</strong></em> to attach state witnesses to every transaction, so that <em><strong>nodes</strong></em> can fetch them on demand. This would, in theory, enable any <em><strong>node</strong></em>, including <em><strong>includers</strong></em> and <em><strong>attesters</strong></em> to independently verify that a transaction’s state accesses are consistent with the <code>preStateRoot</code> without needing access to the full, current state. Such a mechanism is useful for managing the mempool effectively: instead of excluding and including transactions every slot, <em><strong>nodes</strong></em> can retain transactions that remain unaffected by subsequent blocks and prune those whose nonce or balance has changed.</p>
+<p>But in practice, it would require a real-time delivery channel between nodes and the current block producer, introducing strong trust assumptions and a new censorship vector: a block producer could delay or selectively withhold transaction-level proofs to keep targeted transactions out of every mempool and inclusion list, quietly excluding them while still producing an apparently valid block. Moreover, for new transactions, relying solely on the previous block’s state is insufficient. Users need access to updated, real-time state witnesses that include both the accounts and storage slots actually touched by the transaction, as well as any additional parts of the state trie required to reconstruct the path to those entries—due to how the trie structure interlinks state. Not only does continuously fetching these proofs increase bandwidth usage and latency—degrading UX—but it also raises a crucial question: who should serve as <a href="https://ethresear.ch/t/a-protocol-design-view-on-statelessness/22060">proof-serving nodes</a>? Wallets? dApps? The Portal network? Supernodes (i.e., validators staking <code>2048 ETH</code>)? All of the above?</p>
+<p>Although strong statelessness may be the endgame if we want attester and includer nodes to be completely stateless and run on smart watches, further research is essential to answer this question and determine which actors are best suited to perform this duty by evaluating the costs and hardware requirements needed to <strong>(1)</strong> store the full state and <strong>(2)</strong> generate and broadcast the witnesses and proofs associated with user transactions. Note that this approach only requires a one-out-of-N honesty assumption—in theory, a single honest actor capable of generating valid proofs is sufficient. However, in practice, relying on only one or very few actors could lead to issues such as rent extraction (e.g., commitment attacks, censorship, and monopoly pricing).</p>
+<h2><a name="p-54075-option-2-validity-only-partial-statelessness-5" class="anchor" href="#p-54075-option-2-validity-only-partial-statelessness-5"></a>Option 2: Validity-Only Partial Statelessness</h2>
+<p>A pragmatic, short‑term approach is to rely on partial statelessness and store only the minimal data needed to verify transaction validity. Under VOPS, each node maintains just four fields per EOA—<code>address</code> (20 B), <code>nonce</code> (8 B), <code>balance</code> (12 B), and a one‑bit <code>codeFlag</code>—instead of the full state.</p>
+<p>When a transaction arrives, the node checks <code>codeFlag</code>:</p>
+<ul>
+<li><code>codeFlag = 0</code> (pure EOA, no delegation designator — meaning the account cannot delegate execution to custom code):
+<ul>
+<li>Verify signature, nonce, balance vs. fees, and gas limits.</li>
+<li>Allow multiple in‑flight transactions per address.</li>
+</ul>
+</li>
+<li><code>codeFlag = 1</code> (any address capable of running code using a 23‑byte <a href="https://eips.ethereum.org/EIPS/eip-7702" rel="noopener nofollow ugc">EIP‑7702</a> delegation designator):
+<ul>
+<li><strong>Enforce at most one</strong> pending transaction per address.</li>
+<li>Prevents nonce/balance conflicts as delegated code can alter state unpredictably.</li>
+</ul>
+</li>
+</ul>
+<p>On each new block, the node updates its table with all modified quadruplets, prunes any transactions rendered invalid by stale nonces or insufficient balances, drops all but the highest‑priority pending transaction whenever an account’s <code>codeFlag</code> flips from <strong>0</strong> to <strong>1</strong>, and promotes any queued EOA transactions whose nonces now match when the flag flips back from <strong>1</strong> to <strong>0</strong>.</p>
+<p>Because each account entry is only <code>20 + 8 + 12 + 0.125 ≈ 40.125 bytes</code>, maintaining <a href="https://stateless.fyi/development/mainnet-analysis/tree-shape.html#accounts-and-code-length-stats" rel="noopener nofollow ugc">~241 million accounts</a> requires:</p>
+<div class="math">
+241\,\text{million} \times 40.125\,\text{bytes} \approx 8.4\,\text{GiB}
+</div>
+<p>That’s more than a <strong>25×</strong> reduction compared to today’s <code>~233 GiB</code> full‐state size (h/t Guillaume), yet still lets VOPS nodes maintain the mempool effectively. Note that the <code>8.4 GiB</code> figure is uncompressed, so it’s a pessimistic estimate of the storage savings VOPS could deliver.</p>
+<h3><a name="p-54075-vops-for-verkle-6" class="anchor" href="#p-54075-vops-for-verkle-6"></a>VOPS for Verkle</h3>
+<p>To make the VOPS idea concrete, we’ll start by anchoring the proposal in a <strong><a href="https://eips.ethereum.org/EIPS/eip-6800" rel="noopener nofollow ugc">Verkle</a> setting</strong>.</p>
+<p><strong>Block Header Fields</strong></p>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th><strong>Field</strong></th>
+<th><strong>Purpose</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>preStateRoot</code></td>
+<td>State root before executing the block.</td>
+</tr>
+<tr>
+<td><code>postStateRoot</code></td>
+<td>State root after execution.</td>
+</tr>
+<tr>
+<td>Block-level <code>witness</code> (IPA multiproof, in the block body)</td>
+<td>Proves that every state element read during execution is valid against the <code>preStateRoot</code>.</td>
+</tr>
+<tr>
+<td><code>transactions</code></td>
+<td>Full list of transactions.</td>
+</tr>
+</tbody>
+</table>
+</div><p>Let’s recap who does what in that scenario:</p>
+<ul>
+<li>
+<p><em><strong>Users</strong></em> broadcast transactions to the public mempool. Under VOPS, partial‑stateless nodes keep only four <strong>fields</strong> per account—<code>address</code>, <code>nonce</code>, <code>balance</code>, and <code>codeFlag</code>—just enough to decide whether each pending transaction should stay or be pruned.</p>
+</li>
+<li>
+<p><strong><em>Includers</em>:</strong> Each slot, 16 includers observe the pending mempool transactions, add them to inclusion lists (ILs), and broadcast these ILs across the CL P2P network. If the includer also maintains a mempool—as is the case today—no additional checks are needed before including transactions in ILs, since validity checks against the <code>preStateRoot</code> (e.g., <code>nonce</code>, <code>balance</code>, and <code>codeFlag</code>) are performed as part of mempool maintenance. However, if in the future includers are separated into a standalone role (e.g., <a href="https://ethresear.ch/t/towards-attester-includer-separation/21306">light “smart-watch” includers</a>), they will need to independently perform transaction validity checks before including transactions in ILs.</p>
+</li>
+<li>
+<p><em><strong>Block producers</strong></em> hold the full Ethereum state. They must include the union of all <strong>valid</strong> transactions from all ILs in their proposed blocks. An IL transaction can only be excluded if it is invalid or if the block is full (i.e., <a href="https://ethresear.ch/t/unconditional-inclusion-lists/18500">the conditional property</a> is satisfied).</p>
+<p>In a <strong>VOPS</strong> for Verkle world, block producers are responsible for generating and committing the following:</p>
+<ul>
+<li><strong>A block-level witness</strong> (e.g., an <strong>IPA multiproof</strong> over a Verkle tree): This proves that the provided data for the block execution exists in the previous block state root.</li>
+<li><strong>Post-state root</strong>: After executing all transactions, the block producer computes and commits the resulting <code>postStateRoot</code> in the block header. This serves as the output of execution and must be verified by attesters. This is already what block producers do today, and wouldn’t be a new requirement in a VOPS world.</li>
+</ul>
+</li>
+<li>
+<p><em><strong>Attesters</strong></em> verify the block by performing the following steps:</p>
+<ol>
+<li>
+<p><img src="https://ethresear.ch/images/emoji/facebook_messenger/white_check_mark.png?v=14" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> <strong>Verify the block-level witness</strong>: Confirm that all the provided state (proven via the IPA multiproof) are valid against the <code>preStateRoot</code>.</p>
+</li>
+<li>
+<p><img src="https://ethresear.ch/images/emoji/facebook_messenger/white_check_mark.png?v=14" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> <strong>Re-execute the block</strong> locally: Using the provided transactions, attesters independently re-execute the block starting from the pre-state (reconstructed from the witness) to recompute the <code>postStateRoot</code>.</p>
+</li>
+<li>
+<p><img src="https://ethresear.ch/images/emoji/facebook_messenger/white_check_mark.png?v=14" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> <strong>Check the</strong> <code>postStateRoot</code>: Ensure that the locally recomputed <code>postStateRoot</code> matches the one committed in the block.</p>
+</li>
+<li>
+<p><strong><img src="https://ethresear.ch/images/emoji/facebook_messenger/white_check_mark.png?v=14" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> Validate IL conditions</strong></p>
+</li>
+</ol>
+<ul>
+<li><strong>Included IL transactions</strong>
+<ul>
+<li>During local re-execution from the reconstructed pre-state, all state changes corresponding to IL transactions present in the block can be observed.</li>
+</ul>
+</li>
+<li><strong>Excluded IL transactions</strong>
+<ul>
+<li>After executing all included transactions in the block, attempt to execute each excluded IL transaction:
+<ul>
+<li>If the transaction would fail nonce or balance checks, or if the block was full, the exclusion is justified.</li>
+<li>Otherwise, the block producer is censoring and the block should not receive a vote.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>If all checks pass—validity of state access, correctness of execution, and satisfaction of IL conditions—<strong>attesters vote for the block</strong>. By re-executing blocks in <strong>step 2</strong> and simultaneously updating their local quadruplet tables in <strong>step 3</strong>, VOPS nodes keep their partial state perfectly in sync without ever storing the full Verkle tree.</p>
+</li>
+</ul>
+<h3><a name="p-54075-vops-for-zkvms-7" class="anchor" href="#p-54075-vops-for-zkvms-7"></a>VOPS for zkVMs</h3>
+<p>Building on the Verkle flavour of VOPS, we can replace block‑level state proofs and local re‑execution with a zero-knowledge Virtual Machine (<strong>zkVM)</strong>. Each block would come with a <strong>SNARK</strong> that lets every verifier check the whole transition—and all IL conditions—by running a single, millisecond‑scale verification.</p>
+<ul>
+<li><strong>What <em>block producers</em> must prove:</strong>
+<ul>
+<li><strong>State validity:</strong> Every key/value read by transactions is proven against the <code>preStateRoot</code>.</li>
+<li><strong>Execution correctness:</strong> Executing the ordered transactions over that reconstructed pre-state yields the committed <code>postStateRoot</code>.</li>
+<li><strong>Diff correctness:</strong> Applying the correct full state diff to <code>preStateRoot</code> yields <code>postStateRoot</code>, and the diff matches the one embedded in the header.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Block Header Fields</strong></p>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>preStateRoot</code></td>
+<td>State root before execution</td>
+</tr>
+<tr>
+<td><code>postStateRoot</code></td>
+<td>State root after execution</td>
+</tr>
+<tr>
+<td><code>stateDiff</code></td>
+<td>Merkle root of the complete list of every modified account leaf and storage slot</td>
+</tr>
+<tr>
+<td><code>execProof</code></td>
+<td>SNARK binding <code>transactions + stateDiff</code> to the transition <code>preStateRoot → postStateRoot</code></td>
+</tr>
+</tbody>
+</table>
+</div><blockquote>
+<p>Two notes:</p>
+<ul>
+<li>Under VOPS and AA‑VOPS, nodes rely on receiving the full <code>stateDiff</code> per block to patch their local state. <a href="https://github.com/ethereum/EIPs/pull/9580/files" rel="noopener nofollow ugc">EIP-7928 Block-Level Access Lists (BALs)</a> would provide exactly this: a verifiable, enforced publication of all modified accounts, storage keys, balances, and nonces.</li>
+<li>IL compliance is checked locally by VOPS nodes using their updated quadruplet tables and the received <code>stateDiff</code>—no extra proof obligation here (see AA-VOPS for where per-account proof ties into inclusion-list rules).</li>
+</ul>
+</blockquote>
+<p><strong>Block-by-block routine for VOPS nodes</strong></p>
+<ol>
+<li><strong>Verify</strong> <code>execProof</code><strong>.</strong> Confirms <img src="https://ethresear.ch/images/emoji/facebook_messenger/white_check_mark.png?v=14" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> state validity, <img src="https://ethresear.ch/images/emoji/facebook_messenger/white_check_mark.png?v=14" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> execution correctness, and <img src="https://ethresear.ch/images/emoji/facebook_messenger/white_check_mark.png?v=14" title=":white_check_mark:" class="emoji" alt=":white_check_mark:" loading="lazy" width="20" height="20"> diff correctness.</li>
+<li><strong>Extract quadruplets.</strong> From the verified full <code>stateDiff</code>, pull out each modified account’s <code>(address, nonce, balance, codeFlag)</code> and update the local table.</li>
+<li><strong>Enforce IL rules.</strong> Using the refreshed quadruplet table, re-check inclusion-list conditions locally. IL enforcement can be done out-of-the-proof using local checks with the stored VOPS-quadruplet fields.</li>
+<li><strong>Prune the mempool.</strong> Drop any pending transaction invalidated by the new quadruplet values.</li>
+</ol>
+<p><strong>Resource profile</strong></p>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Node</th>
+<th>Block producer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Disk</strong></td>
+<td>≈ 8.4 GiB for the quadruplet table (≈ 25× smaller than full MPT state)</td>
+<td>Unchanged</td>
+</tr>
+<tr>
+<td><strong>Bandwidth</strong></td>
+<td><code>stateDiff</code> adds only a few tens of KB—negligible vs. current block limits</td>
+<td>Almost unchanged, but a bit more upload bandwidth for witnesses</td>
+</tr>
+<tr>
+<td><strong>CPU</strong></td>
+<td>One fast SNARK verification per block (milliseconds on a laptop)</td>
+<td><strong>Heavy</strong> proving workload—still a lot costlier (multiple GPUs) than building Merkle/Verkle witnesses, though <a href="https://ethproofs.org/" rel="noopener nofollow ugc">improving</a> <a href="https://x.com/soispoke/status/1892528208957821345" rel="noopener nofollow ugc">quickly</a></td>
+</tr>
+<tr>
+<td><strong>Proof size</strong></td>
+<td>Constant-size, verifiers always download the same few hundred bytes</td>
+<td>Constant-size, ideally aiming for 128-256 KiB per proof</td>
+</tr>
+</tbody>
+</table>
+</div><p><strong>Bottom line.</strong></p>
+<p>With ≈ 8.4 GiB of local state, unchanged mempool rules, and a single succinct proof per block, zkVM VOPS preserves Ethereum’s censorship-resistance while keeping verifier hardware requirements within consumer-grade limits.</p>
+<h3><a name="p-54075-vops-syncing-8" class="anchor" href="#p-54075-vops-syncing-8"></a>VOPS Syncing</h3>
+<p>Let’s start with an important note. In today’s <a href="https://eips.ethereum.org/EIPS/eip-6800" rel="noopener nofollow ugc">Verkle</a> and <a href="https://eips.ethereum.org/EIPS/eip-7864" rel="noopener nofollow ugc">Binary tree</a> proposals, accounts and storage slots are interleaved, unlike the Merkle Patricia Tree where accounts form a distinct subtrie. A VOPS node cannot reliably tell accounts apart from storage slots, and cannot simply download a snapshot to rebuild its local account table. Most isolated slots (&gt;80%) can be filtered, but attackers could create fake account-like slots to slow down syncing. Syncing from genesis does not solve this, since current witness formats do not indicate whether a value is an account or a storage slot. Solving this would require richer witness formats, such as those proposed for <a>block-level access lists</a>, or small changes to the tree structure.</p>
+<p>Today, the account trie represents roughly <code>1/6</code> of the total state size. Assuming a snap sync approach, downloading just the account trie would make syncing about five to six times faster compared to downloading the full state, accounting for the healing phase. The healing phase would still take the same time as today, and much of the downloaded data would eventually be discarded, but syncing could happen from any full node, just like today.</p>
+<p>Bootstrapping a VOPS node requires <strong>only accounts state</strong> (no storage tries or code blobs) along with the usual block headers:</p>
+<ol>
+<li>
+<p><strong>Header download and verification</strong></p>
+<ul>
+<li>Fetch and verify block headers from genesis (or a trusted checkpoint) to the latest head.</li>
+</ul>
+</li>
+<li>
+<p><strong>Block-by-Block Updates</strong></p>
+<p>For each new block:</p>
+<ul>
+<li><strong>Retrieve:</strong>
+<ul>
+<li>Verkle-tree: header + IPA multiproof + full transaction list</li>
+<li>zkVM: header + SNARK <code>execProof</code> + compact <code>stateDiff</code> sidecar</li>
+</ul>
+</li>
+<li><strong>Verify &amp; Extract:</strong>
+<ul>
+<li>Verkle-tree: check the multiproof, extract all touched account entries, then re-execute every transaction in order against that reconstructed pre-state. Record each changed <code>(address, nonce, balance, codeFlag)</code>.</li>
+<li>zkVM: verify the SNARK (state reads, execution, and IL rules) and parse the <code>stateDiff</code>sidecar list of updated quadruplets.</li>
+</ul>
+</li>
+<li><strong>Apply:</strong> update the local table with each modified account entry.</li>
+</ul>
+</li>
+<li>
+<p><strong>Mempool Pruning</strong></p>
+<ul>
+<li>Upon each table update, drop any pending transaction whose sender now has a stale nonce, insufficient balance, or a <code>codeFlag</code> flip from 0→1 (retaining only the highest-priority pending tx for that address).</li>
+<li>After processing all blocks to the head, the table is fully current and the mempool enforces valid-only admission/pruning exactly as in live operation.</li>
+</ul>
+</li>
+</ol>
+<h2><a name="p-54075-vops-and-native-account-abstraction-aavops-9" class="anchor" href="#p-54075-vops-and-native-account-abstraction-aavops-9"></a><strong>VOPS and Native Account Abstraction (AA‑VOPS)</strong></h2>
+<p><strong>Native Account Abstraction (AA, see <a href="https://eips.ethereum.org/EIPS/eip-7701" rel="noopener nofollow ugc">EIP-7701</a>)</strong> introduces a major paradigm shift: accounts are no longer simple objects with fixed validation rules, but programmable entities that can run arbitrary code. This flexibility breaks the assumption that checking just the <code>nonce</code>, <code>balance</code>, and <code>codeFlag</code> is enough to validate a transaction. As a result, VOPS needs an upgrade: <strong>AA-VOPS</strong>.</p>
+<p>AA-VOPS extends VOPS to support native AA while keeping nodes lightweight, by avoiding full global state replication. Instead of requiring every node to track every account, each node only tracks the accounts it actively cares about (for its own EOAs or ones it interacts with), maintaining a small local cache that is updated incrementally over time.</p>
+<p>While native AA unlocks powerful new capabilities, it also forces the ecosystem closer to strong statelessness designs, where transactions must carry explicit witnesses. As we extend VOPS to support AA-VOPS, we should carefully weigh whether the benefits of full native AA justify this added complexity, or if sticking to a simpler VOPS model better preserves decentralization and efficiency.</p>
+<h3><a name="p-54075-aa-vops-vs-strong-statelessness-10" class="anchor" href="#p-54075-aa-vops-vs-strong-statelessness-10"></a><strong>AA-VOPS vs Strong Statelessness</strong></h3>
+<p><strong>Strong statelessness</strong> expects users to attach a full state witness to every transaction, covering all touched accounts and storage slots.</p>
+<p>In contrast, <strong>AA-VOPS</strong> allows nodes to maintain up-to-date proofs only for specific accounts tied to their own EOAs. These proofs stay valid across multiple blocks unless the account changes and are refreshed using lightweight <code>stateDiffs</code> included with each block.</p>
+<p>This avoids bulky witnesses on every transaction, keeping bandwidth and storage requirements minimal while preserving censorship-resistance and transaction validity.</p>
+<h3><a name="p-54075-how-aa-vops-work-11" class="anchor" href="#p-54075-how-aa-vops-work-11"></a><strong>How AA-VOPS Work</strong></h3>
+<p><strong>Local Cache and Witness Maintenance</strong></p>
+<p>A node (or a wallet or dApp backend acting on its behalf) keeps:</p>
+<ul>
+<li>Its own account leaf: <code>nonce</code>, <code>balance</code>, <code>storageRoot</code>, and <code>codeHash</code>.</li>
+<li>Any extra storage slots required by the account’s AA logic.</li>
+<li>A Merkle or Verkle path witness authenticating these fields against a recent <code>stateRoot</code>.</li>
+</ul>
+<p>The witness remains valid until a later block modifies any of the covered fields.</p>
+<p><strong>Bootstrapping the witness:</strong></p>
+<ul>
+<li>The node obtains the initial leaf and path once, using <code>eth_getProof</code> from any full node or RPC provider (in Reth, you can now <a href="https://github.com/paradigmxyz/reth/blob/d69c42402fa9f9e9c24d73d59e4deeb82f1cdeb1/crates/trie/trie/src/proof/mod.rs#L104" rel="noopener nofollow ugc">get all the witnesses with a single RPC call</a>).</li>
+</ul>
+<p><strong>Incremental updates:</strong></p>
+<p>Every block provides</p>
+<ol>
+<li>A compact, full <strong><code>stateDiff</code></strong> (as in VOPS-with-zkVM).</li>
+<li>An <strong>IL commitment</strong> (e.g., an aggregate of the 16 IL signatures). This commitment allows attesters to verify that the block producer committed to all ILs they observed locally.</li>
+<li>A <strong>block-level proof</strong> (e.g., a SNARK) binding the <code>transactions</code>, the <code>stateDiff</code>, and the IL compliance rules together.</li>
+</ol>
+<p>When a block arrives, the node:</p>
+<ol>
+<li>
+<p><strong>Verifies the block-level proof</strong>, which ensures:</p>
+<ul>
+<li>The <code>stateDiff</code> correctly encodes the transition from <code>preStateRoot</code> to <code>postStateRoot</code>.</li>
+<li>All included transactions are executed correctly.</li>
+<li>Each transaction in the IL set was either included or validly excluded (because the block was full or the transaction became invalid after prior execution).</li>
+</ul>
+<p><em>(Optional optimization: Block producers could attach a “failure hint” for each excluded IL transaction, indicating the index in execution where it failed, reducing attester workload.)</em></p>
+</li>
+<li>
+<p><strong>Patches its witness if needed:</strong></p>
+<p>The VOPS node (or a wallet/dapp tracking its own EOAs) checks if any of its accounts appear in the <code>stateDiff</code>.</p>
+<ul>
+<li><strong>If present</strong>, it updates the cached leaf and recomputes affected Merkle/Verkle paths.</li>
+<li><strong>If absent</strong>, the cached witness remains valid against the new <code>stateRoot</code>.</li>
+</ul>
+</li>
+</ol>
+<p>If a node stays online and processes every block, it never needs another archive query after bootstrapping. If it falls behind, it can replay missing diffs or reseed its witness via <code>eth_getProof</code>.</p>
+<h3><a name="p-54075-transaction-packaging-12" class="anchor" href="#p-54075-transaction-packaging-12"></a><strong>Transaction Packaging</strong></h3>
+<p>When submitting a transaction:</p>
+<ul>
+<li>For EOAs and <a href="https://eips.ethereum.org/EIPS/eip-7702" rel="noopener nofollow ugc">EIP-7702</a> accounts, no additional witness is needed. The minimal account fields are locally available.</li>
+<li>For <a href="https://eips.ethereum.org/EIPS/eip-7701" rel="noopener nofollow ugc">EIP-7701</a> smart accounts, a succinct single-account validity proof (e.g., a SNARK) is attached, showing both inclusion of the account leaf and correct <code>VALIDATE</code> logic execution.</li>
+</ul>
+<h3><a name="p-54075-future-aa-compatibility-13" class="anchor" href="#p-54075-future-aa-compatibility-13"></a><strong>Future AA compatibility</strong></h3>
+<p>If future AA standards allow <code>VALIDATE</code> to read outside the account, the sender can widen the attached witness to cover those additional storage slots. The model extends naturally.</p>
+<p><strong>Mempool Admission</strong></p>
+<p>A receiving node verifies the witness or proof against the referenced <code>stateRoot</code>, using its cached <code>stateDiffs</code> to check for updates:</p>
+<ul>
+<li>If the diffs show the account has <strong>not</strong> changed, the transaction is accepted.</li>
+<li>If the diffs indicate the account <strong>has</strong> changed, the witness is stale and the node requests an updated proof.</li>
+</ul>
+<p>In practice, nodes could also maintain a sliding window of recent stateDiffs—e.g., the last ~N blocks—to allow for transaction validation without re-querying.</p>
+<h3><a name="p-54075-why-aa-vops-is-compelling-14" class="anchor" href="#p-54075-why-aa-vops-is-compelling-14"></a><strong>Why AA-VOPS is Compelling</strong></h3>
+<ul>
+<li>
+<p><strong>No global replication:</strong></p>
+<p>Each node stores only a few kilobytes, not 8 GiB (VOPS) or ~233 GiB (full state). Block producers and RPC providers still need the full state.</p>
+</li>
+<li>
+<p><strong>AA compatibility:</strong></p>
+<p>Works with <a href="https://eips.ethereum.org/EIPS/eip-7701" rel="noopener nofollow ugc">EIP-7701</a> today and can adapt if validation logic later reads external storage.</p>
+</li>
+<li>
+<p><strong>On-demand bootstrapping:</strong></p>
+<p>To track a new EOA, a node fetches a single <code>eth_getProof</code> once and keeps it fresh with diffs.</p>
+</li>
+</ul>
+<h3><a name="p-54075-trade-offs-15" class="anchor" href="#p-54075-trade-offs-15"></a><strong>Trade-offs</strong></h3>
+<ol>
+<li>
+<p><strong>Higher P2P bandwidth:</strong></p>
+<p>Every transaction carries its own witness or succinct proof, growing average transaction size (~736 bytes for Verkle, ~1024 bytes for binary trees).</p>
+</li>
+<li>
+<p><strong>User-side proving or fetching:</strong></p>
+<p>Nodes must keep proofs current by tracking diffs or querying a full node, which is prone to centralization vectors.</p>
+</li>
+<li>
+<p><strong>Dependency on full nodes for bootstrapping:</strong></p>
+<p>Unlike VOPS, AA-VOPS depends on full nodes or RPC providers to initially fetch account proofs. If missing diffs, nodes must reseed via <code>eth_getProof</code>, potentially introducing centralization risks if few providers dominate.</p>
+</li>
+</ol>
+<h2><a name="p-54075-conclusion-and-takeaways-16" class="anchor" href="#p-54075-conclusion-and-takeaways-16"></a>Conclusion and takeaways</h2>
+<p><strong>Validity‑Only Partial Statelessness</strong> (<strong>VOPS</strong>) reduces local storage requirements for nodes to roughly 8.4 GiB uncompressed—just the <code>(address, nonce, balance, codeFlag)</code> quadruplets—while preserving Ethereum’s censorship‑resistance properties. This approach leverages the asymmetry between account and storage-slot growth: as long as storage continues to dominate new state entries, the savings remain substantial; should account creation ever outpace storage growth, the relative advantage would diminish accordingly.</p>
+<p>There are two main advantages to VOPS in its original version: The first is a witness-free mempool: because every node stores each EOA’s <code>(address, nonce, balance, codeFlag)</code> quadruplet, the mempool never needs per-transaction Merkle or Verkle proofs. Block-level proofs (for example, SNARKs in a zkEVM) still guarantee full correctness while adding only a few hundred bytes to each block’s propagation. The second is truly peer-to-peer syncing: since every node maintains that minimal state for all EOAs, you can bootstrap or restore from any peer without needing additional proofs or individual account data, eliminating reliance on full or archive nodes.</p>
+<p>But supporting native AA pushes us toward a different set of trade-offs. AA-VOPS cuts local storage to just a few kilobytes by attaching a small, up-to-date proof to each transaction, but the downside is higher P2P payloads and occasional calls to a full node or dedicated service whenever you start tracking a new account, bootstrap a node, or come back online after being offline. As proving technology and SNARKs continues to improve, AA-VOPS could become the long-term, future-proof route to full statelessness. The original VOPS, by contrast, stands out as a pragmatic short-term solution, preserving seamless UX by avoiding transaction-level witnesses.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="10" />
+              <span class='post-likes'>10 Likes</span>
+            </div>
+
+                <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/a-local-node-favoring-delta-to-the-scaling-roadmap/22368/15">A local-node-favoring delta to the scaling roadmap</a>
+                        <meta itemprop='position' content='25'>
+                      </div>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/frame-transactions-and-the-three-gates-to-privacy/24666">Frame Transactions and the Three Gates to Privacy</a>
+                        <meta itemprop='position' content='26'>
+                      </div>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/frame-transactions-through-a-statelessness-lens/24538">Frame Transactions Through a Statelessness Lens</a>
+                        <meta itemprop='position' content='27'>
+                      </div>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/repurposing-focil-as-an-l2-forced-transaction-mechanism/25233">Repurposing FOCIL as an L2 forced transaction mechanism</a>
+                        <meta itemprop='position' content='28'>
+                      </div>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/a-local-node-favoring-delta-to-the-scaling-roadmap/22368/12">A local-node-favoring delta to the scaling roadmap</a>
+                        <meta itemprop='position' content='29'>
+                      </div>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/state-expiry-in-protocol-vs-out-of-protocol/23258">State Expiry: In-protocol vs. Out-of-protocol</a>
+                        <meta itemprop='position' content='30'>
+                      </div>
+                </div>
+          </div>
+          <div id='post_2' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/morph-dev'><span itemprop='name'>morph-dev</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-04-30T20:21:14Z' class='post-time'>
+                    April 30, 2025,  8:21pm
+                  </time>
+                  <meta itemprop='dateModified' content='2025-04-30T20:21:14Z'>
+              <span itemprop='position'>2</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>I want to propose alternative approach, in a context of Weak statelessness.</p>
+<p>What if transactions would come with a regular Merkle Proof on a Verkle/Binary trie (not aggregated one, i.e. IPA multiproof). Wouldn’t the <strong>nodes</strong> and <strong>Includers</strong> be able to maintain that proof across blocks solely based on block’s execution witness?</p>
+<p>Instead of keeping them separately, we can optimize storage and computation by keeping partial Verkle trie locally (partial only enough to cover all accounts associated with transaction in their mempool). Every transaction that enters mempool would have enough data to expand partial view.</p>
+<p>If we assume that <strong>nodes</strong> are going to store X recent blocks (relatively small number) and their execution witness, then transaction that are sent by <strong>Users</strong> could be lagging few blocks behind head of the chain, and <strong>nodes</strong> would still be able to updated their proofs. That mean that <strong>Users</strong> could obtain these proofs from sources that don’t have to be as <em>fast</em>, e.g. Portal Network.</p>
+<p>This could be explored in the context of Strong statelessness, but my intuition tells me that Verkle proofs would be too big for this to be practical. However, that might not be the problem for Unified Binary Trie.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_3' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/pipermerriam'><span itemprop='name'>pipermerriam</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-05-01T14:50:23Z' class='post-time'>
+                    May 1, 2025,  2:50pm
+                  </time>
+                  <meta itemprop='dateModified' content='2025-05-01T14:50:23Z'>
+              <span itemprop='position'>3</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>I believe that Portal is well positioned to provide solutions and options for a few things in this proposal.  Our state network plans are roughly as follows.</p>
+<p>Current stage implements a full archival model that serves the Ethereum state in the format of individual trie nodes.  This model will be available up to the latest finalized block.  This stage should be complete before the end of this year.</p>
+<p>Once the first stage is live we will begin on the second stage which stores the state at the head of the chain.  This model uses a “flat” access model allowing direct lookup of leaf data with an O(1) lookup cost.  The in progress spec for this model can be found <a href="https://github.com/ethereum/portal-network-specs/pull/389">here</a></p>
+<p>With both of these live, the Portal state network should be capable of doing the following things.</p>
+<ul>
+<li>Supporting initial sync of the compressed state for VOPS nodes.</li>
+<li>Bootstrapping witnesses for AA-VOPS nodes.</li>
+<li>Removing dependencies of full nodes for <code>eth_getProof</code>. Any place where <code>eth_getProof</code> is used, it should be viable to use Portal state network at the cost of higher latency.</li>
+</ul>
+<p>We are currently already building towards a model in our state network that is based on pushing out state diffs at each block.  There seems to be a lot of overlap in the proving primitives that are needed for this VOPS design and what Portal needs for state network.  We are also very pro-verkle as the unified trie design benefits Portal greatly.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="2" />
+              <span class='post-likes'>2 Likes</span>
+            </div>
+
+          </div>
+          <div id='post_4' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/soispoke'><span itemprop='name'>soispoke</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-05-02T09:09:59Z' class='post-time'>
+                    May 2, 2025,  9:09am
+                  </time>
+                  <meta itemprop='dateModified' content='2025-05-02T09:09:59Z'>
+              <span itemprop='position'>4</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="morph-dev" data-post="2" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/morph-dev/48/14323_2.png" class="avatar"> morph-dev:</div>
+<blockquote>
+<p>What if transactions would come with a regular Merkle Proof on a Verkle/Binary trie (not aggregated one, i.e. IPA multiproof). Wouldn’t the <strong>nodes</strong> and <strong>Includers</strong> be able to maintain that proof across blocks solely based on block’s execution witness?</p>
+</blockquote>
+</aside>
+<p>If transactions come with merkle or verkle/binary proofs, this isn’t weak statelessness anymore, but yes nodes and includers would be able to maintain the mempool in that case. What you describe is really close to the AA-VOPS design suggested in the post.</p>
+<aside class="quote no-group" data-username="pipermerriam" data-post="3" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/pipermerriam/48/4199_2.png" class="avatar"> pipermerriam:</div>
+<blockquote>
+<p>With both of these live, the Portal state network should be capable of doing the following things.</p>
+<ul>
+<li>Supporting initial sync of the compressed state for VOPS nodes.</li>
+<li>Bootstrapping witnesses for AA-VOPS nodes.</li>
+<li>Removing dependencies of full nodes for <code>eth_getProof</code>. Any place where <code>eth_getProof</code> is used, it should be viable to use Portal state network at the cost of higher latency.</li>
+</ul>
+</blockquote>
+</aside>
+<p>This is great! I think having an actual practical solution for VOPS nodes to access state via Portal, including fresh/head of the chain state is what’s needed in case we go towards AA-VOPS for sure.</p>
+<aside class="quote no-group" data-username="pipermerriam" data-post="3" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/pipermerriam/48/4199_2.png" class="avatar"> pipermerriam:</div>
+<blockquote>
+<p>We are currently already building towards a model in our state network that is based on pushing out state diffs at each block.</p>
+</blockquote>
+</aside>
+<p>I’m guessing <a href="https://github.com/ethereum/EIPs/pull/9580" rel="noopener nofollow ugc">Block-level Access Lists</a> would help/simplify things on this particular point?</p>
+<aside class="quote no-group" data-username="pipermerriam" data-post="3" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/pipermerriam/48/4199_2.png" class="avatar"> pipermerriam:</div>
+<blockquote>
+<p>Removing dependencies of full nodes for <code>eth_getProof</code>. Any place where <code>eth_getProof</code> is used, it should be viable to use Portal state network at the cost of higher latency.</p>
+</blockquote>
+</aside>
+<p>Agreed. Even if Portal has slightly higher latency than full-node RPCs, just having a decentralized fallback could make a real difference especially if you can default to Portal automatically if/when needed.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_5' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/yoavw'><span itemprop='name'>yoavw</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-05-11T15:43:55Z' class='post-time'>
+                    May 11, 2025,  3:43pm
+                  </time>
+                  <meta itemprop='dateModified' content='2025-05-11T15:43:55Z'>
+              <span itemprop='position'>5</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="soispoke" data-post="1" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/soispoke/48/12076_2.png" class="avatar"> soispoke:</div>
+<blockquote>
+<p><strong>Local Cache and Witness Maintenance</strong></p>
+<p>A node (or a wallet or dApp backend acting on its behalf) keeps:</p>
+<ul>
+<li>Its own account leaf: <code>nonce</code>, <code>balance</code>, <code>storageRoot</code>, and <code>codeHash</code>.</li>
+<li>Any extra storage slots required by the account’s AA logic.</li>
+<li>A Merkle or Verkle path witness authenticating these fields against a recent <code>stateRoot</code>.</li>
+</ul>
+<p>The witness remains valid until a later block modifies any of the covered fields.</p>
+</blockquote>
+</aside>
+<p>The validation data for an account may include <code>codeHash</code>, <code>storageRoot</code> and storage slots for more contracts, if they’re accessed during the account’s validation. For example, modular accounts (ERC-6900 and ERC-7579) may access a number of validation modules.</p>
+<p>In addition, if a paymaster contract pays for the gas, then the transaction’s validity also depends on the code and storage of that paymaster.</p>
+<p>Caching should be quite effective here.  My understanding is that a light node would typically serve a single user or a small number of users sending transactions.  The validation data of an account seldom changes (e.g. key rotation).  The node would seldom have to refresh its proof.</p>
+<p>The exception to this is paymasters, as they’re used by a large number of users and their balance keeps changing.  If the nodes’ users frequently use a certain paymaster, the node may end up getting new proofs for it frequently.  In the most common case this will be just the balance, but in some cases it’ll also involve storage changes (e.g. user uses TokenPaymaster to pay with USDC, so the USDC contract’s <code>storageRoot</code> becomes a dependency.  The user’s USDC balance slot may not change frequently but the proof will change every block because others transact with USDC.</p>
+<p>To reduce latency in that case, would it make sense for the node to maintain a list of frequently accessed contracts (e.g. TokenPaymaster+USDC) and keep refreshing their state from Portal network?</p>
+<aside class="quote no-group" data-username="soispoke" data-post="4" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/soispoke/48/12076_2.png" class="avatar"> soispoke:</div>
+<blockquote>
+<p>Agreed. Even if Portal has slightly higher latency than full-node RPCs, just having a decentralized fallback could make a real difference especially if you can default to Portal automatically if/when needed.</p>
+</blockquote>
+</aside>
+<p>I think it’s important to use Portal, at least as fallback to reduce dependency on full nodes.  Ideally the node should preemptively refresh the state of the accounts it frequently uses (frequently used user accounts and their dependencies, frequently used paymasters and their dependencies).</p>
+<p><a class="mention" href="/u/pipermerriam">@pipermerriam</a> how much latency does it add?  And since we know which contracts the light node uses most frequently, would it make sense to preemptively refresh them, or will it put too much burden on Portal?</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_6' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/sina'><span itemprop='name'>sina</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-05-13T01:25:54Z' class='post-time'>
+                    May 13, 2025,  1:25am
+                  </time>
+                  <meta itemprop='dateModified' content='2025-05-13T01:25:54Z'>
+              <span itemprop='position'>6</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Very interesting proposal! I’ve been struggling to square how scaling L1 execution can be compatible with FOCIL and similar anti-censorship gadgets that rely on a broad attestor set, and this is a very interesting angle for a solution. <img src="https://ethresear.ch/images/emoji/facebook_messenger/grin.png?v=12" title=":grin:" class="emoji" alt=":grin:" loading="lazy" width="20" height="20"></p>
+<p>One way I’m understanding this, feel free to correct me, is that we’re effectively decomposing the L1 state into two types:</p>
+<ol>
+<li>“account state”, which we expect “everyone” (nodes) to be able to effectively download/verify/index due to its necessary dissemination for effective CR gadgets</li>
+<li>“full state”, which we don’t expect as wide of access (~block producers only)</li>
+</ol>
+<p>I’m concerned there’s a lot of hidden complexity around maintaining two such state types- potentially different metering, bandwidth constraints, and limits will be required. Thinking adversarially, I could imagine a world where an insidious block producer bloats the total size of the “account state” or the size of the block-to-block diffs to purposely deteriorate the ability of nodes to keep up. To avoid this I believe you’d need to effectively meter “account state” separately, considering things like a total size limit, state rent, a diff size limit per block, or similar. While you get the benefit of “one global state” in some senses, the protocol will have to effectively manage two separate resources.</p>
+<p>I’m curious about the benefits we get for this complexity compared to the status quo of having an execution layer with a “full state” metered to be downloaded, executed, and indexed by all nodes instead of just builders (eg. philosophically ~what we have now) which acts as the backstop layer for CR, and then have the “rolled-up” flavors of state sitting on top as explicitly separate-but-connected domains (philosophically ~what enshrined L2s would be)?</p>
+<p>Most relevant to this post, keeping a small-node-friendly-fullstate-layer grants simpler protocol management of distinct state resources (similar to the current L1 vs L2 dynamic we see today) as well as more accessible block building (don’t need to be a prover). The main advantage I see to the VOPs design is that we can scope down the small-node-friendly-state to focus only on what’s needed to validate transactions rather than arbitrary state types as we see today, potentially resulting in more accurate metering if we can effectively design around attack and griefing vectors. I’m curious though to hear about other angles that I may not be considering.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_7' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/soispoke'><span itemprop='name'>soispoke</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-05-13T08:23:28Z' class='post-time'>
+                    May 13, 2025,  8:23am
+                  </time>
+                  <meta itemprop='dateModified' content='2025-05-13T08:23:28Z'>
+              <span itemprop='position'>7</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Thanks for your feedback and comments!</p>
+<aside class="quote no-group" data-username="yoavw" data-post="5" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/yoavw/48/6142_2.png" class="avatar"> yoavw:</div>
+<blockquote>
+<p>To reduce latency in that case, would it make sense for the node to maintain a list of frequently accessed contracts (e.g. TokenPaymaster+USDC) and keep refreshing their state from Portal network?</p>
+</blockquote>
+</aside>
+<p>The paymaster case is definitely one I didn’t have in mind. After our discussion and thinking more about your comments, I’m still quite concerned about nodes having to rely on external services to keep their proofs up-to-date. I agree Portal can be an option in theory, but we would need a lot more certainty about the viability of this option (e.g., the latency) to make sure we don’t end up having all nodes just fetching from centralized providers. We might also need to start thinking about alternatives to Portal anyways, for example we could ask all nodes that stake 2048 ETH to be stateful and provide state, or wallets and dApps to be responsible for providing state to their users.</p>
+<aside class="quote no-group" data-username="sina" data-post="6" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/sina/48/11475_2.png" class="avatar"> sina:</div>
+<blockquote>
+<p>Very interesting proposal! I’ve been struggling to square how scaling L1 execution can be compatible with FOCIL and similar anti-censorship gadgets that rely on a broad attestor set, and this is a very interesting angle for a solution. <img src="https://ethresear.ch/images/emoji/facebook_messenger/grin.png?v=12" title=":grin:" class="emoji" alt=":grin:" loading="lazy" width="20" height="20"></p>
+</blockquote>
+</aside>
+<p>Thanks!</p>
+<aside class="quote no-group" data-username="sina" data-post="6" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/sina/48/11475_2.png" class="avatar"> sina:</div>
+<blockquote>
+<p>Thinking adversarially, I could imagine a world where an insidious block producer bloats the total size of the “account state” or the size of the block-to-block diffs to purposely deteriorate the ability of nodes to keep up.</p>
+</blockquote>
+</aside>
+<p>I think this definitely need to be kept in mind, but I don’t think it’s necessarily a concern. Imagine a case in which a block producer bloats the block-to-block diff: If attesters are not able to download the diff they wouldn’t actually vote for the block (assuming we make it a fork choice enforced condition), which would ultimately hurt the block producer.</p>
+<aside class="quote no-group" data-username="sina" data-post="6" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/sina/48/11475_2.png" class="avatar"> sina:</div>
+<blockquote>
+<p>the protocol will have to effectively manage two separate resources.</p>
+</blockquote>
+</aside>
+<p>I think that’s right, but it’s the case with any statelessness proposal right? You have to have some stateful nodes (e.g., block producers), in order for some other light stateless nodes (e.g., attesters, includers) to be a possibility. VOPS is just one instantiation of this, proposing that light nodes should still hold the state that’s necessary for maintaining a healthy mempool.</p>
+<aside class="quote no-group" data-username="sina" data-post="6" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/sina/48/11475_2.png" class="avatar"> sina:</div>
+<blockquote>
+<p>I’m curious about the benefits we get for this complexity compared to the status quo of having an execution layer with a “full state” metered to be downloaded, executed, and indexed by all nodes instead of just builders</p>
+</blockquote>
+</aside>
+<p>Imposing all nodes to be stateful like today might just not be possible if we both (1) want to increase the gas limit and (2) ensure some nodes can participate in attesting and in CR without needing high hardward requirements.</p>
+<aside class="quote no-group" data-username="sina" data-post="6" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/sina/48/11475_2.png" class="avatar"> sina:</div>
+<blockquote>
+<p>The main advantage I see to the VOPs design is that we can scope down the small-node-friendly-state to focus only on what’s needed to validate transactions rather than arbitrary state types as we see today, potentially resulting in more accurate metering if we can effectively design around attack and griefing vectors.</p>
+</blockquote>
+</aside>
+<p>Yeah that’s the main advantage I see as well <img src="https://ethresear.ch/images/emoji/facebook_messenger/slight_smile.png?v=12" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"></p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_8' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/pipermerriam'><span itemprop='name'>pipermerriam</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-05-14T03:57:34Z' class='post-time'>
+                    May 14, 2025,  3:57am
+                  </time>
+                  <meta itemprop='dateModified' content='2025-05-14T03:57:34Z'>
+              <span itemprop='position'>8</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="yoavw" data-post="5" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/yoavw/48/6142_2.png" class="avatar"> yoavw:</div>
+<blockquote>
+<p><a class="mention" href="/u/pipermerriam">@pipermerriam</a> how much latency does it add? And since we know which contracts the light node uses most frequently, would it make sense to preemptively refresh them, or will it put too much burden on Portal?</p>
+</blockquote>
+</aside>
+<p>Latency for accessing a single account can be projected as</p>
+<ul>
+<li>A: time to navigate the network to find the nodes that store the account</li>
+<li>B: time to retrieve the account</li>
+</ul>
+<p>For A, clever clients should be able to do this in well under 500ms.  There’s lots of shortcuts and optimizations for DHT navigation so this number should be able to be reduced under 200ms if the client is willing tot do some work to cache a larger view of the network.</p>
+<p>For B, account data is small so another few hundred milliseconds.</p>
+<p>I think it’s probably reasonable to have average cases be less than 1s for random access lookups, and probably less than 500ms for things that are regularly accessed.</p>
+<p>As for things like pre-emptive refreshing of a frequently accessed account, I expect this should be fine.  There’s also probably a few different routes to doing this by either fetching the data regularly… or by keeping it up-to-date yourself with block level state diffs being gossiped around the network.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_9' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/sina'><span itemprop='name'>sina</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-05-14T19:11:54Z' class='post-time'>
+                    May 14, 2025,  7:11pm
+                  </time>
+                  <meta itemprop='dateModified' content='2025-05-14T19:11:54Z'>
+              <span itemprop='position'>9</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Appreciate the reply <a class="mention" href="/u/soispoke">@soispoke</a> <img src="https://ethresear.ch/images/emoji/facebook_messenger/grin.png?v=12" title=":grin:" class="emoji" alt=":grin:" loading="lazy" width="20" height="20"><img src="https://ethresear.ch/images/emoji/facebook_messenger/pray.png?v=12" title=":pray:" class="emoji" alt=":pray:" loading="lazy" width="20" height="20"></p>
+<aside class="quote no-group quote-modified" data-username="soispoke" data-post="7" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/soispoke/48/12076_2.png" class="avatar"> soispoke:</div>
+<blockquote>
+<aside class="quote no-group" data-username="sina" data-post="6" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/sina/48/11475_2.png" class="avatar"> sina:</div>
+<blockquote>
+<p>Thinking adversarially, I could imagine a world where an insidious block producer bloats the total size of the “account state” or the size of the block-to-block diffs to purposely deteriorate the ability of nodes to keep up.</p>
+</blockquote>
+</aside>
+<p>I think this definitely need to be kept in mind, but I don’t think it’s necessarily a concern. Imagine a case in which a block producer bloats the block-to-block diff: If attesters are not able to download the diff they wouldn’t actually vote for the block (assuming we make it a fork choice enforced condition), which would ultimately hurt the block producer.</p>
+</blockquote>
+</aside>
+<p>It sounds like we’re in agreement here that the protocol will have to consider such edge cases that effectively make account-state and full-state different resources with unique limits and metering. I’m a bit more worried about the “hidden complexity” that comes with this though, as I put it in my original reply. I’ll try to illustrate some more angles here.</p>
+<aside class="quote no-group quote-modified" data-username="soispoke" data-post="7" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/soispoke/48/12076_2.png" class="avatar"> soispoke:</div>
+<blockquote>
+<aside class="quote no-group" data-username="sina" data-post="6" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/sina/48/11475_2.png" class="avatar"> sina:</div>
+<blockquote>
+<p>the protocol will have to effectively manage two separate resources.</p>
+</blockquote>
+</aside>
+<p>I think that’s right, but it’s the case with any statelessness proposal right?</p>
+</blockquote>
+</aside>
+<p>At risk of going a bit off-topic to poke at statelessness more generally, do you have any concerns around the protocol having resources that functionally behave differently and are metered/limited differently but have a unified interface leading to patterns forming on top that poorly abstract over the unique features of the resources anyway?</p>
+<p>For example, would an application or usecase decide it wants to use account balances/nonces as a type of pseudo-storage because of the “stronger properties” it affords (more widely accessible/indexed)? I can imagine a similar dynamic that goes the other way too-- certain state that should otherwise be considered account state ends up in some form in the non-account-state to arbitrage any gain that falls out of the different metering, degrading the original intent behind the design.</p>
+<p>To me the ideal way to design around this is to decide which resources make sense for the protocol to expose and then simply expose them as purely as possible with expressive interfaces, letting the ecosystem adjust to the unique metering of different resources in a more “natural” way. Zooming back in to VOPs, this means being able to cleanly express whether the “state” I’m targetting is all-nodes or super-nodes-only state, and knowing how I’m charged/metered for it without thinking of more complex extraprotocol patterns meant to hack/arbitrage the design.</p>
+<p>I’m not saying that it’d be impossible to design a robust system that achieves the properties we want, but my worry is that by relying on misdirection-via-unified-interface to try to make both resources feel like one, we’ll just end up with hacky meta-interfaces to the unique resources that mirror what we should’ve done in the first place.</p>
+<aside class="quote no-group quote-modified" data-username="soispoke" data-post="7" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/soispoke/48/12076_2.png" class="avatar"> soispoke:</div>
+<blockquote>
+<aside class="quote no-group" data-username="sina" data-post="6" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/sina/48/11475_2.png" class="avatar"> sina:</div>
+<blockquote>
+<p>I’m curious about the benefits we get for this complexity compared to the status quo of having an execution layer with a “full state” metered to be downloaded, executed, and indexed by all nodes instead of just builders</p>
+</blockquote>
+</aside>
+<p>Imposing all nodes to be stateful like today might just not be possible if we both (1) want to increase the gas limit and (2) ensure some nodes can participate in attesting and in CR without needing high hardward requirements.</p>
+</blockquote>
+</aside>
+<p>The reason I highlight the status quo is because I think when you compare it through a VOPs-ish lens it actually achieves pretty desirable properties while maintaining pure and expressive interfaces to the underlying resources. Depending on how specific scaling the L1 is to mean “more synchronously accessible L1 state”, the status quo via L2s effectively gives us more state that is opt-in by large builders and accessible asynchronously.</p>
+<p>I’m sure there are more angles and smarter framings than I’m identifying, which I’d love to better understand; here’s a snapshot of my current perspective:</p>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th>Facet</th>
+<th>VOPs</th>
+<th>Status Quo L1 + L2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Metered-to-be-widely-downloaded state</td>
+<td>Account state, only what’s needed to maintain a healthy mempool</td>
+<td>L1 state, everything needed to progress L1</td>
+</tr>
+<tr>
+<td>Larger, cheaper, but sparsely downloaded state</td>
+<td>The rest of the L1 state, needed to progress L1</td>
+<td>L2 state-- customizable on top of the pure resources the protocol offers, opt-in, not required for progressing L1</td>
+</tr>
+<tr>
+<td>Purity of interfaces to resources</td>
+<td>TBD but probably low based on our above agreement on unique metering required for account state despite the unified interface</td>
+<td>Highly pure, though things like limits, metering, rent, etc. will evolve and could always be better</td>
+</tr>
+<tr>
+<td>Concentrates block building</td>
+<td>Yes for the L1 (requires proving and state that is explicitly metered to be large)</td>
+<td>No for the L1, yes for L2s (which are opt-in)</td>
+</tr>
+<tr>
+<td>Interop between “small” and “large” state</td>
+<td>Synchronous, it’s all just L1 state</td>
+<td>Async is easy (cross-L2 calls), sync is TBD; relies on playing out rollup-verify opcodes and similar frontier research</td>
+</tr>
+<tr>
+<td>Compatibility with the broader statelessness research direction</td>
+<td>Medium-high (open questions but designed with statelessness from the ground up)</td>
+<td>Low-medium (not designed with statelessness in mind but more battle-hardened patterns)</td>
+</tr>
+</tbody>
+</table>
+</div>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_10' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/yoavw'><span itemprop='name'>yoavw</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-05-17T02:01:45Z' class='post-time'>
+                    May 17, 2025,  2:01am
+                  </time>
+                  <meta itemprop='dateModified' content='2025-05-17T02:01:45Z'>
+              <span itemprop='position'>10</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="pipermerriam" data-post="8" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/pipermerriam/48/4199_2.png" class="avatar"> pipermerriam:</div>
+<blockquote>
+<p>For A, clever clients should be able to do this in well under 500ms.</p>
+</blockquote>
+</aside>
+<p>The problem is that account validation may depend on multiple contracts.  E.g. modular accounts (ERC-6900, ERC-7579) typically access a few.  When refreshing the cache, the client already knows the dependencies and can fetch them in parallel unless a dependency has changed.  But on first access they’ll have to be fetched sequentially, leading to high latency.</p>
+<aside class="quote no-group" data-username="pipermerriam" data-post="8" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/pipermerriam/48/4199_2.png" class="avatar"> pipermerriam:</div>
+<blockquote>
+<p>For B, account data is small so another few hundred milliseconds.</p>
+</blockquote>
+</aside>
+<p>I hope portal can fetch the required subset of the account’s state rather than the entire account data.  It’s not always small.  For example if the wallet uses the USDC TokenPaymaster to pay for the gas, then the node needs the user’s USDC balance (small data) but the entire USDC contract’s state is quite big.  Does portal’s state network operate at the account level, or the slot level?</p>
+<aside class="quote no-group" data-username="pipermerriam" data-post="8" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/pipermerriam/48/4199_2.png" class="avatar"> pipermerriam:</div>
+<blockquote>
+<p>As for things like pre-emptive refreshing of a frequently accessed account, I expect this should be fine.</p>
+</blockquote>
+</aside>
+<p>Considering the above (e.g. modular accounts accessing a number of contracts during validation), pre-emptive refreshing may be required.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_11' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/pipermerriam'><span itemprop='name'>pipermerriam</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-05-27T17:59:57Z' class='post-time'>
+                    May 27, 2025,  5:59pm
+                  </time>
+                  <meta itemprop='dateModified' content='2025-05-27T17:59:57Z'>
+              <span itemprop='position'>11</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="yoavw" data-post="10" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/yoavw/48/6142_2.png" class="avatar"> yoavw:</div>
+<blockquote>
+<p>Does portal’s state network operate at the account level, or the slot level?</p>
+</blockquote>
+</aside>
+<p>Slot level.  Everything in portal is designed for granular low level access patterns.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_12' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/MicahZoltu'><span itemprop='name'>MicahZoltu</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-06-22T12:37:51Z' class='post-time'>
+                    June 22, 2025, 12:37pm
+                  </time>
+                  <meta itemprop='dateModified' content='2025-06-22T12:37:51Z'>
+              <span itemprop='position'>12</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="soispoke" data-post="1" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/soispoke/48/12076_2.png" class="avatar"> soispoke:</div>
+<blockquote>
+<p><em><strong>Users</strong></em> send transactions that, if valid (i.e., passing nonce and balance checks), are broadcast across <em><strong>nodes</strong></em> and remain pending in the public mempool.<br>
+<em>Note: In this post, we use the term “node” to refer mempool maintainers via their execution layer client.</em></p>
+</blockquote>
+</aside>
+<p>I think this is an incorrect definition of a user, or we need to define a new type of user that is far more common than the one defined here.  What is described here is a Bitcoin user at best, though even on Bitcoin people need ways to check their balances.</p>
+<p>In Ethereum, people are interacting with contracts and those contracts have state, and reading that state is very frequently a soft requirement for interacting with the protocol and often a hard requirement.  In order to meaningfully generate a transaction, a user needs the ability to read current state/balances from one or more contracts in order to correctly construct a transaction which they then publish.</p>
+<p>Unless I’m missing something (I’ll admit, I didn’t read whole post in great detail), this post seems to start the thinking/discussion from after the point where the user has already constructed a valid transaction and it describes how that whole flow would work end-to-end.  Unfortunately, none of this is useful if users cannot actually construct valid transactions in the first place!</p>
+<p>The core issue (IMO) when it comes to state is that end-users (as a group) need access to a significant portion of state in order to interact with Ethereum in meaningful ways.  This is an assertion that I don’t believe we can remove.  There may be solutions (and I think there are) that allow us to reduce the set of state that a user needs to store for <em>their</em> interactions, and reduce the size on disk of that state.  There are also more theoretical solutions that would allow users to interact with state held by third parties without those third parties being aware of what state is being accessed (FHE with noise or erasure coding or something).</p>
+<p>Any discussion that involves talking about how to mitigate state growth must address this core issue in order for the solution to be useful for mitigating the real harms caused by state growth.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_13' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/soispoke'><span itemprop='name'>soispoke</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-06-23T16:49:23Z' class='post-time'>
+                    June 23, 2025,  4:49pm
+                  </time>
+                  <meta itemprop='dateModified' content='2025-06-23T16:49:23Z'>
+              <span itemprop='position'>13</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Thanks for your feedback!</p>
+<p>I think you’re referring to a problem that’s different than what VOPS aims to solve.</p>
+<p>VOPS gives a solution to avoid having witnesses attached to all transactions in a stateless world while retaining the CR properties we get from maintaining a healthy public mempool.</p>
+<p>You’re asking what state end users should store in order to craft valid transactions in the first place especially for transactions more complex than simple transfers (for which tracking the nonce and balance fields of your own accounts might suffice). One answer could be that users should store the state related to the contracts they care about /are interacting with (e.g., a given Uniswap pool).</p>
+<p>But then the more difficult question becomes: where and how should they obtain that state in the first place? I agree we don’t have good answers for that yet. I think ideally it could be a combination of users storing the state themselves, but also maybe dApps, wallets, “supernodes” (e.g., that are staking 2048 ETH), a decentralized Portal like network…</p>
+<p>Let’s say we asked users to be the ones having to store the state they care about, would you see a big issue with that?</p>
+<aside class="quote no-group" data-username="MicahZoltu" data-post="12" data-topic="22236">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/micahzoltu/48/18591_2.png" class="avatar"> MicahZoltu:</div>
+<blockquote>
+<p>There are also more theoretical solutions that would allow users to interact with state held by third parties without those third parties being aware of what state is being accessed (FHE with noise or erasure coding or something).</p>
+</blockquote>
+</aside>
+<p>I’m not really aware of these solutions, they definitely seem interesting but a bit far from being efficient/practical. Still if you have some references would love to look into it more.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_14' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/MicahZoltu'><span itemprop='name'>MicahZoltu</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-06-23T17:06:33Z' class='post-time'>
+                    June 23, 2025,  5:06pm
+                  </time>
+                  <meta itemprop='dateModified' content='2025-06-23T17:06:33Z'>
+              <span itemprop='position'>14</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Ah, I see.  What you are proposing here is a mechanism that allows a person to prove that their transaction is valid (and thus eligible for mempool inclusion) without the recipient needing to hold all of the state necessary to execute that transaction?</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_15' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/soispoke'><span itemprop='name'>soispoke</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2025-06-24T05:46:34Z' class='post-time'>
+                    June 24, 2025,  5:46am
+                  </time>
+                  <meta itemprop='dateModified' content='2025-06-24T05:46:34Z'>
+              <span itemprop='position'>15</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>No, here is a mechanism that specifies what state nodes maintaining a mempool, FOCIL includers, and attesters should store to guarantee CR is preserved without having to attach transaction-level witnesses. Like you said this isn’t really about end users, more about what nodes with protocol duties should do.</p>
+<p>Instead of asking users to generate witnesses every time to prove that their transaction is valid (and should be kept in the mempool), you ask nodes to store the minimal state necessary to determine whether a txn is valid or not.</p>
+<ul>
+<li>If users only want to do transfers, all they need to store is the <code>balance</code>, <code>nonce</code>, <code>codeflag</code> fields associated with their accounts.</li>
+<li>If they want to interact with contracts, then they need to store the state associated with these contracts to construct these transactions.</li>
+<li>If they want to do send native AA txns (e.g., 7701) and benefit from the CR FOCIL provides, they will probably need to only store state and generate witnesses for any state they access during the validation phase (they witnesses still wouldn’t have to include VOPS fields so they would be more lighweight)</li>
+</ul>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+    </div>
+
+
+    
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/tos' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/privacy' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>

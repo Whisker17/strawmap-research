@@ -1,0 +1,2560 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    
+      <title>EIP-8141: Frame Transaction</title>
+      <meta property="og:title" content="EIP-8141: Frame Transaction" />
+    
+    <meta name="description" content="Add frame abstraction for transaction validation, execution, and gas payment" />
+    <meta property="og:description" content="Add frame abstraction for transaction validation, execution, and gas payment" />
+    <meta name="twitter:description" content="Add frame abstraction for transaction validation, execution, and gas payment" />
+  
+  <meta name="generator" content="Jekyll" />
+  <meta property="og:locale" content="en_US" />
+  <link rel="canonical" href="https://eips.ethereum.org/EIPS/eip-8141" />
+  <meta property="og:url" content="https://eips.ethereum.org/EIPS/eip-8141" />
+  <meta property="og:site_name" content="Ethereum Improvement Proposals" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:site" content="@" />
+  <script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": "https://eips.ethereum.org",
+      "name": "Ethereum Improvement Proposals",
+      "description": "Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.",
+      "@context": "https://schema.org"
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://eips.ethereum.org/feed.xml" title="Ethereum Improvement Proposals" /><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/override.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    });
+  </script>
+  <script type="text/javascript">
+    window.MathJax = {
+      loader: {
+        load: ['input/tex-base', 'output/chtml']
+      },
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true,
+        processEnvironments: false,
+        processRefs: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js" integrity="sha384-/1zmJ1mBdfKIOnwPxpdG6yaRrxP6qu3eVYm0cz2nOx+AcL4d3AqEFrwcqGZVVroG" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/citation-js/0.6.7/citation.min.js" integrity="sha512-N+LDFMa9owHXGS+CyMrBvuxq2QuGl3fiB/7cys3aUEL7K6P1soHGqsS0sjHXZpwNd9Kz0m3R4IPy1HYRi6ROEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+    addEventListener('DOMContentLoaded', async () => {
+      const Cite = window.require('citation-js');
+      const citationElements = document.querySelectorAll('.language-csl-json');
+      for (let citationElement of citationElements) {
+        try {
+          const citation = await Cite.async(citationElement);
+          const template = document.createElement('template');
+          template.innerHTML = citation.format('bibliography', {
+            format: 'html',
+            template: 'apa',
+            lang: 'en-US'
+          });
+          if (citationElement.parentElement && citationElement.parentElement.matches('pre')) {
+            citationElement.parentElement.replaceWith(template.content);
+          } else {
+            citationElement.replaceWith(template.content);
+          }
+        } catch (e) {
+          console.error("unable to render citation", e);
+        }
+      }
+    });
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Ethereum Improvement Proposals</a><nav class="site-nav d-flex">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger row p-2"><a class="page-link col" href="/all">All</a><a class="page-link col" href="/core">Core</a><a class="page-link col" href="/networking">Networking</a><a class="page-link col" href="/interface">Interface</a><a class="page-link col" href="/erc">ERC</a><a class="page-link col" href="/meta">Meta</a><a class="page-link col" href="/informational">Informational</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="bi-megaphone-fill" fill="currentColor" viewBox="0 0 16 16">
+    <title>Alert</title>
+    <path d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0v-11zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25.222 25.222 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56V3.224zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009a68.14 68.14 0 0 1 .496.008 64 64 0 0 1 1.51.048zm1.39 1.081c.285.021.569.047.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a65.81 65.81 0 0 1 1.692.064c.327.017.65.037.966.06z"/>
+  </symbol>
+  <symbol id="bi-code" fill="currentColor" viewBox="0 0 16 16">
+    <title>Source</title>
+    <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/>
+  </symbol>
+  <svg id="bi-chat" fill="currentColor" viewBox="0 0 16 16">
+    <title>Discuss</title>
+    <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+  </svg>
+</svg>
+
+<div class="home">
+  
+  
+  
+ 
+  <span class="h5">
+    
+    
+    
+      <span class="badge text-light bg-warning" data-bs-toggle="tooltip" data-bs-title="This EIP is not yet recommended for general use or implementation, as it is subject to normative (breaking) changes.">⚠️ Draft</span>
+    
+    
+    
+       
+    
+      <a class="badge text-light bg-primary" data-bs-toggle="tooltip" data-bs-title="Improvements requiring a consensus fork, as well as changes that are not necessarily consensus critical but may be relevant to “core dev” discussions." href="../core">Standards Track: Core</a>
+    
+  </span>
+  <h1 class="page-heading">
+    EIP-8141: Frame Transaction
+    <a href="https://ethereum-magicians.org/t/frame-transaction/27617" class="no-underline">
+      <svg role="img" aria-label="Discuss" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-chat"/>
+      </svg>
+    </a>
+    <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-8141.md" class="no-underline">
+      <svg role="img" aria-label="Source" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-code"/>
+      </svg>
+    </a>
+  </h1>
+  <h3>Add frame abstraction for transaction validation, execution, and gas payment</h3>
+  <table class="table table-borderless preamble">
+    <tbody>
+      <tr>
+        <th scope="row">Authors</th>
+        <td>Vitalik Buterin&nbsp;(<a href="https://github.com/vbuterin">@vbuterin</a>), lightclient&nbsp;(<a href="https://github.com/lightclient">@lightclient</a>), Felix Lange&nbsp;(<a href="https://github.com/fjl">@fjl</a>), Yoav Weiss&nbsp;(<a href="https://github.com/yoavw">@yoavw</a>), Alex Forshtat&nbsp;(<a href="https://github.com/forshtat">@forshtat</a>), Dror Tirosh&nbsp;(<a href="https://github.com/drortirosh">@drortirosh</a>), Shahaf Nacson&nbsp;(<a href="https://github.com/shahafn">@shahafn</a>), Derek Chiang&nbsp;(<a href="https://github.com/derekchiang">@derekchiang</a>), Toni Wahrstätter&nbsp;(<a href="https://github.com/nerolation">@nerolation</a>)</td>
+      </tr>
+      
+        <tr>
+          <th scope="row">Created</th>
+          <td>2026-01-29</td>
+        </tr>
+      
+      
+             
+      
+        <tr>
+          <th scope="row">Discussion Link</th>
+          <td><a href="https://ethereum-magicians.org/t/frame-transaction/27617" target="_blank" rel="noopener">https://ethereum-magicians.org/t/frame-transaction/27617</a></td>
+        </tr>
+      
+      
+        <tr>
+          <th scope="row">Requires</th>
+          <td>
+
+  <a href="eip-1559">EIP-1559</a>, 
+
+  <a href="eip-2718">EIP-2718</a>, 
+
+  <a href="eip-3607">EIP-3607</a>, 
+
+  <a href="eip-4844">EIP-4844</a>, 
+
+  <a href="eip-7623">EIP-7623</a>, 
+
+  <a href="eip-7702">EIP-7702</a>
+
+</td>
+        </tr>
+      
+    </tbody>
+  </table>
+  <br/>
+
+  
+
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#motivation">Motivation</a></li>
+  <li><a href="#specification">Specification</a>
+    <ul>
+      <li><a href="#constants">Constants</a></li>
+      <li><a href="#frame-transaction">Frame Transaction</a></li>
+      <li><a href="#approve-instruction-0xaa">APPROVE Instruction (0xaa)</a></li>
+      <li><a href="#introspection">Introspection</a></li>
+      <li><a href="#mempool">Mempool</a></li>
+    </ul>
+  </li>
+  <li><a href="#rationale">Rationale</a>
+    <ul>
+      <li><a href="#canonical-signature-hash">Canonical signature hash</a></li>
+      <li><a href="#approve-calling-convention">APPROVE calling convention</a></li>
+      <li><a href="#payer-in-receipt">Payer in receipt</a></li>
+      <li><a href="#no-authorization-list">No authorization list</a></li>
+      <li><a href="#no-access-list">No access list</a></li>
+      <li><a href="#atomic-batching">Atomic batching</a></li>
+      <li><a href="#per-frame-cost">Per-frame cost</a></li>
+      <li><a href="#per-frame-value">Per-frame value</a></li>
+      <li><a href="#public-key-aliases">Public Key Aliases</a></li>
+      <li><a href="#externally-owned-account-eoa-support">Externally Owned Account (EOA) support</a></li>
+      <li><a href="#non-canonical-paymasters-in-the-mempool">Non-canonical paymasters in the mempool</a></li>
+      <li><a href="#examples">Examples</a></li>
+      <li><a href="#data-efficiency">Data Efficiency</a></li>
+    </ul>
+  </li>
+  <li><a href="#backwards-compatibility">Backwards Compatibility</a></li>
+  <li><a href="#security-considerations">Security Considerations</a>
+    <ul>
+      <li><a href="#transaction-propagation">Transaction Propagation</a></li>
+    </ul>
+  </li>
+  <li><a href="#copyright">Copyright</a></li>
+</ul>
+
+  </div>
+
+  <h2 id="abstract">
+      
+      
+        <a href="#abstract" class="anchor-link"></a> Abstract
+      
+      
+    </h2>
+
+<p>Adds a new transaction whose validity and gas payment can be defined abstractly. This is achieved by decomposing the transaction into a sequence of <em>frames</em> which are contract calls that validate the transaction, approve gas payment, and execute standard user operations.</p>
+  
+    <h2 id="motivation">
+      
+      
+        <a href="#motivation" class="anchor-link"></a> Motivation
+      
+      
+    </h2>
+
+<p>The frame transaction type offers UX and security benefits across many areas:</p>
+
+<ul>
+  <li>it provides a native off-ramp from the elliptic curve based cryptographic system used to authenticate transactions today, to post-quantum (PQ) secure systems.</li>
+  <li>accounts are unlinked from their ECDSA keys, allowing native key rotation</li>
+  <li>smart accounts become simpler and therefore safer by natively providing batch call processing</li>
+  <li>alternative fee payment schemes are supported without centralized, third party relayers</li>
+  <li>the default account gives the protocol an even stronger guarantee on the lowest common denominator of account functionality</li>
+</ul>
+
+<p>Ultimately, frame transactions realize the original vision of account abstraction: an account simply becomes an address with code. It leverages the EVM to support arbitrary <em>user-defined</em> definitions of validation and gas payment.</p>
+  
+    <h2 id="specification">
+      
+      
+        <a href="#specification" class="anchor-link"></a> Specification
+      
+      
+    </h2>
+  
+    <h3 id="constants">
+      
+      
+        <a href="#constants" class="anchor-link"></a> Constants
+      
+      
+    </h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">FRAME_TX_TYPE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">0x06</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">FRAME_TX_INTRINSIC_COST</code></td>
+      <td><code class="language-plaintext highlighter-rouge">15000</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">FRAME_TX_PER_FRAME_COST</code></td>
+      <td><code class="language-plaintext highlighter-rouge">475</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ENTRY_POINT</code></td>
+      <td><code class="language-plaintext highlighter-rouge">address(0xaa)</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EXPIRY_VERIFIER</code></td>
+      <td><code class="language-plaintext highlighter-rouge">address(0x8141)</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EXPIRY_DATA_LENGTH</code></td>
+      <td><code class="language-plaintext highlighter-rouge">8</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MAX_FRAMES</code></td>
+      <td><code class="language-plaintext highlighter-rouge">64</code></td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h3 id="frame-transaction">
+      
+      
+        <a href="#frame-transaction" class="anchor-link"></a> Frame Transaction
+      
+      
+    </h3>
+
+<p>A new <a href="/EIPS/eip-2718">EIP-2718</a> transaction with type <code class="language-plaintext highlighter-rouge">FRAME_TX_TYPE</code> is introduced. Transactions of this type are referred to as <strong>frame transactions</strong>.</p>
+  
+    <h4 id="payload-encoding">
+      
+      
+        <a href="#payload-encoding" class="anchor-link"></a> Payload Encoding
+      
+      
+    </h4>
+
+<p>The payload is defined as the RLP serialization of the following:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[chain_id, nonce, sender, frames, signatures, max_priority_fee_per_gas, max_fee_per_gas, max_fee_per_blob_gas, blob_versioned_hashes]
+
+frames = [[mode, flags, target, gas_limit, value, data], ...]
+signatures = [[scheme, signer, msg, signature], ...]
+</code></pre></div></div>
+  
+    <h4 id="field-definitions">
+      
+      
+        <a href="#field-definitions" class="anchor-link"></a> Field Definitions
+      
+      
+    </h4>
+
+<p>Below are high-level definitions of each field in the transaction definition. Detailed behavior is defined in subsequent sections.</p>
+  
+    <h5 id="outer-transaction-payload">
+      
+      
+        <a href="#outer-transaction-payload" class="anchor-link"></a> Outer transaction payload
+      
+      
+    </h5>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">chain_id</code> – the chain ID in which the transaction is valid.</li>
+  <li><code class="language-plaintext highlighter-rouge">nonce</code> – nonce of the sender to prevent replays.</li>
+  <li><code class="language-plaintext highlighter-rouge">sender</code> – the address of the intended sender of the transaction.</li>
+  <li><code class="language-plaintext highlighter-rouge">frames</code> – list of frames to execute.</li>
+  <li><code class="language-plaintext highlighter-rouge">signatures</code> – list of validated signatures available to the transaction.</li>
+  <li><code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code> – the EIP-1559 priority fee per gas the transaction will pay.</li>
+  <li><code class="language-plaintext highlighter-rouge">max_fee_per_gas</code> – the maximum EIP-1559 fee the transaction is willing to pay, per gas.</li>
+  <li><code class="language-plaintext highlighter-rouge">max_fee_per_blob_gas</code> – the maximum EIP-4844 fee per blob gas the transaction is willing to pay. Must be <code class="language-plaintext highlighter-rouge">0</code> if <code class="language-plaintext highlighter-rouge">blob_versioned_hashes</code> is empty.</li>
+  <li><code class="language-plaintext highlighter-rouge">blob_versioned_hashes</code> – list of EIP-4844 blob versioned hashes.</li>
+</ul>
+  
+    <h5 id="frame-object">
+      
+      
+        <a href="#frame-object" class="anchor-link"></a> Frame object
+      
+      
+    </h5>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">mode</code> – the mode specifies the specific execution semantics the frame will execute with.</li>
+  <li><code class="language-plaintext highlighter-rouge">flags</code> – specifies optional frame / mode features.</li>
+  <li><code class="language-plaintext highlighter-rouge">target</code> – the destination or <code class="language-plaintext highlighter-rouge">to</code> address for the frame.</li>
+  <li><code class="language-plaintext highlighter-rouge">gas_limit</code> – the maximum gas allowed to be execute in pursuit of the frame.</li>
+  <li><code class="language-plaintext highlighter-rouge">value</code> – the amount in wei that should transferred from the <code class="language-plaintext highlighter-rouge">sender</code> as part of the frame execution.</li>
+  <li><code class="language-plaintext highlighter-rouge">data</code> – the calldata provided to the top level call frame.</li>
+</ul>
+  
+    <h5 id="signature-object">
+      
+      
+        <a href="#signature-object" class="anchor-link"></a> Signature object
+      
+      
+    </h5>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">scheme</code> – the verification scheme used to interpret the raw signature bytes.</li>
+  <li><code class="language-plaintext highlighter-rouge">signer</code> – scheme-dependent signer metadata; for <code class="language-plaintext highlighter-rouge">SECP256K1</code> and <code class="language-plaintext highlighter-rouge">P256</code>, this is a 20-byte address.</li>
+  <li><code class="language-plaintext highlighter-rouge">msg</code> – either empty, indicating the canonical transaction signature hash, or an explicit 32-byte digest.</li>
+  <li><code class="language-plaintext highlighter-rouge">signature</code> – raw signature bytes interpreted according to <code class="language-plaintext highlighter-rouge">scheme</code>.</li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">mode</code> of each frame sets the context of execution. It allows the protocol to identify
+the purpose of the frame within the execution loop.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><code class="language-plaintext highlighter-rouge">mode</code></th>
+      <th>Name</th>
+      <th>Summary</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td><code class="language-plaintext highlighter-rouge">DEFAULT</code> mode</td>
+      <td>Execute frame as <code class="language-plaintext highlighter-rouge">ENTRY_POINT</code></td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><code class="language-plaintext highlighter-rouge">VERIFY</code> mode</td>
+      <td>Frame identifies as transaction validation</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><code class="language-plaintext highlighter-rouge">SENDER</code> mode</td>
+      <td>Execute frame as <code class="language-plaintext highlighter-rouge">sender</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The <code class="language-plaintext highlighter-rouge">flags</code> field configures additional execution constraints. Bit positions are zero-based, with the least significant bit numbered <code class="language-plaintext highlighter-rouge">0</code>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Flag bits</th>
+      <th>Meaning</th>
+      <th>Valid with</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0-1</td>
+      <td>Approval scope</td>
+      <td>Any mode</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Atomic batch</td>
+      <td>Any mode</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The <code class="language-plaintext highlighter-rouge">Valid with</code> column indicates the mode under which the flag is valid. If a flag is not valid under the current mode, the transaction is invalid.</p>
+  
+    <h4 id="constraints">
+      
+      
+        <a href="#constraints" class="anchor-link"></a> Constraints
+      
+      
+    </h4>
+
+<p>Some validity constraints can be determined statically. They are outlined below:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">assert</span> <span class="n">tx</span><span class="p">.</span><span class="n">chain_id</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">256</span>
+<span class="k">assert</span> <span class="n">tx</span><span class="p">.</span><span class="n">nonce</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">64</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">frames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">frames</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">MAX_FRAMES</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">sender</span><span class="p">)</span> <span class="o">==</span> <span class="mi">20</span>
+
+<span class="k">for</span> <span class="n">sig</span> <span class="ow">in</span> <span class="n">tx</span><span class="p">.</span><span class="n">signatures</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">sig</span><span class="p">.</span><span class="n">scheme</span> <span class="ow">in</span> <span class="p">[</span><span class="n">SECP256K1</span><span class="p">,</span> <span class="n">P256</span><span class="p">]:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">.</span><span class="n">signer</span><span class="p">)</span> <span class="o">==</span> <span class="mi">20</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">invalid_transaction</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">.</span><span class="n">msg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">sig</span><span class="p">.</span><span class="n">msg</span> <span class="o">==</span> <span class="n">Bytes</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">.</span><span class="n">msg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">32</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">sig</span><span class="p">.</span><span class="n">msg</span> <span class="o">!=</span> <span class="sa">b</span><span class="s">"</span><span class="se">\x00</span><span class="s">"</span> <span class="o">*</span> <span class="mi">32</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">invalid_transaction</span><span class="p">()</span>
+
+<span class="n">total_frame_gas</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">tx</span><span class="p">.</span><span class="n">frames</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">frame</span><span class="p">.</span><span class="n">mode</span> <span class="o">&lt;</span> <span class="mi">3</span>
+    <span class="k">assert</span> <span class="n">frame</span><span class="p">.</span><span class="n">flags</span> <span class="o">&lt;</span> <span class="mi">8</span>
+    <span class="k">assert</span> <span class="n">frame</span><span class="p">.</span><span class="n">target</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame</span><span class="p">.</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="mi">20</span>
+    <span class="k">assert</span> <span class="n">frame</span><span class="p">.</span><span class="n">gas_limit</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">64</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">frame</span><span class="p">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">256</span>
+    <span class="k">assert</span> <span class="n">frame</span><span class="p">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">SENDER</span> <span class="ow">or</span> <span class="n">frame</span><span class="p">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">total_frame_gas</span> <span class="o">+=</span> <span class="n">frame</span><span class="p">.</span><span class="n">gas_limit</span>
+    <span class="k">assert</span> <span class="n">total_frame_gas</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">64</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="c1"># Atomic batch flag (bit 2 of flags) requires a subsequent frame to batch with.
+</span>    <span class="k">if</span> <span class="n">frame</span><span class="p">.</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="n">ATOMIC_BATCH_FLAG</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">frames</span><span class="p">)</span>                  <span class="c1"># must not be last frame
+</span></code></pre></div></div>
+  
+    <h4 id="transaction-signatures">
+      
+      
+        <a href="#transaction-signatures" class="anchor-link"></a> Transaction Signatures
+      
+      
+    </h4>
+
+<p>The <code class="language-plaintext highlighter-rouge">signatures</code> list contains signatures that may be referenced by <code class="language-plaintext highlighter-rouge">VERIFY</code> frames and by ordinary EVM execution. Every signature in this list must validate successfully before any frame is executed. If any signature is malformed or invalid, the whole transaction is invalid.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">signatures</code> list is optional. Contracts may still ignore it entirely and perform bespoke signature verification inside frame execution.</p>
+
+<p>The raw <code class="language-plaintext highlighter-rouge">signature</code> byte strings are intentionally not introspectable by EVM code to allow future aggregation schemes. Contracts can inspect only the metadata of the signature list through transaction introspection.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">scheme</code> identifies how the raw <code class="language-plaintext highlighter-rouge">signature</code> bytes are interpreted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><code class="language-plaintext highlighter-rouge">scheme</code></th>
+      <th>Name</th>
+      <th><code class="language-plaintext highlighter-rouge">signature</code> encoding</th>
+      <th>Gas cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0</td>
+      <td><code class="language-plaintext highlighter-rouge">SECP256K1</code></td>
+      <td><code class="language-plaintext highlighter-rouge">v (1 byte) || r (32 bytes) || s (32 bytes)</code></td>
+      <td>2800</td>
+    </tr>
+    <tr>
+      <td>0x1</td>
+      <td><code class="language-plaintext highlighter-rouge">P256</code></td>
+      <td><code class="language-plaintext highlighter-rouge">r || s || qx || qy</code> (all 32 bytes)</td>
+      <td>6700</td>
+    </tr>
+    <tr>
+      <td>0x2..255</td>
+      <td>reserved</td>
+      <td>reserved</td>
+      <td>reserved</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For <code class="language-plaintext highlighter-rouge">SECP256K1</code> and <code class="language-plaintext highlighter-rouge">P256</code>, the <code class="language-plaintext highlighter-rouge">signer</code> is a 20-byte Ethereum address.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">msg</code> which message the signature authorizes:</p>
+
+<ul>
+  <li>if <code class="language-plaintext highlighter-rouge">len(msg) == 0</code>, the signature is signed over <code class="language-plaintext highlighter-rouge">compute_sig_hash(tx)</code></li>
+  <li>if <code class="language-plaintext highlighter-rouge">len(msg) == 32</code>, the signature is signed the explicit 32-byte digest <code class="language-plaintext highlighter-rouge">msg</code></li>
+  <li>any other <code class="language-plaintext highlighter-rouge">msg</code> length is invalid</li>
+</ul>
+
+<p>The explicit 32-byte zero digest is invalid. This reserves the zero stack value as the EVM-visible representation of the transaction signing hash case.</p>
+
+<p>For <code class="language-plaintext highlighter-rouge">P256</code>, the signer address must be <code class="language-plaintext highlighter-rouge">keccak256(qx || qy)[12:]</code>.</p>
+  
+    <h4 id="receipt-encoding">
+      
+      
+        <a href="#receipt-encoding" class="anchor-link"></a> Receipt Encoding
+      
+      
+    </h4>
+
+<p>The <code class="language-plaintext highlighter-rouge">ReceiptPayload</code> is defined as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[cumulative_gas_used, payer, [frame_receipt, ...]]
+frame_receipt = [status, gas_used, logs]
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">payer</code> is the address of the account that paid the fees for the transaction. <code class="language-plaintext highlighter-rouge">status</code> is the return code of the top-level call. A new code <code class="language-plaintext highlighter-rouge">0x3</code> is introduced for frames which are skipped due to failed atomic batch.</p>
+  
+    <h4 id="signature-hash">
+      
+      
+        <a href="#signature-hash" class="anchor-link"></a> Signature Hash
+      
+      
+    </h4>
+
+<p>The canonical signature hash is defined such that any signature with empty <code class="language-plaintext highlighter-rouge">msg</code> will have its raw <code class="language-plaintext highlighter-rouge">signature</code> bytes elided:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">compute_sig_hash</span><span class="p">(</span><span class="n">tx</span><span class="p">:</span> <span class="n">FrameTx</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Hash</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sig</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">signatures</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">.</span><span class="n">msg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">tx</span><span class="p">.</span><span class="n">signatures</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">signature</span> <span class="o">=</span> <span class="n">Bytes</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">keccak</span><span class="p">(</span><span class="nb">bytes</span><span class="p">([</span><span class="n">FRAME_TX_TYPE</span><span class="p">])</span> <span class="o">+</span> <span class="n">rlp</span><span class="p">(</span><span class="n">tx</span><span class="p">))</span>
+</code></pre></div></div>
+  
+    <h4 id="signature-validation">
+      
+      
+        <a href="#signature-validation" class="anchor-link"></a> Signature Validation
+      
+      
+    </h4>
+
+<p>Every signature in the outer transaction object is validated before frame execution. The validation rules are:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">SECP256K1</span> <span class="o">=</span> <span class="mh">0x0</span>
+<span class="n">P256</span>      <span class="o">=</span> <span class="mh">0x1</span>
+
+<span class="k">def</span> <span class="nf">effective_signer</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">sig</span><span class="p">.</span><span class="n">signer</span>
+
+<span class="k">def</span> <span class="nf">validate_signature</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">sig_hash</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">.</span><span class="n">msg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">sig_hash</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">.</span><span class="n">msg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">32</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sig</span><span class="p">.</span><span class="n">msg</span> <span class="o">==</span> <span class="sa">b</span><span class="s">"</span><span class="se">\x00</span><span class="s">"</span> <span class="o">*</span> <span class="mi">32</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">msg</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">if</span> <span class="n">sig</span><span class="p">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="n">SECP256K1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">.</span><span class="n">signature</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">65</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">signature</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">signature</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">33</span><span class="p">]</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">signature</span><span class="p">[</span><span class="mi">33</span><span class="p">:</span><span class="mi">65</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">sig</span><span class="p">.</span><span class="n">signer</span> <span class="o">==</span> <span class="n">ecrecover</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">sig</span><span class="p">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="n">P256</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">.</span><span class="n">signature</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">128</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="n">r</span>  <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">signature</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">32</span><span class="p">]</span>
+        <span class="n">s</span>  <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">signature</span><span class="p">[</span><span class="mi">32</span><span class="p">:</span><span class="mi">64</span><span class="p">]</span>
+        <span class="n">qx</span> <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">signature</span><span class="p">[</span><span class="mi">64</span><span class="p">:</span><span class="mi">96</span><span class="p">]</span>
+        <span class="n">qy</span> <span class="o">=</span> <span class="n">sig</span><span class="p">.</span><span class="n">signature</span><span class="p">[</span><span class="mi">96</span><span class="p">:</span><span class="mi">128</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">sig</span><span class="p">.</span><span class="n">signer</span> <span class="o">!=</span> <span class="n">keccak256</span><span class="p">(</span><span class="n">qx</span> <span class="o">+</span> <span class="n">qy</span><span class="p">)[</span><span class="mi">12</span><span class="p">:]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="n">P256VERIFY</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+</code></pre></div></div>
+  
+    <h4 id="expiry-verifier-frame">
+      
+      
+        <a href="#expiry-verifier-frame" class="anchor-link"></a> Expiry Verifier Frame
+      
+      
+    </h4>
+
+<p>A <code class="language-plaintext highlighter-rouge">VERIFY</code> frame whose <code class="language-plaintext highlighter-rouge">frame.target</code> equals <code class="language-plaintext highlighter-rouge">EXPIRY_VERIFIER</code> is an <strong>expiry verifier frame</strong>. It calls the expiry verifier contract deployed at <code class="language-plaintext highlighter-rouge">EXPIRY_VERIFIER</code> with <code class="language-plaintext highlighter-rouge">frame.data</code> as calldata. The calldata is interpreted as an 8-byte unsigned big-endian expiry timestamp. The call reverts unless <code class="language-plaintext highlighter-rouge">block.timestamp &lt;= expiry_timestamp</code>.</p>
+
+<p>An expiry verifier frame is invalid unless all of the following hold:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">frame.flags == 0</code>,</li>
+  <li><code class="language-plaintext highlighter-rouge">frame.value == 0</code>, and</li>
+  <li><code class="language-plaintext highlighter-rouge">len(frame.data) == EXPIRY_DATA_LENGTH</code>.</li>
+</ul>
+
+<p>A transaction can contain at most one expiry verifier frame.</p>
+
+<p>At activation, clients must install the following expiry verifier contract runtime code at <code class="language-plaintext highlighter-rouge">EXPIRY_VERIFIER</code>. The expiry verifier contract’s runtime code must be:</p>
+
+<pre><code class="language-asm">push1 0x08
+calldatasize
+eq
+push1 0x0a
+jumpi
+push0
+push0
+revert
+
+jumpdest
+push0
+calldataload
+push1 0xc0
+shr
+timestamp
+gt
+push1 0x16
+jumpi
+stop
+
+jumpdest
+push0
+push0
+revert
+</code></pre>
+
+<p>The runtime bytecode is:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x60083614600a575f5ffd5b5f3560c01c4211601657005b5f5ffd
+</code></pre></div></div>
+
+<p>Equivalently, the runtime behavior is:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">evm</span><span class="p">.</span><span class="n">calldata</span><span class="p">)</span> <span class="o">!=</span> <span class="n">EXPIRY_DATA_LENGTH</span><span class="p">:</span>
+    <span class="n">revert</span><span class="p">()</span>
+
+<span class="n">expiry_timestamp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">.</span><span class="n">from_bytes</span><span class="p">(</span><span class="n">evm</span><span class="p">.</span><span class="n">calldata</span><span class="p">,</span> <span class="s">"big"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">evm</span><span class="p">.</span><span class="n">timestamp</span> <span class="o">&gt;</span> <span class="n">expiry_timestamp</span><span class="p">:</span>
+    <span class="n">revert</span><span class="p">()</span>
+
+<span class="n">stop</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>If the check passes, the frame succeeds with no return data and no logs. The frame consumes gas according to normal EVM execution rules. Although <code class="language-plaintext highlighter-rouge">TIMESTAMP</code> is generally banned during validation-prefix execution, it is permitted in this special <code class="language-plaintext highlighter-rouge">VERIFY</code> frame when executing the canonical expiry verifier runtime code at <code class="language-plaintext highlighter-rouge">EXPIRY_VERIFIER</code>.</p>
+
+<p>Clients may omit the explicit EVM execution and directly perform the expiry check above, provided the externally observable result is identical to executing the canonical contract. Note: While this is a valid optimization for Ethereum mainnet, it could be problematic on non-mainnet situations in case a different contract is used.</p>
+  
+    <h4 id="behavior">
+      
+      
+        <a href="#behavior" class="anchor-link"></a> Behavior
+      
+      
+    </h4>
+
+<p>When processing a frame transaction, perform the following steps.</p>
+
+<p>To begin processing a frame transaction:</p>
+
+<ol>
+  <li>Ensure <code class="language-plaintext highlighter-rouge">tx.nonce == state[tx.sender].nonce</code></li>
+  <li>Compute the canonical transaction signature hash: <code class="language-plaintext highlighter-rouge">sig_hash = compute_sig_hash(tx)</code>.</li>
+  <li>For each <code class="language-plaintext highlighter-rouge">sig</code> in <code class="language-plaintext highlighter-rouge">tx.signatures</code>, ensure <code class="language-plaintext highlighter-rouge">validate_signature(sig, tx, sig_hash) == true</code>.</li>
+  <li>Initialize transaction-scoped variables:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">payer = None</code></li>
+      <li><code class="language-plaintext highlighter-rouge">sender_approved = false</code></li>
+    </ul>
+  </li>
+  <li>Let <code class="language-plaintext highlighter-rouge">resolved_target = frame.target if frame.target is not None else tx.sender</code>
+    <ul>
+      <li>Unless otherwise stated, checks that refer to the target account during execution use the resolved target.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Then for each frame:</p>
+
+<ol>
+  <li>Execute a call with the specified <code class="language-plaintext highlighter-rouge">mode</code>, <code class="language-plaintext highlighter-rouge">flags</code>, <code class="language-plaintext highlighter-rouge">resolved_target</code>, <code class="language-plaintext highlighter-rouge">gas_limit</code>, <code class="language-plaintext highlighter-rouge">value</code>, and <code class="language-plaintext highlighter-rouge">data</code>.
+    <ul>
+      <li>If mode is <code class="language-plaintext highlighter-rouge">SENDER</code>:
+        <ul>
+          <li><code class="language-plaintext highlighter-rouge">sender_approved</code> must be <code class="language-plaintext highlighter-rouge">true</code>. If not, the transaction is invalid.</li>
+          <li>Set <code class="language-plaintext highlighter-rouge">caller</code> as <code class="language-plaintext highlighter-rouge">tx.sender</code>.</li>
+        </ul>
+      </li>
+      <li>If mode is <code class="language-plaintext highlighter-rouge">DEFAULT</code> or <code class="language-plaintext highlighter-rouge">VERIFY</code>:
+        <ul>
+          <li>Set the <code class="language-plaintext highlighter-rouge">caller</code> to <code class="language-plaintext highlighter-rouge">ENTRY_POINT</code>.</li>
+        </ul>
+      </li>
+      <li>In the top-level frame call, <code class="language-plaintext highlighter-rouge">CALLVALUE</code> is <code class="language-plaintext highlighter-rouge">frame.value</code>.</li>
+      <li>As with an ordinary <code class="language-plaintext highlighter-rouge">CALL</code>, if the caller does not have sufficient balance to transfer <code class="language-plaintext highlighter-rouge">frame.value</code>, the frame reverts.</li>
+      <li>If <code class="language-plaintext highlighter-rouge">resolved_target</code> code hash is empty, i.e. <code class="language-plaintext highlighter-rouge">0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470</code>, execute the logic described in <a href="#default-code">default code</a>.</li>
+      <li>Otherwise, if <code class="language-plaintext highlighter-rouge">resolved_target</code> uses an <a href="/EIPS/eip-7702">EIP-7702</a> delegation indicator, execute according to <a href="/EIPS/eip-7702">EIP-7702</a>’s delegated-code semantics.</li>
+      <li>The <code class="language-plaintext highlighter-rouge">ORIGIN</code> opcode returns frame <code class="language-plaintext highlighter-rouge">caller</code> throughout all call depths.</li>
+      <li>If a frame’s execution reverts, its state changes are discarded. Additionally, if this frame has the atomic batch flag set, mark all subsequent frames in the same atomic group as skipped.</li>
+    </ul>
+  </li>
+  <li>If frame has mode <code class="language-plaintext highlighter-rouge">VERIFY</code> the following additional requirements are imposed:
+    <ul>
+      <li>Execute the frame as a <code class="language-plaintext highlighter-rouge">STATICCALL</code>, disallowing state manipulation.
+        <ul>
+          <li>Only <code class="language-plaintext highlighter-rouge">APPROVE</code> can modify the state or transaction context in <code class="language-plaintext highlighter-rouge">VERIFY</code>.</li>
+        </ul>
+      </li>
+      <li>If the frame reverts, the transaction is invalid.</li>
+    </ul>
+  </li>
+  <li>If a frame is part of an atomic batch and it fails, unroll the associated atomic batch.
+    <ul>
+      <li>An <strong>atomic batch</strong> is a maximal contiguous sequence of frames <code class="language-plaintext highlighter-rouge">[i, j]</code> where <code class="language-plaintext highlighter-rouge">j &gt; i</code>, frames <code class="language-plaintext highlighter-rouge">i</code> through <code class="language-plaintext highlighter-rouge">j - 1</code> have <code class="language-plaintext highlighter-rouge">ATOMIC_BATCH_FLAG</code> set, and frame <code class="language-plaintext highlighter-rouge">j</code> does not have <code class="language-plaintext highlighter-rouge">ATOMIC_BATCH_FLAG</code> set.</li>
+      <li>When a frame in the batch fails, the state must be rolled back to the condition it was immediately before the atomic batch began. All remaining frames in the atomic batch are skipped.</li>
+      <li>Since skipped frames are not executed, the gas value allotted to them is refunded at the end of the transaction.</li>
+      <li>If the frame does not have an associated atomic batch, further special
+handling is not needed, simple revert the individual frame.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>After executing all frames, verify that <code class="language-plaintext highlighter-rouge">payer</code> has been set (i.e. <code class="language-plaintext highlighter-rouge">payer != None</code>). If <code class="language-plaintext highlighter-rouge">payer</code> is set, refund any unpaid gas to the payer. If it is not, the whole transaction is invalid.</p>
+  
+    <h5 id="cross-frame-interactions">
+      
+      
+        <a href="#cross-frame-interactions" class="anchor-link"></a> Cross-frame interactions
+      
+      
+    </h5>
+
+<p>A few cross-frame interactions to note:</p>
+
+<ul>
+  <li>For the purposes of gas accounting of warm / cold state status, the journal of such touches is shared across frames.</li>
+  <li>Discard the <code class="language-plaintext highlighter-rouge">TSTORE</code> and <code class="language-plaintext highlighter-rouge">TLOAD</code> transient storage between frames.</li>
+</ul>
+  
+    <h5 id="gas-accounting">
+      
+      
+        <a href="#gas-accounting" class="anchor-link"></a> Gas Accounting
+      
+      
+    </h5>
+
+<p>The total gas limit of the transaction is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def signature_gas(sig):
+    if sig.scheme == SECP256K1:
+        return 2800
+    if sig.scheme == P256:
+        return 6700
+    invalid_transaction()
+
+signature_verification_cost = sum(signature_gas(sig) for sig in tx.signatures)
+
+tx_gas_limit = (
+    FRAME_TX_INTRINSIC_COST
+    + len(tx.frames) * FRAME_TX_PER_FRAME_COST
+    + calldata_cost(rlp(tx.signatures))
+    + calldata_cost(rlp(tx.frames))
+    + signature_verification_cost
+    + sum(frame.gas_limit for all frames)
+)
+</code></pre></div></div>
+
+<p>Where <code class="language-plaintext highlighter-rouge">calldata_cost</code> is calculated per standard <a href="/EIPS/eip-7623">EIP-7623</a> rules.</p>
+
+<p>The calldata cost for <code class="language-plaintext highlighter-rouge">rlp(tx.signatures)</code> is charged over the signature objects exactly as included in the transaction, including the scheme-dependent <code class="language-plaintext highlighter-rouge">signer</code> bytes.</p>
+
+<p>The total fee is defined as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tx_fee = tx_gas_limit * effective_gas_price + blob_fees
+blob_fees = len(blob_versioned_hashes) * GAS_PER_BLOB * blob_base_fee
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">effective_gas_price</code> is calculated per <a href="/EIPS/eip-1559">EIP-1559</a> and <code class="language-plaintext highlighter-rouge">blob_fees</code> is calculated as per <a href="/EIPS/eip-4844">EIP-4844</a>.</p>
+
+<p>Any <code class="language-plaintext highlighter-rouge">frame.value</code> transferred by <code class="language-plaintext highlighter-rouge">SENDER</code> frames is separate from <code class="language-plaintext highlighter-rouge">tx_fee</code> and follows ordinary <code class="language-plaintext highlighter-rouge">CALL</code> value-transfer semantics. The gas cost of sending <code class="language-plaintext highlighter-rouge">frame.value</code> is the same as for any <code class="language-plaintext highlighter-rouge">CALL</code> instruction.</p>
+
+<p>Each frame has its own <code class="language-plaintext highlighter-rouge">gas_limit</code> allocation. Unused gas from a frame is <strong>not</strong> available to subsequent frames. After all frames execute, the gas refund is calculated as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>refund = sum(frame.gas_limit for all frames) - total_gas_used
+</code></pre></div></div>
+
+<p>This refund is returned to the gas payer (the <code class="language-plaintext highlighter-rouge">resolved_target</code> that called <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_PAYMENT)</code> or <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_EXECUTION_AND_PAYMENT)</code>) and added back to the block gas pool.</p>
+  
+    <h5 id="default-code">
+      
+      
+        <a href="#default-code" class="anchor-link"></a> Default code
+      
+      
+    </h5>
+
+<p>Frame transactions can be used by accounts who do not have deployed code, nor an <a href="/EIPS/eip-7702">EIP-7702</a> delegation indicator via the “default code” mechanism. The behavior of the default code is defined below:</p>
+
+<ul>
+  <li>If <code class="language-plaintext highlighter-rouge">mode</code> is <code class="language-plaintext highlighter-rouge">VERIFY</code>:
+    <ul>
+      <li>Read the allowed approval scope from the flags field: <code class="language-plaintext highlighter-rouge">allowed_scope = frame.flags &amp; APPROVE_SCOPE_MASK</code>. If <code class="language-plaintext highlighter-rouge">allowed_scope == APPROVE_SCOPE_NONE</code>, revert.</li>
+      <li>If <code class="language-plaintext highlighter-rouge">allowed_scope &amp; APPROVE_EXECUTION != 0</code> and <code class="language-plaintext highlighter-rouge">resolved_target != tx.sender</code>, revert.</li>
+      <li>If there is no <code class="language-plaintext highlighter-rouge">SECP256K1</code> signature <code class="language-plaintext highlighter-rouge">sig</code> such that <code class="language-plaintext highlighter-rouge">sig.signer == resolved_target</code> and <code class="language-plaintext highlighter-rouge">sig.msg == Bytes()</code>, revert.</li>
+      <li>Call <code class="language-plaintext highlighter-rouge">APPROVE(allowed_scope)</code>.</li>
+    </ul>
+  </li>
+  <li>If <code class="language-plaintext highlighter-rouge">mode</code> is <code class="language-plaintext highlighter-rouge">SENDER</code> or <code class="language-plaintext highlighter-rouge">DEFAULT</code>:
+    <ul>
+      <li>Return successfully as if calling empty code.</li>
+    </ul>
+  </li>
+</ul>
+  
+    <h3 id="approve-instruction-0xaa">
+      
+      
+        <a href="#approve-instruction-0xaa" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">APPROVE</code> Instruction (<code class="language-plaintext highlighter-rouge">0xaa</code>)
+      
+      
+    </h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">APPROVE</code> instruction exits the current EVM call frame successfully and updates the transaction-scoped approval context based on the <code class="language-plaintext highlighter-rouge">scope</code> operand.</p>
+  
+    <h4 id="stack">
+      
+      
+        <a href="#stack" class="anchor-link"></a> Stack
+      
+      
+    </h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Stack</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">top - 0</code></td>
+      <td><code class="language-plaintext highlighter-rouge">offset</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">top - 1</code></td>
+      <td><code class="language-plaintext highlighter-rouge">length</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">top - 2</code></td>
+      <td><code class="language-plaintext highlighter-rouge">scope</code></td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h4 id="scope-operand">
+      
+      
+        <a href="#scope-operand" class="anchor-link"></a> Scope Operand
+      
+      
+    </h4>
+
+<p>The <code class="language-plaintext highlighter-rouge">scope</code> operand is a bitmask. Define the following constants:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">APPROVE_NONE</code> (<code class="language-plaintext highlighter-rouge">0x0</code>): No approval scope allowed - the current frame is not allowed to approve any scope.</li>
+  <li><code class="language-plaintext highlighter-rouge">APPROVE_PAYMENT</code> (<code class="language-plaintext highlighter-rouge">0x1</code>): Approval of payment - the contract approves paying the total gas cost for the transaction.</li>
+  <li><code class="language-plaintext highlighter-rouge">APPROVE_EXECUTION</code> (<code class="language-plaintext highlighter-rouge">0x2</code>): Approval of execution - the sender contract approves future frames calling on its behalf.
+    <ul>
+      <li>Note this is only valid when <code class="language-plaintext highlighter-rouge">resolved_target</code> equals <code class="language-plaintext highlighter-rouge">tx.sender</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">APPROVE_EXECUTION_AND_PAYMENT</code> (<code class="language-plaintext highlighter-rouge">0x3</code>): Approval of payment and execution.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">APPROVE_SCOPE_MASK</code> is defined as an alias for <code class="language-plaintext highlighter-rouge">APPROVE_EXECUTION_AND_PAYMENT</code>.</p>
+  
+    <h4 id="behavior-1">
+      
+      
+        <a href="#behavior-1" class="anchor-link"></a> Behavior
+      
+      
+    </h4>
+
+<p>The behavior of <code class="language-plaintext highlighter-rouge">APPROVE</code> is defined as follows:</p>
+
+<ul>
+  <li>If <code class="language-plaintext highlighter-rouge">ADDRESS != resolved_target</code>, revert.</li>
+  <li>Ensure that <code class="language-plaintext highlighter-rouge">scope</code> is one of the caller’s allowed scopes in <code class="language-plaintext highlighter-rouge">frame.flags</code>, otherwise revert.
+    <ul>
+      <li>To check this, evaluate that <code class="language-plaintext highlighter-rouge">scope != 0</code> and <code class="language-plaintext highlighter-rouge">scope &amp; ~(frame.flags &amp; APPROVE_SCOPE_MASK) == 0</code>.</li>
+    </ul>
+  </li>
+  <li>Depending on the value of <code class="language-plaintext highlighter-rouge">scope</code>, perform the following:
+    <ul>
+      <li>For <code class="language-plaintext highlighter-rouge">APPROVE_EXECUTION</code>:
+        <ul>
+          <li>If <code class="language-plaintext highlighter-rouge">sender_approved == true</code>, revert the frame.</li>
+          <li>If <code class="language-plaintext highlighter-rouge">resolved_target != tx.sender</code>, revert the frame.</li>
+          <li>Set <code class="language-plaintext highlighter-rouge">sender_approved = true</code>.</li>
+        </ul>
+      </li>
+      <li>For <code class="language-plaintext highlighter-rouge">APPROVE_PAYMENT</code>
+        <ul>
+          <li>If <code class="language-plaintext highlighter-rouge">payer</code> was already set, revert the frame.</li>
+          <li>If <code class="language-plaintext highlighter-rouge">resolved_target</code> has insufficient balance, revert the frame.</li>
+          <li>If <code class="language-plaintext highlighter-rouge">sender_approved == false</code>, revert the frame.</li>
+          <li>Increment the sender’s nonce, set <code class="language-plaintext highlighter-rouge">payer = resolved_target</code>, and collect the transaction’s maximum cost from <code class="language-plaintext highlighter-rouge">payer</code>,</li>
+        </ul>
+      </li>
+      <li>For <code class="language-plaintext highlighter-rouge">APPROVE_EXECUTION_AND_PAYMENT</code>:
+        <ul>
+          <li>If <code class="language-plaintext highlighter-rouge">sender_approved</code> or <code class="language-plaintext highlighter-rouge">payer</code> was already set, revert the frame.</li>
+          <li>If <code class="language-plaintext highlighter-rouge">resolved_target</code> != <code class="language-plaintext highlighter-rouge">tx.sender</code>, revert the frame.</li>
+          <li>If <code class="language-plaintext highlighter-rouge">resolved_target</code> has insufficient balance, revert the frame.</li>
+          <li>Set <code class="language-plaintext highlighter-rouge">sender_approved = true</code>, increment the sender’s nonce, set <code class="language-plaintext highlighter-rouge">payer = resolved_target</code>, and collect the transaction’s maximum cost (<code class="language-plaintext highlighter-rouge">TXPARAM(0x06)</code>) from <code class="language-plaintext highlighter-rouge">payer</code>.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+  
+    <h3 id="introspection">
+      
+      
+        <a href="#introspection" class="anchor-link"></a> Introspection
+      
+      
+    </h3>
+
+<p>The instructions in this section provide the needed introspection capabilities of the new frame transaction type and the frame objects themselves, including some runtime information like the execution result status.</p>
+  
+    <h4 id="txparam-instruction-0xb0">
+      
+      
+        <a href="#txparam-instruction-0xb0" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">TXPARAM</code> Instruction <code class="language-plaintext highlighter-rouge">(0xb0)</code>
+      
+      
+    </h4>
+
+<p>This instruction gives access to transaction-scoped information. The gas cost of this operation is <code class="language-plaintext highlighter-rouge">2</code>. It takes one value from the stack, <code class="language-plaintext highlighter-rouge">param</code>, and returns the associated transaction value to the stack. See the table for the full mapping.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><code class="language-plaintext highlighter-rouge">param</code></th>
+      <th>Return value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>current transaction type</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td><code class="language-plaintext highlighter-rouge">nonce</code></td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td><code class="language-plaintext highlighter-rouge">sender</code></td>
+    </tr>
+    <tr>
+      <td>0x03</td>
+      <td><code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas</code></td>
+    </tr>
+    <tr>
+      <td>0x04</td>
+      <td><code class="language-plaintext highlighter-rouge">max_fee_per_gas</code></td>
+    </tr>
+    <tr>
+      <td>0x05</td>
+      <td><code class="language-plaintext highlighter-rouge">max_fee_per_blob_gas</code></td>
+    </tr>
+    <tr>
+      <td>0x06</td>
+      <td>max cost (basefee=max, all gas used, includes blob cost, intrinsic cost, and signature verification cost)</td>
+    </tr>
+    <tr>
+      <td>0x07</td>
+      <td><code class="language-plaintext highlighter-rouge">len(blob_versioned_hashes)</code></td>
+    </tr>
+    <tr>
+      <td>0x08</td>
+      <td><code class="language-plaintext highlighter-rouge">compute_sig_hash(tx)</code></td>
+    </tr>
+    <tr>
+      <td>0x09</td>
+      <td><code class="language-plaintext highlighter-rouge">len(frames)</code></td>
+    </tr>
+    <tr>
+      <td>0x0A</td>
+      <td>currently executing frame index</td>
+    </tr>
+    <tr>
+      <td>0x0B</td>
+      <td><code class="language-plaintext highlighter-rouge">len(signatures)</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Undefined <code class="language-plaintext highlighter-rouge">param</code> values result in an exceptional halt.</p>
+  
+    <h4 id="framedataload-instruction-0xb1">
+      
+      
+        <a href="#framedataload-instruction-0xb1" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">FRAMEDATALOAD</code> Instruction <code class="language-plaintext highlighter-rouge">0xb1</code>
+      
+      
+    </h4>
+
+<p>This opcode loads one 32-byte word of data from frame input. Gas cost: 3 (matches CALLDATALOAD).</p>
+
+<p>It takes two values from the stack, an <code class="language-plaintext highlighter-rouge">offset</code> and <code class="language-plaintext highlighter-rouge">frameIndex</code>.
+It places the retrieved data on the stack.</p>
+
+<p>When the <code class="language-plaintext highlighter-rouge">frameIndex</code> is out-of-bounds, an exceptional halt occurs.</p>
+
+<p>The operation semantics match CALLDATALOAD, returning a word of data from the chosen
+frame’s <code class="language-plaintext highlighter-rouge">data</code>, starting at the given byte <code class="language-plaintext highlighter-rouge">offset</code>.</p>
+  
+    <h4 id="framedatacopy-instruction-0xb2">
+      
+      
+        <a href="#framedatacopy-instruction-0xb2" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">FRAMEDATACOPY</code> Instruction (<code class="language-plaintext highlighter-rouge">0xb2</code>)
+      
+      
+    </h4>
+
+<p>This opcode copies data frame input into the contract’s memory. Its gas cost is calculated
+exactly as for <code class="language-plaintext highlighter-rouge">CALLDATACOPY</code>, including the fixed cost of 3, the per-word copy cost, and
+the standard EVM memory expansion cost.</p>
+
+<p>It takes four values from the stack: <code class="language-plaintext highlighter-rouge">memOffset</code>, <code class="language-plaintext highlighter-rouge">dataOffset</code>, <code class="language-plaintext highlighter-rouge">length</code> and <code class="language-plaintext highlighter-rouge">frameIndex</code>.
+No stack output value is produced.</p>
+
+<p>When the <code class="language-plaintext highlighter-rouge">frameIndex</code> is out-of-bounds, an exceptional halt occurs.</p>
+
+<p>The operation semantics match CALLDATACOPY, copying <code class="language-plaintext highlighter-rouge">length</code> bytes from the chosen frame’s
+<code class="language-plaintext highlighter-rouge">data</code>, starting at the given byte <code class="language-plaintext highlighter-rouge">dataOffset</code>, into a memory region starting at
+<code class="language-plaintext highlighter-rouge">memOffset</code>.</p>
+  
+    <h4 id="frameparam-instruction-0xb3">
+      
+      
+        <a href="#frameparam-instruction-0xb3" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">FRAMEPARAM</code> Instruction (<code class="language-plaintext highlighter-rouge">0xb3</code>)
+      
+      
+    </h4>
+
+<p>This instruction gives access to frame-scoped information. The gas cost of this operation is <code class="language-plaintext highlighter-rouge">2</code>. It takes two values from the stack, <code class="language-plaintext highlighter-rouge">frameIndex</code> on top and <code class="language-plaintext highlighter-rouge">param</code> second from top.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><code class="language-plaintext highlighter-rouge">param</code></th>
+      <th><code class="language-plaintext highlighter-rouge">frameIndex</code></th>
+      <th>Return value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>frameIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">resolved_target</code></td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>frameIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">gas_limit</code></td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>frameIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">mode</code></td>
+    </tr>
+    <tr>
+      <td>0x03</td>
+      <td>frameIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">flags</code></td>
+    </tr>
+    <tr>
+      <td>0x04</td>
+      <td>frameIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">len(data)</code></td>
+    </tr>
+    <tr>
+      <td>0x05</td>
+      <td>frameIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">status</code> (exceptional halt if current/future)</td>
+    </tr>
+    <tr>
+      <td>0x06</td>
+      <td>frameIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">allowed_scope</code> (<code class="language-plaintext highlighter-rouge">frame.flags &amp; APPROVE_SCOPE_MASK</code>)</td>
+    </tr>
+    <tr>
+      <td>0x07</td>
+      <td>frameIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">atomic_batch</code> (<code class="language-plaintext highlighter-rouge">(frame.flags &gt;&gt; 2) &amp; 0x01</code>, returns 0/1)</td>
+    </tr>
+    <tr>
+      <td>0x08</td>
+      <td>frameIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Notes:</p>
+
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">status</code> field (0x05) returns <code class="language-plaintext highlighter-rouge">0</code> for failure or <code class="language-plaintext highlighter-rouge">1</code> for success.</li>
+  <li>Undefined <code class="language-plaintext highlighter-rouge">param</code> values result in an exceptional halt.</li>
+  <li>Out-of-bounds access for <code class="language-plaintext highlighter-rouge">frameIndex</code> results in an exceptional halt.</li>
+  <li>Attempting to access the return <code class="language-plaintext highlighter-rouge">status</code> of the current frame or a subsequent frame results in an exceptional halt.</li>
+</ul>
+  
+    <h4 id="sigparam-instruction-0xb4">
+      
+      
+        <a href="#sigparam-instruction-0xb4" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">SIGPARAM</code> Instruction (<code class="language-plaintext highlighter-rouge">0xb4</code>)
+      
+      
+    </h4>
+
+<p>This instruction gives access to signature-scoped metadata. The raw <code class="language-plaintext highlighter-rouge">signature</code> bytes are intentionally not accessible from the EVM. The gas cost of this operation is <code class="language-plaintext highlighter-rouge">2</code>. It takes two values from the stack, <code class="language-plaintext highlighter-rouge">signatureIndex</code> on top and <code class="language-plaintext highlighter-rouge">param</code> second from top.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><code class="language-plaintext highlighter-rouge">param</code></th>
+      <th><code class="language-plaintext highlighter-rouge">signatureIndex</code></th>
+      <th>Return value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>signatureIndex</td>
+      <td>effective signer address</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>signatureIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">scheme</code></td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>signatureIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">msg</code></td>
+    </tr>
+    <tr>
+      <td>0x03</td>
+      <td>signatureIndex</td>
+      <td><code class="language-plaintext highlighter-rouge">len(signature)</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Notes:</p>
+
+<ul>
+  <li>Undefined <code class="language-plaintext highlighter-rouge">param</code> values result in an exceptional halt.</li>
+  <li>Out-of-bounds access for <code class="language-plaintext highlighter-rouge">signatureIndex</code> results in an exceptional halt.</li>
+</ul>
+  
+    <h3 id="mempool">
+      
+      
+        <a href="#mempool" class="anchor-link"></a> Mempool
+      
+      
+    </h3>
+
+<p>The transaction mempool must carefully handle frame transactions, as a naive implementation could introduce denial-of-service vulnerabilities. The fundamental goal of the public mempool rules is to avoid allowing an arbitrary number of transactions to be invalidated by a single environmental change or state modification. Beyond this, the rules also aim to minimize the amount of work needed to complete the initial validation phase of a transaction before an acceptance decision can be made.</p>
+
+<p>This policy is inspired by <a href="/EIPS/eip-7562">ERC-7562</a>, but removes staking and reputation entirely. Any behavior that ERC-7562 would admit only for a staked or reputable third party is rejected here for the public mempool. Transactions outside these rules may be accepted into a local or private mempool, but must not be propagated through the public mempool.</p>
+  
+    <h4 id="constants-1">
+      
+      
+        <a href="#constants-1" class="anchor-link"></a> Constants
+      
+      
+    </h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MAX_VERIFY_GAS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">100_000</code></td>
+      <td>Maximum amount of gas a node should expend validating signatures and simulating the validation prefix</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MAX_PENDING_TXS_USING_NON_CANONICAL_PAYMASTER</code></td>
+      <td><code class="language-plaintext highlighter-rouge">1</code></td>
+      <td>Maximum amount of pending transactions that can be using any given non-canonical paymaster</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h4 id="validation-prefix">
+      
+      
+        <a href="#validation-prefix" class="anchor-link"></a> Validation Prefix
+      
+      
+    </h4>
+
+<p>The <strong>validation prefix</strong> of a frame transaction is the shortest prefix of frames whose successful execution sets <code class="language-plaintext highlighter-rouge">payer</code>.</p>
+
+<p>Public mempool rules apply only to the validation prefix. Once <code class="language-plaintext highlighter-rouge">payer</code> has been set, subsequent frames are outside public mempool validation and may be arbitrary. In particular, <code class="language-plaintext highlighter-rouge">user_op</code> and <code class="language-plaintext highlighter-rouge">post_op</code> occur after payment approval and are therefore not subject to the public mempool restrictions below.</p>
+
+<p>For public mempool accounting, signature validation is treated as part of the transaction intrinsic cost and counts against <code class="language-plaintext highlighter-rouge">MAX_VERIFY_GAS</code>.</p>
+  
+    <h4 id="policy-summary">
+      
+      
+        <a href="#policy-summary" class="anchor-link"></a> Policy Summary
+      
+      
+    </h4>
+
+<p>A frame transaction is eligible for public mempool propagation only if its validation prefix depends exclusively on:</p>
+
+<ol>
+  <li>transaction fields, including the canonical signature hash,</li>
+  <li>the block timestamp as read by an expiry verifier frame,</li>
+  <li>the sender’s nonce, code, and storage,</li>
+  <li>if a deploy frame is present, the code of the factory targeted by that frame (subject to the deploy-frame trace rules below),</li>
+  <li>if a paymaster frame is present, either a canonical paymaster instance together with explicit paymaster balance reservation, or a non-canonical paymaster being used by less than <code class="language-plaintext highlighter-rouge">MAX_PENDING_TXS_USING_NON_CANONICAL_PAYMASTER</code> pending transactions,</li>
+  <li>the code of any other existing non-delegated contracts reached during validation via <code class="language-plaintext highlighter-rouge">CALL*</code> or <code class="language-plaintext highlighter-rouge">EXTCODE*</code>, provided the resulting trace does not access disallowed mutable state.</li>
+</ol>
+
+<p>Any dependency on third-party mutable state outside these categories must result in rejection by the public mempool.</p>
+  
+    <h4 id="mode-subclassifications">
+      
+      
+        <a href="#mode-subclassifications" class="anchor-link"></a> Mode Subclassifications
+      
+      
+    </h4>
+
+<p>While the frames are designed to be generic, we refine some frame modes for the purpose of specifying public mempool handling clearly.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Mode</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">self_verify</code></td>
+      <td>VERIFY</td>
+      <td>Validates the transaction and approves both sender and payer</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">deploy</code></td>
+      <td>DEFAULT</td>
+      <td>Deploys a new smart account, typically via a deterministic factory such as the <a href="/EIPS/eip-7997">EIP-7997</a> predeploy</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">only_verify</code></td>
+      <td>VERIFY</td>
+      <td>Validates the transaction and approves only the sender</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pay</code></td>
+      <td>VERIFY</td>
+      <td>Validates the transaction and approves only the payer</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expiry_verify</code></td>
+      <td>VERIFY</td>
+      <td>Calls the expiry verifier contract (target = <code class="language-plaintext highlighter-rouge">EXPIRY_VERIFIER</code>)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">user_op</code></td>
+      <td>SENDER</td>
+      <td>Executes the intended user operation</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">post_op</code></td>
+      <td>DEFAULT</td>
+      <td>Executes an optional post-op action as needed by the paymaster</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h4 id="public-mempool-recognized-validation-prefixes">
+      
+      
+        <a href="#public-mempool-recognized-validation-prefixes" class="anchor-link"></a> Public Mempool-recognized Validation Prefixes
+      
+      
+    </h4>
+
+<p>The public mempool recognizes four validation prefixes. Structural rules are enforced only up to and including the frame that sets <code class="language-plaintext highlighter-rouge">payer</code>.</p>
+  
+    <h5 id="self-relay">
+      
+      
+        <a href="#self-relay" class="anchor-link"></a> Self Relay
+      
+      
+    </h5>
+  
+    <h6 id="basic-transaction">
+      
+      
+        <a href="#basic-transaction" class="anchor-link"></a> Basic Transaction
+      
+      
+    </h6>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+-------------+
+| self_verify |
++-------------+
+</code></pre></div></div>
+  
+    <h6 id="deploy-new-account">
+      
+      
+        <a href="#deploy-new-account" class="anchor-link"></a> Deploy New Account
+      
+      
+    </h6>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+--------+-------------+
+| deploy | self_verify |
++--------+-------------+
+</code></pre></div></div>
+  
+    <h5 id="canonical-paymaster">
+      
+      
+        <a href="#canonical-paymaster" class="anchor-link"></a> Canonical Paymaster
+      
+      
+    </h5>
+  
+    <h6 id="basic-transaction-1">
+      
+      
+        <a href="#basic-transaction-1" class="anchor-link"></a> Basic Transaction
+      
+      
+    </h6>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+-------------+-----+
+| only_verify | pay |
++-------------+-----+
+</code></pre></div></div>
+  
+    <h6 id="deploy-new-account-1">
+      
+      
+        <a href="#deploy-new-account-1" class="anchor-link"></a> Deploy New Account
+      
+      
+    </h6>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+--------+-------------+-----+
+| deploy | only_verify | pay |
++--------+-------------+-----+
+</code></pre></div></div>
+
+<p>Frames after these prefixes are outside public mempool validation. For example, a transaction may continue with any number of <code class="language-plaintext highlighter-rouge">user_op</code>s and/or <code class="language-plaintext highlighter-rouge">post_op</code>s.</p>
+  
+    <h4 id="structural-rules">
+      
+      
+        <a href="#structural-rules" class="anchor-link"></a> Structural Rules
+      
+      
+    </h4>
+
+<p>To be accepted into the public mempool, a frame transaction must satisfy the following:</p>
+
+<ol>
+  <li>Its validation prefix must match one of the four recognized prefixes above.</li>
+  <li>If present, <code class="language-plaintext highlighter-rouge">deploy</code> must be the first frame. This implies there can be at most one <code class="language-plaintext highlighter-rouge">deploy</code> frame in the validation prefix.</li>
+  <li><code class="language-plaintext highlighter-rouge">self_verify</code> and <code class="language-plaintext highlighter-rouge">only_verify</code> must execute in <code class="language-plaintext highlighter-rouge">VERIFY</code> mode, target <code class="language-plaintext highlighter-rouge">tx.sender</code> (either explicitly or via a null target), and must successfully call <code class="language-plaintext highlighter-rouge">APPROVE</code>.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">self_verify</code> must call <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_EXECUTION_AND_PAYMENT)</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">only_verify</code> must call <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_EXECUTION)</code>.</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">pay</code> must execute in <code class="language-plaintext highlighter-rouge">VERIFY</code> mode and successfully call <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_PAYMENT)</code>.</li>
+  <li>No frame in the validation prefix may have the <code class="language-plaintext highlighter-rouge">ATOMIC_BATCH_FLAG</code> set.</li>
+  <li>The sum of <code class="language-plaintext highlighter-rouge">gas_limit</code> values across the validation prefix, plus the intrinsic cost of validating <code class="language-plaintext highlighter-rouge">tx.signatures</code>, must not exceed <code class="language-plaintext highlighter-rouge">MAX_VERIFY_GAS</code>.</li>
+  <li>Nodes should stop simulation immediately once <code class="language-plaintext highlighter-rouge">payer</code> has been set.</li>
+</ol>
+  
+    <h4 id="expiry-verifier-frame-1">
+      
+      
+        <a href="#expiry-verifier-frame-1" class="anchor-link"></a> Expiry Verifier Frame
+      
+      
+    </h4>
+
+<p>An <code class="language-plaintext highlighter-rouge">expiry_verify</code> frame MAY appear at any position in the frame list. For the purposes of matching the recognized validation-prefix shapes above, expiry verifier frames are skipped (e.g., <code class="language-plaintext highlighter-rouge">[expiry_verify, self_verify]</code> is recognized as <code class="language-plaintext highlighter-rouge">[self_verify]</code>).</p>
+
+<p>A node MUST drop a frame transaction from the public mempool if it contains an <code class="language-plaintext highlighter-rouge">expiry_verify</code> frame whose deadline is less than the node’s view of the current block timestamp at any point.</p>
+
+<p>Expiry verifier frames are not subject to the validation trace rules, storage-dependency tracking, or <code class="language-plaintext highlighter-rouge">MAX_VERIFY_GAS</code>. The <code class="language-plaintext highlighter-rouge">TIMESTAMP</code> opcode is permitted only for the canonical expiry verifier runtime code at <code class="language-plaintext highlighter-rouge">EXPIRY_VERIFIER</code>; clients may optimize the frame by performing the same deadline check without explicit EVM execution.</p>
+  
+    <h4 id="canonical-paymaster-exception">
+      
+      
+        <a href="#canonical-paymaster-exception" class="anchor-link"></a> Canonical Paymaster Exception
+      
+      
+    </h4>
+
+<p>The generic validation trace and opcode rules below apply to all frames in the validation prefix except a <code class="language-plaintext highlighter-rouge">pay</code> frame whose target runtime code exactly matches the canonical paymaster implementation. The canonical paymaster implementation is explicitly designed to be safe for public mempool use and is therefore admitted by code match, successful <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_PAYMENT)</code>, and the paymaster accounting rules in this section, rather than by requiring it to satisfy each generic validation rule individually.</p>
+  
+    <h4 id="validation-trace-rules">
+      
+      
+        <a href="#validation-trace-rules" class="anchor-link"></a> Validation Trace Rules
+      
+      
+    </h4>
+
+<p>A public mempool node must simulate the validation prefix and reject the transaction if any of the following occurs before <code class="language-plaintext highlighter-rouge">payer</code> has been set:</p>
+
+<ul>
+  <li>a frame in the validation prefix reverts</li>
+  <li>a <code class="language-plaintext highlighter-rouge">self_verify</code>, <code class="language-plaintext highlighter-rouge">only_verify</code>, or <code class="language-plaintext highlighter-rouge">pay</code> frame exits without its required <code class="language-plaintext highlighter-rouge">APPROVE</code></li>
+  <li>total public-mempool validation work, including signature validation, exceeds <code class="language-plaintext highlighter-rouge">MAX_VERIFY_GAS</code></li>
+  <li>execution uses a banned opcode</li>
+  <li>execution performs a state write, except inside the first <code class="language-plaintext highlighter-rouge">deploy</code> frame for (a) <code class="language-plaintext highlighter-rouge">CREATE</code>, <code class="language-plaintext highlighter-rouge">CREATE2</code>, or <code class="language-plaintext highlighter-rouge">SETDELEGATE</code> operations that install code at <code class="language-plaintext highlighter-rouge">tx.sender</code>, or (b) <code class="language-plaintext highlighter-rouge">SSTORE</code>s to <code class="language-plaintext highlighter-rouge">tx.sender</code>’s storage</li>
+  <li>execution reads storage outside <code class="language-plaintext highlighter-rouge">tx.sender</code></li>
+  <li>execution performs <code class="language-plaintext highlighter-rouge">CALL*</code> or <code class="language-plaintext highlighter-rouge">EXTCODE*</code> to an address that is neither an existing contract nor a precompile, or to an address that uses an EIP-7702 delegation, except for <code class="language-plaintext highlighter-rouge">tx.sender</code> default-code behavior</li>
+  <li>if a <code class="language-plaintext highlighter-rouge">deploy</code> frame is present, its execution does not result in non-empty code being installed at <code class="language-plaintext highlighter-rouge">tx.sender</code> (either conventional contract code or an EIP-7702 delegation indicator)</li>
+</ul>
+  
+    <h5 id="banned-opcodes">
+      
+      
+        <a href="#banned-opcodes" class="anchor-link"></a> Banned Opcodes
+      
+      
+    </h5>
+
+<p>For <code class="language-plaintext highlighter-rouge">VERIFY</code> frames, the usual <code class="language-plaintext highlighter-rouge">STATICCALL</code> restrictions apply except for the protocol-defined effects of <code class="language-plaintext highlighter-rouge">APPROVE</code>. In addition, the following opcodes are banned during the validation prefix, with a few caveats:</p>
+
+<ul>
+  <li>ORIGIN (0x32)</li>
+  <li>GASPRICE (0x3A)</li>
+  <li>BLOCKHASH (0x40)</li>
+  <li>COINBASE (0x41)</li>
+  <li>TIMESTAMP (0x42)
+    <ul>
+      <li>Except in an expiry verifier frame executing the canonical runtime code at <code class="language-plaintext highlighter-rouge">EXPIRY_VERIFIER</code>.</li>
+    </ul>
+  </li>
+  <li>NUMBER (0x43)</li>
+  <li>PREVRANDAO/DIFFICULTY (0x44)</li>
+  <li>GASLIMIT (0x45)</li>
+  <li>BASEFEE (0x48)</li>
+  <li>BLOBHASH (0x49)</li>
+  <li>BLOBBASEFEE (0x4A)</li>
+  <li>GAS (0x5A)
+    <ul>
+      <li>Except when followed immediately by a <code class="language-plaintext highlighter-rouge">*CALL</code> instruction. This is the standard method of passing gas to a child call and does not create an additional public mempool dependency.</li>
+    </ul>
+  </li>
+  <li>CREATE (0xF0)
+    <ul>
+      <li>Except inside the first <code class="language-plaintext highlighter-rouge">deploy</code> frame.</li>
+    </ul>
+  </li>
+  <li>CREATE2 (0xF5)
+    <ul>
+      <li>Except inside the first <code class="language-plaintext highlighter-rouge">deploy</code> frame.</li>
+    </ul>
+  </li>
+  <li>SETDELEGATE (0xF6, <a href="/EIPS/eip-7819">EIP-7819</a>)
+    <ul>
+      <li>Except inside the first <code class="language-plaintext highlighter-rouge">deploy</code> frame.</li>
+    </ul>
+  </li>
+  <li>INVALID (0xFE)</li>
+  <li>SELFDESTRUCT (0xFF)</li>
+  <li>BALANCE (0x31)</li>
+  <li>SELFBALANCE (0x47)</li>
+  <li>SSTORE (0x55)</li>
+  <li>TLOAD (0x5C)</li>
+  <li>TSTORE (0x5D)</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">SLOAD</code> can be used only to access <code class="language-plaintext highlighter-rouge">tx.sender</code> storage, including when reached transitively via <code class="language-plaintext highlighter-rouge">CALL*</code> or <code class="language-plaintext highlighter-rouge">DELEGATECALL</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">CALL*</code> and <code class="language-plaintext highlighter-rouge">EXTCODE*</code> may target any existing contract or precompile, provided the resulting trace still satisfies the storage, opcode, and EIP-7702 restrictions above. This permits helper contracts and libraries during validation, including via <code class="language-plaintext highlighter-rouge">DELEGATECALL</code>, so long as they do not introduce additional mutable-state dependencies.</p>
+  
+    <h4 id="paymasters">
+      
+      
+        <a href="#paymasters" class="anchor-link"></a> Paymasters
+      
+      
+    </h4>
+
+<p>A paymaster can choose to sponsor a transaction’s gas. Generally the relationship is one paymaster to many transaction senders, however, this is in direct conflict with the goal of not predicating the validity of many transactions on the value of one account or storage element.</p>
+
+<p>We address this conflict in two ways:</p>
+
+<ol>
+  <li>If a paymaster sponsors gas for a large number of accounts simultaneously, it must be a safe, standardized paymaster contract. It is designed such that ether which enters it cannot leave except:
+  a. in the form of payment for a transaction, or
+  b. after a delay period.</li>
+  <li>If a paymaster sponsors gas for a small number of accounts simultaneously (no more than <code class="language-plaintext highlighter-rouge">MAX_PENDING_TXS_USING_NON_CANONICAL_PAYMASTER</code>), it may be any paymaster contract.</li>
+</ol>
+  
+    <h5 id="canonical-paymaster-1">
+      
+      
+        <a href="#canonical-paymaster-1" class="anchor-link"></a> Canonical paymaster
+      
+      
+    </h5>
+
+<p>The canonical paymaster is not a singleton deployment. Many instances may be deployed. For public mempool purposes, a paymaster instance is considered canonical if and only if the runtime code at the <code class="language-plaintext highlighter-rouge">pay</code> frame target exactly matches the canonical paymaster implementation.</p>
+
+<p>The canonical paymaster in this draft authorizes with a single secp256k1 signer via <code class="language-plaintext highlighter-rouge">ecrecover</code>, does not support contract-signature schemes, and may change in later specifications, in which case a new canonical implementation version would be required.</p>
+
+<p>Because the canonical paymaster implementation is explicitly standardized to be safe for public mempool use, nodes do not need to apply the generic validation trace and opcode rules to that <code class="language-plaintext highlighter-rouge">pay</code> frame. Instead, they identify it by runtime code match and apply the paymaster-specific accounting and revalidation rules in this section.</p>
+
+<p>A transaction using a paymaster is eligible for public mempool propagation only if the <code class="language-plaintext highlighter-rouge">pay</code> frame targets a canonical paymaster instance and the node can reserve the maximum transaction cost against that paymaster.</p>
+
+<p>For public mempool purposes, each node maintains a local accounting value <code class="language-plaintext highlighter-rouge">reserved_pending_cost(paymaster)</code> and computes:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">available_paymaster_balance</span> <span class="o">=</span> <span class="n">state</span><span class="p">.</span><span class="n">balance</span><span class="p">(</span><span class="n">paymaster</span><span class="p">)</span> <span class="o">-</span> <span class="n">reserved_pending_cost</span><span class="p">(</span><span class="n">paymaster</span><span class="p">)</span> <span class="o">-</span> <span class="n">pending_withdrawal_amount</span><span class="p">(</span><span class="n">paymaster</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Where <code class="language-plaintext highlighter-rouge">pending_withdrawal_amount(paymaster)</code> is the currently pending delayed withdrawal amount of the canonical paymaster instance, or zero if no delayed withdrawal is pending.</p>
+
+<p>A node must reject a paymaster transaction if <code class="language-plaintext highlighter-rouge">available_paymaster_balance</code> is less than the transaction’s maximum cost (<code class="language-plaintext highlighter-rouge">TXPARAM(0x06)</code>).</p>
+
+<p>On admission, the node increments <code class="language-plaintext highlighter-rouge">reserved_pending_cost(paymaster)</code> by the transaction’s maximum cost (<code class="language-plaintext highlighter-rouge">TXPARAM(0x06)</code>). On eviction, replacement, inclusion, or reorg removal, the node decrements it accordingly.</p>
+  
+    <h5 id="non-canonical-paymaster">
+      
+      
+        <a href="#non-canonical-paymaster" class="anchor-link"></a> Non-canonical paymaster
+      
+      
+    </h5>
+
+<p>For non-canonical paymasters, <code class="language-plaintext highlighter-rouge">pending_withdrawal_amount</code> is not meaningful since they may not support timelocked withdrawals.  Instead, we keep the mempool safe by enforcing that each non-canonical paymaster can only be used with no more than <code class="language-plaintext highlighter-rouge">MAX_PENDING_TXS_USING_NON_CANONICAL_PAYMASTER</code> pending transactions.</p>
+
+<p>Therefore we perform two checks:</p>
+
+<ul>
+  <li>For balance, <code class="language-plaintext highlighter-rouge">available_paymaster_balance</code> must not be less than the transaction cost, where:</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">available_paymaster_balance</span> <span class="o">=</span> <span class="n">state</span><span class="p">.</span><span class="n">balance</span><span class="p">(</span><span class="n">paymaster</span><span class="p">)</span> <span class="o">-</span> <span class="n">reserved_pending_cost</span><span class="p">(</span><span class="n">paymaster</span><span class="p">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>The number of pending transactions in the mempool that uses this paymaster must be less than <code class="language-plaintext highlighter-rouge">MAX_PENDING_TXS_USING_NON_CANONICAL_PAYMASTER</code>.</li>
+</ul>
+
+<p><a href="#non-canonical-paymasters-in-the-mempool">See here for rationale</a> for enabling non-canonical paymasters in the mempool.</p>
+  
+    <h4 id="acceptance-algorithm">
+      
+      
+        <a href="#acceptance-algorithm" class="anchor-link"></a> Acceptance Algorithm
+      
+      
+    </h4>
+
+<ol>
+  <li>A transaction is received over the wire and the node decides whether to accept or reject it.</li>
+  <li>The node validates all signatures. If any signature is malformed or invalid, reject.</li>
+  <li>The node analyzes the frame structure and determines the validation prefix. If the prefix is not one of the recognized prefixes, reject.</li>
+  <li>The node simulates the validation prefix and enforces the structural and trace rules above, except that a <code class="language-plaintext highlighter-rouge">pay</code> frame whose target runtime code exactly matches the canonical paymaster implementation is handled via the canonical paymaster exception and the paymaster-specific rules below.</li>
+  <li>The node records the sender storage slots read during validation. Calls into helper contracts do not create additional mutable-state dependencies unless they cause disallowed storage access under the trace rules above.</li>
+  <li>If a canonical paymaster instance is used, the node verifies paymaster solvency using the reservation rule above.</li>
+  <li>A node should keep at most one pending frame transaction per sender in the public mempool. A new transaction from the same sender MAY replace the existing one only if it uses the same nonce and satisfies the node’s fee bump rules.</li>
+  <li>If all checks pass, the transaction may be accepted into the public mempool and propagated to peers.</li>
+</ol>
+  
+    <h4 id="revalidation">
+      
+      
+        <a href="#revalidation" class="anchor-link"></a> Revalidation
+      
+      
+    </h4>
+
+<p>When a new canonical block is accepted, the node removes any included frame transactions from the public mempool, updates paymaster reservations accordingly, and identifies the remaining pending transactions whose tracked dependencies were touched by the block. This includes at least transactions for the same sender, transactions whose recorded sender storage slots changed, and transactions that reference a canonical paymaster instance whose balance, code, or delayed-withdrawal state changed. The node then re-simulates the validation prefix of only those affected transactions against the new head and evicts any transaction that no longer satisfies the public mempool rules.</p>
+  
+    <h4 id="transaction-origination">
+      
+      
+        <a href="#transaction-origination" class="anchor-link"></a> Transaction origination
+      
+      
+    </h4>
+
+<p>Do not apply the restriction put in place by <a href="/EIPS/eip-3607">EIP-3607</a> to frame transactions.
+Specifically, <code class="language-plaintext highlighter-rouge">SENDER</code> frames originate calls where <code class="language-plaintext highlighter-rouge">tx.sender</code> is a contract account.
+Validation logic for other transaction types remains unchanged, i.e. the transaction is only valid if the sender account’s code is either empty or a valid delegation indicator.</p>
+  
+    <h2 id="rationale">
+      
+      
+        <a href="#rationale" class="anchor-link"></a> Rationale
+      
+      
+    </h2>
+  
+    <h3 id="canonical-signature-hash">
+      
+      
+        <a href="#canonical-signature-hash" class="anchor-link"></a> Canonical signature hash
+      
+      
+    </h3>
+
+<p>The canonical signature hash is provided in <code class="language-plaintext highlighter-rouge">TXPARAM</code> to simplify the development of smart accounts.</p>
+
+<p>Computing the signature hash in EVM is complicated and expensive. While using the canonical signature hash is not mandatory, it is strongly recommended. Creating a bespoke signature requires precise commitment to the underlying transaction data. Without this, it’s possible that some elements can be manipulated in-the-air while the transaction is pending and have unexpected effects. This is known as transaction malleability. Using the canonical signature hash avoids malleability of the frames.</p>
+
+<p>The raw <code class="language-plaintext highlighter-rouge">signature</code> bytes of signatures with empty <code class="language-plaintext highlighter-rouge">msg</code> are elided from the canonical signature hash. This is done for three reasons:</p>
+
+<ol>
+  <li>A signature over <code class="language-plaintext highlighter-rouge">compute_sig_hash(tx)</code> cannot commit to its own raw bytes.</li>
+  <li>In the future it may be desired to aggregate or otherwise externalize these signatures for data and compute efficiency reasons.</li>
+  <li>Signatures with explicit 32-byte <code class="language-plaintext highlighter-rouge">msg</code> values do not induce this circularity, so their raw bytes are currently committed by the transaction signature hash.</li>
+</ol>
+
+<p>The <code class="language-plaintext highlighter-rouge">data</code> of <code class="language-plaintext highlighter-rouge">VERIFY</code> frames, including expiry verifier deadlines, is not elided. Any validation data that is intended to be added after a sender signs should be represented as elided raw signature bytes in <code class="language-plaintext highlighter-rouge">tx.signatures</code>, rather than as mutable frame data.</p>
+  
+    <h3 id="approve-calling-convention">
+      
+      
+        <a href="#approve-calling-convention" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">APPROVE</code> calling convention
+      
+      
+    </h3>
+
+<p>Originally <code class="language-plaintext highlighter-rouge">APPROVE</code> was meant to extend the space of return statuses from 0 and 1 today to 0 to 4. However, this would mean smart accounts deployed today would not be able to modify their contract code to return with a different value at the top level. For this reason, we’ve chosen behavior above: <code class="language-plaintext highlighter-rouge">APPROVE</code> terminates the executing frame successfully like <code class="language-plaintext highlighter-rouge">RETURN</code>, but it actually updates the transaction scoped values <code class="language-plaintext highlighter-rouge">sender_approved</code> and <code class="language-plaintext highlighter-rouge">payer</code> during execution. It is still required that only the sender can toggle the <code class="language-plaintext highlighter-rouge">sender_approved</code> to <code class="language-plaintext highlighter-rouge">true</code>. Only the frame’s resolved target can call <code class="language-plaintext highlighter-rouge">APPROVE</code> generally, because it can allow the transaction pool and other frames to better reason about <code class="language-plaintext highlighter-rouge">VERIFY</code> mode frames.</p>
+
+<p>Because <code class="language-plaintext highlighter-rouge">DELEGATECALL</code> preserves <code class="language-plaintext highlighter-rouge">ADDRESS</code>, code executed via <code class="language-plaintext highlighter-rouge">DELEGATECALL</code> from the resolved target may also execute <code class="language-plaintext highlighter-rouge">APPROVE</code> successfully. Contracts that rely on <code class="language-plaintext highlighter-rouge">APPROVE</code> should therefore treat delegatecalled libraries as fully trusted.</p>
+  
+    <h3 id="payer-in-receipt">
+      
+      
+        <a href="#payer-in-receipt" class="anchor-link"></a> Payer in receipt
+      
+      
+    </h3>
+
+<p>The payer cannot be determined statically from a frame transaction and is relevant to users. The only way to provide this information safely and efficiently over the JSON-RPC is to record this data in the receipt object.</p>
+  
+    <h3 id="no-authorization-list">
+      
+      
+        <a href="#no-authorization-list" class="anchor-link"></a> No authorization list
+      
+      
+    </h3>
+
+<p>The EIP-7702 authorization list heavily relies on ECDSA cryptography to determine the authority of accounts to delegate code. While delegations could be used in other manners later, it does not satisfy the PQ goals of the frame transaction.</p>
+  
+    <h3 id="no-access-list">
+      
+      
+        <a href="#no-access-list" class="anchor-link"></a> No access list
+      
+      
+    </h3>
+
+<p>The access list was introduced to address a particular backwards compatibility issue that was caused by EIP-2929. The risk-reward of using an access list successfully is high. A single miss, paying to warm a storage slot that does not end up getting used, causes the overall transaction cost to be greater than had it not been included at all.</p>
+
+<p>Future optimizations based on pre-announcing state elements a transaction will touch will be covered by block level access lists.</p>
+  
+    <h3 id="atomic-batching">
+      
+      
+        <a href="#atomic-batching" class="anchor-link"></a> Atomic batching
+      
+      
+    </h3>
+
+<p>Atomic batching allows multiple frames to be grouped into a single all-or-nothing unit. This is useful when a sequence of calls is only meaningful if all succeed together, such as an approval followed by a swap, or a series of interdependent state changes. Without this feature, a revert in one frame would leave the preceding frames’ state changes applied, potentially leaving the account in an undesirable intermediate state.</p>
+
+<p>Using a flag to indicate atomic batches saves us from having to introduce a new mode. Batches are identified purely by consecutive frames with the flag set, terminated by a frame without it. This design enables consecutive atomic batches since the batch boundary is clearly indicated by the frame without the flag.</p>
+  
+    <h3 id="per-frame-cost">
+      
+      
+        <a href="#per-frame-cost" class="anchor-link"></a> Per-frame cost
+      
+      
+    </h3>
+
+<p>Each frame incurs a fixed CALL execution-context overhead (100) plus <code class="language-plaintext highlighter-rouge">G_log</code> (375) for the receipt sub-entry it produces, giving <code class="language-plaintext highlighter-rouge">FRAME_TX_PER_FRAME_COST = 475</code>. The execution-context component covers context setup, mode dispatch, and gas accounting at the frame boundary, analogous to the fixed overhead of a CALL. The <code class="language-plaintext highlighter-rouge">G_log</code> component covers the <code class="language-plaintext highlighter-rouge">[status, gas_used, logs]</code> receipt sub-entry that each frame adds to the transaction receipt, which must be serialized, hashed into the receipt trie, and proven by ZK-EVM implementations. Cold/warm access costs for the frame’s target account are charged within the frame’s own <code class="language-plaintext highlighter-rouge">gas_limit</code> through the normal EVM warm/cold accounting, not through the per-frame cost.</p>
+  
+    <h3 id="per-frame-value">
+      
+      
+        <a href="#per-frame-value" class="anchor-link"></a> Per-frame value
+      
+      
+    </h3>
+
+<p>A design goal of the frame transaction is to provide a good experience out-of-the-box for users and to reduce the threat surface of smart contract wallets. Like batching, sending native value is a part of achieving that.</p>
+
+<p>Restricting non-zero <code class="language-plaintext highlighter-rouge">value</code> to <code class="language-plaintext highlighter-rouge">SENDER</code> frames keeps <code class="language-plaintext highlighter-rouge">VERIFY</code> and <code class="language-plaintext highlighter-rouge">DEFAULT</code> frames side-effect-free with respect to ETH transfer semantics, preserves the intended <code class="language-plaintext highlighter-rouge">STATICCALL</code>-like behavior of <code class="language-plaintext highlighter-rouge">VERIFY</code>, and avoids requiring the protocol-defined <code class="language-plaintext highlighter-rouge">ENTRY_POINT</code> caller to fund top-level ETH transfers.</p>
+  
+    <h3 id="public-key-aliases">
+      
+      
+        <a href="#public-key-aliases" class="anchor-link"></a> Public Key Aliases
+      
+      
+    </h3>
+
+<p>Future signature schemes with large public keys may benefit from a state-backed alias mechanism. Such an alias could be a 20-byte address that identifies a public key stored in state, allowing transactions to reference the address instead of carrying the full public key each time.</p>
+
+<p>A future extension could represent the alias account as non-executable code containing a canonical public key object, for example:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0xef02 || version || key_type || pubkey_len || pubkey
+</code></pre></div></div>
+
+<p>where <code class="language-plaintext highlighter-rouge">key_type</code> defines the cryptosystem, public key encoding, valid lengths, and validation rules for <code class="language-plaintext highlighter-rouge">pubkey</code>.</p>
+
+<p>That extension could also define a <code class="language-plaintext highlighter-rouge">PUBLISHPK</code> instruction to validate a public key, wrap it in the canonical alias-code format, derive the alias address, and install the alias code.</p>
+  
+    <h3 id="externally-owned-account-eoa-support">
+      
+      
+        <a href="#externally-owned-account-eoa-support" class="anchor-link"></a> Externally Owned Account (EOA) support
+      
+      
+    </h3>
+
+<p>While we expect EOA users to migrate to smart accounts eventually, we recognize that most Ethereum users today are using EOAs, so we want to improve UX for them where we can.</p>
+
+<p>Thanks to the default code, EOAs today can use frame transactions to reap many benefits of account abstraction, including sending sponsored transactions, paying gas in ERC-20 tokens, batch transactions, and more.</p>
+  
+    <h3 id="non-canonical-paymasters-in-the-mempool">
+      
+      
+        <a href="#non-canonical-paymasters-in-the-mempool" class="anchor-link"></a> Non-canonical paymasters in the mempool
+      
+      
+    </h3>
+
+<p>The primary use case for non-canonical paymasters is to enable users to pay gas with a dedicated “gas account,” so that their other accounts can transact without holding any ETH. For example, a user might have a single account that holds some ETH, while other accounts only hold stablecoins and NFTs, and they can transact freely with these other accounts while using the gas account as the paymaster.</p>
+
+<p>Note that users can use any EOA as a paymaster thanks to the <a href="#default-code">default code</a>.</p>
+  
+    <h3 id="examples">
+      
+      
+        <a href="#examples" class="anchor-link"></a> Examples
+      
+      
+    </h3>
+  
+    <h4 id="example-1-simple-transaction">
+      
+      
+        <a href="#example-1-simple-transaction" class="anchor-link"></a> Example 1: Simple Transaction
+      
+      
+    </h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Frame</th>
+      <th>Caller</th>
+      <th>Target</th>
+      <th>Value</th>
+      <th>Flags</th>
+      <th>Data</th>
+      <th>Mode</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>ENTRY_POINT</td>
+      <td>Null (sender)</td>
+      <td>0</td>
+      <td>APPROVE_EXECUTION_AND_PAYMENT</td>
+      <td>Empty</td>
+      <td>VERIFY</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Sender</td>
+      <td>Target</td>
+      <td>0</td>
+      <td>APPROVE_SCOPE_NONE</td>
+      <td>Call data</td>
+      <td>SENDER</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Frame 0 uses a signature entry with empty <code class="language-plaintext highlighter-rouge">msg</code> for the sender and calls <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_EXECUTION_AND_PAYMENT)</code> to approve both payment and execution. Frame 1 executes and exits normally via <code class="language-plaintext highlighter-rouge">RETURN</code>.</p>
+
+<p>The mempool can process this transaction with the following static validation and call:</p>
+
+<ul>
+  <li>Verify that the first frame is a <code class="language-plaintext highlighter-rouge">VERIFY</code> frame.</li>
+  <li>Verify that the call of frame 0 succeeds, and does not violate the mempool rules (similar to <a href="/EIPS/eip-7562">ERC-7562</a>).</li>
+</ul>
+  
+    <h4 id="example-1a-simple-eth-transfer">
+      
+      
+        <a href="#example-1a-simple-eth-transfer" class="anchor-link"></a> Example 1a: Simple ETH transfer
+      
+      
+    </h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Frame</th>
+      <th>Caller</th>
+      <th>Target</th>
+      <th>Value</th>
+      <th>Flags</th>
+      <th>Data</th>
+      <th>Mode</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>ENTRY_POINT</td>
+      <td>Null (sender)</td>
+      <td>0</td>
+      <td>APPROVE_EXECUTION_AND_PAYMENT</td>
+      <td>Empty</td>
+      <td>VERIFY</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Sender</td>
+      <td>Destination</td>
+      <td>Amount</td>
+      <td>APPROVE_SCOPE_NONE</td>
+      <td>Empty</td>
+      <td>SENDER</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A simple transfer is performed by setting the <code class="language-plaintext highlighter-rouge">SENDER</code> frame target to the destination account and the frame <code class="language-plaintext highlighter-rouge">value</code> to the transfer amount. This requires two frames for mempool compatibility, since the validation phase of the transaction has to be static.</p>
+  
+    <h4 id="example-1b-simple-account-deployment">
+      
+      
+        <a href="#example-1b-simple-account-deployment" class="anchor-link"></a> Example 1b: Simple account deployment
+      
+      
+    </h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Frame</th>
+      <th>Caller</th>
+      <th>Target</th>
+      <th>Value</th>
+      <th>Flags</th>
+      <th>Data</th>
+      <th>Mode</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>ENTRY_POINT</td>
+      <td>Deployer</td>
+      <td>0</td>
+      <td>APPROVE_SCOPE_NONE</td>
+      <td>Initcode, Salt</td>
+      <td>DEFAULT</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>ENTRY_POINT</td>
+      <td>Null (sender)</td>
+      <td>0</td>
+      <td>APPROVE_EXECUTION_AND_PAYMENT</td>
+      <td>Empty</td>
+      <td>VERIFY</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Sender</td>
+      <td>Destination</td>
+      <td>Amount</td>
+      <td>APPROVE_SCOPE_NONE</td>
+      <td>Empty</td>
+      <td>SENDER</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This example illustrates the initial deployment flow for a smart account at the <code class="language-plaintext highlighter-rouge">sender</code> address. Since the address needs to have code in order to validate the transaction, the transaction must deploy the code before verification.</p>
+
+<p>The first frame would call the <a href="/EIPS/eip-7997">EIP-7997</a> deterministic factory predeploy. The deployer determines the address in a deterministic way from the salt and initcode. However, since the transaction sender is not authenticated at this point, the user must choose an initcode which is safe to deploy by anyone.</p>
+  
+    <h4 id="example-2-atomic-approve--swap">
+      
+      
+        <a href="#example-2-atomic-approve--swap" class="anchor-link"></a> Example 2: Atomic Approve + Swap
+      
+      
+    </h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Frame</th>
+      <th>Caller</th>
+      <th>Target</th>
+      <th>Value</th>
+      <th>Flags</th>
+      <th>Data</th>
+      <th>Mode</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>ENTRY_POINT</td>
+      <td>Null (sender)</td>
+      <td>0</td>
+      <td>APPROVE_EXECUTION_AND_PAYMENT</td>
+      <td>Empty</td>
+      <td>VERIFY</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Sender</td>
+      <td>ERC-20</td>
+      <td>0</td>
+      <td>ATOMIC_BATCH_FLAG</td>
+      <td>approve(DEX, amount)</td>
+      <td>SENDER</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Sender</td>
+      <td>DEX</td>
+      <td>0</td>
+      <td>APPROVE_SCOPE_NONE</td>
+      <td>swap(…)</td>
+      <td>SENDER</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Frame 0 uses a signature entry with empty <code class="language-plaintext highlighter-rouge">msg</code> and calls <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_EXECUTION_AND_PAYMENT)</code>. Frames 1 and 2 form an atomic batch: if the swap in frame 2 reverts, the ERC-20 approval from frame 1 is also reverted, preventing the account from being left with a dangling approval.</p>
+  
+    <h4 id="example-3-sponsored-transaction-fee-payment-in-erc-20">
+      
+      
+        <a href="#example-3-sponsored-transaction-fee-payment-in-erc-20" class="anchor-link"></a> Example 3: Sponsored Transaction (Fee Payment in ERC-20)
+      
+      
+    </h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Frame</th>
+      <th>Caller</th>
+      <th>Target</th>
+      <th>Value</th>
+      <th>Flags</th>
+      <th>Data</th>
+      <th>Mode</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>ENTRY_POINT</td>
+      <td>Null (sender)</td>
+      <td>0</td>
+      <td>APPROVE_EXECUTION</td>
+      <td>Empty</td>
+      <td>VERIFY</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>ENTRY_POINT</td>
+      <td>Sponsor</td>
+      <td>0</td>
+      <td>APPROVE_PAYMENT</td>
+      <td>Sponsor data</td>
+      <td>VERIFY</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Sender</td>
+      <td>ERC-20</td>
+      <td>0</td>
+      <td>APPROVE_SCOPE_NONE</td>
+      <td>transfer(Sponsor,fees)</td>
+      <td>SENDER</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Sender</td>
+      <td>Target addr</td>
+      <td>0</td>
+      <td>APPROVE_SCOPE_NONE</td>
+      <td>Call data</td>
+      <td>SENDER</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>ENTRY_POINT</td>
+      <td>Sponsor</td>
+      <td>0</td>
+      <td>APPROVE_SCOPE_NONE</td>
+      <td>Post op call</td>
+      <td>DEFAULT</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>Frame 0: Uses the sender’s signature entry with empty <code class="language-plaintext highlighter-rouge">msg</code> and calls <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_EXECUTION)</code> to authorize execution from sender.</li>
+  <li>Frame 1: Checks that the user has enough ERC-20 tokens, inspects signature metadata in <code class="language-plaintext highlighter-rouge">tx.signatures</code> if needed, and checks that the next frame is an ERC-20 send of the right size to the sponsor. Calls <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_PAYMENT)</code> to authorize payment.</li>
+  <li>Frame 2: Sends tokens to sponsor.</li>
+  <li>Frame 3: User’s intended call.</li>
+  <li>Frame 4 (optional): Check unpaid gas, refund tokens, possibly convert tokens to ETH on an AMM.</li>
+</ul>
+  
+    <h3 id="data-efficiency">
+      
+      
+        <a href="#data-efficiency" class="anchor-link"></a> Data Efficiency
+      
+      
+    </h3>
+
+<p><strong>Basic transaction sending ETH from a smart account:</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Bytes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tx wrapper</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Chain ID</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Nonce</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Sender</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>Max priority fee</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>Max fee</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>Max fee per blob gas</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Blob versioned hashes (empty)</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Signatures wrapper</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sender tx signature: scheme</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sender tx signature: signer</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>Sender tx signature: msg</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Sender tx signature: signature</td>
+      <td>65</td>
+    </tr>
+    <tr>
+      <td>Frames wrapper</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sender validation frame: mode</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sender validation frame: flags</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sender validation frame: target</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sender validation frame: gas</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Sender validation frame: value</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sender validation frame: data</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Execution frame: mode</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Execution frame: flags</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Execution frame: target</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>Execution frame: gas</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Execution frame: value</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>Execution frame: data</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td><strong>Total</strong></td>
+      <td>158</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Notes: Nonce assumes &lt; 65536 prior sends. Fees assume &lt; 1099 gwei. Validation frame target is 1 byte because target is <code class="language-plaintext highlighter-rouge">tx.sender</code>. Validation gas assumes &lt;= 65,536 gas. Validation frame value is zero. Execution frame target is encoded directly as the destination address. Execution frame value assumes a compact 5-byte encoding. The execution frame data is empty for a plain ETH transfer. The signature is a secp256k1 entry with empty <code class="language-plaintext highlighter-rouge">msg</code> using a 65-byte ECDSA signature. Blob fields assume no blobs (empty list, zero max fee).</p>
+
+<p>This is not much larger than an EIP-1559 transaction; the extra overhead is mainly the need to specify the sender and the per-frame wrapper explicitly.</p>
+
+<p><strong>First transaction from an account (add deployment frame):</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Bytes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Deployment frame: mode</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Deployment frame: flags</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Deployment frame: target</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>Deployment frame: gas</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>Deployment frame: value</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Deployment frame: data</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <td><strong>Total additional</strong></td>
+      <td>126</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Notes: Gas assumes cost &lt; 2^24. Calldata assumes small proxy.</p>
+
+<p><strong>Trustless pay-with-ERC-20 sponsor (add these frames):</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Bytes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Sponsor validation frame: mode</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sponsor validation frame: flags</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sponsor validation frame: target</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>Sponsor validation frame: gas</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>Sponsor validation frame: value</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sponsor validation frame: calldata</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Send to sponsor frame: mode</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Send to sponsor frame: flags</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Send to sponsor frame: target</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>Send to sponsor frame: gas</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>Send to sponsor frame: value</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Send to sponsor frame: calldata</td>
+      <td>68</td>
+    </tr>
+    <tr>
+      <td>Sponsor post op frame: mode</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Sponsor post op frame: flags</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sponsor post op frame: target</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <td>Sponsor post op frame: gas</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>Sponsor post op frame: value</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Sponsor post op frame: calldata</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td><strong>Total additional</strong></td>
+      <td>147</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Notes: Sponsor can read info from other fields. ERC-20 transfer call is 68 bytes.</p>
+
+<p>There is some inefficiency in the sponsor case, because the same sponsor address must appear in three places (sponsor validation, send to sponsor inside ERC-20 calldata, post op frame), and the ABI is inefficient (~12 + 24 bytes wasted on zeroes). This is difficult to mitigate in a “clean” way, because one of the duplicates is inside the ERC-20 call, “opaque” to the protocol. However, it is much less inefficient than ERC-4337, because not all of the data takes the hit of the 32-byte-per-field ABI overhead.</p>
+  
+    <h2 id="backwards-compatibility">
+      
+      
+        <a href="#backwards-compatibility" class="anchor-link"></a> Backwards Compatibility
+      
+      
+    </h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">ORIGIN</code> opcode behavior changes for frame transactions, returning the frame’s caller rather than the traditional transaction origin. This is consistent with the precedent set by EIP-7702, which already modified <code class="language-plaintext highlighter-rouge">ORIGIN</code> semantics. Contracts that rely on <code class="language-plaintext highlighter-rouge">ORIGIN = CALLER</code> for security checks (a discouraged pattern) may behave differently under frame transactions.</p>
+  
+    <h2 id="security-considerations">
+      
+      
+        <a href="#security-considerations" class="anchor-link"></a> Security Considerations
+      
+      
+    </h2>
+  
+    <h3 id="transaction-propagation">
+      
+      
+        <a href="#transaction-propagation" class="anchor-link"></a> Transaction Propagation
+      
+      
+    </h3>
+
+<p>Frame transactions introduce new denial-of-service vectors for transaction pools that node operators must mitigate. Because validation logic is arbitrary EVM code, attackers can craft transactions that appear valid during initial validation but become invalid later. Without any additional policies, an attacker could submit many transactions whose validity depends on some shared state, then submit one transaction that modifies that state, and cause all other transactions to become invalid simultaneously. This wastes the computational resources nodes spent validating and storing these transactions.</p>
+  
+    <h4 id="example-attack">
+      
+      
+        <a href="#example-attack" class="anchor-link"></a> Example Attack
+      
+      
+    </h4>
+
+<p>A simple example is transactions that check <code class="language-plaintext highlighter-rouge">block.timestamp</code>:</p>
+
+<div class="language-solidity highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function</span> <span class="n">validateTransaction</span><span class="p">()</span> <span class="k">external</span> <span class="p">{</span>
+    <span class="nb">require</span><span class="p">(</span><span class="n">block</span><span class="p">.</span><span class="n">timestamp</span> <span class="o">&lt;</span> <span class="n">SOME_DEADLINE</span><span class="p">,</span> <span class="s">"expired"</span><span class="p">);</span>
+    <span class="c1">// ... rest of validation
+</span>    <span class="n">APPROVE</span><span class="p">(</span><span class="n">APPROVE_EXECUTION_AND_PAYMENT</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Such transactions are valid when submitted but become invalid once the deadline passes, without any on-chain action required from the attacker.</p>
+  
+    <h4 id="deploy-frame-front-running">
+      
+      
+        <a href="#deploy-frame-front-running" class="anchor-link"></a> Deploy Frame Front-Running
+      
+      
+    </h4>
+
+<p>If a transaction uses a <code class="language-plaintext highlighter-rouge">deploy</code> frame, that frame executes before the sender is authenticated. An observer can front-run the same deterministic deployment and cause the <code class="language-plaintext highlighter-rouge">deploy</code> frame to fail because code is already present at <code class="language-plaintext highlighter-rouge">tx.sender</code>. Accordingly, the deploy frame’s calldata (and any initcode it carries) must be safe to submit by any party, and wallets should expect resubmission without the <code class="language-plaintext highlighter-rouge">deploy</code> frame once deployment has already occurred.</p>
+  
+    <h4 id="explicit-sender-state-read-amplification">
+      
+      
+        <a href="#explicit-sender-state-read-amplification" class="anchor-link"></a> Explicit Sender State-Read Amplification
+      
+      
+    </h4>
+
+<p>Because <code class="language-plaintext highlighter-rouge">tx.sender</code> is explicit in the transaction envelope, an attacker can submit many invalid frame transactions that name arbitrary sender addresses and force nodes to read sender state, including the nonce check required before execution. Public mempool implementations should therefore perform all available structural and stateless checks before sender-state access and should consider peer-level rate limiting or other DoS mitigations for repeated invalid transactions that vary <code class="language-plaintext highlighter-rouge">tx.sender</code>.</p>
+  
+    <h4 id="cross-frame-data-visibility-during-validation">
+      
+      
+        <a href="#cross-frame-data-visibility-during-validation" class="anchor-link"></a> Cross-frame Data Visibility During Validation
+      
+      
+    </h4>
+
+<p><code class="language-plaintext highlighter-rouge">FRAMEPARAM</code>, <code class="language-plaintext highlighter-rouge">FRAMEDATALOAD</code>, and <code class="language-plaintext highlighter-rouge">FRAMEDATACOPY</code> allow validation code to inspect other frames, including later <code class="language-plaintext highlighter-rouge">SENDER</code> frames and their <code class="language-plaintext highlighter-rouge">value</code>s. As a result, paymasters and other <code class="language-plaintext highlighter-rouge">VERIFY</code> frames can observe user operation parameters before approval and may condition their behavior on that information. Users should therefore treat non-<code class="language-plaintext highlighter-rouge">VERIFY</code> frame parameters and data as visible to validation logic and should not rely on untrusted paymasters or verifiers to keep such information private.</p>
+  
+    <h5 id="mitigations">
+      
+      
+        <a href="#mitigations" class="anchor-link"></a> Mitigations
+      
+      
+    </h5>
+
+<p>Node implementations should consider restricting which opcodes and storage slots validation frames can access, similar to ERC-7562. This isolates transactions from each other and limits mass invalidation vectors.</p>
+
+<p>It’s recommended that to <em>validate</em> the transaction, a specific frame structure is enforced and the amount of gas that is expended executing the validation phase must be limited. Once the validation prefix reaches payer approval via <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_PAYMENT)</code> or <code class="language-plaintext highlighter-rouge">APPROVE(APPROVE_EXECUTION_AND_PAYMENT)</code>, the transaction can be included in the mempool and propagated to peers safely.</p>
+
+<p>For deployment of the sender account in the first frame, the mempool enforces deploy-frame determinism via the validation trace rules. Any contract may be used as <code class="language-plaintext highlighter-rouge">frame.target</code>, provided the frame’s execution satisfies those rules — notably, it must not read mutable state outside <code class="language-plaintext highlighter-rouge">tx.sender</code> or maintain per-deploy factory storage (counters, reentrancy flags, etc.), so that the deployment result is independent of chain state. Factories deployed via the <a href="/EIPS/eip-7997">EIP-7997</a> deterministic factory predeploy are the canonical choice for acquiring a cross-chain-stable factory address.</p>
+
+<p>In general, it can be assumed that handling of frame transactions imposes similar restrictions as EIP-7702 on mempool relay, i.e. only a single transaction can be pending for an account that uses frame transactions.</p>
+  
+    <h2 id="copyright">
+      
+      
+        <a href="#copyright" class="anchor-link"></a> Copyright
+      
+      
+    </h2>
+
+<p>Copyright and related rights waived via <a href="/LICENSE">CC0</a>.</p>
+
+  <h2>Citation</h2>
+  <p>Please cite this document as:</p>
+  
+  <p>Vitalik Buterin&nbsp;(<a href="https://github.com/vbuterin">@vbuterin</a>), lightclient&nbsp;(<a href="https://github.com/lightclient">@lightclient</a>), Felix Lange&nbsp;(<a href="https://github.com/fjl">@fjl</a>), Yoav Weiss&nbsp;(<a href="https://github.com/yoavw">@yoavw</a>), Alex Forshtat&nbsp;(<a href="https://github.com/forshtat">@forshtat</a>), Dror Tirosh&nbsp;(<a href="https://github.com/drortirosh">@drortirosh</a>), Shahaf Nacson&nbsp;(<a href="https://github.com/shahafn">@shahafn</a>), Derek Chiang&nbsp;(<a href="https://github.com/derekchiang">@derekchiang</a>), Toni Wahrstätter&nbsp;(<a href="https://github.com/nerolation">@nerolation</a>), "EIP-8141: Frame Transaction [DRAFT]," <em>Ethereum Improvement Proposals</em>, no. 8141, January 2026. Available: https://eips.ethereum.org/EIPS/eip-8141.</p>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "TechArticle",
+    "headline": "EIP-8141: Frame Transaction [DRAFT]",
+    "name": "EIP-8141: Frame Transaction [DRAFT]",
+    "author": "Vitalik Buterin (@vbuterin), lightclient (@lightclient), Felix Lange (@fjl), Yoav Weiss (@yoavw), Alex Forshtat (@forshtat), Dror Tirosh (@drortirosh), Shahaf Nacson (@shahafn), Derek Chiang (@derekchiang), Toni Wahrstätter (@nerolation)",
+    "dateCreated": "2026-01-29",
+    "datePublished": "2026-01-29",
+    
+    "discussionUrl": "https://ethereum-magicians.org/t/frame-transaction/27617",
+    
+    "inLanguage": "en-US",
+    "license": "#copyright",
+    "copyrightYear": "2026"
+  }
+</script>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ethereum Improvement Proposals</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ethereum Improvement Proposals</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ethereum/EIPs"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ethereum/EIPs</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

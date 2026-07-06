@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Exploring the Design Space for a Post-Quantum Public Key Registry for Ethereum Validators - Cryptography - Ethereum Research</title>
+    <meta name="description" content="Authors: Thomas Coratger, Tom Wambsgans, Ladislaus, Thomas Thiery, Justin Drake 
+Credits to Benedikt Wagner and Dmitry Khovratovich for all the theoretical work, ideas, discussions and papers that have been published on &amp;hellip;">
+    <meta name="generator" content="Discourse 3.5.2 - https://github.com/discourse/discourse version cc8d3f6f74bb618b3594ddc8fabcfd7663f63723">
+<link rel="icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/b/b5d7a1aa2f70490e3de763bef97271864784994f_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/3/3483ad4ffed2ab2b130f3e81fdb188ea2c478643_2_180x180.png">
+<meta name="theme-color" media="all" content="#fff">
+
+<meta name="color-scheme" content="light">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://ethresear.ch/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040" />
+
+<link rel="search" type="application/opensearchdescription+xml" href="https://ethresear.ch/opensearch.xml" title="Ethereum Research Search">
+
+    <link href="/stylesheets/color_definitions_light-default_-1_2_d93422173e6af31573562c9ff4e20afcb8a5ec7d.css?__ws=ethresear.ch" media="all" rel="stylesheet" class="light-scheme"/>
+
+<link href="/stylesheets/common_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common"  />
+
+  <link href="/stylesheets/desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop"  />
+
+
+
+    <link href="/stylesheets/checklist_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="checklist"  />
+    <link href="/stylesheets/discourse-details_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-details"  />
+    <link href="/stylesheets/discourse-graphviz_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-graphviz"  />
+    <link href="/stylesheets/discourse-lazy-videos_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+    <link href="/stylesheets/discourse-local-dates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+    <link href="/stylesheets/discourse-math_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-math"  />
+    <link href="/stylesheets/discourse-narrative-bot_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+    <link href="/stylesheets/discourse-presence_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-presence"  />
+    <link href="/stylesheets/discourse-solved_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-solved"  />
+    <link href="/stylesheets/discourse-templates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-templates"  />
+    <link href="/stylesheets/discourse-topic-voting_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+    <link href="/stylesheets/docker_manager_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="docker_manager"  />
+    <link href="/stylesheets/footnote_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="footnote"  />
+    <link href="/stylesheets/poll_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll"  />
+    <link href="/stylesheets/discourse-topic-voting_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting_desktop"  />
+    <link href="/stylesheets/poll_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="/stylesheets/common_theme_4_9581ecb7d67f268461f04d3d4e1b015ea2ad1983.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="4" data-theme-name="easy footer"/>
+    <link href="/stylesheets/desktop_theme_2_6e0603c5f6be3f943ee4806f79959c7a96ab67f5.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop_theme" data-theme-id="2" data-theme-name="default"/>
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;Exploring the Design Space for a Post-Quantum Public Key Registry for Ethereum Validators&#39;" href="https://ethresear.ch/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040.rss" />
+    <meta property="og:site_name" content="Ethereum Research" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://ethresear.ch/uploads/default/optimized/3X/d/7/d78950be85fa7fb0f6590af2bd15ca83fff7c041_2_1024x169.png" />
+<meta property="og:image" content="https://ethresear.ch/uploads/default/optimized/3X/d/7/d78950be85fa7fb0f6590af2bd15ca83fff7c041_2_1024x169.png" />
+<meta property="og:url" content="https://ethresear.ch/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040" />
+<meta name="twitter:url" content="https://ethresear.ch/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040" />
+<meta property="og:title" content="Exploring the Design Space for a Post-Quantum Public Key Registry for Ethereum Validators" />
+<meta name="twitter:title" content="Exploring the Design Space for a Post-Quantum Public Key Registry for Ethereum Validators" />
+<meta property="og:description" content="Authors: Thomas Coratger, Tom Wambsgans, Ladislaus, Thomas Thiery, Justin Drake  Credits to Benedikt Wagner and Dmitry Khovratovich for all the theoretical work, ideas, discussions and papers that have been published on eprint and that are linked in this post.  As outlined in the Strawmap roadmap, securing Ethereum against the looming threat of large-scale quantum computers is a top priority. A critical milestone in this transition is migrating our proof-of-stake consensus from BLS signatures to..." />
+<meta name="twitter:description" content="Authors: Thomas Coratger, Tom Wambsgans, Ladislaus, Thomas Thiery, Justin Drake  Credits to Benedikt Wagner and Dmitry Khovratovich for all the theoretical work, ideas, discussions and papers that have been published on eprint and that are linked in this post.  As outlined in the Strawmap roadmap, securing Ethereum against the looming threat of large-scale quantum computers is a top priority. A critical milestone in this transition is migrating our proof-of-stake consensus from BLS signatures to..." />
+<meta property="og:article:section" content="Cryptography" />
+<meta property="og:article:section:color" content="000000" />
+<meta name="twitter:label1" value="Reading time" />
+<meta name="twitter:data1" value="14 mins 🕑" />
+<meta name="twitter:label2" value="Likes" />
+<meta name="twitter:data2" value="17 ❤" />
+<meta property="article:published_time" content="2026-06-01T19:01:28+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+    
+  </head>
+  <body class="crawler ">
+    
+    <header>
+  <a href="/">Ethereum Research</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040">Exploring the Design Space for a Post-Quantum Public Key Registry for Ethereum Validators</a>
+    </h1>
+
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/cryptography/28" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #000000'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>Cryptography</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </span>
+      </div>
+
+  </div>
+
+  
+
+    <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+      <meta itemprop='headline' content='Exploring the Design Space for a Post-Quantum Public Key Registry for Ethereum Validators'>
+      <link itemprop='url' href='https://ethresear.ch/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040'>
+      <meta itemprop='datePublished' content='2026-06-01T19:01:28Z'>
+        <meta itemprop='articleSection' content='Cryptography'>
+      <meta itemprop='keywords' content=''>
+      <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop='name' content='Ethereum Foundation'>
+          <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+            <meta itemprop='url' content='https://ethresear.ch/uploads/default/original/2X/8/84d109b2d8dd6bc4fe5255cd44fc429e5649da32.png'>
+          </div>
+      </div>
+
+
+          <div id='post_1'  class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/tcoratger'><span itemprop='name'>tcoratger</span></a>
+                
+              </span>
+
+                <link itemprop="mainEntityOfPage" href="https://ethresear.ch/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040">
+
+                <link itemprop="image" href="https://ethresear.ch/uploads/default/original/3X/d/7/d78950be85fa7fb0f6590af2bd15ca83fff7c041.png">
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2026-06-01T19:01:28Z' class='post-time'>
+                    June 1, 2026,  7:01pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-05T13:38:53Z'>
+              <span itemprop='position'>1</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p><strong>Authors:</strong> <a href="https://github.com/tcoratger">Thomas Coratger</a>, <a href="https://github.com/TomWambsgans">Tom Wambsgans</a>, <a href="https://x.com/ladislaus0x">Ladislaus</a>, <a href="https://x.com/soispoke">Thomas Thiery</a>, <a href="https://x.com/drakefjustin">Justin Drake</a></p>
+<p><em>Credits to <a href="https://benedikt-wagner.dev/">Benedikt Wagner</a> and <a href="https://x.com/khovr">Dmitry Khovratovich</a> for all the theoretical work, ideas, discussions and papers that have been published on eprint and that are linked in this post.</em></p>
+<p>As outlined in the <a href="https://strawmap.org/">Strawmap roadmap</a>, securing Ethereum against the looming threat of large-scale quantum computers is a top priority. A critical milestone in this transition is migrating our proof-of-stake consensus from BLS signatures to a post-quantum (PQ) secure signature scheme.</p>
+<p>This post aims to explore the concepts and design space for a Post-Quantum Public Key Registry. Importantly, the actual transition will happen in phases: the Public Key Registry fork will occur first, enabling validators to register their PQ keys, followed by the actual signature switch several forks later. This gradual rollout gives the network ample time to build state, monitor for vulnerabilities, and finalize the underlying cryptographic primitives. Ultimately, the discussions generated here will mature into a formal Ethereum Improvement Proposal (EIP).</p>
+<h2><a name="p-60301-historical-context-and-the-need-for-a-registry-1" class="anchor" href="#p-60301-historical-context-and-the-need-for-a-registry-1"></a>Historical Context and the Need for a Registry</h2>
+<p>In the current proof-of-stake design, validator public keys (BLS12-381) are registered via the deposit contract on the execution layer and subsequently processed by the consensus layer. BLS signatures are wonderfully efficient for aggregation, but they rely on elliptic curve cryptography, which is completely broken by Shor’s algorithm.</p>
+<p>Transitioning to post-quantum signatures introduces significant operational difficulties for the network’s participants. Generating and securely storing these new keys requires validators to access their cold storage, execute new key generation scripts, and interact with their most sensitive cryptographic material. Because this is such a high-friction, high-stakes operational maneuver, we plan to decouple the registration of these keys from their active use in consensus. A dedicated Public Key Registry acts as a critical warmup phase, giving validators a low-pressure environment to securely manage their hardware setups and gradually commit to their post-quantum identities well in advance of the actual protocol upgrade.</p>
+<h2><a name="p-60301-part-1-foundations-the-cryptographic-core-extended-merkle-signature-scheme-xmss-2" class="anchor" href="#p-60301-part-1-foundations-the-cryptographic-core-extended-merkle-signature-scheme-xmss-2"></a>Part 1: Foundations — The Cryptographic Core: eXtended Merkle Signature Scheme (XMSS)</h2>
+<p>When exploring post-quantum digital signatures, the cryptographic community generally categorizes the design space into a few main families: lattice-based, code-based, isogeny-based, multivariate, and hash-based. While solutions like lattice-based signatures (e.g., aggregating Falcon signatures via proof systems like LaBRADOR) are heavily studied, selecting secure parameters for them is highly complex, and their security proofs often rely on techniques with uncertain implications in a post-quantum setting.</p>
+<p>Ultimately, hash-based signatures emerge as the strongest candidate for Ethereum. They stand out due to their conceptual simplicity, ease of implementation, and reliance on highly conservative, standard-model cryptographic assumptions (like basic collision and preimage resistance) rather than complex algebraic structures.</p>
+<p>Hash-based signatures present two primary challenges: they do not natively support aggregation, and they require strict state management to prevent key reuse. While the aggregation problem must be solved separately via cryptographic proofs, the structured nature of Ethereum’s proof-of-stake consensus gives us a massive advantage for the latter: validators are required to sign exactly once per epoch.</p>
+<p>This strict timeline allows us to bypass the significant verification overhead of fully stateless schemes (like SPHINCS+, which requires roughly 10x more hashes at verification) and instead leverage a synchronized (stateful) signature scheme. The <a href="https://eprint.iacr.org/2025/055">eXtended Merkle Signature Scheme (XMSS)</a> perfectly fits this model, tying each signature to a specific sequential position. Note that double signing under XMSS would break the key by leaking enough intermediate hash information to let an attacker forge signatures for that leaf.</p>
+<h3><a name="p-60301-how-xmss-works-3" class="anchor" href="#p-60301-how-xmss-works-3"></a>How XMSS Works</h3>
+<p>To understand why XMSS is so effective, it helps to break down its construction step by step, starting from the basic properties of a hash function.</p>
+<h4><a name="p-60301-the-building-block-hash-chains-4" class="anchor" href="#p-60301-the-building-block-hash-chains-4"></a>The Building Block: Hash Chains</h4>
+<p>Because cryptographic hash functions are one-way (preimage resistant), you cannot easily deduce an input from an output. A hash chain leverages this by taking a secret starting value (a private key) and hashing it repeatedly a predetermined number of times to produce a final value (the public key).</p>
+<p>If a hash chain has 256 steps, revealing the intermediate hash at step 100 proves you know the secret, because a verifier can simply hash that value 156 more times to see if it matches the public key. This is the foundation of a One-Time Signature (OTS). To sign a message, you convert the message into a number (e.g., 100), and reveal the hash at that specific position in the chain.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/d/7/d78950be85fa7fb0f6590af2bd15ca83fff7c041.png" data-download-href="https://ethresear.ch/uploads/default/d78950be85fa7fb0f6590af2bd15ca83fff7c041" title="image"><img src="https://ethresear.ch/uploads/default/optimized/3X/d/7/d78950be85fa7fb0f6590af2bd15ca83fff7c041_2_690x114.png" alt="image" data-base62-sha1="uKIQT7ARpiIBM17WTMDje1UjPnr" width="690" height="114" srcset="https://ethresear.ch/uploads/default/optimized/3X/d/7/d78950be85fa7fb0f6590af2bd15ca83fff7c041_2_690x114.png, https://ethresear.ch/uploads/default/optimized/3X/d/7/d78950be85fa7fb0f6590af2bd15ca83fff7c041_2_1035x171.png 1.5x, https://ethresear.ch/uploads/default/original/3X/d/7/d78950be85fa7fb0f6590af2bd15ca83fff7c041.png 2x" data-dominant-color="F5F8F7"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">image</span><span class="informations">1136×188 9.5 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<h4><a name="p-60301-parallel-chains-for-security-5" class="anchor" href="#p-60301-parallel-chains-for-security-5"></a>Parallel Chains for Security</h4>
+<p>A single hash chain has a critical vulnerability: if you reveal the hash at position 100 to sign a message, an attacker could just hash your signature one more time to forge a signature for a message mapping to position 101.</p>
+<p>To prevent this forgery, the scheme splits the message into multiple smaller chunks, using a parallel hash chain for each chunk, and enforces a strict mathematical constraint: a target sum. For a signature to be valid, the sum of all the chunk values (chain positions) must equal a specific, predetermined number.</p>
+<p>Because of this constraint, if an attacker tries to forge a signature by hashing one chain forward (which increases its numerical value), the total sum of their forged signature will exceed the target. To rebalance the sum and produce a valid encoding, the attacker would be forced to decrease the value on another chain. Decreasing a value requires moving backward up the chain (reversing the hash function). Since cryptographic hash functions are strictly one-way (preimage resistant), this backward movement is computationally infeasible, rendering the W-OTS signature completely secure.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/5/1/51f195223d4c05b197a8982ef328eea45ae73e7d.png" data-download-href="https://ethresear.ch/uploads/default/51f195223d4c05b197a8982ef328eea45ae73e7d" title="image"><img src="https://ethresear.ch/uploads/default/optimized/3X/5/1/51f195223d4c05b197a8982ef328eea45ae73e7d_2_690x206.png" alt="image" data-base62-sha1="bGUgkhr1VDplbSf2hCcVn4349qZ" width="690" height="206" srcset="https://ethresear.ch/uploads/default/optimized/3X/5/1/51f195223d4c05b197a8982ef328eea45ae73e7d_2_690x206.png, https://ethresear.ch/uploads/default/optimized/3X/5/1/51f195223d4c05b197a8982ef328eea45ae73e7d_2_1035x309.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/5/1/51f195223d4c05b197a8982ef328eea45ae73e7d_2_1380x412.png 2x" data-dominant-color="F6F8F8"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">image</span><span class="informations">1456×436 39.5 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<h4><a name="p-60301-attempted-forgery-analysis-6" class="anchor" href="#p-60301-attempted-forgery-analysis-6"></a>Attempted Forgery Analysis</h4>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Signature Vector</th>
+<th style="text-align:center">Chain 0 (<span class="math">m_0'</span>)</th>
+<th style="text-align:center">Chain 1 (<span class="math">m_1'</span>)</th>
+<th style="text-align:center">Chain 2 (<span class="math">m_2'</span>)</th>
+<th style="text-align:center">Chain 3 (<span class="math">m_3'</span>)</th>
+<th style="text-align:center"><strong>Target Sum</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><img src="https://ethresear.ch/images/emoji/facebook_messenger/green_circle.png?v=14" title=":green_circle:" class="emoji" alt=":green_circle:" loading="lazy" width="20" height="20"> <strong>Original</strong></td>
+<td style="text-align:center">2</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center"><strong>9</strong></td>
+</tr>
+<tr>
+<td style="text-align:left"><img src="https://ethresear.ch/images/emoji/facebook_messenger/purple_circle.png?v=14" title=":purple_circle:" class="emoji" alt=":purple_circle:" loading="lazy" width="20" height="20"> <strong>Forged</strong></td>
+<td style="text-align:center">3</td>
+<td style="text-align:center"><img src="https://ethresear.ch/images/emoji/facebook_messenger/red_circle.png?v=14" title=":red_circle:" class="emoji" alt=":red_circle:" loading="lazy" width="20" height="20"> <strong>2</strong> <em>(Dropped)</em></td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center"><strong>9</strong></td>
+</tr>
+</tbody>
+</table>
+</div><h5><a name="p-60301-why-the-attack-fails-7" class="anchor" href="#p-60301-why-the-attack-fails-7"></a>Why the Attack Fails</h5>
+<p>To forge the first chain forward (<span class="math">2 \rightarrow 3</span>), the attacker simply hashes the revealed value one more time. However, this increases the total sum to 10, violating the protocol’s strict target constraint.</p>
+<p>To maintain the mandatory target sum of 9, the attacker is forced to decrease a value on another chain (<span class="math">3 \rightarrow 2</span>). Because cryptographic hash functions are strictly one-way (preimage resistant), <strong>moving backward up a chain to decrement a value is computationally infeasible</strong>, rendering the forged signature invalid.</p>
+<h4><a name="p-60301-scaling-to-many-time-signatures-8" class="anchor" href="#p-60301-scaling-to-many-time-signatures-8"></a>Scaling to Many-Time Signatures</h4>
+<p>Because revealing these intermediate hashes inherently consumes the chains, this setup can only be used safely <em>once</em>. To sign thousands of blocks over a validator’s lifecycle, we need a many-time signature scheme.</p>
+<p>XMSS solves this by generating a massive sequence of independent One-Time Signature keypairs. The public keys of all these OTS instances are placed as the leaves of a massive Merkle tree. The root of this Merkle tree becomes the validator’s actual global public key—this is the small, compact data point that would be submitted to the Public Key Registry.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/5/d/5d0af9f8151697db76a5b09b39f376cf34d62cea.png" data-download-href="https://ethresear.ch/uploads/default/5d0af9f8151697db76a5b09b39f376cf34d62cea" title="image"><img src="https://ethresear.ch/uploads/default/optimized/3X/5/d/5d0af9f8151697db76a5b09b39f376cf34d62cea_2_690x338.png" alt="image" data-base62-sha1="dh5V8TFW6KSuNKQTf9ggJxrFd4S" width="690" height="338" srcset="https://ethresear.ch/uploads/default/optimized/3X/5/d/5d0af9f8151697db76a5b09b39f376cf34d62cea_2_690x338.png, https://ethresear.ch/uploads/default/optimized/3X/5/d/5d0af9f8151697db76a5b09b39f376cf34d62cea_2_1035x507.png 1.5x, https://ethresear.ch/uploads/default/original/3X/5/d/5d0af9f8151697db76a5b09b39f376cf34d62cea.png 2x" data-dominant-color="F4F7F6"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">image</span><span class="informations">1136×558 27.9 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<h4><a name="p-60301-the-signing-and-verification-process-9" class="anchor" href="#p-60301-the-signing-and-verification-process-9"></a>The Signing and Verification Process</h4>
+<p>When a validator needs to sign a block for a specific slot, they move to the next unused leaf in their tree. The final signature contains:</p>
+<ol>
+<li>The OTS signature for the current message.</li>
+<li>The specific OTS public key for that leaf.</li>
+<li>The Merkle authentication path (the sibling hashes) connecting that leaf to the global Merkle root.</li>
+</ol>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/6/3/63e508ce4e06eec53d68974d23ad353991e8ba89.png" data-download-href="https://ethresear.ch/uploads/default/63e508ce4e06eec53d68974d23ad353991e8ba89" title="image"><img src="https://ethresear.ch/uploads/default/optimized/3X/6/3/63e508ce4e06eec53d68974d23ad353991e8ba89_2_690x289.png" alt="image" data-base62-sha1="efHYmarSq9AgSJndvWVwmKFjmPv" width="690" height="289" srcset="https://ethresear.ch/uploads/default/optimized/3X/6/3/63e508ce4e06eec53d68974d23ad353991e8ba89_2_690x289.png, https://ethresear.ch/uploads/default/optimized/3X/6/3/63e508ce4e06eec53d68974d23ad353991e8ba89_2_1035x433.png 1.5x, https://ethresear.ch/uploads/default/original/3X/6/3/63e508ce4e06eec53d68974d23ad353991e8ba89.png 2x" data-dominant-color="F6F7F5"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">image</span><span class="informations">1136×476 30.4 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/9/6/960b097ce8b814b547b88fc3d2ad2e8c056733ee.png" data-download-href="https://ethresear.ch/uploads/default/960b097ce8b814b547b88fc3d2ad2e8c056733ee" title="image"><img src="https://ethresear.ch/uploads/default/optimized/3X/9/6/960b097ce8b814b547b88fc3d2ad2e8c056733ee_2_690x223.png" alt="image" data-base62-sha1="lplgzKlAhXKDDzJaXUjOA8UUJz0" width="690" height="223" srcset="https://ethresear.ch/uploads/default/optimized/3X/9/6/960b097ce8b814b547b88fc3d2ad2e8c056733ee_2_690x223.png, https://ethresear.ch/uploads/default/optimized/3X/9/6/960b097ce8b814b547b88fc3d2ad2e8c056733ee_2_1035x334.png 1.5x, https://ethresear.ch/uploads/default/original/3X/9/6/960b097ce8b814b547b88fc3d2ad2e8c056733ee.png 2x" data-dominant-color="F7F8F9"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">image</span><span class="informations">1136×368 25.9 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p>The verifier simply checks the OTS signature against the OTS public key, and then verifies the Merkle path to ensure that specific leaf is a legitimate part of the validator’s registered root.</p>
+<h2><a name="p-60301-what-gets-registered-key-sizes-and-practical-impact-10" class="anchor" href="#p-60301-what-gets-registered-key-sizes-and-practical-impact-10"></a>What Gets Registered: Key Sizes and Practical Impact</h2>
+<p>Now that we understand the conceptual design of XMSS, the natural question for the registry is: what exactly does a validator need to submit, and how big is it?</p>
+<h3><a name="p-60301-public-key-52-bytes-11" class="anchor" href="#p-60301-public-key-52-bytes-11"></a>Public Key: 52 bytes</h3>
+<p>Each validator’s XMSS public key consists of two parts:</p>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Component</th>
+<th style="text-align:left">Size</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Merkle root</strong></td>
+<td style="text-align:left">32 bytes</td>
+<td style="text-align:left">The root hash of the validator’s XMSS Merkle tree. This single value commits to all <span class="math">2^{32}</span> one-time signing leaves. It is the only thing a verifier needs to check that any individual signature belongs to this validator.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Public parameter</strong></td>
+<td style="text-align:left">20 bytes</td>
+<td style="text-align:left">A random value generated once at key creation time. It is mixed into every hash computation (tree nodes, chain steps, message hashing) and serves two primary roles: it is essential for tight security proofs, and it provides domain separation across users so that an attacker cannot attack multiple validators in parallel when attempting a brute-force attack.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Total</strong></td>
+<td style="text-align:left"><strong>52 bytes</strong></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+</div><p>For comparison, a BLS12-381 public key is 48 bytes. The post-quantum public key is only 4 bytes larger — a remarkable result that means the registry’s per-validator storage overhead is negligible. At scale, registering 1 million validators requires storing only ~52 MiB of public keys in the state.</p>
+<h3><a name="p-60301-signature-3112-bytes-12" class="anchor" href="#p-60301-signature-3112-bytes-12"></a>Signature: 3,112 bytes</h3>
+<p>Each per-slot XMSS signature contains:</p>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Component</th>
+<th style="text-align:left">Size</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Merkle authentication path</strong></td>
+<td style="text-align:left">1,024 bytes</td>
+<td style="text-align:left">The list of sibling hashes needed to reconstruct the path from the used leaf up to the Merkle root. The tree has 32 levels, so there are 32 siblings, each 32 bytes. A verifier re-hashes this path and checks that the result matches the public key root.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Encoding randomness</strong></td>
+<td style="text-align:left">28 bytes</td>
+<td style="text-align:left">A per-signature random value that is mixed into the message hash to produce the target-sum encoding. While it allows the signer to resample until hitting the required target sum, its primary purpose is security: without this randomness, the scheme would only provide 64 bits of security, leaving the encoding vulnerable to a birthday attack.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Chain hash values</strong></td>
+<td style="text-align:left">2,048 bytes</td>
+<td style="text-align:left">The 64 intermediate hash chain values revealed by the signer — one per parallel chain. Each value is the point in its chain that corresponds to the encoded message chunk. The verifier walks each chain forward from this revealed value to the chain endpoint and checks consistency with the Merkle leaf.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Total</strong></td>
+<td style="text-align:left"><strong>3,112 bytes</strong></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+</div><p>This is significantly larger than a BLS signature (96 bytes), which is a reason why aggregation via SNARKs is essential (see next section).</p>
+<h3><a name="p-60301-secret-key-manageable-on-consumer-hardware-13" class="anchor" href="#p-60301-secret-key-manageable-on-consumer-hardware-13"></a>Secret Key: Manageable on Consumer Hardware</h3>
+<p>A naive implementation would need to compute and store the full Merkle tree with <span class="math">2^{32}</span> leaves all at once—requiring terabytes of storage and immense memory. Instead, our reference implementation of the scheme uses a <em>top-bottom tree</em> strategy. It splits the massive tree into a top half (height 16) and <span class="math">2^{16}</span> bottom trees (height 16 each).</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/9/2/92b04265a2bbc8542f5d92f04855433df47f9c04.png" data-download-href="https://ethresear.ch/uploads/default/92b04265a2bbc8542f5d92f04855433df47f9c04" title="image"><img src="https://ethresear.ch/uploads/default/optimized/3X/9/2/92b04265a2bbc8542f5d92f04855433df47f9c04_2_690x279.png" alt="image" data-base62-sha1="kVFlmKWWG1SFuVMkdxtNopPoPXu" width="690" height="279" srcset="https://ethresear.ch/uploads/default/optimized/3X/9/2/92b04265a2bbc8542f5d92f04855433df47f9c04_2_690x279.png, https://ethresear.ch/uploads/default/optimized/3X/9/2/92b04265a2bbc8542f5d92f04855433df47f9c04_2_1035x418.png 1.5x, https://ethresear.ch/uploads/default/original/3X/9/2/92b04265a2bbc8542f5d92f04855433df47f9c04.png 2x" data-dominant-color="F6F6F7"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">image</span><span class="informations">1136×460 25.9 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p>This drops the spatial complexity of key generation and signing to <span class="math">\mathcal{O}(\sqrt{\text{lifetime}})</span>, meaning it only requires a few megabytes of RAM and disk space. Instead of holding the whole structure, the validator only stores the top tree and caches a sliding window of just two bottom trees: the <em>current</em> bottom tree and the <em>next</em> bottom tree. Caching the next tree is a practical necessity; it ensures a seamless transition without missing any attestations when the current bottom tree is exhausted (every ~65,536 slots, or ~9 days).</p>
+<p>Crucially, <strong>these cached tree structures are not cryptographically sensitive.</strong> They are simply intermediate public hashes leading up to the global Merkle root. They can be stored in plaintext on standard disks. The <em>only</em> actual cryptographic secret is the 32-byte PRF seed.</p>
+<h3><a name="p-60301-why-koalabear-14" class="anchor" href="#p-60301-why-koalabear-14"></a>Why KoalaBear?</h3>
+<p>All arithmetic in the scheme is performed over the KoalaBear prime field, with modulus:</p>
+<div class="math">
+p = 2^{31} - 2^{24} + 1
+</div>
+<p>This is a 31-bit prime, meaning each field element fits in a single 32-bit word (4 bytes). The choice of a small field is deliberate and performance-critical. Because the XMSS scheme and the SNARK aggregator are both dominated by field arithmetic, every multiplication and addition must be as fast as possible.</p>
+<p>A 31-bit prime has three key advantages:</p>
+<ul>
+<li><strong>SIMD parallelism</strong>: Four-byte elements pack tightly into CPU vector registers. On x86 processors, AVX2 instructions can process 8 field elements in parallel (256-bit registers), and AVX512 can process 16 at once (512-bit registers). On ARM processors (including Apple Silicon), NEON instructions handle 4 elements per vector. This means that a single CPU instruction can perform 4 to 16 field multiplications simultaneously.</li>
+<li><strong>No overflow risk</strong>: Multiplying two 31-bit values produces at most a 62-bit result, which fits comfortably in a 64-bit register. This eliminates the need for multi-precision arithmetic or carry propagation, making modular reduction trivial.</li>
+<li><strong>High two-adicity</strong>: The multiplicative group has order <span class="math">p - 1 = 2^{24} \times 127</span>, giving a two-adicity of 24. While seemingly small, this is not a limiting factor for multilinear polynomial commitment schemes like WHIR when utilizing interleaved Reed-Solomon codes. Furthermore, operations in the degree-5 extension field (<span class="math">\mathbb{F}_{q}</span> where <span class="math">q = p^5</span>) provide the necessary 128 bits of security required by WHIR.</li>
+</ul>
+<p>Beyond raw arithmetic speed, KoalaBear was specifically chosen because the cube map <span class="math">x \mapsto x^3</span> is a permutation of the multiplicative group. This holds because <span class="math">\gcd(3,\; p - 1) = \gcd(3,\; 2^{24} \times 127) = 1</span>. This property is important for Poseidon: the hash function needs an S-box (a non-linear substitution layer) that is a permutation polynomial over the field. Since the cube map is already a permutation, the S-box can use degree 3 — the smallest possible. A lower-degree S-box means fewer multiplications per round, which directly translates to faster hashing and fewer constraints inside the SNARK circuit. For comparison, other fields like BabyBear (<span class="math">p = 2^{31} - 2^{27} + 1</span>) require an S-box of degree 7, and BN254-based Poseidon uses degree 5.</p>
+<p>The combination of a degree-3 S-box, high two-adicity, and SIMD-friendly element size makes KoalaBear an exceptionally well-suited field for this workload.</p>
+<h3><a name="p-60301-production-scheme-parameters-15" class="anchor" href="#p-60301-production-scheme-parameters-15"></a>Production Scheme Parameters</h3>
+<p>The table below lists the full production configuration used until now for our lean consensus devnets. To make it easier to follow, the parameters are grouped by what part of the system they control.</p>
+<h4><a name="p-60301-lifetime-and-message-16" class="anchor" href="#p-60301-lifetime-and-message-16"></a>Lifetime and Message</h4>
+<p>These parameters define the overall scope of a key and what it signs.</p>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Parameter</th>
+<th style="text-align:left">Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Key lifetime</strong></td>
+<td style="text-align:left"><span class="math">2^{32}</span> slots (~1632 years at 12-second slots)</td>
+<td style="text-align:left">The total number of slots a single key can be used for. Each slot consumes exactly one leaf of the Merkle tree, so the tree has <span class="math">2^{32}</span> leaves.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Message length</strong></td>
+<td style="text-align:left">32 bytes</td>
+<td style="text-align:left">The size of the data being signed. In practice this is a hash of the attestation or block data — always exactly 32 bytes.</td>
+</tr>
+</tbody>
+</table>
+</div><h4><a name="p-60301-message-encoding-how-a-message-becomes-chain-positions-17" class="anchor" href="#p-60301-message-encoding-how-a-message-becomes-chain-positions-17"></a>Message Encoding (How a Message Becomes Chain Positions)</h4>
+<p>Recall from the XMSS overview above that signing a message means revealing intermediate values in hash chains. But first, the message must be converted into a set of numbers that tell the signer <em>where</em> to reveal in each chain. This conversion is called the <em>encoding</em>, and these parameters control how it works.</p>
+<p>The message is hashed together with some fresh randomness to produce 46 numbers (one per chain), each between 0 and 7. These numbers are the chunk values. The chunk value for a given chain tells the signer how many steps to walk into that chain from its secret starting point before revealing the value. The verifier then walks the remaining steps to the chain endpoint: with a maximum chain length of 7, a chunk value of 5 means the signer revealed the value 5 steps in, and the verifier hashes it the remaining 2 times (7 - 5) to reach the endpoint.</p>
+<p>The critical security constraint is the <em>target sum</em>: the 46 chunk values must add up to exactly 200. This is what makes the encoding incomparable — no valid codeword can be reached from another by moving every chain in the same direction. Since an attacker who has seen a signature can only ever hash the revealed values forward (which increases a chunk value), they would have to decrease some other chunk to keep the sum at 200. Decreasing a chunk means inverting the hash, which is computationally infeasible. The fixed sum plus the one-wayness of the chains is what prevents forgery.</p>
+<p>If the 46 chunk values were sampled uniformly, their expected sum would be about 161 (46 × 3.5). The target of 200 is deliberately set above this average: because the verifier only walks the remaining steps of each chain, a higher target sum means fewer hash evaluations at verification — here, 46 × 7 - 200 = 122 chain hashes in total, versus 161 if the target sat at the mean. To make the chunk values uniform in the first place (so the target is hit predictably), the message hash uses an <em>aborting hypercube construction</em>. It rejection-samples the hash output, discarding and re-hashing whenever an output element falls outside the uniform range. The signer then simply draws fresh randomness and re-encodes until the 46 values happen to sum to exactly 200, up to 100,000 attempts; in practice, a valid encoding is found well within that bound.</p>
+<p><em>Note: Because optimizing these hash functions in the SNARK context for signature aggregation is a highly active area of research, the exact underlying encoding algorithm remains a moving piece. The parameters below represent the current working configuration, but specific values may evolve as the cryptography is finalized for mainnet.</em></p>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Number of parallel hash chains</strong></td>
+<td>46</td>
+<td>The message is encoded into 46 independent chunks, one per chain. More chains means more security but larger signatures.</td>
+</tr>
+<tr>
+<td><strong>Alphabet size per chain</strong></td>
+<td>8</td>
+<td>Each chunk value is between 0 and 7 (i.e., base 8). This determines the maximum depth of any single chain.</td>
+</tr>
+<tr>
+<td><strong>Maximum chain length</strong></td>
+<td>7 steps</td>
+<td>The longest possible walk along a chain (alphabet size minus 1). The signer and verifier together never traverse more than 7 hash evaluations per chain.</td>
+</tr>
+<tr>
+<td><strong>Target sum</strong></td>
+<td>200</td>
+<td>The 46 chunk values must sum to exactly this number for the encoding to be valid. This is the anti-forgery (incomparability) mechanism.</td>
+</tr>
+<tr>
+<td><strong>Maximum encoding attempts</strong></td>
+<td>100,000</td>
+<td>Upper bound on how many times the signer tries different randomness to find a valid encoding.</td>
+</tr>
+<tr>
+<td><strong>Encoding randomness</strong></td>
+<td>7 field elements (28 bytes)</td>
+<td>The fresh random value mixed into the message hash on each attempt. Included in the signature so the verifier can reproduce the encoding.</td>
+</tr>
+<tr>
+<td><strong>Message field-element length</strong></td>
+<td>9 field elements (36 bytes)</td>
+<td>The 32-byte message re-encoded as field elements and fed (together with the randomness and public parameter) into the message hash.</td>
+</tr>
+</tbody>
+</table>
+</div><h4><a name="p-60301-hash-function-and-internal-sizes-18" class="anchor" href="#p-60301-hash-function-and-internal-sizes-18"></a>Hash Function and Internal Sizes</h4>
+<p>These parameters control the hash function used throughout the scheme. All sizes are expressed in field elements; each KoalaBear field element is 4 bytes, so multiplying by 4 gives the size in bytes.</p>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Internal hash function</strong></td>
+<td>Poseidon1 over KoalaBear (width 24 and width 16)</td>
+<td>The arithmetization-friendly permutation used for all tree hashing, chain hashing, and message hashing. It runs at width 24 (operating on 24 field elements at a time) for tree-node merging and the message-hash sponge, and at width 16 for the per-step chain hashing, which only needs to compress a single value.</td>
+</tr>
+<tr>
+<td><strong>Message-hash sponge rate / capacity</strong></td>
+<td>rate 15 / capacity 9</td>
+<td>The message hash runs the width-24 permutation as a sponge: 15 of the 24 state elements carry input/output data (the rate), and the remaining 9 are reserved for domain separation (the capacity). Tree and chain hashing instead run in compression mode rather than as a sponge.</td>
+</tr>
+<tr>
+<td><strong>Hash digest length</strong></td>
+<td>8 field elements (248 bits)</td>
+<td>The output size of each hash invocation. Every tree node, chain endpoint, and message hash is 248 bits. This targets roughly 128 bits of classical security and 64 bits of quantum security.</td>
+</tr>
+<tr>
+<td><strong>Public parameter length</strong></td>
+<td>5 field elements (20 bytes)</td>
+<td>The random per-validator value that is part of the public key and mixed into every hash to ensure independence between validators.</td>
+</tr>
+<tr>
+<td><strong>Sponge capacity</strong></td>
+<td>9 field elements</td>
+<td>The portion of the width-24 Poseidon1 sponge state reserved for domain separation. Combined with per-call tweaks, this ensures different uses of the hash (tree nodes, chain steps, message hashing) cannot collide across contexts.</td>
+</tr>
+</tbody>
+</table>
+</div><h4><a name="p-60301-tree-structure-and-key-derivation-19" class="anchor" href="#p-60301-tree-structure-and-key-derivation-19"></a>Tree Structure and Key Derivation</h4>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Parameter</th>
+<th style="text-align:left">Value</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Merkle tree height</strong></td>
+<td style="text-align:left">32 levels (split into 16 top + 16 bottom)</td>
+<td style="text-align:left">The tree has <span class="math">2^{32}</span> leaves (one per slot). It is split into a top tree of height 16 and many bottom trees of height 16 each, so that only two bottom trees need to be in memory at a time.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Key derivation PRF</strong></td>
+<td style="text-align:left">SHAKE128 (256-bit key)</td>
+<td style="text-align:left">All secret material (chain starting values, per-signature randomness) is derived deterministically from a single 32-byte master seed using SHAKE128. This means the validator only needs to back up one 32-byte value.</td>
+</tr>
+</tbody>
+</table>
+</div><h2><a name="p-60301-signature-aggregation-via-leanvm-and-pqsnarks-20" class="anchor" href="#p-60301-signature-aggregation-via-leanvm-and-pqsnarks-20"></a>Signature Aggregation via leanVM and pqSNARKs</h2>
+<p>Hash-based signatures do not natively support the public aggregation features we enjoy with BLS. With ~1 million validators each broadcasting a ~3.1 KiB signature, the bandwidth requirements for aggregators would easily exceed 3 GiB per slot, which is entirely unfeasible for Ethereum’s slot constraints.</p>
+<p>The solution is to aggregate these synchronized many-time signatures using a succinct argument of knowledge (a pqSNARK). To handle this elegantly and efficiently, we utilize <em>leanVM</em>, a minimal, Cairo-inspired zkVM designed specifically for Ethereum’s post-quantum signature verification. leanVM is built on a highly optimized proving stack utilizing SuperSpartan with AIR-specific optimizations, Logup for bus interactions, and WHIR for multilinear polynomial commitments. Crucially, WHIR allows for simple polynomial stacking, avoiding the need to Merkle commit to each individual column and significantly reducing the final proof size.</p>
+<p>Instead of verifying a massive batch of signatures simultaneously in one giant circuit, leanVM uses <em>recursive aggregation</em>. The protocol partitions the signers into manageable groups, aggregators verify their XMSS signatures to create sub-proofs, and then recursively run the leanVM verifier <em>inside</em> the program to merge these sub-proofs into a single final proof.</p>
+<p>Because the consensus layer must know exactly who participated to process rewards, inactivity leaks, fork choice weight, and slashing, the aggregate payload includes both the leanVM proof and a <em>signer bitfield</em> (similar to the bitlists used in current BLS attestations). The leanVM circuit is explicitly constrained to prove that valid signatures exist for the exact subset of public keys indicated by this accompanying bitfield.</p>
+<p>Based on recent benchmarks running on high-end consumer hardware (e.g., an M4 Max CPU), leanVM achieves a proving throughput of roughly 1k XMSS signatures per second. In its proven security regime—offering 123 bits of provable security via a degree-5 extension of the KoalaBear field—a 2-to-1 recursive proof takes less than a second to generate and results in a highly compact final proof size of roughly 128 KiB to 350 KiB depending on the PCS rate. This recursive approach scales well, making on-chain verification and network propagation highly practical for Ethereum’s slot budget.</p>
+<h2><a name="p-60301-the-hash-function-an-open-design-space-21" class="anchor" href="#p-60301-the-hash-function-an-open-design-space-21"></a>The Hash Function: An Open Design Space</h2>
+<p>Because the verification process is dominated by hash function evaluations, the efficiency of our pqSNARK aggregator relies heavily on the chosen hash function.</p>
+<p>Initially, Poseidon2 emerged as a leading candidate. It operates natively over finite fields, making it highly optimized for modern arithmetization frameworks and zkVMs like leanVM. However, recent cryptanalysis and attack techniques targeting algebraic hash functions (such as those detailed in <a href="https://eprint.iacr.org/2026/306.pdf">eprint 2026/306</a>) are forcing us to reconsider relying solely on Poseidon2.</p>
+<p>Because we have not made a final decision, the design of the Public Key Registry must remain flexible. To accommodate this, we may allow the generation of public keys using various hash functions—a design referred to as the <em>multi-hash public key registry</em>.</p>
+<h3><a name="p-60301-current-hash-candidates-22" class="anchor" href="#p-60301-current-hash-candidates-22"></a>Current Hash Candidates</h3>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Hash Function</th>
+<th style="text-align:left">Arithmetization Efficiency</th>
+<th style="text-align:left">Cryptanalytic Maturity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>SHA / BLAKE3</strong></td>
+<td style="text-align:left">Low (heavy bitwise operations)</td>
+<td style="text-align:left">High (highly battle-tested)</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Poseidon1</strong></td>
+<td style="text-align:left">High (SNARK-friendly)</td>
+<td style="text-align:left">Medium (subject to ongoing analysis)</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Poseidon2</strong></td>
+<td style="text-align:left">Very High (optimized for modern fields)</td>
+<td style="text-align:left">Low (recent attacks raise concerns)</td>
+</tr>
+</tbody>
+</table>
+</div><p>This directly impacts registry design: the registry must be <em>hash-function-agile</em>, potentially storing a hash function identifier alongside each public key so the network can support multiple hash functions during the transition and mandate migration if one is deprecated.</p>
+<h2><a name="p-60301-part-2-registry-design-considerations-23" class="anchor" href="#p-60301-part-2-registry-design-considerations-23"></a>Part 2: Registry Design Considerations</h2>
+<h3><a name="p-60301-registration-protocol-mechanics-24" class="anchor" href="#p-60301-registration-protocol-mechanics-24"></a>Registration Protocol Mechanics</h3>
+<p>The registration protocol itself requires concrete mechanics to ensure a smooth, secure, and sybil-resistant transition without overwhelming the Beacon Chain. Because this upgrade fundamentally changes validator identities, the lifecycle of a key registration must be carefully managed. Here is the proposed architecture for how validators will actually register their keys:</p>
+<ul>
+<li>
+<p><strong>Delivery and Authorization:</strong> To securely bind a post-quantum identity to an existing validator, the delivery mechanism will likely utilize a new consensus-layer operation (e.g., a <code>PostQuantumRegistration</code> message). This submission must be explicitly authorized to prove definitive ownership of the validator index. For validators with <code>0x01</code> or <code>0x02</code> execution-layer withdrawal credentials, this would involve an L1 signature from the withdrawal address. For legacy <code>0x00</code> credentials, it would require a signature from the currently active BLS key. Crucially, this registration message must also include a <em>Proof of Possession</em>—a single valid XMSS signature over the registration payload. Without this, the protocol would blindly accept 52 raw bytes, meaning a validator with a silently broken key generation setup wouldn’t discover the failure until the actual signing fork years later. Once both signatures are verified, the network accepts and binds the 52-byte XMSS public key to the validator record in the beacon state. To support hash-function agility, this binding is not permanent; the registration message should include a sequence number or version field to allow validators to update or rotate their keys in the future.</p>
+</li>
+<li>
+<p><strong>Per-Block Processing Cap and State Growth:</strong> To protect the network from state bloat and computational spikes during a mass registration event, the protocol must enforce a strict processing queue. Similar to the existing validator activation and exit churn limits, we propose capping the number of registrations processed per slot (e.g., <code>MAX_PQ_REGISTRATIONS_PER_BLOCK = 16</code>). Registrations broadcast to the gossip network will sit in a local memory pool; block proposers will pack up to the maximum limit into their blocks. This ensures that block verification times remain predictably low and the resulting state growth is smoothed out over weeks or months, preventing sudden spikes in node resource requirements.</p>
+</li>
+<li>
+<p><strong>Incentives and the Transition Timeline:</strong> A major risk of a phased rollout is a last-minute stampede right before BLS signatures are formally deprecated, which could overwhelm the processing queue and leave active validators unable to sign, threatening network finality. To avoid this, the rollout will incorporate mechanisms to encourage early action. Validators who participate in the early warmup phase could be granted priority placement in the eventual post-quantum activation queue. Alternatively, a modest, temporary boost to attestation rewards (e.g., a slight multiplier on the base reward) for early registrants could efficiently drive adoption. Finally, as the hard deadline approaches, the protocol could employ a stick approach—gradually applying an inactivity leak or initiating forced exits for validators who have failed to register a post-quantum key, ensuring the active set consists only of PQ-ready nodes before the final switch is flipped.</p>
+</li>
+</ul>
+<h3><a name="p-60301-hash-function-agility-25" class="anchor" href="#p-60301-hash-function-agility-25"></a>Hash Function Agility</h3>
+<p>Because the hash function is not yet finalized, the registry must be designed with agility in mind. One approach is to allow validators to register keys under different hash function identifiers, meaning each registry entry would carry the 52-byte public key along with a tag indicating the chosen hash function. If a function is later compromised, affected validators would be required to re-register. Alternatively, to ensure robust future-proofing without the friction of future re-registration, the protocol could enforce the use of two or three specific hash candidates (e.g., Poseidon1, BLAKE3, and SHA-256) from the start. In this scenario, every validator would perform key generation for each mandated hash function upfront, and the final value committed to the registry would simply be the concatenation of these multiple XMSS public keys.</p>
+<p>Because keygen and registration are frontloaded, if one hash function is compromised, the network can quickly switch to an alternative without validators needing to regenerate keys from scratch. While this approach provides excellent future-proofing, there is a minor trade-off: the registered key size increases from 52 bytes to 104–156 bytes. Fortunately, the computational overhead for key generation is minimal. Since traditional bitwise hash functions (like SHA-256, BLAKE3, or Monolith) are orders of magnitude faster to compute on standard CPUs than algebraic hashes like Poseidon, generating these backup trees adds only a fraction of time to the baseline key generation process. Ultimately, this slight increase in storage and computation is a highly acceptable trade-off for the seamless agility it provides. These two solutions are just ideas with advantages and drawbacks for each, requiring further exploration.</p>
+<h3><a name="p-60301-key-lifetime-and-activation-windows-26" class="anchor" href="#p-60301-key-lifetime-and-activation-windows-26"></a>Key Lifetime and Activation Windows</h3>
+<p>XMSS keys are inherently generated with an explicit <em>activation window</em>: a starting slot and a finite number of active slots dictated by the Merkle tree’s capacity. Because the cryptographic construction ties each signature to a specific sequential position, a key naturally cannot sign messages outside this window. Consequently, there is no need to explicitly record these bounds in the registry or enforce them at the protocol level; once a validator exhausts their available leaves, they simply lose the ability to produce valid signatures.</p>
+<p>For memory efficiency, activation slots are aligned to boundaries of 65,536 slots (~9 days). This is transparent to the validator — the key generation tool handles the alignment automatically.</p>
+<h3><a name="p-60301-serialization-27" class="anchor" href="#p-60301-serialization-27"></a>Serialization</h3>
+<p>All data structures use SSZ (Simple Serialize), the standard serialization format for Ethereum’s consensus layer. The public key is a fixed-size 52-byte value, making it straightforward to include in the existing beacon state validator record alongside the current BLS key.</p>
+<h3><a name="p-60301-practical-considerations-for-validators-28" class="anchor" href="#p-60301-practical-considerations-for-validators-28"></a>Practical Considerations for Validators</h3>
+<p>Registering a post-quantum key is a one-time operation, but it involves generating a massive Merkle tree and securely storing the resulting material. Here is what validators should expect in practice compared to today’s operations:</p>
+<ul>
+<li><strong>Key generation is computationally heavy but memory-light:</strong> The validator runs an offline tool that expands a 32-byte seed into the full XMSS tree. Because the tree has <span class="math">2^{32}</span> leaves, this involves billions of hash evaluations. The reference implementation parallelizes this across all available CPU cores using SIMD optimizations. While this process takes on the order of hours on a modern multi-core machine (e.g., 8-16 cores), thanks to the top-bottom tree strategy, it operates in <span class="math">\mathcal{O}(\sqrt{\text{lifetime}})</span> space. This means any standard machine with just a few megabytes of free RAM can generate keys. Because it involves the master secret, this one-time operation <em>must</em> be done on an air-gapped or cold-storage machine.</li>
+<li><strong>The secret vs. the operational key:</strong> Today, an encrypted BLS validator keystore is roughly a single kilobyte. In the PQ era, the actual cryptographic secret (the 32-byte PRF seed) remains tiny and must be fiercely guarded and backed up. Losing it means losing the ability to sign, with no recovery possible. However, the <em>operational key file</em>—which caches the non-secret top tree and the current bottom tree pair for fast, lightweight signing—is serialized in SSZ format and sits at around tens of megabytes. While significantly larger than a BLS key, this operational file fits easily on consumer SSDs.</li>
+<li><strong>Ongoing signing is lightweight:</strong> Once the key is generated and the operational file is loaded into the signing infrastructure, producing a signature for each slot requires only a handful of hash evaluations (walking 64 chains of at most 7 steps each, plus one Merkle path lookup). This is fast enough to run effortlessly on standard consumer hardware well within the 12-second slot budget.</li>
+<li><strong>Community-led tooling:</strong> Building the key generation UX requires strong stakeholder engagement from day one. A major learning from the beacon chain launch is that relying solely on the EF to maintain the <code>deposit-cli</code> became a bottleneck over time. To ensure sustainable support, security audits, and feature iteration (like consolidations), we envision the PQ key generation tool being an open-source, community-maintained effort from the start, potentially incentivized by EF grants.</li>
+</ul>
+<p>What the validator actually submits to the registry is the 52-byte public key along with a single XMSS Proof of Possession signature. This proves end-to-end that the offline keygen worked perfectly. This submission can be done via a standard on-chain transaction, similar in spirit to the current BLS key deposit. The secret key never leaves the validator’s machine.</p>
+<h2><a name="p-60301-open-questions-and-future-work-29" class="anchor" href="#p-60301-open-questions-and-future-work-29"></a>Open Questions and Future Work</h2>
+<ol>
+<li>
+<p><strong>Hash function finalization</strong>: Will Poseidon survive continued cryptanalysis, or will we need to fall back to SHA-3/BLAKE3 (at significant proving cost)?</p>
+</li>
+<li>
+<p><strong>Registry update mechanism</strong>: How should the state accommodate key rotation or re-registration if a validator needs to switch hash functions?</p>
+</li>
+<li>
+<p><strong>Aggregator economics</strong>: Who bears the computational cost of SNARK proving? Should aggregation be compensated via protocol rewards?</p>
+</li>
+<li>
+<p><strong>Compatibility period</strong>: During the transition, should the protocol support both BLS and XMSS signatures simultaneously?</p>
+</li>
+<li>
+<p><strong>Scaling the registry</strong>: The current devnets support only hundreds of validators. Production Ethereum has ~1 million. How does the aggregation tree scale?</p>
+</li>
+<li>
+<p><strong>Polynomial Commitment Optimization</strong>: We are currently relying on WHIR for our multilinear polynomial commitments due to its efficiency with small fields and recursive stacking. Can we further shrink proof sizes by refining our Reed-Solomon interleaving strategy or integrating alternative polynomial commitment schemes entirely?</p>
+</li>
+<li>
+<p><strong>Key Generation UX and Tooling:</strong> How can we make the key generation process accessible and foolproof for solo stakers? Learning from the <code>deposit-cli</code>, how do we foster a community-owned, grant-incentivized open-source effort to build this critical infrastructure from day one?</p>
+</li>
+<li>
+<p><strong>Standard Model vs. ROM for XMSS:</strong> There is an ongoing debate about shifting XMSS parameters from the standard model to the Random Oracle Model (ROM). While relying on the ROM is less conservative cryptographically, it would shrink the signature size below the IPv6 MTU limit and eliminate the need for multiple Poseidon widths (16 and 24). Furthermore, since the SNARK aggregator already relies on the ROM, standard-model XMSS might be unnecessarily strict. Should we lean into a stronger (more rounds) Poseidon and embrace the ROM to simplify the scheme?</p>
+</li>
+<li>
+<p><strong>The Finite Field Choice (KoalaBear vs. Goldilocks):</strong> While KoalaBear is extremely fast, its 31-bit size and low two-adicity (24) impose strict limits on proof size—currently capping leanVM at roughly 16M cycles and 2M Poseidons to prevent Logup multiplicity overflows. Migrating to a 64-bit field like Goldilocks would solve these overflow constraints, allow for larger proofs, support native storage of CL balances, and easily hit 128-bit security (via a Poseidon state of 8) with minimal WHIR grinding. The primary trade-off is proving speed, which is currently about 2x slower on Goldilocks. Should the protocol prioritize the capacity and elegance of Goldilocks, anticipating future performance optimizations?</p>
+</li>
+</ol>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="16" />
+              <span class='post-likes'>16 Likes</span>
+            </div>
+
+          </div>
+          <div id='post_2' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/potuz'><span itemprop='name'>potuz</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-06-03T10:24:59Z' class='post-time'>
+                    June 3, 2026, 10:24am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-03T10:24:59Z'>
+              <span itemprop='position'>2</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>I see this post as a two different things. One is to have a registry in advance to start preparing for Q-Day with time and not a posteriori when we are already in panic. The other is to propose a particular scheme, fields, hashing algos etc.</p>
+<p>I believe the first of the objectives is a clear no brainer that can be done right now, while the second may still require time, research and community vetting on deciding these schemes.</p>
+<p>Why not just then register hashed BLS keys instead? BLS keys are already part of the operator’s workflow and are safe as long as they haven’t signed anything. We could just keep them and sign with them the move to PQ only <strong>after</strong> the PQ system has been fully chosen and vetted.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_3' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/71104'><span itemprop='name'>71104</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-06-03T11:23:32Z' class='post-time'>
+                    June 3, 2026, 11:23am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-03T11:23:32Z'>
+              <span itemprop='position'>3</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group quote-modified" data-username="potuz" data-post="2" data-topic="25040">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/potuz/48/11413_2.png" class="avatar"> potuz:</div>
+<blockquote>
+<p>BLS keys […] are safe as long as they haven’t signed anything.</p>
+</blockquote>
+</aside>
+<p>Not sure what you mean by this but remember that a CRQP can recover private BLS keys from the public ones.</p>
+<p>If you’re proposing to record hashed public BLS keys then you’re effectively treating public BLS keys as secret keys and requiring that their owners don’t sign anything, which is pretty much impossible given that BLS pairs are used in the consensus algorithm.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_4' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/tcoratger'><span itemprop='name'>tcoratger</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-06-03T12:36:05Z' class='post-time'>
+                    June 3, 2026, 12:36pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-03T12:36:05Z'>
+              <span itemprop='position'>4</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Indeed, the post is divided into two parts, ordered in the reverse order of what you indicated in your reply, but that doesn’t change anything; you correctly identified the two parts.</p>
+<h3><a name="p-60406-part-1-1" class="anchor" href="#p-60406-part-1-1"></a>Part 1</h3>
+<p>We present the XMSS scheme and our plan for aggregation. Even though some eprint XMSS papers have been published before on eprint for the cryptographer community, we thought it is nice to present this here in a simple and intuitive way for Ethereum developers.</p>
+<p>In this section, we also present our research on hashing, SNARK scheme for aggregation, fields, etc. As indicated throughout the post and in the open questions, all these topics remain widely open for alternative designs. Most of this research takes place here: <a href="https://github.com/leanEthereum" class="inline-onebox">lean Ethereum · GitHub</a> and is open to public contributions, of course.</p>
+<p>Technically speaking, even the signature scheme itself is not 100% confirmed because if someone comes up with a magical PQ signature scheme with much better aggregation properties, this is certainly something we have to consider.</p>
+<h3><a name="p-60406-part-2-2" class="anchor" href="#p-60406-part-2-2"></a>Part 2</h3>
+<p>In this second part, we present some approaches for an early post-quantum public key registry as a preparation step for validators (touching the cold storage, run the key generation algorithm, avoid a rush for key generation by doing this early). We can discuss the best way to achieve this, drawing on some of the ideas mentioned in the post, which will, of course, require consensus within the community.</p>
+<p>The purpose of this registry is not to enshrine or invoke aggregation machinery; there will be no form of SNARK or anything similar. It will only be used for public key generation for XMSS. And precisely to anticipate a scenario where we might need to switch the hash function from Poseidon to something else, we propose a multi-hash public key registry so that validators would be natively prepared for a couple of hash functions in case we need to switch.</p>
+<p>So if we summarize, the main objectives of the approach are:</p>
+<ul>
+<li>Authenticating a quantum-safe identity upfront,</li>
+<li>Hash function agility.</li>
+</ul>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_5' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/71104'><span itemprop='name'>71104</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-06-03T12:40:07Z' class='post-time'>
+                    June 3, 2026, 12:40pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-03T12:40:07Z'>
+              <span itemprop='position'>5</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="tcoratger" data-post="4" data-topic="25040">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/tcoratger/48/20719_2.png" class="avatar"> tcoratger:</div>
+<blockquote>
+<p>if someone comes up with a magical PQ signature scheme with much better aggregation properties, this is certainly something we have to consider.</p>
+</blockquote>
+</aside>
+<p>Say hello to <a href="https://ethresear.ch/t/what-if-post-quantum-ethereum-doesn-t-need-signatures-at-all/24427">zkMAC</a>. <img src="https://ethresear.ch/images/emoji/facebook_messenger/slight_smile.png?v=14" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"></p>
+<p>TL;DR: do <a href="https://en.wikipedia.org/wiki/HMAC" rel="noopener nofollow ugc">HMAC</a> in a zkSTARK. It’s literally two hashes, smallest circuit ever, and once you build future Ethereum on a recursive zkSTARK framework you can aggregate as many signed transactions as you want and prove an entire block with a single proof.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_6' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/0xjasonw'><span itemprop='name'>0xjasonw</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-06-03T16:22:40Z' class='post-time'>
+                    June 3, 2026,  4:22pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-03T16:22:40Z'>
+              <span itemprop='position'>6</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="71104" data-post="5" data-topic="25040">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/71104/48/20098_2.png" class="avatar"> 71104:</div>
+<blockquote>
+<p>Say hello to <a href="https://ethresear.ch/t/what-if-post-quantum-ethereum-doesn-t-need-signatures-at-all/24427">zkMAC</a>. <img src="https://ethresear.ch/images/emoji/facebook_messenger/slight_smile.png?v=14" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"></p>
+</blockquote>
+</aside>
+<p>Bro, it’s ZK-ACE :-).</p>
+<p>Under JP Aumasson’s post on X about crypto agility, I created a thread discussing the advantages of <em>identity-authorization separation</em> model, which is the foundation of ZK-ACE.</p>
+<p>here is the post: <a href="https://x.com/veorq/status/2062192304908029988" rel="noopener nofollow ugc">https://x.com/veorq/status/2062192304908029988</a></p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_7' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/potuz'><span itemprop='name'>potuz</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-06-03T19:35:35Z' class='post-time'>
+                    June 3, 2026,  7:35pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-03T19:35:35Z'>
+              <span itemprop='position'>7</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>The point I’m making is that you can register <em>today</em> a quantum safe key that is uncontested to be safe and that is already part of the workflow of every operator. Using the same old tooling they already trust and use. Put it in a registry. And by the time the new consensus algo is ready to switch over to PQ, we use <em>those</em> keys to switch over. No need to agree early on any hashing algo nor any extra information, SHA is at least as good as every proposal.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_8' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/71104'><span itemprop='name'>71104</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-06-03T19:54:41Z' class='post-time'>
+                    June 3, 2026,  7:54pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-03T19:54:41Z'>
+              <span itemprop='position'>8</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>At the very least we need to agree on the field where the key is defined, because if everyone commits to a key that’s uniformly distributed over, say, the 256-bit range, and later we decide to use, say, the BLS12-381 scalar field, it might be hard to switch between the two fields while maintaining the uniform distribution. Simple modular reduction wouldn’t work.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_9' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/uink45'><span itemprop='name'>uink45</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-06-04T02:23:21Z' class='post-time'>
+                    June 4, 2026,  2:23am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-04T02:23:21Z'>
+              <span itemprop='position'>9</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Hi <a class="mention" href="/u/tcoratger">@tcoratger</a>, thanks for the post.</p>
+<p>For validators using <code>0x01</code> or <code>0x02</code> withdrawal credentials, if the withdrawal address is a smart contract, then I don’t think it would be possible to generate a signature proving ownership for the <code>PostQuantumRegistration</code> message in the current design?</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_10' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/opus-lux'><span itemprop='name'>opus-lux</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-06-05T03:49:19Z' class='post-time'>
+                    June 5, 2026,  3:49am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-05T03:49:19Z'>
+              <span itemprop='position'>10</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Yeah love the post.</p>
+<p>I released something related to this recently on May 21st called WOTS-39. It’s a post quantum signing scheme that uses Winternitz One Time Signatures (WOTS+) with each public key being authorized by a Lamport chain hash pre image.</p>
+<p>Along with WOTS-39 I have released three implementations:</p>
+<p>-ERC-4337 smart account on EVM (Deployed and tested)</p>
+<p>-EIP-7702 native EOA account upgrade on EVM (Deployed and tested)</p>
+<p>-A live bitcoin Signet for my bitcoin proposal, completely free to participate in.</p>
+<p>All of this is live right now on my website:  https://block_opuslux.ar.io</p>
+<p>Also I think proposals like EIP-7701 that block the key path spend and allow for native post quantum security upgrades is a strong path forward. That way when the quantum threat arrives we will have the upgrades ready to go. Or cold storage long term wallets can adopt post quantum security early before the threat arrives.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_11' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/asn'><span itemprop='name'>asn</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-06-05T14:09:14Z' class='post-time'>
+                    June 5, 2026,  2:09pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-05T14:09:14Z'>
+              <span itemprop='position'>11</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="tcoratger" data-post="1" data-topic="25040">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/tcoratger/48/20719_2.png" class="avatar"> tcoratger:</div>
+<blockquote>
+<p><strong>Public parameter</strong> 20 bytes A random value generated once at key creation time. It is mixed into every hash computation (tree nodes, chain steps, message hashing) and serves two primary roles: it is essential for tight security proofs, and it provides domain separation across users so that an attacker cannot attack multiple validators in parallel when attempting a brute-force attack.</p>
+</blockquote>
+</aside>
+<p><em>From a discussion with Gotti and Benedikt</em></p>
+<p>Two ways to avoid storing this per-validator data:</p>
+<ul>
+<li>Use something like <code>H(#validator_idx)</code> as the public parameters (or basically any other unique identifier known ahead of time)</li>
+<li>Move the pp to the signature, instead of the per-validator registry: For example, <code>pk’ = H_2(pk, pp)</code> where <code>pk</code> is the old pk. Then just send <code>pp</code> as part of the signature.</li>
+</ul>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_12' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/b-wagn'><span itemprop='name'>b-wagn</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-06-22T09:52:08Z' class='post-time'>
+                    June 22, 2026,  9:52am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-06-22T09:52:08Z'>
+              <span itemprop='position'>12</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="tcoratger" data-post="1" data-topic="25040">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/tcoratger/48/20719_2.png" class="avatar"> tcoratger:</div>
+<blockquote>
+<p><strong>Standard Model vs. ROM for XMSS:</strong> There is an ongoing debate about shifting XMSS parameters from the standard model to the Random Oracle Model (ROM). While relying on the ROM is less conservative cryptographically, it would shrink the signature size below the IPv6 MTU limit and eliminate the need for multiple Poseidon widths (16 and 24). Furthermore, since the SNARK aggregator already relies on the ROM, standard-model XMSS might be unnecessarily strict. Should we lean into a stronger (more rounds) Poseidon and embrace the ROM to simplify the scheme?</p>
+</blockquote>
+</aside>
+<p>I want to share some more insights regarding this question. The main discussion here is not standard model vs ROM. It is if we can get signature sizes below one MTU. With the parameters presented here, we can’t, but with more optimistic parameters, we can.</p>
+<p>I have summarized all pros and cons of such a sub-MTU parameter set <a href="https://notes.ethereum.org/@b-wagn/r1kf3JEbGx" rel="noopener nofollow ugc">in this note</a>.</p>
+<p>In general, I would always vote for a conservative choice of parameters, especially if we use Poseidon.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+    </div>
+
+
+    
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/tos' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/privacy' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>

@@ -1,0 +1,49 @@
+HTTP/1.1 200 Connection established
+
+HTTP/2 307 
+content-type: application/binary
+x-robots-tag: noindex, nofollow, nosnippet
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+pragma: no-cache
+expires: Mon, 01 Jan 1990 00:00:00 GMT
+date: Sun, 05 Jul 2026 16:43:43 GMT
+location: https://doc-0s-6g-drawings.googleusercontent.com/export/v7g5ustuhk8vtka1g3l436kimk/0a46s005326tk2s44tuj9eddgg/1783269820000/110474004051498283290/*/1GkcGfQv9kxgrYQMyu0BYGcZya0gIDG_wQ7GsFJEsdzY?exportFormat=svg
+p3p: CP="This is not a P3P policy! See g.co/p3phelp for more info."
+cross-origin-resource-policy: cross-origin
+content-security-policy: require-trusted-types-for 'script';report-uri https://csp.withgoogle.com/csp/docs-tt
+content-security-policy: base-uri 'self';object-src 'self' blob:;report-uri https://docs.google.com/drawings/cspreport;script-src 'nonce-VKtCvBH-LTX_y0uD6Bdiww' 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval'
+server: ESF
+content-length: 0
+x-xss-protection: 0
+x-frame-options: SAMEORIGIN
+x-content-type-options: nosniff
+set-cookie: COMPASS=drawings=CmEACWuJV7ktigbZ5O6-XlxYpMmgacUpHRXvtSPJE8JP6WX8OXBtAKh94ll33sIrjA_ONF9K2c7tYvnMa7EMie4psEOeZjaL6S84tWnMJI4FtT7NLQ3Bd7Lr3-OwjYye3_f7EM-vqtIGGnIACWuJV20Pz78fR27DVwsLaj4qvRhKdBoQWzSCMC22ZB05l5fsCQvQwS8RFqBzfRQC-m1A4iif7ySDYSeXbmnQS8cTNkJf_SX2F3eehk3Xk7SvDX9ygepsPCH0Bdzbo4fvDj5e9AedcLgmBQIJl7cQeao=; Domain=.docs.google.com; Expires=Sun, 05-Jul-2026 17:43:43 GMT; Path=/drawings/d/1GkcGfQv9kxgrYQMyu0BYGcZya0gIDG_wQ7GsFJEsdzY; Secure; HttpOnly; SameSite=none
+set-cookie: NID=532=fYIwG9F2Ssf5mf1Mr8nArLieF9W_6mVZ-GrygvKk8XMPY96mw9-BMIIR4nzs2htj7SUcya-x25QRCTHwhyTqgL9PZjQwA-vdRpezeHPSqiQcvV3u21AHpCbldaqnP9LTX-NTd--Y5GtMAufLGlkQiSl7uW6ZgQ5RVAyLxBPTAYtHmitdJiB8LOZjgJecG_32xa0; expires=Mon, 04-Jan-2027 16:43:43 GMT; path=/; domain=.google.com; HttpOnly
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+
+HTTP/1.1 200 Connection established
+
+HTTP/2 200 
+content-type: image/svg+xml; charset=utf-8
+x-robots-tag: noindex, nofollow, nosnippet
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+pragma: no-cache
+expires: Mon, 01 Jan 1990 00:00:00 GMT
+date: Sun, 05 Jul 2026 16:43:44 GMT
+content-disposition: attachment; filename="L1protocolstrawmanroadmap.svg"; filename*=UTF-8''L1%20protocol%20strawman%20roadmap.svg
+access-control-allow-origin: *
+access-control-expose-headers: Cache-Control,Content-Disposition,Content-Length,Content-Type,Date,Expires,Pragma,Server
+cross-origin-resource-policy: cross-origin
+content-security-policy: require-trusted-types-for 'script';report-uri https://csp.withgoogle.com/csp/docs-tt
+content-security-policy: frame-ancestors 'self' https://docs.google.com
+content-security-policy: base-uri 'self';object-src 'self' blob:;report-uri https://doc-0s-6g-drawings.googleusercontent.com/drawings/cspreport;script-src 'nonce-s9nclNb-8KSDLcUwewJJWg' 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval'
+reporting-endpoints: default="/web-reports?bl=editors.drawings-frontend_20260624.00_p3&context=eJwVz3lUlQUaBvDPb3k-UJD1siXbvRpXUDQ1LblKcLmAeESxyU-tbDCUJBVCRHLLbSy11GQctWkSvagkQipSrtkgJ9QcITUVd5BFdtkSUGSe_vid9zznec97ztv_is5W0IS9Nppwob8m5A3QhAI7TfjSXhOsjprwzFUTAnSaUEw_uGvCDg9NmOKlCdk-mhA0nDlYE3aFakIOWSM14cR07lLATE0YR9IsTXChstma8IhuxWtCLdkmaIIntc3XBDFREy4laUI53V6jCU_oja80IZpe7taEgXs0wfWoJgymslLeoYllmhBLu6o04RAdr9aEIvqVbtIfgxrELloX2CBuJvfKNtGX9gW3i99Td0y72G9yu1jxWqdYR3fXdoqP6auPn4k76b6pS6ymnAld4lEaNb9LHE_PNneJfTT-crcYTsuce8TP6GBWj5hPsbNfijNottAnzqWcQX3iUbqS0SfeoPRHgrSauvf3k8Zk95NMtCxLlD6j5mJRyjFK0lHyfVuSAuj83ySphBLXSlIyJX4uSal0uVqSrtG2_rJ0zE-WTpGpZbwcQddaQ-Q7VDTVJDfvMsl_0qojJvkfVDVugtxIwu4J8gDyvBIq-1NFWahcRwu9w-Q0KokOk6-R5-Qw2Z9mhIfLc2jFynB5PX3rbpaz6eU0s4w4s1ydYpab6G66WX5MbkfNsg_lFZplw6UIOYgm09u0hFbQAcqjvtYIWW2LkGu9LXILvVhgkeUki_zmJxY5jKrOWeRGulFjke9R2euR8m0ydEXJQVTcHSWX0kZdtBz4cbQ8ika7TJJDyN1zkqynL9UY-Z-UPHWvEvD2XmUE_f2nvcpH9GJ8luLfkaUMpdfn7FNSpu5XMui8q1UpoSH3rMpw6myxKr30-KNspYEiF2YrseRVla3oqWLDAaWOso8dUI5QRexBpY6Szh1UltLaDYeUTbTAN0f5hKbNylFmUtGRHOXXusPKVUoanqsspYqYXKWObGNzFSd6f3Wu8hHFb8tTRGO-0p8GfpivuNHNRfnKA1qfXq9soY5LDcoLOl3eoBTR2dBGpZgSsxqVq6calZsUVdSoTKVPZjYpn1LyN03KMnI40Kc40ayeAZhDF3Ls8Bt962CPbOo6YQ-h0B6bT9pjBxXU2eMMNRQPRDvt-c4B-2j0NEckBjohmd55ywnvFjjhQzKPdMZk2mJxRiadiXfGBQrOd8ZYavJ3QSetDnTBRioZ54JSkt9wgR2FznVBFC2-74p0iovVYRad_VSHYjq9XIeivxzW4TK1m9zwnEbsd8M4-uOuG-7T3ntuOESjFrpjPKVlumMlLe9zxzpq8vNAJy2d74FVJOd7wI4ulnigjAZbPTGM3vzMC2FUstkLpaTr8oI3Ldz-CtKoZNIgXCFd8SB409fve2MPPbrpjSfUnuuDyjs-qKWt93yQSa4tPhhEQ1p9EEgft_kghX541xd5831xnL5f7Yt8uir54ToZVD8EUcIHflhIy5L8cOekHyrp84t-2EaGnf4IIqvVH7k0r8Ifi-hpkB5ddHaEHsX0XZQeVvr3Rk4q_UKPW_RKlh4Gsv5PjxxKvKrHQrpPleRTyp7uUQVtLNNj6Es9XqM9JgP20Z13DHhIB9IMyCP35QYU0ElKWWHAUipcacBp2nXDgL00bPCrGEM1M15FM23pDMB2qpSNqCcdjPAmR9UID3pgb0QNdToa0UMZTkasophhRkwnd6sRvtR404gO2lhjxFa6KoTg0MEQPMwNQS1tORaC7VRKN-j28RDcJ2tBCHLoeawJ0lQTTlebUEROfSZ4UtnOCbhNtZsmooXO9UxEg20o2mlc8VsIpdT_hGE5Dfk9DMPJUh-GKXQlNxzKIjPs6eISM8pIl2GGN11cx0zBVWaMpnluEVhE4S0RiKF9KywY7xKJcNq2JhK76Lk1ElJ2JLxaI-FLU01RiE-LwgL6OTcKv9KW8ihkUtejKAgVUVCDo-FAfQ-joT6KhpPtJHjSmW2V-IXymh-jkC4NqsJVyp9WhR_pblwVHtPs7irMpelDqrFVqcG_KGFSDfp9XwNbCs6twVgqb67BA3o-qRZSTC06Y2vRS79nP0E5hRc9gVdAHfTUcase3X9prEe_pnosdmpAOi2Na4T9yUboqDq6CU20eF4T0mno7Sa8RvGmZiygY2-24It1LVh6ogWrKGbOU0yngvlPcYbibFohh7Shy9QGYUIbrse186d23IzrwAPabu1AakEHllHKjk5k0KHMThwh7_I_oSfLe88whR51PEN7Txee00rPbmwg0dKN_vTe7W4kUG5-DwpILXgBBzqs68Vxao3vRTc1fNuLp1R5ohf1dK2vF3doovQSkRTg0YcRVGQW1Ms0YX8_1UKGG6IaRGPcJdVEdl6S6kqbEmT1a7p2Tlbv0IrrsrqeBpsUdRj9NwTqJbqwGupvlNEGdQ2Vu9ioD6izzUatGDJAFccMUFU6E2CnXiCbG3aqI-W9OlAtJJvAgaojzfzGUS084Kj-pDip56ku30ltpXxvZ_UU5aW7qoU0d427mkS79R5qFtWc81Cb6flDD7X_Mw_VgT6N8FTXUnSGpzqNfvR6Rf2Zks77qKm0ucVH3UrOdja_ZB6-Bsesjb13JS9YMlKSU9P0xnkJC9KSU5cEJ6TGL1uwOHHJ8PmpyYvT5i1O-GDUyFFjR44dNSZ45MgPUkb_H2EU9Kk&build-label=editors.drawings-frontend_20260624.00_p3&imp-sid=CKjb1OP9u5UDFYYtqQEdo34qRQ&is-cached-offline=false&wcrumsspbp=true"
+document-policy: include-js-call-stacks-in-crash-reports
+x-frame-options: ALLOW-FROM https://docs.google.com
+server: ESF
+x-xss-protection: 0
+x-content-type-options: nosniff
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+accept-ranges: none
+vary: Accept-Encoding
+

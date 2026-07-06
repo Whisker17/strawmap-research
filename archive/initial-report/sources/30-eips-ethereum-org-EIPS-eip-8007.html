@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    
+      <title>EIP-8007: Glamsterdam Gas Repricings</title>
+      <meta property="og:title" content="EIP-8007: Glamsterdam Gas Repricings" />
+    
+    <meta name="description" content="Directory of EIPs introducing changes to the gas pricing model for the Glamsterdam fork" />
+    <meta property="og:description" content="Directory of EIPs introducing changes to the gas pricing model for the Glamsterdam fork" />
+    <meta name="twitter:description" content="Directory of EIPs introducing changes to the gas pricing model for the Glamsterdam fork" />
+  
+  <meta name="generator" content="Jekyll" />
+  <meta property="og:locale" content="en_US" />
+  <link rel="canonical" href="https://eips.ethereum.org/EIPS/eip-8007" />
+  <meta property="og:url" content="https://eips.ethereum.org/EIPS/eip-8007" />
+  <meta property="og:site_name" content="Ethereum Improvement Proposals" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:site" content="@" />
+  <script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": "https://eips.ethereum.org",
+      "name": "Ethereum Improvement Proposals",
+      "description": "Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.",
+      "@context": "https://schema.org"
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://eips.ethereum.org/feed.xml" title="Ethereum Improvement Proposals" /><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/override.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    });
+  </script>
+  <script type="text/javascript">
+    window.MathJax = {
+      loader: {
+        load: ['input/tex-base', 'output/chtml']
+      },
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true,
+        processEnvironments: false,
+        processRefs: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js" integrity="sha384-/1zmJ1mBdfKIOnwPxpdG6yaRrxP6qu3eVYm0cz2nOx+AcL4d3AqEFrwcqGZVVroG" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/citation-js/0.6.7/citation.min.js" integrity="sha512-N+LDFMa9owHXGS+CyMrBvuxq2QuGl3fiB/7cys3aUEL7K6P1soHGqsS0sjHXZpwNd9Kz0m3R4IPy1HYRi6ROEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+    addEventListener('DOMContentLoaded', async () => {
+      const Cite = window.require('citation-js');
+      const citationElements = document.querySelectorAll('.language-csl-json');
+      for (let citationElement of citationElements) {
+        try {
+          const citation = await Cite.async(citationElement);
+          const template = document.createElement('template');
+          template.innerHTML = citation.format('bibliography', {
+            format: 'html',
+            template: 'apa',
+            lang: 'en-US'
+          });
+          if (citationElement.parentElement && citationElement.parentElement.matches('pre')) {
+            citationElement.parentElement.replaceWith(template.content);
+          } else {
+            citationElement.replaceWith(template.content);
+          }
+        } catch (e) {
+          console.error("unable to render citation", e);
+        }
+      }
+    });
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Ethereum Improvement Proposals</a><nav class="site-nav d-flex">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger row p-2"><a class="page-link col" href="/all">All</a><a class="page-link col" href="/core">Core</a><a class="page-link col" href="/networking">Networking</a><a class="page-link col" href="/interface">Interface</a><a class="page-link col" href="/erc">ERC</a><a class="page-link col" href="/meta">Meta</a><a class="page-link col" href="/informational">Informational</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="bi-megaphone-fill" fill="currentColor" viewBox="0 0 16 16">
+    <title>Alert</title>
+    <path d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0v-11zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25.222 25.222 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56V3.224zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009a68.14 68.14 0 0 1 .496.008 64 64 0 0 1 1.51.048zm1.39 1.081c.285.021.569.047.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a65.81 65.81 0 0 1 1.692.064c.327.017.65.037.966.06z"/>
+  </symbol>
+  <symbol id="bi-code" fill="currentColor" viewBox="0 0 16 16">
+    <title>Source</title>
+    <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/>
+  </symbol>
+  <svg id="bi-chat" fill="currentColor" viewBox="0 0 16 16">
+    <title>Discuss</title>
+    <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+  </svg>
+</svg>
+
+<div class="home">
+  
+  
+  
+ 
+  <span class="h5">
+    
+    
+    
+      <span class="badge text-light bg-warning" data-bs-toggle="tooltip" data-bs-title="This EIP is not yet recommended for general use or implementation, as it is subject to normative (breaking) changes.">⚠️ Draft</span>
+    
+    
+    
+       
+    
+      <a class="badge text-light bg-primary" data-bs-toggle="tooltip" data-bs-title="Describes a process surrounding Ethereum or proposes a change to (or an event in) a process. " href="../meta">Meta</a>
+    
+  </span>
+  <h1 class="page-heading">
+    EIP-8007: Glamsterdam Gas Repricings
+    <a href="https://ethereum-magicians.org/t/eip-8007-glamsterdam-gas-repricings-meta-eip/25206" class="no-underline">
+      <svg role="img" aria-label="Discuss" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-chat"/>
+      </svg>
+    </a>
+    <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-8007.md" class="no-underline">
+      <svg role="img" aria-label="Source" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-code"/>
+      </svg>
+    </a>
+  </h1>
+  <h3>Directory of EIPs introducing changes to the gas pricing model for the Glamsterdam fork</h3>
+  <table class="table table-borderless preamble">
+    <tbody>
+      <tr>
+        <th scope="row">Authors</th>
+        <td>Maria Silva&nbsp;(<a href="https://github.com/misilva73">@misilva73</a>), Ansgar Dietrichs&nbsp;(<a href="https://github.com/adietrichs">@adietrichs</a>)</td>
+      </tr>
+      
+        <tr>
+          <th scope="row">Created</th>
+          <td>2025-08-21</td>
+        </tr>
+      
+      
+             
+      
+        <tr>
+          <th scope="row">Discussion Link</th>
+          <td><a href="https://ethereum-magicians.org/t/eip-8007-glamsterdam-gas-repricings-meta-eip/25206" target="_blank" rel="noopener">https://ethereum-magicians.org/t/eip-8007-glamsterdam-gas-repricings-meta-eip/25206</a></td>
+        </tr>
+      
+      
+        <tr>
+          <th scope="row">Requires</th>
+          <td>
+
+  <a href="eip-2780">EIP-2780</a>, 
+
+  <a href="eip-2926">EIP-2926</a>, 
+
+  <a href="eip-7686">EIP-7686</a>, 
+
+  <a href="eip-7778">EIP-7778</a>, 
+
+  <a href="eip-7904">EIP-7904</a>, 
+
+  <a href="eip-7923">EIP-7923</a>, 
+
+  <a href="eip-7971">EIP-7971</a>, 
+
+  <a href="eip-7973">EIP-7973</a>, 
+
+  <a href="eip-7976">EIP-7976</a>, 
+
+  <a href="eip-7981">EIP-7981</a>, 
+
+  <a href="eip-8011">EIP-8011</a>, 
+
+  <a href="eip-8032">EIP-8032</a>, 
+
+  <a href="eip-8037">EIP-8037</a>, 
+
+  <a href="eip-8038">EIP-8038</a>, 
+
+  <a href="eip-8053">EIP-8053</a>, 
+
+  <a href="eip-8057">EIP-8057</a>, 
+
+  <a href="eip-8058">EIP-8058</a>, 
+
+  <a href="eip-8059">EIP-8059</a>
+
+</td>
+        </tr>
+      
+    </tbody>
+  </table>
+  <br/>
+
+  
+
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#motivation">Motivation</a></li>
+  <li><a href="#specification">Specification</a>
+    <ul>
+      <li><a href="#considered-for-inclusion">Considered for Inclusion</a></li>
+      <li><a href="#declined-for-inclusion">Declined for Inclusion</a></li>
+    </ul>
+  </li>
+  <li><a href="#rationale">Rationale</a>
+    <ul>
+      <li><a href="#gas-cost-changes-by-operation">Gas cost changes by operation</a></li>
+    </ul>
+  </li>
+  <li><a href="#security-considerations">Security Considerations</a></li>
+  <li><a href="#copyright">Copyright</a></li>
+</ul>
+
+  </div>
+
+  <h2 id="abstract">
+      
+      
+        <a href="#abstract" class="anchor-link"></a> Abstract
+      
+      
+    </h2>
+
+<p>This Meta EIP documents all the proposals for Glamsterdam related to the gas repricing effort. The goal of this effort is to harmonize gas costs across the EVM, thereby reducing the impact of specific bottlenecks on scaling. Proposals include changes to the cost of single EVM operations, as well as bigger changes to the gas model. This Meta EIP is purely informational and does not aim to have an active role in the governance process for the Glamsterdam fork. Instead, it serves as a directory for all repricing-related proposals, helping to organize the work and keeping the community informed about the status of each EIP.</p>
+  
+    <h2 id="motivation">
+      
+      
+        <a href="#motivation" class="anchor-link"></a> Motivation
+      
+      
+    </h2>
+
+<p>The main objective of the Glamsterdam fork is to improve L1 scalability. A crucial aspect of this initiative is to create a better alignment between gas costs and actual resource usage. Currently, the gas model often misprices operations, resulting in inefficiencies and unintended incentives. For instance, within the pure compute operations, there is a high variance in execution time per gas unit, which indicates that a single unit of computation is not priced equally across the various opcodes.</p>
+
+<p>By standardizing gas costs across EVM operations and other resources, we can reduce bottlenecks and enhance the utilization of EVM resources, which will subsequently enable further scalability. The EIPs listed below constitute a significant first step in that direction. We expect that further iteration will be necessary in future hardforks.</p>
+  
+    <h2 id="specification">
+      
+      
+        <a href="#specification" class="anchor-link"></a> Specification
+      
+      
+    </h2>
+
+<p>The following table lists all EIPs related to repricings that are being discussed in the scope of the Glamsterdam fork. There are three types of EIPs in this list:</p>
+
+<ol>
+  <li><strong>Broad harmonization</strong>. These EIPs reprice a class of operations with the goal of harmonizing them and removing single bottlenecks.</li>
+  <li><strong>Pricing extension</strong>. These EIPs make targeted changes to a specific opcode or component of the gas model, usually coupled with a new mechanism.</li>
+  <li><strong>Supporting</strong>. These EIPs are not directly doing a repricing, but instead introduce a change that support other repricing EIPs or enhance the scalability potential of repricings.</li>
+</ol>
+  
+    <h3 id="considered-for-inclusion">
+      
+      
+        <a href="#considered-for-inclusion" class="anchor-link"></a> Considered for Inclusion
+      
+      
+    </h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">EIP</th>
+      <th>Description</th>
+      <th>Type</th>
+      <th style="text-align: center">Resource class</th>
+      <th>Gas change overview</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-2780">EIP-2780</a></td>
+      <td>Decompose the flat intrinsic transaction cost into explicit primitives priced to match the resources a transaction actually consumes.</td>
+      <td>Broad harmonization</td>
+      <td style="text-align: center">Multi-resource</td>
+      <td>Decompose flat 21,000 into <code class="language-plaintext highlighter-rouge">TX_BASE_COST</code> (12,000) + <code class="language-plaintext highlighter-rouge">COLD_ACCOUNT_ACCESS</code> (3,000) + <code class="language-plaintext highlighter-rouge">TX_VALUE_COST</code> (4,244) + <code class="language-plaintext highlighter-rouge">TRANSFER_LOG_COST</code> (1,756); add <code class="language-plaintext highlighter-rouge">STATE_BYTES_PER_NEW_ACCOUNT × CPSB</code> (183,600) state gas to value transfers that create an account</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-7778">EIP-7778</a></td>
+      <td>Prevent Block Gas Limit Circumvention by Excluding Refunds from Block Gas Accounting.</td>
+      <td>Pricing extension</td>
+      <td style="text-align: center">General Accounting</td>
+      <td>No opcode repricing; excludes gas refunds (e.g. <code class="language-plaintext highlighter-rouge">SSTORE</code> clearing) from block gas accounting</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-7904">EIP-7904</a></td>
+      <td>Empirical analysis of EVM compute operation runtimes (Informational); concludes no compute gas cost needs repricing at the target throughput.</td>
+      <td>Broad harmonization</td>
+      <td style="text-align: center">Compute</td>
+      <td>No changes: with <a href="/EIPS/eip-7928">EIP-7928</a> optimizations in place, all examined compute opcodes and precompiles already meet the 100 Mgas/s target at their current cost</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-7976">EIP-7976</a></td>
+      <td>Increase the calldata floor cost to 64/64 gas per byte to reduce maximum block size.</td>
+      <td>Pricing extension</td>
+      <td style="text-align: center">Data</td>
+      <td>Increase calldata floor cost (10/40 → 64/64 per byte)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-7981">EIP-7981</a></td>
+      <td>Price access lists for data to reduce maximum block size.</td>
+      <td>Pricing extension</td>
+      <td style="text-align: center">Data</td>
+      <td>Increase: new floor charge on access list data (addresses + storage keys)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-8037">EIP-8037</a></td>
+      <td>Harmonization, increase and separate metering of state creation gas costs to mitigate state growth and unblock scaling.</td>
+      <td>Broad harmonization</td>
+      <td style="text-align: center">State</td>
+      <td>All increase via a fixed <code class="language-plaintext highlighter-rouge">CPSB</code> (1,530 gas/byte), metered in a separate state-gas dimension: <code class="language-plaintext highlighter-rouge">GAS_CREATE</code>, <code class="language-plaintext highlighter-rouge">GAS_CODE_DEPOSIT</code>, <code class="language-plaintext highlighter-rouge">GAS_NEW_ACCOUNT</code>, <code class="language-plaintext highlighter-rouge">GAS_STORAGE_SET</code>, <code class="language-plaintext highlighter-rouge">PER_AUTH_BASE_COST</code>, <code class="language-plaintext highlighter-rouge">PER_EMPTY_ACCOUNT_COST</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-8038">EIP-8038</a></td>
+      <td>Increases the gas cost of state-access operations to reflect Ethereum’s larger state.</td>
+      <td>Broad harmonization</td>
+      <td style="text-align: center">State</td>
+      <td>Increase: <code class="language-plaintext highlighter-rouge">STORAGE_WRITE</code>, <code class="language-plaintext highlighter-rouge">COLD_STORAGE_ACCESS</code>, <code class="language-plaintext highlighter-rouge">COLD_ACCOUNT_ACCESS</code>, <code class="language-plaintext highlighter-rouge">ACCOUNT_WRITE</code>, <code class="language-plaintext highlighter-rouge">CREATE_ACCESS</code>, access list costs; <code class="language-plaintext highlighter-rouge">EXTCODESIZE</code>/<code class="language-plaintext highlighter-rouge">EXTCODECOPY</code> extra warm read; <code class="language-plaintext highlighter-rouge">WARM_ACCESS</code> unchanged</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h3 id="declined-for-inclusion">
+      
+      
+        <a href="#declined-for-inclusion" class="anchor-link"></a> Declined for Inclusion
+      
+      
+    </h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">EIP</th>
+      <th>Description</th>
+      <th>Type</th>
+      <th style="text-align: center">Resource class</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-2926">EIP-2926</a></td>
+      <td>Introduce code-chunking in an MPT context.</td>
+      <td>Pricing extension</td>
+      <td style="text-align: center">State</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-7686">EIP-7686</a></td>
+      <td>Adjust memory limits and gas limits of sub-calls to create a clear linear bound on how much total memory an EVM execution can consume.</td>
+      <td>Pricing extension</td>
+      <td style="text-align: center">Memory</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-7923">EIP-7923</a></td>
+      <td>Linearize Memory Costing and replace the current quadratic formula with a page-based cost model.</td>
+      <td>Pricing extension</td>
+      <td style="text-align: center">Memory</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-7971">EIP-7971</a></td>
+      <td>Decrease costs for <code class="language-plaintext highlighter-rouge">TLOAD</code> and <code class="language-plaintext highlighter-rouge">TSTORE</code> with a transaction-global limit.</td>
+      <td>Pricing extension</td>
+      <td style="text-align: center">Memory</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-7973">EIP-7973</a></td>
+      <td>Introduce warm account writes, decreasing the cost of writing to an account after the first write.</td>
+      <td>Pricing extension</td>
+      <td style="text-align: center">State</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-8011">EIP-8011</a></td>
+      <td>Gas accounting by EVM resource, increasing throughput and improving resource usage controls, with minimal changes to the protocol and UX.</td>
+      <td>Supporting</td>
+      <td style="text-align: center">NA</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-8032">EIP-8032</a></td>
+      <td>Makes <code class="language-plaintext highlighter-rouge">SSTORE</code> gas cost scale with a contract’s storage size to discourage state bloat.</td>
+      <td>Pricing extension</td>
+      <td style="text-align: center">State</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-8053">EIP-8053</a></td>
+      <td>Adds <code class="language-plaintext highlighter-rouge">milli-gas</code> as the EVM’s internal gas accounting unit, reducing rounding errors without impacting UX.</td>
+      <td>Supporting</td>
+      <td style="text-align: center">NA</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-8057">EIP-8057</a></td>
+      <td>Multi‑block temporal locality discounts for state and account access.</td>
+      <td>Pricing extension</td>
+      <td style="text-align: center">State</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-8058">EIP-8058</a></td>
+      <td>Reduces gas costs for deploying duplicate contract bytecode via access-list based mechanism.</td>
+      <td>Pricing extension</td>
+      <td style="text-align: center">State</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><a href="/EIPS/eip-8059">EIP-8059</a></td>
+      <td>Gas parameters and variables are increased to a factor of <code class="language-plaintext highlighter-rouge">REBASE_FACTOR</code> to reduce rounding errors without major changes to the EVM.</td>
+      <td>Supporting</td>
+      <td style="text-align: center">NA</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h2 id="rationale">
+      
+      
+        <a href="#rationale" class="anchor-link"></a> Rationale
+      
+      
+    </h2>
+  
+    <h3 id="gas-cost-changes-by-operation">
+      
+      
+        <a href="#gas-cost-changes-by-operation" class="anchor-link"></a> Gas cost changes by operation
+      
+      
+    </h3>
+
+<p>The following tables summarize the preliminary gas cost changes. Numbers are not yet finalized and will be subject to change.</p>
+  
+    <h4 id="compute-opcodes-and-precompiles--eip-7904-no-changes">
+      
+      
+        <a href="#compute-opcodes-and-precompiles--eip-7904-no-changes" class="anchor-link"></a> Compute Opcodes and Precompiles — <a href="/EIPS/eip-7904">EIP-7904</a> (no changes)
+      
+      
+    </h4>
+
+<p><a href="/EIPS/eip-7904">EIP-7904</a> is now Informational and recommends no repricing. Earlier revisions proposed raising the cost of a set of compute opcodes and precompiles, but re-running the benchmark and estimation pipeline against clients that include the parallel-execution optimizations unlocked by <a href="/EIPS/eip-7928">EIP-7928</a> (Block-Level Access Lists) shows those operations now clear the 100 Mgas/s throughput target at their current gas costs. Every compute opcode and precompile examined is therefore left unchanged.</p>
+  
+    <h4 id="state-access--eip-8038">
+      
+      
+        <a href="#state-access--eip-8038" class="anchor-link"></a> State Access — <a href="/EIPS/eip-8038">EIP-8038</a>
+      
+      
+    </h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Opcode(s)</th>
+      <th>Component</th>
+      <th style="text-align: right">Current</th>
+      <th style="text-align: right">New</th>
+      <th>Direction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SSTORE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STORAGE_WRITE</code> (first-time write surcharge)</td>
+      <td style="text-align: right">2,800</td>
+      <td style="text-align: right">10,000</td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SSTORE</code>, <code class="language-plaintext highlighter-rouge">SLOAD</code></td>
+      <td><code class="language-plaintext highlighter-rouge">COLD_STORAGE_ACCESS</code></td>
+      <td style="text-align: right">2,100</td>
+      <td style="text-align: right">3,000</td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">*CALL</code>, <code class="language-plaintext highlighter-rouge">BALANCE</code>, <code class="language-plaintext highlighter-rouge">EXT*</code>, <code class="language-plaintext highlighter-rouge">SELFDESTRUCT</code></td>
+      <td><code class="language-plaintext highlighter-rouge">COLD_ACCOUNT_ACCESS</code></td>
+      <td style="text-align: right">2,600</td>
+      <td style="text-align: right">3,000</td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">*CALL</code>, <code class="language-plaintext highlighter-rouge">SELFDESTRUCT</code>, ETH transfers</td>
+      <td><code class="language-plaintext highlighter-rouge">ACCOUNT_WRITE</code> (first-time account-leaf write surcharge)</td>
+      <td style="text-align: right">6,700</td>
+      <td style="text-align: right">8,000</td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td>All state ops (warm)</td>
+      <td><code class="language-plaintext highlighter-rouge">WARM_ACCESS</code></td>
+      <td style="text-align: right">100</td>
+      <td style="text-align: right">100</td>
+      <td>unchanged</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CREATE</code>, <code class="language-plaintext highlighter-rouge">CREATE2</code></td>
+      <td><code class="language-plaintext highlighter-rouge">CREATE_ACCESS</code></td>
+      <td style="text-align: right">7,000</td>
+      <td style="text-align: right">11,000</td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EXTCODESIZE</code></td>
+      <td>Extra warm read for 2nd DB lookup</td>
+      <td style="text-align: right">0</td>
+      <td style="text-align: right">+<code class="language-plaintext highlighter-rouge">WARM_ACCESS</code></td>
+      <td>increase (new)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EXTCODECOPY</code></td>
+      <td>Extra warm read for 2nd DB lookup</td>
+      <td style="text-align: right">0</td>
+      <td style="text-align: right">+<code class="language-plaintext highlighter-rouge">WARM_ACCESS</code></td>
+      <td>increase (new)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SSTORE</code>, <code class="language-plaintext highlighter-rouge">SLOAD</code> (access list)</td>
+      <td><code class="language-plaintext highlighter-rouge">ACCESS_LIST_STORAGE_KEY_COST</code></td>
+      <td style="text-align: right">1,900</td>
+      <td style="text-align: right">3,000</td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">*CALL</code> etc. (access list)</td>
+      <td><code class="language-plaintext highlighter-rouge">ACCESS_LIST_ADDRESS_COST</code></td>
+      <td style="text-align: right">2,400</td>
+      <td style="text-align: right">3,000</td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SSTORE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STORAGE_CLEAR_REFUND</code></td>
+      <td style="text-align: right">4,800</td>
+      <td style="text-align: right">12,480</td>
+      <td>increase (refund)</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h4 id="state-creation--eip-8037-all-increase">
+      
+      
+        <a href="#state-creation--eip-8037-all-increase" class="anchor-link"></a> State Creation — <a href="/EIPS/eip-8037">EIP-8037</a> (all increase)
+      
+      
+    </h4>
+
+<p><a href="/EIPS/eip-8037">EIP-8037</a> introduces a fixed cost per state byte, <code class="language-plaintext highlighter-rouge">CPSB = 1,530</code> (derived from a 150M reference block gas limit), and meters state creation in a separate state-gas dimension. The new-state byte counts are 120 per account, 64 per storage slot, and 23 per <a href="/EIPS/eip-7702">EIP-7702</a> authorization indicator. The “New state gas” column is charged to the state-gas dimension; the “New regular gas” column accompanies it in regular gas.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operation</th>
+      <th>Opcodes Affected</th>
+      <th style="text-align: right">Current</th>
+      <th style="text-align: right">New state gas</th>
+      <th style="text-align: right">New regular gas</th>
+      <th>Direction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">GAS_CREATE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">CREATE</code>, <code class="language-plaintext highlighter-rouge">CREATE2</code>, create txs</td>
+      <td style="text-align: right">32,000</td>
+      <td style="text-align: right">120 × CPSB (183,600)</td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">CREATE_ACCESS</code></td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">GAS_CODE_DEPOSIT</code></td>
+      <td><code class="language-plaintext highlighter-rouge">CREATE</code>, <code class="language-plaintext highlighter-rouge">CREATE2</code>, create txs</td>
+      <td style="text-align: right">200/byte</td>
+      <td style="text-align: right">CPSB/byte (1,530/byte)</td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">6 × ceil(len/32)</code> (hash)</td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">GAS_NEW_ACCOUNT</code></td>
+      <td><code class="language-plaintext highlighter-rouge">CALL*</code> to new accounts, <code class="language-plaintext highlighter-rouge">SELFDESTRUCT</code></td>
+      <td style="text-align: right">25,000</td>
+      <td style="text-align: right">120 × CPSB (183,600)</td>
+      <td style="text-align: right">0</td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">GAS_STORAGE_SET</code></td>
+      <td><code class="language-plaintext highlighter-rouge">SSTORE</code> (0 → non-zero)</td>
+      <td style="text-align: right">20,000</td>
+      <td style="text-align: right">64 × CPSB (97,920)</td>
+      <td style="text-align: right">0</td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PER_EMPTY_ACCOUNT_COST</code></td>
+      <td>EIP-7702 auth</td>
+      <td style="text-align: right">25,000</td>
+      <td style="text-align: right">120 × CPSB (183,600)</td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">ACCOUNT_WRITE</code></td>
+      <td>increase</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PER_AUTH_BASE_COST</code></td>
+      <td>EIP-7702 auth</td>
+      <td style="text-align: right">12,500</td>
+      <td style="text-align: right">23 × CPSB (35,190)</td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">REGULAR_PER_AUTH_BASE_COST</code></td>
+      <td>increase</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h4 id="transaction-level-costs">
+      
+      
+        <a href="#transaction-level-costs" class="anchor-link"></a> Transaction-Level Costs
+      
+      
+    </h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th style="text-align: right">Current</th>
+      <th>New</th>
+      <th>Direction</th>
+      <th>EIP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Intrinsic base (plain transfer to existing account)</td>
+      <td style="text-align: right">21,000</td>
+      <td>21,000, decomposed into <code class="language-plaintext highlighter-rouge">TX_BASE_COST</code> (12,000) + <code class="language-plaintext highlighter-rouge">COLD_ACCOUNT_ACCESS</code> (3,000) + <code class="language-plaintext highlighter-rouge">TX_VALUE_COST</code> (4,244) + <code class="language-plaintext highlighter-rouge">TRANSFER_LOG_COST</code> (1,756)</td>
+      <td>unchanged (decomposed)</td>
+      <td><a href="/EIPS/eip-2780">2780</a></td>
+    </tr>
+    <tr>
+      <td>New-account charge (value transfer creating an account)</td>
+      <td style="text-align: right">0</td>
+      <td><code class="language-plaintext highlighter-rouge">STATE_BYTES_PER_NEW_ACCOUNT × CPSB</code> = 183,600 state gas</td>
+      <td>increase (new)</td>
+      <td><a href="/EIPS/eip-2780">2780</a>, <a href="/EIPS/eip-8037">8037</a></td>
+    </tr>
+    <tr>
+      <td>Calldata floor cost</td>
+      <td style="text-align: right">10/40 per byte</td>
+      <td>64/64 per byte</td>
+      <td>increase</td>
+      <td><a href="/EIPS/eip-7976">7976</a></td>
+    </tr>
+    <tr>
+      <td>Access list data cost</td>
+      <td style="text-align: right">0</td>
+      <td><code class="language-plaintext highlighter-rouge">floor_token_cost</code> per token</td>
+      <td>increase (new)</td>
+      <td><a href="/EIPS/eip-7981">7981</a></td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h2 id="security-considerations">
+      
+      
+        <a href="#security-considerations" class="anchor-link"></a> Security Considerations
+      
+      
+    </h2>
+
+<p>Discussed in the individual EIPs.</p>
+  
+    <h2 id="copyright">
+      
+      
+        <a href="#copyright" class="anchor-link"></a> Copyright
+      
+      
+    </h2>
+
+<p>Copyright and related rights waived via <a href="/LICENSE">CC0</a>.</p>
+
+  <h2>Citation</h2>
+  <p>Please cite this document as:</p>
+  
+  <p>Maria Silva&nbsp;(<a href="https://github.com/misilva73">@misilva73</a>), Ansgar Dietrichs&nbsp;(<a href="https://github.com/adietrichs">@adietrichs</a>), "EIP-8007: Glamsterdam Gas Repricings [DRAFT]," <em>Ethereum Improvement Proposals</em>, no. 8007, August 2025. Available: https://eips.ethereum.org/EIPS/eip-8007.</p>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "TechArticle",
+    "headline": "EIP-8007: Glamsterdam Gas Repricings [DRAFT]",
+    "name": "EIP-8007: Glamsterdam Gas Repricings [DRAFT]",
+    "author": "Maria Silva (@misilva73), Ansgar Dietrichs (@adietrichs)",
+    "dateCreated": "2025-08-21",
+    "datePublished": "2025-08-21",
+    
+    "discussionUrl": "https://ethereum-magicians.org/t/eip-8007-glamsterdam-gas-repricings-meta-eip/25206",
+    
+    "inLanguage": "en-US",
+    "license": "#copyright",
+    "copyrightYear": "2025"
+  }
+</script>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ethereum Improvement Proposals</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ethereum Improvement Proposals</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ethereum/EIPs"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ethereum/EIPs</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

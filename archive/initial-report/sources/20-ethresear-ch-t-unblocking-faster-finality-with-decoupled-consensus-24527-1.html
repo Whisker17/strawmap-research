@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Unblocking faster finality with decoupled consensus - Consensus - Ethereum Research</title>
+    <meta name="description" content="Thanks to the EF Consensus team for discussion and comments 
+In the current consensus protocol, the timelines of block production and finality are coupled. A large committee (consisting of 1/32 of the whole validator set&amp;hellip;">
+    <meta name="generator" content="Discourse 3.5.2 - https://github.com/discourse/discourse version cc8d3f6f74bb618b3594ddc8fabcfd7663f63723">
+<link rel="icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/b/b5d7a1aa2f70490e3de763bef97271864784994f_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/3/3483ad4ffed2ab2b130f3e81fdb188ea2c478643_2_180x180.png">
+<meta name="theme-color" media="all" content="#fff">
+
+<meta name="color-scheme" content="light">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://ethresear.ch/t/unblocking-faster-finality-with-decoupled-consensus/24527" />
+
+<link rel="search" type="application/opensearchdescription+xml" href="https://ethresear.ch/opensearch.xml" title="Ethereum Research Search">
+
+    <link href="/stylesheets/color_definitions_light-default_-1_2_d93422173e6af31573562c9ff4e20afcb8a5ec7d.css?__ws=ethresear.ch" media="all" rel="stylesheet" class="light-scheme"/>
+
+<link href="/stylesheets/common_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common"  />
+
+  <link href="/stylesheets/desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop"  />
+
+
+
+    <link href="/stylesheets/checklist_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="checklist"  />
+    <link href="/stylesheets/discourse-details_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-details"  />
+    <link href="/stylesheets/discourse-graphviz_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-graphviz"  />
+    <link href="/stylesheets/discourse-lazy-videos_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+    <link href="/stylesheets/discourse-local-dates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+    <link href="/stylesheets/discourse-math_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-math"  />
+    <link href="/stylesheets/discourse-narrative-bot_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+    <link href="/stylesheets/discourse-presence_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-presence"  />
+    <link href="/stylesheets/discourse-solved_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-solved"  />
+    <link href="/stylesheets/discourse-templates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-templates"  />
+    <link href="/stylesheets/discourse-topic-voting_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+    <link href="/stylesheets/docker_manager_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="docker_manager"  />
+    <link href="/stylesheets/footnote_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="footnote"  />
+    <link href="/stylesheets/poll_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll"  />
+    <link href="/stylesheets/discourse-topic-voting_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting_desktop"  />
+    <link href="/stylesheets/poll_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="/stylesheets/common_theme_4_9581ecb7d67f268461f04d3d4e1b015ea2ad1983.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="4" data-theme-name="easy footer"/>
+    <link href="/stylesheets/desktop_theme_2_6e0603c5f6be3f943ee4806f79959c7a96ab67f5.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop_theme" data-theme-id="2" data-theme-name="default"/>
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;Unblocking faster finality with decoupled consensus&#39;" href="https://ethresear.ch/t/unblocking-faster-finality-with-decoupled-consensus/24527.rss" />
+    <meta property="og:site_name" content="Ethereum Research" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://ethresear.ch/uploads/default/optimized/3X/e/6/e6359dfcae2b7879c073850bef2d52d7ee31ee3f_2_1024x439.png" />
+<meta property="og:image" content="https://ethresear.ch/uploads/default/optimized/3X/e/6/e6359dfcae2b7879c073850bef2d52d7ee31ee3f_2_1024x439.png" />
+<meta property="og:url" content="https://ethresear.ch/t/unblocking-faster-finality-with-decoupled-consensus/24527/1" />
+<meta name="twitter:url" content="https://ethresear.ch/t/unblocking-faster-finality-with-decoupled-consensus/24527/1" />
+<meta property="og:title" content="Unblocking faster finality with decoupled consensus" />
+<meta name="twitter:title" content="Unblocking faster finality with decoupled consensus" />
+<meta property="og:description" content="Thanks to the EF Consensus team for discussion and comments  In the current consensus protocol, the timelines of block production and finality are coupled. A large committee (consisting of 1/32 of the whole validator set) attests in every slot, in the critical path. Shrinking the size of this committee, for example to 1/64 of the validator set, would enable faster slots, but it would slow down finality, because completing a full voting round (one epoch) would now accrue the overhead of 64 slots ..." />
+<meta name="twitter:description" content="Thanks to the EF Consensus team for discussion and comments  In the current consensus protocol, the timelines of block production and finality are coupled. A large committee (consisting of 1/32 of the whole validator set) attests in every slot, in the critical path. Shrinking the size of this committee, for example to 1/64 of the validator set, would enable faster slots, but it would slow down finality, because completing a full voting round (one epoch) would now accrue the overhead of 64 slots ..." />
+<meta property="og:article:section" content="Consensus" />
+<meta property="og:article:section:color" content="A8497A" />
+<meta name="twitter:label1" value="Reading time" />
+<meta name="twitter:data1" value="6 mins 🕑" />
+<meta name="twitter:label2" value="Likes" />
+<meta name="twitter:data2" value="6 ❤" />
+<meta property="article:published_time" content="2026-03-28T19:56:32+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+    
+  </head>
+  <body class="crawler ">
+    
+    <header>
+  <a href="/">Ethereum Research</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/unblocking-faster-finality-with-decoupled-consensus/24527">Unblocking faster finality with decoupled consensus</a>
+    </h1>
+
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/consensus/29" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #A8497A'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>Consensus</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </span>
+      </div>
+
+  </div>
+
+  
+
+    <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+      <meta itemprop='headline' content='Unblocking faster finality with decoupled consensus'>
+      <link itemprop='url' href='https://ethresear.ch/t/unblocking-faster-finality-with-decoupled-consensus/24527'>
+      <meta itemprop='datePublished' content='2026-03-28T19:56:32Z'>
+        <meta itemprop='articleSection' content='Consensus'>
+      <meta itemprop='keywords' content=''>
+      <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop='name' content='Ethereum Foundation'>
+          <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+            <meta itemprop='url' content='https://ethresear.ch/uploads/default/original/2X/8/84d109b2d8dd6bc4fe5255cd44fc429e5649da32.png'>
+          </div>
+      </div>
+
+
+          <div id='post_1'  class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/fradamt'><span itemprop='name'>fradamt</span></a>
+                
+              </span>
+
+                <link itemprop="mainEntityOfPage" href="https://ethresear.ch/t/unblocking-faster-finality-with-decoupled-consensus/24527">
+
+                <link itemprop="image" href="https://ethresear.ch/uploads/default/original/3X/e/6/e6359dfcae2b7879c073850bef2d52d7ee31ee3f.png">
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2026-03-28T19:56:32Z' class='post-time'>
+                    March 28, 2026,  7:56pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-03-28T20:09:00Z'>
+              <span itemprop='position'>1</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p><em>Thanks to the EF Consensus team for discussion and comments</em></p>
+<p>In the current consensus protocol, <strong>the timelines of block production and finality are coupled</strong>. A large committee (consisting of 1/32 of the whole validator set) attests in every slot, in the critical path. Shrinking the size of this committee, for example to 1/64 of the validator set, would enable faster slots, but it would slow down finality, because completing a full voting round (one epoch) would now accrue the overhead of 64 slots instead of 32. At one extreme of this tradeoff space, only a single validator votes in every slot, and a full voting round is only completed once every 1M slots or so, which would take more than a day even with 100ms slots. Even for less extreme committee sizes (and resulting epoch lengths), the overhead from doing “finality via slot-by-slot accumulation” cannot be discounted.</p>
+<p>On the other hand, increasing the size of the committee would make finality faster, at the cost of slower block production (longer slots). At this other extreme of the tradeoff space, the whole validator set votes in every slot, and slot time largely depends on how fast we can aggregate it.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/e/6/e6359dfcae2b7879c073850bef2d52d7ee31ee3f.png" data-download-href="https://ethresear.ch/uploads/default/e6359dfcae2b7879c073850bef2d52d7ee31ee3f" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/e/6/e6359dfcae2b7879c073850bef2d52d7ee31ee3f_2_690x295.png" alt="" data-base62-sha1="wQwGVxJbfZjxHuTzoAEmQwWzOVx" role="presentation" width="690" height="295" srcset="https://ethresear.ch/uploads/default/optimized/3X/e/6/e6359dfcae2b7879c073850bef2d52d7ee31ee3f_2_690x295.png, https://ethresear.ch/uploads/default/optimized/3X/e/6/e6359dfcae2b7879c073850bef2d52d7ee31ee3f_2_1035x442.png 1.5x, https://ethresear.ch/uploads/default/original/3X/e/6/e6359dfcae2b7879c073850bef2d52d7ee31ee3f.png 2x" data-dominant-color="FAFAFA"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">1180×506 19.9 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div><br>
+<div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/5/b/5b0ab1e94725f8cb2fa5dad85e2987cd3b4715e3.png" data-download-href="https://ethresear.ch/uploads/default/5b0ab1e94725f8cb2fa5dad85e2987cd3b4715e3" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/5/b/5b0ab1e94725f8cb2fa5dad85e2987cd3b4715e3_2_690x312.png" alt="" data-base62-sha1="cZomxWB4F60qXbCe7lImts1iAkX" role="presentation" width="690" height="312" srcset="https://ethresear.ch/uploads/default/optimized/3X/5/b/5b0ab1e94725f8cb2fa5dad85e2987cd3b4715e3_2_690x312.png, https://ethresear.ch/uploads/default/original/3X/5/b/5b0ab1e94725f8cb2fa5dad85e2987cd3b4715e3.png 1.5x, https://ethresear.ch/uploads/default/original/3X/5/b/5b0ab1e94725f8cb2fa5dad85e2987cd3b4715e3.png 2x" data-dominant-color="FAF6F4"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">1032×468 15.5 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p>Proposed consensus upgrades, like variants of SSF and 3SF <a href="#ref1">1</a>, <a href="#ref2">2</a>, <a href="#ref3">3</a>, do not fundamentally change anything about this tradeoff. They simply accept it and position themselves at one end of it, where the full validator set votes in every slot. To do so, the assumption is that the validator set would be shrunk (through consolidation) to a point where this is feasible, and does not pose too harsh constraints on the slot time.</p>
+<p>An alternative path is to <strong>decouple block production and finality</strong>:</p>
+<ul>
+<li>the block production pipeline can rely on a small randomly sampled committee, for example of size 512 (even more so if with a <a href="#available-committee-selection-vrf">secret election</a>).</li>
+<li>the finality pipeline happens in parallel, outside of the critical path of block production</li>
+</ul>
+<p>The tradeoff can be eliminated entirely, and both pipelines can be independently optimized.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/8/c/8c09747bda3b6fc123ee57130b1b73c4f4eac537.png" data-download-href="https://ethresear.ch/uploads/default/8c09747bda3b6fc123ee57130b1b73c4f4eac537" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/8/c/8c09747bda3b6fc123ee57130b1b73c4f4eac537_2_690x290.png" alt="" data-base62-sha1="jYP6osQAgcJLZWuHLxMu6VUqrUH" role="presentation" width="690" height="290" srcset="https://ethresear.ch/uploads/default/optimized/3X/8/c/8c09747bda3b6fc123ee57130b1b73c4f4eac537_2_690x290.png, https://ethresear.ch/uploads/default/optimized/3X/8/c/8c09747bda3b6fc123ee57130b1b73c4f4eac537_2_1035x435.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/8/c/8c09747bda3b6fc123ee57130b1b73c4f4eac537_2_1380x580.png 2x" data-dominant-color="F7F8F7"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">6080×2560 358 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p>There have been explorations in this direction <a href="#ref4">4</a>, but until recently one piece of the puzzle was missing: no known vote-based (= not longest chain) available chain protocol (the top part of the decoupled picture) has good enough properties when run by a rapidly changing committee. In particular, such available protocols <a href="#ref5">5</a>, <a href="#ref6">6</a> do not degrade gracefully in the face of temporary asynchrony, and techniques to increase their asynchrony resilience <a href="#ref7">7</a>, <a href="#ref8">8</a> fail when the active participants are rapidly changing. This is in large part why previous efforts like SSF and 3SF have taken the approach of having the whole validator set vote at once.</p>
+<p>In this post, we discuss an approach to resolve this issue, first constructing an available protocol that is both friendly to committees, optimally secure under synchrony (tolerating a 1/2 adversary for both safety and liveness, under synchrony) and asynchrony resilient. We then use this protocol as one of the two building blocks of an ebb-and-flow protocol <a href="#ref9">9</a>, alongside a finality gadget.</p>
+<h2><a name="p-59290-goldfish-1" class="anchor" href="#p-59290-goldfish-1"></a>Goldfish</h2>
+<p>Goldfish <a href="#ref5">5</a> is a small modification of LMD-GHOST, adding two key features: <strong>vote expiry</strong> and <strong>view-merge</strong> <a href="#ref5">5</a>, <a href="#ref11">11</a>. Vote expiry makes the protocol essentially memoryless: at slot t, only votes from slot t-1 are considered in the fork-choice. This makes Goldfish very simple while achieving optimal security—it tolerates up to 1/2 adversarial stake under synchrony in the sleepy model <a href="#ref6">6</a> (dynamic participation, i.e., validators can go offline and come back).</p>
+<p>The slot structure is simple:</p>
+<ol>
+<li>(time <span class="math">0</span>) - The proposer  runs the fork-choice with all votes from the previous slot that it has seen, and proposes a block to extend the head of the chain. The block contains all votes from the previous slot seen by the proposer</li>
+<li>(time <span class="math">\Delta</span>) - A committee votes on the head of the canonical chain, determined by running the fork-choice with the votes from the previous slot, in particular those obtained by <em>merging</em> their <em>local frozen view</em> (see below) with the <em>proposer view</em> (what’s in the block)</li>
+<li>(time <span class="math">2\Delta</span>) - Everyone “freezes their view” of the attestations they have seen, i.e. record which attestations have been seen by this time<br>
+<div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/4/f/4f32f33c1738023027ab7803b5341f960a722d8a.png" data-download-href="https://ethresear.ch/uploads/default/4f32f33c1738023027ab7803b5341f960a722d8a" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/4/f/4f32f33c1738023027ab7803b5341f960a722d8a_2_690x279.png" alt="" data-base62-sha1="biCSzYJI6oMvvbaS4gojQHH1IBs" role="presentation" width="690" height="279" srcset="https://ethresear.ch/uploads/default/optimized/3X/4/f/4f32f33c1738023027ab7803b5341f960a722d8a_2_690x279.png, https://ethresear.ch/uploads/default/optimized/3X/4/f/4f32f33c1738023027ab7803b5341f960a722d8a_2_1035x418.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/4/f/4f32f33c1738023027ab7803b5341f960a722d8a_2_1380x558.png 2x" data-dominant-color="FAFAF9"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">1680×680 16.1 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></li>
+</ol>
+<p>The goal of the freezing and merging is to achieve the following property:</p>
+<blockquote>
+<p>Under synchrony, a block from an honest proposer is voted by all honest committee members</p>
+</blockquote>
+<p>This is because any vote seen by an honest committee member <em>by the freeze deadline</em> will be also be seen by the proposer of the next slot, and therefore contained in its block. The merged set of votes will then be the same used by the proposer to run its fork-choice, so all committee members will agree with the proposer on the head of the chain.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/0/b/0b7c211065297f9f272da7a81fb1b8544fb9fee7.png" data-download-href="https://ethresear.ch/uploads/default/0b7c211065297f9f272da7a81fb1b8544fb9fee7" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/0/b/0b7c211065297f9f272da7a81fb1b8544fb9fee7_2_690x481.png" alt="" data-base62-sha1="1DBcfPlRxiNK9CPAD2PH3HqoAPZ" role="presentation" width="690" height="481" srcset="https://ethresear.ch/uploads/default/optimized/3X/0/b/0b7c211065297f9f272da7a81fb1b8544fb9fee7_2_690x481.png, https://ethresear.ch/uploads/default/optimized/3X/0/b/0b7c211065297f9f272da7a81fb1b8544fb9fee7_2_1035x721.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/0/b/0b7c211065297f9f272da7a81fb1b8544fb9fee7_2_1380x962.png 2x" data-dominant-color="F8F7F4"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">2120×1480 176 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p>Given this, the security argument (<a href="#ref10">10</a>, <a href="#ref5">5</a>) is straightforward:</p>
+<ol>
+<li>When an honest proposer produces a block in slot t, all honest committee members, constituting a majority of the committee, see it and vote for it (<strong>view-merge</strong> property above)</li>
+<li>In the next slot t+1, the only votes that count are those from the committee of slot t (this is <strong>vote expiry</strong>), a majority of which supports the honest block. Therefore, the block is canonical and some descendant of it is voted by all honest validators. By induction, it stays canonical in all future slots.</li>
+</ol>
+<p>Below is an example of an ex-ante reorg attempt, which fails precisely due to this combination of view-merge + vote expiry. The votes accumulated by the adversary in the slots they previously controlled are expired, and the honest votes from the latest slot are all for the honest block (due to view-merge) and are a majority of all fork-choice weight.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/5/a/5abbb6dd7c95d134f2630a05d2b397323676aa19.png" data-download-href="https://ethresear.ch/uploads/default/5abbb6dd7c95d134f2630a05d2b397323676aa19" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/5/a/5abbb6dd7c95d134f2630a05d2b397323676aa19_2_690x340.png" alt="" data-base62-sha1="cWF9cugo0oGs7pVPMYu5bYMRaR3" role="presentation" width="690" height="340" srcset="https://ethresear.ch/uploads/default/optimized/3X/5/a/5abbb6dd7c95d134f2630a05d2b397323676aa19_2_690x340.png, https://ethresear.ch/uploads/default/optimized/3X/5/a/5abbb6dd7c95d134f2630a05d2b397323676aa19_2_1035x510.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/5/a/5abbb6dd7c95d134f2630a05d2b397323676aa19_2_1380x680.png 2x" data-dominant-color="FAFAF8"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">4440×2188 236 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p>Note that vote-expiry is necessary in the second part of the argument, <em>if we want to support rapidly changing committees</em>. Consider instead LMD-GHOST, where the latest vote of a validator always counts, regardless of how old. With committees, votes then accumulate over time, and an adversary can accumulate votes across many slots and use them to reorg the chain later (ex-ante reorgs <a href="#ref12">12</a>). Using only the votes from the previous slot eliminates this problem entirely, as if we had the whole validator set vote in every slot (which is instead how the problem is resolved in <a href="#ref8">8</a> and related ebb-and-flow protocols <a href="#ref1">1</a>, <a href="#ref2">2</a>, <a href="#ref3">3</a>).</p>
+<p>However, this same memorylessness makes Goldfish vulnerable to temporary asynchrony: if the network experiences delays and honest votes arrive late, the fork-choice becomes devoid of honest contributions, and the adversary can rewrite history at will. Concretely, it can put its own voting weight on whichever fork it wants, and have nodes reorg to that.</p>
+<p>The next figure is an example of this. There’s a long, stable chain (the top one), until at slot t+1 something prevents honest votes (which would have been for the top chain) from being sent or received (the crossed out green votes, perhaps missing because of a network problem), at which point the adversary is free to concentrate its votes on a different branch (the red block), causing a long reorg, because these are the only votes that count (the grey votes from previous slots are expired).</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/5/3/534ae65506ccc176eda7b2dae23a944d9ce793e3.png" data-download-href="https://ethresear.ch/uploads/default/534ae65506ccc176eda7b2dae23a944d9ce793e3" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/5/3/534ae65506ccc176eda7b2dae23a944d9ce793e3_2_541x500.png" alt="" data-base62-sha1="bSQ6k2SQLvfYsm4qJQ4bKrkjdyH" role="presentation" width="541" height="500" srcset="https://ethresear.ch/uploads/default/optimized/3X/5/3/534ae65506ccc176eda7b2dae23a944d9ce793e3_2_541x500.png, https://ethresear.ch/uploads/default/optimized/3X/5/3/534ae65506ccc176eda7b2dae23a944d9ce793e3_2_811x750.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/5/3/534ae65506ccc176eda7b2dae23a944d9ce793e3_2_1082x1000.png 2x" data-dominant-color="FAFAF9"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">4852×4480 546 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<h2><a name="p-59290-stabilization-gadget-2" class="anchor" href="#p-59290-stabilization-gadget-2"></a>Stabilization gadget</h2>
+<p>It is natural to question why we even care about the asynchrony resilience of Goldfish, or of any available chain mechanism, if the whole point is that it’s meant to be used in conjunction with a finality gadget, something that’s explicitly there to provide asynchronous safety. The reason is that we want the protocol to not be brittle whenever participation is not sufficient to finalize. In other words, there’s little point in having an available protocol that can theoretically make progress when participation is very low, if that progress can be completely swept away by even a small period of asynchrony.</p>
+<p>While finality gadgets are not the answer due to their high participation requirements, we can take inspiration from them in our attempt to solve this issue. In particular, we can employ what we might call a <em>stabilization gadget</em>, a way to augment an available protocol to make it resilient to temporary asynchrony, though not fully asynchronously safe (as this would necessarily only work under high participation).</p>
+<p>This might seem a bit circular, because such a stabilization gadget would essentially itself be an asynchrony resilient available protocol, which is what we’re trying to create in the first place. However, the difficulty is only that we want our available protocol to support committees. Without this requirement, we already know how to solve this problem, for example with RLMD-GHOST <a href="#ref8">8</a>, Majorum <a href="#ref2">2</a>, or other available protocols (without committees) augmented with the techniques of <a href="#ref7">7</a>. We can use such protocols as stabilization gadgets, acting with a delay determined by the length of a voting round from the full validator set, just like with the finality gadget. This way, the only part of the chain that’s vulnerable to asynchrony is the very tip, perhaps up to a few slots.</p>
+<h3><a name="p-59290-hybrid-fork-choice-3" class="anchor" href="#p-59290-hybrid-fork-choice-3"></a>Hybrid fork-choice</h3>
+<p>Concretely, we can utilize a stabilization gadget just like a finality gadget, by having it determine a starting point for the fork-choice of the underlying available protocol. For example, using Majorum (similar to RLMD-GHOST, but requiring a child subtree to be supported by a majority of the unexpired weight in order to continue) and Goldfish, the combined fork-choice looks like this:</p>
+<ol>
+<li><strong>Majorum prefix</strong>: Find the highest block whose subtree has a majority of all weight from unexpired latest messages</li>
+<li><strong>Goldfish suffix</strong>: from there, run GHOST with the votes from the previous slot</li>
+</ol>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/6/0/603f4a29ff5d271b025221a3f7b2bbe260a5940d.png" data-download-href="https://ethresear.ch/uploads/default/603f4a29ff5d271b025221a3f7b2bbe260a5940d" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/6/0/603f4a29ff5d271b025221a3f7b2bbe260a5940d_2_689x306.png" alt="" data-base62-sha1="dJrqX5E5YDyR7rQgZr1wOJHnYpT" role="presentation" width="689" height="306" srcset="https://ethresear.ch/uploads/default/optimized/3X/6/0/603f4a29ff5d271b025221a3f7b2bbe260a5940d_2_689x306.png, https://ethresear.ch/uploads/default/optimized/3X/6/0/603f4a29ff5d271b025221a3f7b2bbe260a5940d_2_1033x459.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/6/0/603f4a29ff5d271b025221a3f7b2bbe260a5940d_2_1378x612.png 2x" data-dominant-color="FAFAFB"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">4960×2200 253 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p>There are two caveats:</p>
+<ol>
+<li>As for an ebb-and-flow protocol, we have to be careful with the interaction between the available protocol and the gadget. A safe interaction pattern is to only input a block to the gadget (send a purple vote) if it has been <em>confirmed</em> by the underlying available protocol, as this should mean that the gadget does not interfere with the available protocol under network synchrony, as it can only output blocks that are already safe.</li>
+<li>Unlike a finality gadget, a stabilization gadget might output something even if it does not have majority support. For example, LMD-GHOST is an eager fork-choice, that always continues until a leaf, regardless of whether the children it encounters have much support. This nullifies the benefits of having honest voters only input confirmed blocks to the stabilization gadget, because a block can be output by it even without any honest votes supporting it, and thus without any confirmation guarantees. This is why the previous example uses Majorum, as it will only output blocks that are supported by a majority of the relevant weight, i.e. unexpired latest messages, which by assumption implies at least some honest support.</li>
+</ol>
+<p>Note that we did not previously discuss confirmation rules for Goldfish. For a discussion of this, including how to augment Goldfish to have a <em>fast</em> confirmation rule, check the <a href="#Confirmation-rule">appendix</a>.</p>
+<h2><a name="p-59290-finality-gadget-4" class="anchor" href="#p-59290-finality-gadget-4"></a>Finality gadget</h2>
+<p>We also want a proper finality gadget, giving asynchronous and economic safety. From a fork-choice perspective, this looks like turning the two-step fork-choice into a three-step fork-choice, adding the familiar step of starting from a latest justified checkpoint (something along these lines when using finality gadgets other than Casper FFG):</p>
+<ol>
+<li><strong>FFG (Justified chain)</strong>: Find latest justified checkpoint</li>
+<li><strong>Majorum (stable chain)</strong>: from there, find the highest block whose subtree has a majority of all weight from unexpired latest messages</li>
+<li><strong>Goldfish (available chain)</strong>: from there, run GHOST with the votes from the previous slot</li>
+</ol>
+<p>However, it does not mean that we are now running three separate protocols. In practice, we just need to run the available protocol and then a single gadget on top of it, which bundles finality and stabilization in a single voting round. In this figure, the green votes are used both for FFG and for Majorum.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/3/b/3be97f03736159c7b0b880122852490f0c068aeb.png" data-download-href="https://ethresear.ch/uploads/default/3be97f03736159c7b0b880122852490f0c068aeb" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/3/b/3be97f03736159c7b0b880122852490f0c068aeb_2_690x311.png" alt="" data-base62-sha1="8y0qU4LcllwFbwPUu3qg08jD3Vp" role="presentation" width="690" height="311" srcset="https://ethresear.ch/uploads/default/optimized/3X/3/b/3be97f03736159c7b0b880122852490f0c068aeb_2_690x311.png, https://ethresear.ch/uploads/default/optimized/3X/3/b/3be97f03736159c7b0b880122852490f0c068aeb_2_1035x466.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/3/b/3be97f03736159c7b0b880122852490f0c068aeb_2_1380x622.png 2x" data-dominant-color="F8F9FA"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">5056×2280 270 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p>Even if the votes for the stabilization and finality gadget are bundled, the two are active in different conditions. The next figure shows precisely the situation in which the stabilization gadget helps us: we have not been able to justify anything in a while, perhaps because &lt; 2/3 of the stake is online, but the online stake is still able to stabilize all but the very tip of the chain, preventing an attempted long-range reorg during a temporary period of asynchrony.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/5/b/5baedc06c8ef29093803484a70c0d8c09a1da83f.png" data-download-href="https://ethresear.ch/uploads/default/5baedc06c8ef29093803484a70c0d8c09a1da83f" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/5/b/5baedc06c8ef29093803484a70c0d8c09a1da83f_2_690x332.png" alt="" data-base62-sha1="d545eSu63QNECek8GPV6Gm24t4j" role="presentation" width="690" height="332" srcset="https://ethresear.ch/uploads/default/optimized/3X/5/b/5baedc06c8ef29093803484a70c0d8c09a1da83f_2_690x332.png, https://ethresear.ch/uploads/default/optimized/3X/5/b/5baedc06c8ef29093803484a70c0d8c09a1da83f_2_1035x498.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/5/b/5baedc06c8ef29093803484a70c0d8c09a1da83f_2_1380x664.png 2x" data-dominant-color="F9FAFA"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">5060×2440 308 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<h2><a name="p-59290-appendix-5" class="anchor" href="#p-59290-appendix-5"></a>Appendix</h2>
+<p>Let’s dive a bit deeper into the available chain component, Goldfish.</p>
+<h3><a name="p-59290-confirmation-rule-6" class="anchor" href="#p-59290-confirmation-rule-6"></a>Confirmation rule</h3>
+<h4><a name="p-59290-k-deep-confirmation-7" class="anchor" href="#p-59290-k-deep-confirmation-7"></a>k-deep confirmation</h4>
+<p>Without any any modifications, Goldfish supports a simple k-deep confirmation rule, i.e., we confirm the <em>k-deep prefix of the canonical chain</em>, obtained by chopping off the latest k-1 blocks. This is safe as long as we pick a k such that we have high probability of having an honest proposer in every k blocks (assuming honest majority).</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/7/9/791fe1c26d22f18a9a177ea25bf4316773716aa7.png" data-download-href="https://ethresear.ch/uploads/default/791fe1c26d22f18a9a177ea25bf4316773716aa7" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/7/9/791fe1c26d22f18a9a177ea25bf4316773716aa7_2_690x227.png" alt="" data-base62-sha1="hhw4ZwFZ9u7rVMowJnQktUrLFTV" role="presentation" width="690" height="227" srcset="https://ethresear.ch/uploads/default/optimized/3X/7/9/791fe1c26d22f18a9a177ea25bf4316773716aa7_2_690x227.png, https://ethresear.ch/uploads/default/optimized/3X/7/9/791fe1c26d22f18a9a177ea25bf4316773716aa7_2_1035x340.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/7/9/791fe1c26d22f18a9a177ea25bf4316773716aa7_2_1380x454.png 2x" data-dominant-color="F7F7FB"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">3164×1044 74.5 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<h4><a name="p-59290-fast-confirmation-8" class="anchor" href="#p-59290-fast-confirmation-8"></a>Fast confirmation</h4>
+<p>The problem with the k-deep confirmation rule is of course its very high latency. Ideally, we’d want to be able to confirm a block after a single voting round (from a committee). We can do this, with a small modification to the slot structure of Goldfish, in particular adding one more <code>Δ</code>, and a confirmation phase at <code>2Δ</code>, between the voting phase and the freeze phase. The confirmation rule is simple: you confirm a block if the votes you see by time <code>2Δ</code> are at least <code>3/4</code> of the committee’s size (or <code>3/4 + epsilon</code> of the <em>target</em> size if the committee size if the committee is not of fixed size. See <a href="#Goldfish-committee-selection-VRF">Goldfish committee selection (VRF)</a>).</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/3/6/360c1a3a82e59b56b42491fdcdfbeabd881572db.png" data-download-href="https://ethresear.ch/uploads/default/360c1a3a82e59b56b42491fdcdfbeabd881572db" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/3/6/360c1a3a82e59b56b42491fdcdfbeabd881572db_2_690x279.png" alt="" data-base62-sha1="7I7IbZ2V9WtRTYy5v7v7FytFbHZ" role="presentation" width="690" height="279" srcset="https://ethresear.ch/uploads/default/optimized/3X/3/6/360c1a3a82e59b56b42491fdcdfbeabd881572db_2_690x279.png, https://ethresear.ch/uploads/default/optimized/3X/3/6/360c1a3a82e59b56b42491fdcdfbeabd881572db_2_1035x418.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/3/6/360c1a3a82e59b56b42491fdcdfbeabd881572db_2_1380x558.png 2x" data-dominant-color="FAF9F7"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">1680×680 17.5 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p>Let’s look at how exactly this works. Consider an attester that confirms a block <code>B</code>, by seeing votes for it from <code>3/4</code> of the committee at time <code>2Δ</code>. These votes then reach all other validators by time <code>3Δ</code>, and so they are present in every honest validator’s “frozen view”. Any block conflicting with <code>B</code> can at most be supported from the remaining <code>1/4</code> of the votes, <em>plus any equivocations</em>. However, equivocations are discarded and do not count when computing the fork-choice. Therefore, the support of <code>B</code> when running the fork-choice to vote in the next slot, at time <code>Δ</code>, is going to be at least <code>3/4 - equivocations</code>, while the support of any conflicting block at most <code>1/4</code>. In order for <code>B</code> not part of the canonical chain, at least <code>1/2</code> of the committee has to have sent an equivocating vote, which cannot be the case under the assumption of honest majority.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/f/5/f5537054b93ce1c954724c83b2901696952c0245.png" data-download-href="https://ethresear.ch/uploads/default/f5537054b93ce1c954724c83b2901696952c0245" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/f/5/f5537054b93ce1c954724c83b2901696952c0245_2_690x475.png" alt="" data-base62-sha1="z0fKjEIh0VRfxgZuUpFpUrxYirz" role="presentation" width="690" height="475" srcset="https://ethresear.ch/uploads/default/optimized/3X/f/5/f5537054b93ce1c954724c83b2901696952c0245_2_690x475.png, https://ethresear.ch/uploads/default/optimized/3X/f/5/f5537054b93ce1c954724c83b2901696952c0245_2_1035x712.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/f/5/f5537054b93ce1c954724c83b2901696952c0245_2_1380x950.png 2x" data-dominant-color="F8F7F4"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">2200×1516 193 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<h3><a name="p-59290-view-merge-9" class="anchor" href="#p-59290-view-merge-9"></a>View-merge</h3>
+<p>Let’s make precise how view-merge works, which is also a chance to specify how to deal with equivocations:</p>
+<ul>
+<li>A node only ever keeps track of votes from the most recent voting round, <em>and only of the first two votes received for a validator</em>. Below, the first seen vote for <code>validator_id</code> is recorded in<code>votes[validator_id]</code>, while an eventual equivocation (second seen) in <code>equivocations[validator_id]</code>.</li>
+<li>After the freeze deadline, only the proposer keeps updating its vote records, while everyone else only does so with votes contained in a block.</li>
+<li>Finally, equivocators will be ignored (given zero weight) when running the fork-choice</li>
+</ul>
+<pre data-code-wrap="python"><code class="lang-python">def on_vote(self, vote: Vote, from_block: bool):
+	# Only process votes for the current slot
+	if vote.slot != self.current_slot():
+		return
+
+	# Ignore votes from known equivocators
+	if vote.validator_id in self.equivocations:
+		return
+
+	# Non-proposers ignore votes after the view-merge
+	# deadline unless they are from a block.
+	time_in_slot = (self.network.time % SLOT_DURATION)
+	freeze_deadline = SLOT_DURATION * 2 // 3
+	if time_in_slot &gt; freeze_deadline:
+		if not from_block and not self.is_proposer():
+			return
+
+	# Record the vote if it is the first-seen
+	if vote.validator_id not in self.votes:
+		self.votes[vote.validator_id] = vote
+		return
+
+	# If one has been seen, check for equivocation
+	if self.equivocations[vote.validator_id] != vote:
+		self.equivocations[vote.validator_id] = vote
+
+</code></pre>
+<h4><a name="p-59290-goldfish-committee-selection-vrf-10" class="anchor" href="#p-59290-goldfish-committee-selection-vrf-10"></a>Goldfish committee selection (VRF)</h4>
+<p>The smaller the committee we employ, the more it is important that we maximize the security we get out of the selection method. In particular, we can:</p>
+<ul>
+<li>Select the committee members with probability proportional to stake, and then count their votes rather than weighting them by stake. This is <a href="https://github.com/ethereum/consensus-specs/blob/8a0110a819b87dbd8183542dde9e103e1e716f91/specs/gloas/beacon-chain.md#new-compute_balance_weighted_selection" rel="noopener nofollow ugc">what we already do for the sync committees and (soon) for the PTC</a>, and it is necessary to have high security with a small committee and variable balances (consider a committee of 512 validators where the first 504 have 32 ETH and the remaining 8 have 2048 ETH. The latter control &gt; 1/2 of the committee by themselves)</li>
+<li>Select the committee members secretly, through a VRF that only they can compute. This is what we do for the <a href="https://github.com/ethereum/consensus-specs/blob/8a0110a819b87dbd8183542dde9e103e1e716f91/specs/phase0/validator.md#aggregation-selection" rel="noopener nofollow ugc">aggregator selection</a>, though without the proportionality to stake. This way, the committee members are only known when they have already acted, which protects against an adaptive adversary (bribing, targeted DoS…)</li>
+</ul>
+<p>We can combine these two as follows:</p>
+<pre data-code-wrap="python"><code class="lang-python">def get_committee_seats_per_validator(slot_signature: bytes,
+                                      balance: Gwei,
+                                      total_balance: Gwei,
+                                      TARGET_COMMITTEE_SIZE: uint64) -&gt; int:
+
+    balance_per_committee_seat = max(1, total_balance // TARGET_COMMITTEE_SIZE)
+    seats = balance // balance_per_committee_seat
+    random_value = bytes_to_uint64(hash(slot_signature)[:8]) % balance_per_committee_seat
+    remainder_balance = balance % balance_per_committee_seat
+    seats += 1 if random_value &lt; remainder_balance else 0
+    return seats
+
+</code></pre>
+<p>A validator with stake <code>balance</code> receives <code>balance // balance_per_committee_seat</code> <em>deterministic seats</em> in the committee, and then is randomly allocated one extra seat with probability <code>(balance % balance_per_committee_seat) / balance_per_committee_seat</code>, i.e. with probability proportional to its remaining balance after the deterministic allocation.</p>
+<p>For example, say <code>TARGET_COMMITTEE_SIZE = 512</code> and <code>total_balance = 2**25 ETH</code>, so that <code>balance_per_committee_seat = 2**16</code> A validator with <code>balance = 2**16 + 2**15 ETH</code> will be allocated 1 deterministic seat, and then another seat with probability <code>1/2</code>. A validator with balance <code>1024 ETH</code> will be allocated one seat with probability <code>1/64</code>.</p>
+<hr>
+<h2><a name="p-59290-references-11" class="anchor" href="#p-59290-references-11"></a>References</h2>
+<p><a></a>1. <a href="https://arxiv.org/abs/2302.12745" rel="noopener nofollow ugc">A Simple Single Slot Finality Protocol For Ethereum</a><br>
+<a></a>2. <a href="https://arxiv.org/abs/2601.03862" rel="noopener nofollow ugc">Majorum: Ebb-and-Flow Consensus with Dynamic Quorums</a><br>
+<a></a>3. <a href="https://arxiv.org/abs/2411.00558" rel="noopener nofollow ugc">3-Slot-Finality Protocol for Ethereum</a><br>
+<a></a>4. <a href="https://ethresear.ch/t/lmd-ghost-with-256-validators-and-a-fast-following-finality-gadget/22856">LMD GHOST with ~256 validators and a fast-following finality gadget</a><br>
+<a></a>5. <a href="https://arxiv.org/abs/2209.03255" rel="noopener nofollow ugc">Goldfish: No More Attacks on Ethereum?!</a><br>
+<a></a>6. <a href="https://eprint.iacr.org/2022/1448" rel="noopener nofollow ugc">Towards Practical Sleepy BFT</a><br>
+<a></a>7. <a href="https://arxiv.org/abs/2309.05347" rel="noopener nofollow ugc">Asynchrony-Resilient Sleepy Total-Order Broadcast Protocols</a><br>
+<a></a>8. <a href="https://arxiv.org/abs/2302.11326" rel="noopener nofollow ugc">RLMD-GHOST: Balancing Dynamic Availability With Asynchrony Resilience</a><br>
+<a></a>9. <a href="https://arxiv.org/abs/2009.04987" rel="noopener nofollow ugc">Ebb-and-Flow Protocols: A Resolution of the Availability-Finality Dilemma</a><br>
+<a></a>10. <a href="https://ethresear.ch/t/reorg-resilience-and-security-in-post-ssf-lmd-ghost/14164">Reorg resilience and security in post-SSF LMD-GHOST</a><br>
+<a></a>11. <a href="https://ethresear.ch/t/view-merge-as-a-replacement-for-proposer-boost/13739">View-merge as a replacement for proposer boost</a><br>
+<a></a>12. <a href="https://arxiv.org/abs/2110.10086" rel="noopener nofollow ugc">Three Attacks on Proof-of-Stake Ethereum</a></p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="6" />
+              <span class='post-likes'>6 Likes</span>
+            </div>
+
+          </div>
+    </div>
+
+
+    
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/tos' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/privacy' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>

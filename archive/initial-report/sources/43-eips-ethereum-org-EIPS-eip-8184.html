@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    
+      <title>EIP-8184: LUCID encrypted mempool</title>
+      <meta property="og:title" content="EIP-8184: LUCID encrypted mempool" />
+    
+    <meta name="description" content="Public encrypted mempool for commit-before-reveal inclusion of MEV-sensitive transactions, without enshrining a specific encryption scheme." />
+    <meta property="og:description" content="Public encrypted mempool for commit-before-reveal inclusion of MEV-sensitive transactions, without enshrining a specific encryption scheme." />
+    <meta name="twitter:description" content="Public encrypted mempool for commit-before-reveal inclusion of MEV-sensitive transactions, without enshrining a specific encryption scheme." />
+  
+  <meta name="generator" content="Jekyll" />
+  <meta property="og:locale" content="en_US" />
+  <link rel="canonical" href="https://eips.ethereum.org/EIPS/eip-8184" />
+  <meta property="og:url" content="https://eips.ethereum.org/EIPS/eip-8184" />
+  <meta property="og:site_name" content="Ethereum Improvement Proposals" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:site" content="@" />
+  <script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": "https://eips.ethereum.org",
+      "name": "Ethereum Improvement Proposals",
+      "description": "Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.",
+      "@context": "https://schema.org"
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://eips.ethereum.org/feed.xml" title="Ethereum Improvement Proposals" /><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/override.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    });
+  </script>
+  <script type="text/javascript">
+    window.MathJax = {
+      loader: {
+        load: ['input/tex-base', 'output/chtml']
+      },
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true,
+        processEnvironments: false,
+        processRefs: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js" integrity="sha384-/1zmJ1mBdfKIOnwPxpdG6yaRrxP6qu3eVYm0cz2nOx+AcL4d3AqEFrwcqGZVVroG" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/citation-js/0.6.7/citation.min.js" integrity="sha512-N+LDFMa9owHXGS+CyMrBvuxq2QuGl3fiB/7cys3aUEL7K6P1soHGqsS0sjHXZpwNd9Kz0m3R4IPy1HYRi6ROEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+    addEventListener('DOMContentLoaded', async () => {
+      const Cite = window.require('citation-js');
+      const citationElements = document.querySelectorAll('.language-csl-json');
+      for (let citationElement of citationElements) {
+        try {
+          const citation = await Cite.async(citationElement);
+          const template = document.createElement('template');
+          template.innerHTML = citation.format('bibliography', {
+            format: 'html',
+            template: 'apa',
+            lang: 'en-US'
+          });
+          if (citationElement.parentElement && citationElement.parentElement.matches('pre')) {
+            citationElement.parentElement.replaceWith(template.content);
+          } else {
+            citationElement.replaceWith(template.content);
+          }
+        } catch (e) {
+          console.error("unable to render citation", e);
+        }
+      }
+    });
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Ethereum Improvement Proposals</a><nav class="site-nav d-flex">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger row p-2"><a class="page-link col" href="/all">All</a><a class="page-link col" href="/core">Core</a><a class="page-link col" href="/networking">Networking</a><a class="page-link col" href="/interface">Interface</a><a class="page-link col" href="/erc">ERC</a><a class="page-link col" href="/meta">Meta</a><a class="page-link col" href="/informational">Informational</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="bi-megaphone-fill" fill="currentColor" viewBox="0 0 16 16">
+    <title>Alert</title>
+    <path d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0v-11zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25.222 25.222 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56V3.224zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009a68.14 68.14 0 0 1 .496.008 64 64 0 0 1 1.51.048zm1.39 1.081c.285.021.569.047.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a65.81 65.81 0 0 1 1.692.064c.327.017.65.037.966.06z"/>
+  </symbol>
+  <symbol id="bi-code" fill="currentColor" viewBox="0 0 16 16">
+    <title>Source</title>
+    <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/>
+  </symbol>
+  <svg id="bi-chat" fill="currentColor" viewBox="0 0 16 16">
+    <title>Discuss</title>
+    <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+  </svg>
+</svg>
+
+<div class="home">
+  
+  
+  
+ 
+  <span class="h5">
+    
+    
+    
+      <span class="badge text-light bg-warning" data-bs-toggle="tooltip" data-bs-title="This EIP is not yet recommended for general use or implementation, as it is subject to normative (breaking) changes.">⚠️ Draft</span>
+    
+    
+    
+       
+    
+      <a class="badge text-light bg-primary" data-bs-toggle="tooltip" data-bs-title="Improvements requiring a consensus fork, as well as changes that are not necessarily consensus critical but may be relevant to “core dev” discussions." href="../core">Standards Track: Core</a>
+    
+  </span>
+  <h1 class="page-heading">
+    EIP-8184: LUCID encrypted mempool
+    <a href="https://ethereum-magicians.org/t/eip-8184-lucid-encrypted-mempool/28017" class="no-underline">
+      <svg role="img" aria-label="Discuss" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-chat"/>
+      </svg>
+    </a>
+    <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-8184.md" class="no-underline">
+      <svg role="img" aria-label="Source" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-code"/>
+      </svg>
+    </a>
+  </h1>
+  <h3>Public encrypted mempool for commit-before-reveal inclusion of MEV-sensitive transactions, without enshrining a specific encryption scheme.</h3>
+  <table class="table table-borderless preamble">
+    <tbody>
+      <tr>
+        <th scope="row">Authors</th>
+        <td>Anders Elowsson&nbsp;(<a href="https://github.com/anderselowsson">@anderselowsson</a>), Justin Florentine&nbsp;(<a href="https://github.com/jflo">@jflo</a>), Julian Ma&nbsp;(<a href="https://github.com/ma-julian">@ma-julian</a>)</td>
+      </tr>
+      
+        <tr>
+          <th scope="row">Created</th>
+          <td>2026-03-04</td>
+        </tr>
+      
+      
+             
+      
+        <tr>
+          <th scope="row">Discussion Link</th>
+          <td><a href="https://ethereum-magicians.org/t/eip-8184-lucid-encrypted-mempool/28017" target="_blank" rel="noopener">https://ethereum-magicians.org/t/eip-8184-lucid-encrypted-mempool/28017</a></td>
+        </tr>
+      
+      
+        <tr>
+          <th scope="row">Requires</th>
+          <td>
+
+  <a href="eip-2718">EIP-2718</a>, 
+
+  <a href="eip-7805">EIP-7805</a>
+
+</td>
+        </tr>
+      
+    </tbody>
+  </table>
+  <br/>
+
+  
+
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#motivation">Motivation</a></li>
+  <li><a href="#specification">Specification</a>
+    <ul>
+      <li><a href="#constants-and-parameters">Constants and parameters</a></li>
+      <li><a href="#overview-from-submission-to-execution">Overview: from submission to execution</a></li>
+      <li><a href="#sealed-transactions">Sealed transactions</a></li>
+      <li><a href="#bundles">Bundles</a></li>
+      <li><a href="#extended-payload-bid-with-st-commitments">Extended payload bid with ST-commitments</a></li>
+      <li><a href="#execution-payload-expansion">Execution payload expansion</a></li>
+      <li><a href="#key-message">Key message</a></li>
+      <li><a href="#key-release">Key release</a></li>
+      <li><a href="#key-timeliness">Key timeliness</a></li>
+      <li><a href="#inclusion-lists-with-sts-and-bundles">Inclusion lists with STs and bundles</a></li>
+      <li><a href="#block-processing">Block processing</a></li>
+      <li><a href="#recovery-under-rejected-payload">Recovery under rejected payload</a></li>
+      <li><a href="#engine-api-changes">Engine API Changes</a></li>
+      <li><a href="#beacon-chain-rpc-api-changes">Beacon Chain RPC API Changes</a></li>
+    </ul>
+  </li>
+  <li><a href="#rationale">Rationale</a>
+    <ul>
+      <li><a href="#probabilistic-front-running">Probabilistic front-running</a></li>
+      <li><a href="#mev-and-welfare">MEV and welfare</a></li>
+      <li><a href="#key-publisher-liability-for-non-reveal">Key publisher liability for non-reveal</a></li>
+      <li><a href="#ptc-influence-and-state-observation">PTC influence and state observation</a></li>
+      <li><a href="#alternative-specifications">Alternative specifications</a></li>
+    </ul>
+  </li>
+  <li><a href="#backwards-compatibility">Backwards Compatibility</a></li>
+  <li><a href="#security-considerations">Security Considerations</a></li>
+  <li><a href="#copyright">Copyright</a></li>
+</ul>
+
+  </div>
+
+  <h2 id="abstract">
+      
+      
+        <a href="#abstract" class="anchor-link"></a> Abstract
+      
+      
+    </h2>
+
+<p>This EIP specifies LUCID, a mechanism for carrying encrypted transactions through Ethereum’s public inclusion pipeline while keeping their contents hidden until after the scheduling decision has been fixed. By requiring commitment before reveal and delaying decryption until that point, LUCID protects MEV-sensitive order flow, limits probabilistic front-running by minimizing pre-execution information leakage, and broadens the practical censorship resistance of inclusion lists. The design remains open to different off-protocol decryption schemes, including trustless self-decryption, rather than coupling Ethereum to a single enshrined cryptographic construction.</p>
+  
+    <h2 id="motivation">
+      
+      
+        <a href="#motivation" class="anchor-link"></a> Motivation
+      
+      
+    </h2>
+
+<p>Transaction ordering power has, in practice, made the public mempool unusable for a large share of economically meaningful transactions on Ethereum. When pending transactions can be inspected before inclusion, sophisticated actors can front-run, sandwich, or simply copy profitable strategies, turning transparent block production into an industrialized market for toxic MEV.</p>
+
+<p>The natural response has been a migration toward private order flow. Users, wallets, searchers, and applications increasingly route transactions through private relays, builder-run mempools, order flow auctions, and other trusted intermediaries that can shield transaction contents until inclusion. These arrangements replace a public and permissionless inclusion path with opaque bilateral relationships. They reward trust, access, and private dealmaking over open competition, starving the public mempool, entrenching incumbent builders, and leaving access to blockspace vulnerable to outages, policy changes, and discretionary blacklisting.</p>
+
+<p>This is especially concerning because it pushes some of Ethereum’s most important activity away from the public, composable domain. Offchain market structures may provide reasonable local arrangements, but they are unlikely to constitute a sufficient long-run equilibrium for Ethereum on their own. The promise of DeFi is not merely that transactions settle onchain; it is that trading, competition, and execution themselves can occur permissionlessly onchain.</p>
+
+<p>Another core property is censorship resistance (CR), but because <a href="/EIPS/eip-7805">EIP-7805</a> (FOCIL) relies on open propagation, it cannot provide CR for transactions subject to MEV extraction. A public encrypted mempool addresses this gap. If transactions can be propagated in encrypted form and committed to before their contents are revealed, users no longer need to choose between MEV protection and trustless access to blockspace. This broadens the practical censorship resistance of inclusion lists while reducing the importance of privileged private order flow in builder competition.</p>
+
+<p>At the same time, Ethereum cannot presently enshrine a single encryption scheme for this purpose. A viable in-protocol scheme requires a silent setup with small public keys, non-interactive decryption, no trusted setup, practical ciphertext sizes, CCA2 security, and a credible path to quantum safety. No known construction fully satisfies these requirements at Ethereum’s scale, and waiting for cryptographic breakthroughs would impose an unacceptable delay.</p>
+
+<p>LUCID extends the inclusion pipeline to sealed transactions (STs) that can be propagated in public without revealing their contents. Builders commit to them before decryption, and key publishers release keys only after the scheduling decision has been fixed. In doing so, it preserves a public, permissionless path to inclusion for MEV-sensitive transactions without coupling Ethereum to a specific encryption scheme. Transactions may be self-decrypted in a trustless manner or encrypted in an open design according to a key publisher’s instructions. This broadens the practical CR afforded by FOCIL while reducing Ethereum’s dependence on centralized order-flow relationships. In the longer term, it helps preserve an Ethereum in which trading and transaction competition can take place onchain, in public, and under permissionless market structure.</p>
+  
+    <h2 id="specification">
+      
+      
+        <a href="#specification" class="anchor-link"></a> Specification
+      
+      
+    </h2>
+  
+    <h3 id="constants-and-parameters">
+      
+      
+        <a href="#constants-and-parameters" class="anchor-link"></a> Constants and parameters
+      
+      
+    </h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">TOB_GAS_FRACTION_DENOMINATOR</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">TOB_FEE_FRACTION</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">MAX_SIGNATURE_SIZE</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">16</span>
+<span class="n">MAX_ST_COMMITS_PER_IL</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">MAX_STS_PER_BUNDLE</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">MAX_BYTES_PER_ST</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">24</span> <span class="o">//</span> <span class="mi">64</span> <span class="c1"># Byte bound implied by EIP-7976 and EIP-7825
+</span><span class="n">MAX_ST_COMMITS</span> <span class="o">=</span> <span class="n">MAX_ST_COMMITS_PER_IL</span> <span class="o">*</span> <span class="n">IL_COMMITTEE_SIZE</span> <span class="c1"># IL_COMMITTEE_SIZE defined in EIP-7805
+</span><span class="n">MAX_ST_TICKETS</span> <span class="o">=</span> <span class="n">MAX_ST_COMMITS</span> <span class="o">*</span> <span class="n">MAX_STS_PER_BUNDLE</span>
+<span class="n">tob_gas_limit</span> <span class="o">=</span> <span class="n">block</span><span class="p">.</span><span class="n">gas_limit</span> <span class="o">//</span> <span class="n">TOB_GAS_FRACTION_DENOMINATOR</span>
+<span class="n">tob_gas_limit_per_il</span> <span class="o">=</span> <span class="n">tob_gas_limit</span> <span class="o">//</span> <span class="n">IL_COMMITTEE_SIZE</span>
+</code></pre></div></div>
+  
+    <h3 id="overview-from-submission-to-execution">
+      
+      
+        <a href="#overview-from-submission-to-execution" class="anchor-link"></a> Overview: from submission to execution
+      
+      
+    </h3>
+
+<p>This subsection provides an overview of the LUCID mechanism. LUCID relies on sealed transactions (STs), consisting of a signed ST ticket used for charging the sender and binding to a key publisher and a <code class="language-plaintext highlighter-rouge">ciphertext_envelope</code>.  The <code class="language-plaintext highlighter-rouge">ciphertext_envelope</code> decrypts to a signed plaintext transaction (PT) that can have a different <code class="language-plaintext highlighter-rouge">from</code> field than the ST. Senders encrypt transactions to a key publisher in an open design following the key publisher’s off‑protocol instructions (and if applicable, using its public key), or can otherwise self‑decrypt trustlessly. The ST can be propagated in the public mempool without revealing the PT until after commitment. Figure 1 provides a timeline for the design.</p>
+
+<p><img src="/assets/eip-8184/1.png" alt="Figure 1" /></p>
+
+<p><strong>Figure 1.</strong> LUCID timeline. Bids are included in the beacon block to allow key publishers to release keys in a timely manner before the next slot starts. Decrypted transactions are executed in the next block.</p>
+
+<ul>
+  <li><strong>Before $T_1$</strong> – Includers propagate ILs that, besides PTs, can incorporate STs. The STs are either included individually or in a bundle (dark blue background).</li>
+  <li><strong>$T_1$</strong> – Attesters (purple) of slot $n$ freeze their view of propagated ILs as well as votes on the timeliness of decryption keys released during the previous slot.</li>
+  <li><strong>After $T_1$</strong> – Once builders know which ILs and keys they must adhere to, they cast an expanded <code class="language-plaintext highlighter-rouge">ExecutionPayloadBid</code> for the right to build the block. The bid contains “ST-commitments” to the hash of STs and ST bundles.</li>
+  <li><strong>$T_2$</strong> – At the start of slot $n$, the proposer selects a winning bid, which is at least as encompassing as its own view of required ILs for block $n$ and keys from slot $n-1$. It includes that bid in the beacon block.</li>
+  <li><strong>After $T_2$</strong> – Upon observing the beacon block, nodes begin requesting any missing ILs as well as ST bytes that are referenced by the ST‑commitments. Senders and key publishers can also independently propagate those bytes now.</li>
+  <li><strong>$T_3$</strong> – Attesters of slot $n$ cast a vote on the current head of the chain. If the beacon block is missing or if the bid fails their audit due to omitted ST-commitments in ILs from their frozen view, they indicate the preceding block that is the head of the chain in their view. If the bid passes their audit, they optimistically attest to the block.</li>
+  <li><strong>After $T_3$ (Payload)</strong> – The builder releases the payload which also carries ST tickets that are charged. The first transactions (white rectangle) are decrypted STs, previously committed to in block $n-1$. Regular PTs from the current slot follow (black rectangle).</li>
+  <li><strong>After $T_3$ (Keys)</strong> – Each key publisher observes the ST-commitments in the beacon block. It confirms correct data for its own ST-commitment (pertaining, e.g., to its <code class="language-plaintext highlighter-rouge">gas_obligation</code> specifying how much gas it consumes), that the aggregate of all <code class="language-plaintext highlighter-rouge">gas_obligation</code> entries is within the allotted share of the next payload (<code class="language-plaintext highlighter-rouge">tob_gas_limit</code>), and that the beacon block is attested to. It propagates the key(s) that reveal the STs. The key(s) are flooded P2P and observed by attesters of the next block before their deadline at $T_4$.</li>
+  <li><strong>$T_4$</strong> – The payload timeliness committee (PTC) votes for the timeliness of the payload, including timely receipt of ST/ST-bundle bytes and adherence to the keys released in the previous slot. It further casts a separate bitfield vote confirming the ST-commitments that can now be decrypted, i.e., those with valid ST/ST-bundle bytes and keys released during the current slot.</li>
+  <li><strong>$T_5$</strong> – Attesters of slot $n+1$ freeze their view of propagated ILs as well as the decryption key timeliness votes for the previous block. The process then follows the same trajectory as after $T_1$ (for the previous slot).</li>
+</ul>
+  
+    <h3 id="sealed-transactions">
+      
+      
+        <a href="#sealed-transactions" class="anchor-link"></a> Sealed transactions
+      
+      
+    </h3>
+
+<p>A sealed transaction (ST) is a transaction envelope which contains:</p>
+
+<ol>
+  <li>a signed ST ticket transaction (to later be included on-chain), and</li>
+  <li>a ciphertext envelope (not included on-chain).</li>
+</ol>
+
+<p>It is encoded in SSZ when being included in FOCIL-style inclusion lists.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SealedTransaction</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">ticket</span><span class="p">:</span> <span class="n">Transaction</span>
+    <span class="n">ciphertext_envelope</span><span class="p">:</span> <span class="n">ByteList</span><span class="p">[</span><span class="n">MAX_BYTES_PER_ST</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>It is encoded in RLP when propagating across the mempool, as a new <a href="/EIPS/eip-2718">EIP-2718</a> transaction.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ST_TX_TYPE || rlp([
+  st_ticket,
+  ciphertext_envelope
+])
+</code></pre></div></div>
+  
+    <h4 id="st-ticket">
+      
+      
+        <a href="#st-ticket" class="anchor-link"></a> ST ticket
+      
+      
+    </h4>
+
+<p>An ST ticket is a new <a href="/EIPS/eip-2718">EIP-2718</a> typed transaction. It is charged and consumes the sender’s execution nonce, but is not executed as a normal EVM message call.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ST_TICKET_TX_TYPE || rlp([
+    chain_id,
+    nonce,
+    max_priority_fee_per_gas,
+    max_fee_per_gas,
+    gas_limit,
+    max_tob_fee,
+    max_preceding_commitments,
+    key_publisher,
+    key_publication_fee_recipient,
+    key_publication_fee,
+    key_commitment,
+    reveal_commitment,
+    ciphertext_hash,
+    signature_id,
+    signature
+])
+</code></pre></div></div>
+
+<p>Besides regular transaction fields, the ST ticket also has a:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">max_tob_fee</code> that the sender is willing to pay.</li>
+  <li><code class="language-plaintext highlighter-rouge">max_preceding_commitments</code> executed before the ST, acting as an upper bound.</li>
+  <li><code class="language-plaintext highlighter-rouge">key_publisher</code> responsible for signing bundles before key release.</li>
+  <li><code class="language-plaintext highlighter-rouge">key_publication_fee_recipient</code> that receives the fee.</li>
+  <li><code class="language-plaintext highlighter-rouge">key_publication_fee</code> paid for timely decryption of the plaintext transaction.</li>
+  <li><code class="language-plaintext highlighter-rouge">key_commitment</code> that binds to the revealed key.</li>
+  <li><code class="language-plaintext highlighter-rouge">reveal_commitment</code> that binds to the revealed transaction.</li>
+  <li><code class="language-plaintext highlighter-rouge">ciphertext_hash</code>, where <code class="language-plaintext highlighter-rouge">ciphertext_hash = keccak256(ciphertext_envelope)</code> binds the ciphertext bytes.</li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">signature_id</code> is one byte and the <code class="language-plaintext highlighter-rouge">signature</code> is interpreted according to <code class="language-plaintext highlighter-rouge">signature_id</code>. The only currently valid value for <code class="language-plaintext highlighter-rouge">signature_id</code> is <code class="language-plaintext highlighter-rouge">EC_DSA_TYPE == 0x01</code>. In this case, the <code class="language-plaintext highlighter-rouge">signature</code> is to be interpreted as a (<code class="language-plaintext highlighter-rouge">signature_y_parity</code>, <code class="language-plaintext highlighter-rouge">signature_r</code>, <code class="language-plaintext highlighter-rouge">signature_s</code>)-triple. This design ensures that we do not enshrine non-PQ-safe ECDSA signatures (see further discussion on the relationship to <a href="/EIPS/eip-8141">EIP-8141</a> in the Rationale).</p>
+  
+    <h4 id="ciphertext-envelope">
+      
+      
+        <a href="#ciphertext-envelope" class="anchor-link"></a> Ciphertext envelope
+      
+      
+    </h4>
+
+<p>The <code class="language-plaintext highlighter-rouge">ciphertext_envelope</code> of the ST is defined as:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CiphertextEnvelope</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+  <span class="n">header</span><span class="p">:</span> <span class="n">ByteList</span><span class="p">[</span><span class="mi">2</span><span class="o">**</span><span class="mi">16</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+  <span class="n">dem_ciphertext</span><span class="p">:</span> <span class="n">ByteList</span><span class="p">[</span><span class="n">MAX_BYTES_PER_ST</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>On the EL, <code class="language-plaintext highlighter-rouge">ciphertext_envelope</code> is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rlp([header_len:u16 || header || dem_ciphertext])
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">header_len</code> is big-endian. The <code class="language-plaintext highlighter-rouge">header</code> is <code class="language-plaintext highlighter-rouge">header_len</code> bytes and is opaque to the protocol. This field is reserved for decryption scheme metadata.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">dem_ciphertext</code> is the output of a DEM <code class="language-plaintext highlighter-rouge">ChaCha20-Poly1305</code> AEAD encryption with:</p>
+
+<ul>
+  <li>DEM key – <code class="language-plaintext highlighter-rouge">k_dem</code> (32 bytes).</li>
+  <li>Nonce – <code class="language-plaintext highlighter-rouge">keccak256(chain_id || ticket_from || ticket_nonce)[:12]</code> for STs.</li>
+  <li>Empty <code class="language-plaintext highlighter-rouge">aad</code> (<code class="language-plaintext highlighter-rouge">b""</code>).</li>
+  <li><code class="language-plaintext highlighter-rouge">dem_ciphertext</code> is <code class="language-plaintext highlighter-rouge">ciphertext || tag</code> (<code class="language-plaintext highlighter-rouge">tag</code> is 16 bytes).</li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">ciphertext_envelope</code> decrypts to <code class="language-plaintext highlighter-rouge">plaintext_tx</code>, the raw bytes of an <a href="/EIPS/eip-1559">EIP-1559</a> transaction to be executed onchain.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">plaintext_tx</code> must have:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas = 0</code></li>
+  <li><code class="language-plaintext highlighter-rouge">max_fee_per_gas = 0</code></li>
+  <li><code class="language-plaintext highlighter-rouge">gas_limit = ticket.gas_limit</code></li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">gas_limit</code> must be sufficient to cover the calldata cost of the byte size of the <code class="language-plaintext highlighter-rouge">SealedTransaction</code>. <a href="/EIPS/eip-7825">EIP-7825</a> thus bounds the byte size of an ST.</p>
+
+<p>To bind the key, the sender includes <code class="language-plaintext highlighter-rouge">key_commitment = keccak256(k_dem)</code> in the ST ticket.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">reveal_commitment</code> binds the revealed plaintext payload to a specific ticket. <code class="language-plaintext highlighter-rouge">ticket_from</code> is the recovered sender address from the ticket signature.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">RevealCommitmentPreimage</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">chain_id</span><span class="p">:</span> <span class="n">uint256</span>
+    <span class="n">ticket_from</span><span class="p">:</span> <span class="n">ExecutionAddress</span>
+    <span class="n">ticket_nonce</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="n">plaintext_tx</span><span class="p">:</span> <span class="n">Transaction</span>
+
+<span class="n">reveal_commitment</span> <span class="o">=</span> <span class="n">hash_tree_root</span><span class="p">(</span><span class="n">RevealCommitmentPreimage</span><span class="p">(...))</span>
+</code></pre></div></div>
+  
+    <h3 id="bundles">
+      
+      
+        <a href="#bundles" class="anchor-link"></a> Bundles
+      
+      
+    </h3>
+
+<p>Sealed transactions can be bundled together only if all contained ST tickets have the same <code class="language-plaintext highlighter-rouge">key_publisher</code>. The bundle is then signed by that <code class="language-plaintext highlighter-rouge">key_publisher</code> to authenticate that it formed it.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SealedBundle</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">sealed_transactions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SealedTransaction</span><span class="p">,</span> <span class="n">MAX_STS_PER_BUNDLE</span><span class="p">]</span>
+    <span class="n">key_publisher_signature_id</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="n">key_publisher_signature</span><span class="p">:</span> <span class="n">ByteList</span><span class="p">[</span><span class="n">MAX_SIGNATURE_SIZE</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">key_publisher_signature</code> is interpreted according to <code class="language-plaintext highlighter-rouge">key_publisher_signature_id</code>. The <code class="language-plaintext highlighter-rouge">ticket_hash</code> of an ST is <code class="language-plaintext highlighter-rouge">keccak256(ticket_bytes)</code>. The only currently valid value for <code class="language-plaintext highlighter-rouge">key_publisher_signature_id</code> is <code class="language-plaintext highlighter-rouge">EC_DSA_TYPE == 0x01</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">bundle_root</code> is the hash of the list of ticket hashes: <code class="language-plaintext highlighter-rouge">bundle_root = keccak256(keccak256(ticket_bytes[0]) || ... || keccak256(ticket_bytes[n]))</code>. The key publisher signs <code class="language-plaintext highlighter-rouge">(chain_id, bundle_root)</code> with an ECDSA signature that recovers <code class="language-plaintext highlighter-rouge">key_publisher</code>.</p>
+
+<p>Bundles are assigned an <code class="language-plaintext highlighter-rouge">executable</code> bitfield when committed to by the builder (as described below). Bundles have a collective <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code> which is set as the minimum <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code> among STs with <code class="language-plaintext highlighter-rouge">executable = 1</code>. Each ST has a <code class="language-plaintext highlighter-rouge">tob_fee</code> computed as described below under the “Block processing” subsection. The <code class="language-plaintext highlighter-rouge">bundle_tob_fee</code> is the aggregate of the <code class="language-plaintext highlighter-rouge">tob_fee</code> of all STs in the bundle with <code class="language-plaintext highlighter-rouge">executable = 1</code>.</p>
+  
+    <h3 id="extended-payload-bid-with-st-commitments">
+      
+      
+        <a href="#extended-payload-bid-with-st-commitments" class="anchor-link"></a> Extended payload bid with ST-commitments
+      
+      
+    </h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">ExecutionPayloadBid</code> is extended with ST commitments and canonical IL roots.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">STCommitment</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">commitment_root</span><span class="p">:</span> <span class="n">Bytes32</span>
+    <span class="n">commitment_key</span><span class="p">:</span> <span class="n">Bytes32</span>
+    <span class="n">gas_obligation</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="n">executable</span><span class="p">:</span> <span class="n">Bitlist</span><span class="p">[</span><span class="n">MAX_STS_PER_BUNDLE</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">ExecutionPayloadBid</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="p">...</span>
+    <span class="n">st_commitments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">STCommitment</span><span class="p">,</span> <span class="n">MAX_ST_COMMITS</span><span class="p">]</span>
+    <span class="n">IL_roots</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Bytes32</span><span class="p">,</span> <span class="n">IL_COMMITTEE_SIZE</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">commitment_root</code> is <code class="language-plaintext highlighter-rouge">ticket_hash</code> for non-bundles and <code class="language-plaintext highlighter-rouge">bundle_root</code> for bundles.</p>
+
+<p>For a non-bundle commitment, <code class="language-plaintext highlighter-rouge">executable</code> is empty and <code class="language-plaintext highlighter-rouge">gas_obligation = ticket.gas_limit</code>. For a bundle commitment, <code class="language-plaintext highlighter-rouge">executable</code> has length equal to the number of tickets in the committed bundle, in bundle order. The <code class="language-plaintext highlighter-rouge">executable[i]</code> bit is set to <code class="language-plaintext highlighter-rouge">1</code> iff ticket <code class="language-plaintext highlighter-rouge">i</code> can pay <code class="language-plaintext highlighter-rouge">ticket_fee</code> (defined below) and passes the <code class="language-plaintext highlighter-rouge">ticket.nonce</code> check when ST tickets are processed in <code class="language-plaintext highlighter-rouge">st_commitments</code> order and bundle members are processed in bundle order.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">commitment_tob_fee</code> is defined as the <code class="language-plaintext highlighter-rouge">tob_fee</code> of an ST and the <code class="language-plaintext highlighter-rouge">bundle_tob_fee</code> of a bundle. It is not included in the commitment since it can be computed deterministically and is not required at commitment time. or the same reason, the <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code> is not included.</p>
+
+<p>For STs, the <code class="language-plaintext highlighter-rouge">commitment_key</code> is the ticket’s <code class="language-plaintext highlighter-rouge">key_commitment</code>. For bundles, the builder first generates the list <code class="language-plaintext highlighter-rouge">key_commitments</code> by iterating over the bundle in bundle order and appending each <code class="language-plaintext highlighter-rouge">key_commitment</code> with <code class="language-plaintext highlighter-rouge">executable[i] == 1</code>. It then sets <code class="language-plaintext highlighter-rouge">commitment_key = keccak256(key_commitments)</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">gas_obligation</code> is the aggregate <code class="language-plaintext highlighter-rouge">ticket.gas_limit</code> for bundle members with <code class="language-plaintext highlighter-rouge">executable[i] == 1</code>.</p>
+  
+    <h3 id="execution-payload-expansion">
+      
+      
+        <a href="#execution-payload-expansion" class="anchor-link"></a> Execution payload expansion
+      
+      
+    </h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">DecryptedTransaction</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">plaintext_tx</span><span class="p">:</span> <span class="n">Transaction</span>
+</code></pre></div></div>
+
+<p>The execution payload is prepended with <code class="language-plaintext highlighter-rouge">st_tickets</code> and <code class="language-plaintext highlighter-rouge">decrypted_transactions</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ExecutionPayload</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">st_tickets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Transaction</span><span class="p">,</span> <span class="n">MAX_ST_TICKETS</span><span class="p">]</span>
+    <span class="n">decrypted_transactions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DecryptedTransaction</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">MAX_ST_TICKETS</span><span class="p">]</span>
+    <span class="p">...</span>
+</code></pre></div></div>
+  
+    <h3 id="key-message">
+      
+      
+        <a href="#key-message" class="anchor-link"></a> Key message
+      
+      
+    </h3>
+
+<p>Decryptors publish DEM key material in an unsigned message.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">LucidKeyMessage</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">chain_id</span><span class="p">:</span> <span class="n">uint256</span>
+    <span class="n">scheduling_beacon_block_root</span><span class="p">:</span> <span class="n">Bytes32</span>
+    <span class="n">scheduling_slot</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="n">commit_index</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="n">k_dems</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Bytes32</span><span class="p">,</span> <span class="n">MAX_STS_PER_BUNDLE</span><span class="p">]</span>
+</code></pre></div></div>
+  
+    <h4 id="key-message-validity-and-decryption">
+      
+      
+        <a href="#key-message-validity-and-decryption" class="anchor-link"></a> Key message validity and decryption
+      
+      
+    </h4>
+
+<p>A <code class="language-plaintext highlighter-rouge">LucidKeyMessage</code> is valid if it:</p>
+
+<ol>
+  <li>resolves, for a non-bundle ST, <code class="language-plaintext highlighter-rouge">keccak256(k_dems[0]) == commitment_key</code>; resolves, for a multi-key bundle, <code class="language-plaintext highlighter-rouge">keccak256(keccak256(k_dems[0]) || ... || keccak256(k_dems[n])) == commitment_key</code>;</li>
+  <li>has a <code class="language-plaintext highlighter-rouge">chain_id</code> that matches the chain;</li>
+  <li>references a commitment present in the scheduling block;</li>
+  <li>has the length <code class="language-plaintext highlighter-rouge">len(k_dems) == 1</code> for STs, and <code class="language-plaintext highlighter-rouge">len(k_dems) == sum(executable)</code> for bundles, with <code class="language-plaintext highlighter-rouge">k_dems</code> ordered by the bundle order filtered to <code class="language-plaintext highlighter-rouge">executable[i] == 1</code>;</li>
+  <li>successfully decrypts the transaction(s).</li>
+</ol>
+
+<p>Decryption of a scheduled ST is defined as successful only if decrypting <code class="language-plaintext highlighter-rouge">ciphertext_envelope</code> yields a <code class="language-plaintext highlighter-rouge">plaintext_tx</code> whose:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">hash_tree_root(RevealCommitmentPreimage(...)) == ticket.reveal_commitment</code>, and</li>
+  <li><code class="language-plaintext highlighter-rouge">plaintext_tx</code> decodes to a type-2 transaction with:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">max_fee_per_gas = 0</code>,</li>
+      <li><code class="language-plaintext highlighter-rouge">max_priority_fee_per_gas = 0</code>,</li>
+      <li><code class="language-plaintext highlighter-rouge">gas_limit = ticket.gas_limit</code>.</li>
+    </ul>
+  </li>
+</ul>
+  
+    <h3 id="key-release">
+      
+      
+        <a href="#key-release" class="anchor-link"></a> Key release
+      
+      
+    </h3>
+
+<p>The key publisher observes ST-commitments from the <code class="language-plaintext highlighter-rouge">ExecutionPayloadBid</code> included in the beacon block. It verifies that the <code class="language-plaintext highlighter-rouge">executable</code> bitfield indeed produces the specified <code class="language-plaintext highlighter-rouge">gas_obligation</code> for its own ST-commitment and that the aggregate of all <code class="language-plaintext highlighter-rouge">gas_obligation</code> entries is within the <code class="language-plaintext highlighter-rouge">tob_gas_limit</code>. Given that these requirements are fulfilled, if the payload turns out to be invalid or untimely, the key publisher’s ST-commitment will always fit within the <code class="language-plaintext highlighter-rouge">tob_gas_limit</code>. This means that the ST(s) can still be included ToB in the next valid payload, as further discussed in the section entitled “Recovery under rejected payload”.</p>
+
+<p>The key publisher further verifies that the order of the ST-commitment is consistent with its underlying <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code>. When the key publisher is confident that the beacon block will become canonical (for example after observing attestations for it), it releases its <code class="language-plaintext highlighter-rouge">LucidKeyMessage</code>. In the case of a single ST, the sender may itself also release the <code class="language-plaintext highlighter-rouge">LucidKeyMessage</code>, even if it specified a key publisher other than itself.</p>
+  
+    <h3 id="key-timeliness">
+      
+      
+        <a href="#key-timeliness" class="anchor-link"></a> Key timeliness
+      
+      
+    </h3>
+
+<p>Each PTC member publishes a signed vote message indicating which valid keys, scheduled for the current slot, they have observed:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">DOMAIN_LUCID_KEY_TIMELINESS</span> <span class="o">=</span> <span class="n">DomainType</span><span class="p">(</span><span class="s">'TBD'</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">LucidKeyTimelinessVote</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">chain_id</span><span class="p">:</span> <span class="n">uint256</span>
+    <span class="n">voting_slot</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="n">validator_index</span><span class="p">:</span> <span class="n">ValidatorIndex</span>
+    <span class="n">scheduling_beacon_block_root</span><span class="p">:</span> <span class="n">Bytes32</span>
+    <span class="n">scheduling_slot</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="n">keys_observed</span><span class="p">:</span> <span class="n">Bitlist</span><span class="p">[</span><span class="n">MAX_ST_COMMITS</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">SignedLucidKeyTimelinessVote</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">message</span><span class="p">:</span> <span class="n">LucidKeyTimelinessVote</span>
+    <span class="n">signature</span><span class="p">:</span> <span class="n">BLSSignature</span>
+</code></pre></div></div>
+
+<p>A bit <code class="language-plaintext highlighter-rouge">keys_observed[j]</code> is set to 1 iff the voter observed, by the key observation deadline of the PTC, a valid <code class="language-plaintext highlighter-rouge">LucidKeyMessage</code> for <code class="language-plaintext highlighter-rouge">(scheduling_beacon_block_root, scheduling_slot, commit_index=j)</code>. Nodes treat equivocated <code class="language-plaintext highlighter-rouge">LucidKeyTimelinessVote</code> messages the same way they do for equivocated ILs in FOCIL: they propagate the first two distinct signed votes they have observed for the same key to signal equivocation. The PTC members of the <em>next slot</em> store received votes at the <code class="language-plaintext highlighter-rouge">lucid_key_vote_deadline</code>, but keep listening for new messages and equivocation until they vote.</p>
+
+<p>Let <code class="language-plaintext highlighter-rouge">timely_key_votes</code> be a bitfield of observed votes on a key at <code class="language-plaintext highlighter-rouge">lucid_key_vote_deadline</code> and <code class="language-plaintext highlighter-rouge">total_key_votes</code> be a bitfield of observed votes on a key at the attestation time. The number of committee members who equivocated is tallied in <code class="language-plaintext highlighter-rouge">equivocated_votes</code>. These votes are not included in the key votes bitfields. Further define:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">timely_1 = sum(timely_key_votes)</code>,</li>
+  <li><code class="language-plaintext highlighter-rouge">timely_0 = len(timely_key_votes) - timely_1</code>,</li>
+  <li><code class="language-plaintext highlighter-rouge">late_1 = sum(total_key_votes) - timely_1</code>,</li>
+  <li><code class="language-plaintext highlighter-rouge">late_0 = len(total_key_votes) - sum(total_key_votes) - timely_0</code></li>
+</ul>
+
+<p>The PTC of the <em>next slot</em> considers:</p>
+
+<ul>
+  <li>All non-equivocated votes it observed at <code class="language-plaintext highlighter-rouge">lucid_key_vote_deadline</code> to have been seen by the builder.</li>
+  <li>All non-equivocated votes it observed after <code class="language-plaintext highlighter-rouge">lucid_key_vote_deadline</code> to have potentially been seen by the builder.</li>
+  <li>All equivocated votes to potentially have been seen voting either <code class="language-plaintext highlighter-rouge">0</code> or <code class="language-plaintext highlighter-rouge">1</code>.</li>
+</ul>
+
+<p>The builder can thus treat a key as missing under condition:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">2 * timely_1 &lt;= (timely_1 + timely_0 + late_0 + equivocated_votes)</code>;</li>
+</ul>
+
+<p>and treat a key as observed under condition:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">2 * (timely_1 + late_1 + equivocated_votes) &gt; (timely_1 + timely_0 + late_1 + equivocated_votes)</code>.</li>
+</ul>
+
+<p>If this test fails for any key, the PTC of the next slot votes against the payload timeliness.</p>
+  
+    <h3 id="inclusion-lists-with-sts-and-bundles">
+      
+      
+        <a href="#inclusion-lists-with-sts-and-bundles" class="anchor-link"></a> Inclusion lists with STs and bundles
+      
+      
+    </h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">InclusionList</code> container of <a href="/EIPS/eip-7805">EIP-7805</a> is extended with STs and ST bundles:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">InclusionList</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="p">...</span>
+    <span class="n">sealed_transactions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SealedTransaction</span><span class="p">,</span> <span class="n">MAX_ST_COMMITS_PER_IL</span><span class="p">]</span>
+    <span class="n">sealed_bundles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SealedBundle</span><span class="p">,</span> <span class="n">MAX_ST_COMMITS_PER_IL</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>The IL must satisfy <code class="language-plaintext highlighter-rouge">len(sealed_transactions) + len(sealed_bundles) &lt;= MAX_ST_COMMITS_PER_IL</code>.</p>
+
+<p>An entry of a timely IL must still be excluded from the block if:</p>
+
+<ul>
+  <li>it is an ST that already appears in the block via a bundle,</li>
+  <li>it is a bundle with STs that already appear in another bundle with a higher aggregate <code class="language-plaintext highlighter-rouge">gas_limit</code>.</li>
+</ul>
+
+<p>An entry of a timely IL may still be excluded from the block if:</p>
+
+<ul>
+  <li>The aggregate <code class="language-plaintext highlighter-rouge">gas_limit</code> of all STs (including bundled STs) of the IL exceeds <code class="language-plaintext highlighter-rouge">tob_gas_limit_per_il</code>.</li>
+  <li>It cannot be inserted in <code class="language-plaintext highlighter-rouge">st_commitments</code> at the position determined by the ST-commitment ordering rule (see Block processing)—without breaking its <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code> stipulation.</li>
+</ul>
+
+<p>Attesters check the second condition similarly to the post-execution check of FOCIL, for each entry in <code class="language-plaintext highlighter-rouge">sealed_transactions</code> or <code class="language-plaintext highlighter-rouge">sealed_bundles</code> in a timely observed IL that was excluded from the block. The attester iterates through the <code class="language-plaintext highlighter-rouge">st_commitments</code> starting from ToB, for bundles updating <code class="language-plaintext highlighter-rouge">executable</code> of the to-be-inserted commitment and aggregating the <code class="language-plaintext highlighter-rouge">tob_fee</code> over eligible STs to compute the <code class="language-plaintext highlighter-rouge">bundle_tob_fee</code>. If in any instance the ST-commitment could be placed in <code class="language-plaintext highlighter-rouge">st_commitments</code> at the position determined by the ST-commitment ordering rule without violating its <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code>, but is not included, attesters vote against the block.</p>
+  
+    <h3 id="block-processing">
+      
+      
+        <a href="#block-processing" class="anchor-link"></a> Block processing
+      
+      
+    </h3>
+
+<p>Nodes match the STs/ST bundles with their ST-commitments in the beacon block, verify for each matched ST (whether standalone or in a bundle) that <code class="language-plaintext highlighter-rouge">keccak256(ciphertext_envelope) == ticket.ciphertext_hash</code>, and verify that the commitments are ordered by descending <code class="language-plaintext highlighter-rouge">commitment_tob_fee</code>, tie-breaking by descending <code class="language-plaintext highlighter-rouge">gas_obligation</code> and ascending <code class="language-plaintext highlighter-rouge">commitment_root</code> respectively; referred to as the “ST-commitment ordering rule”. They further verify that ST tickets adhere to the order of the ST-commitments. The ST tickets of bundles must further be in the same order as in the bundle, which the key publisher is free to decide.</p>
+
+<p>Each ST ticket is charged after first establishing a <code class="language-plaintext highlighter-rouge">priority_fee</code> and <code class="language-plaintext highlighter-rouge">tob_fee</code> based on the <code class="language-plaintext highlighter-rouge">base_fee_per_gas</code>:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Initialize
+</span><span class="n">max_priority_fee</span> <span class="o">=</span> <span class="n">ticket</span><span class="p">.</span><span class="n">max_priority_fee_per_gas</span> <span class="o">*</span> <span class="n">ticket</span><span class="p">.</span><span class="n">gas_limit</span>
+<span class="n">max_fee</span> <span class="o">=</span> <span class="n">ticket</span><span class="p">.</span><span class="n">max_fee_per_gas</span> <span class="o">*</span> <span class="n">ticket</span><span class="p">.</span><span class="n">gas_limit</span>
+<span class="n">base_fee</span> <span class="o">=</span> <span class="n">block</span><span class="p">.</span><span class="n">base_fee_per_gas</span> <span class="o">*</span> <span class="n">ticket</span><span class="p">.</span><span class="n">gas_limit</span>
+
+<span class="c1"># Compute capped fees
+</span><span class="k">assert</span> <span class="n">max_fee</span> <span class="o">&gt;=</span> <span class="n">base_fee</span> <span class="o">+</span> <span class="n">ticket</span><span class="p">.</span><span class="n">key_publication_fee</span>
+<span class="n">priority_fee</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">max_priority_fee</span><span class="p">,</span> <span class="n">max_fee</span> <span class="o">-</span> <span class="p">(</span><span class="n">base_fee</span> <span class="o">+</span> <span class="n">ticket</span><span class="p">.</span><span class="n">key_publication_fee</span><span class="p">))</span>
+<span class="n">tob_fee</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ticket</span><span class="p">.</span><span class="n">max_tob_fee</span><span class="p">,</span> <span class="n">max_fee</span> <span class="o">-</span> <span class="p">(</span><span class="n">base_fee</span> <span class="o">+</span> <span class="n">ticket</span><span class="p">.</span><span class="n">key_publication_fee</span> <span class="o">+</span> <span class="n">priority_fee</span><span class="p">))</span>
+
+<span class="c1"># Charge the ticket sender
+</span><span class="n">ticket_fee</span> <span class="o">=</span>  <span class="n">base_fee</span> <span class="o">+</span> <span class="n">ticket</span><span class="p">.</span><span class="n">key_publication_fee</span> <span class="o">+</span> <span class="n">priority_fee</span> <span class="o">+</span> <span class="n">tob_fee</span>
+<span class="k">assert</span> <span class="n">ticket</span><span class="p">.</span><span class="n">signer</span><span class="p">.</span><span class="n">balance</span> <span class="o">&gt;=</span> <span class="n">ticket_fee</span>
+<span class="k">assert</span> <span class="n">ticket</span><span class="p">.</span><span class="n">signer</span><span class="p">.</span><span class="n">nonce</span> <span class="o">==</span> <span class="n">ticket</span><span class="p">.</span><span class="n">nonce</span>
+<span class="n">ticket</span><span class="p">.</span><span class="n">signer</span><span class="p">.</span><span class="n">balance</span> <span class="o">-=</span> <span class="n">ticket_fee</span>
+<span class="n">ticket</span><span class="p">.</span><span class="n">signer</span><span class="p">.</span><span class="n">nonce</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></pre></div></div>
+
+<p>All nodes validate key message validity as previously described for the PTC. They verify that <code class="language-plaintext highlighter-rouge">decrypted_transactions</code> contains the byte-identical transactions they derived via decryption, positioned in the same order as the corresponding charged ST tickets, with STs not decrypted left out from the <code class="language-plaintext highlighter-rouge">decrypted_transactions</code> list.</p>
+
+<p>Upon successful decryption, the calldata cost of the decrypted transaction is computed using <code class="language-plaintext highlighter-rouge">max(len(ciphertext_envelope), len(plaintext_tx.data))</code> bytes. The PT is then executed as a regular transaction, except that it bypasses the ordinary EIP-1559 fee-cap validation and no gas fee is charged, since the fee was already prepaid by the ST ticket. The <code class="language-plaintext highlighter-rouge">gas_used</code> is referred to as <code class="language-plaintext highlighter-rouge">dual_gas_used</code> to capture that it encompasses a broader interpretation of calldata. The unused gas, previously charged to the <code class="language-plaintext highlighter-rouge">parent_ticket</code> according to the base fee of the previous block, is then returned to the sender, together with the <code class="language-plaintext highlighter-rouge">parent_tob_fee</code> reserved for the penalty:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">parent_ticket</span><span class="p">.</span><span class="n">signer</span><span class="p">.</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">parent</span><span class="p">.</span><span class="n">base_fee_per_gas</span> <span class="o">*</span> <span class="p">(</span><span class="n">parent_ticket</span><span class="p">.</span><span class="n">gas_limit</span> <span class="o">-</span> <span class="n">dual_gas_used</span><span class="p">)</span> <span class="o">+</span> <span class="n">parent_tob_fee</span> <span class="o">*</span> <span class="p">(</span><span class="n">TOB_FEE_FRACTION</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">TOB_FEE_FRACTION</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">priority_fee</code> is not reconciled with <code class="language-plaintext highlighter-rouge">gas_used</code> since the ST still took up bounded space upon commitment. The specified key publication fee recipient is further credited the key publication fee:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">parent_ticket</span><span class="p">.</span><span class="n">key_publication_fee_recipient</span><span class="p">.</span><span class="n">balance</span> <span class="o">+=</span> <span class="n">parent_ticket</span><span class="p">.</span><span class="n">key_publication_fee</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">decrypted_transactions</code> are executed against the header of the block in which their ST ticket was committed to, in order to prevent builders from being able to inject information into the block after having witnessed decrypted transactions. During processing, the <code class="language-plaintext highlighter-rouge">SLOTNUM</code> opcode introduced in <a href="/EIPS/eip-7843">EIP-7843</a> must always return the slot number which included the corresponding ST ticket. The addition of the parent block hash to the historical block registry defined in <a href="/EIPS/eip-2935">EIP-2935</a> is no longer done at the top of the block; it is deferred till after the last ST has been executed. Likewise, the addition of the parent block’s beacon root to the historical root registry defined in <a href="/EIPS/eip-4788">EIP-4788</a> is no longer done at the top of the block; it is also deferred till after the last ST has been executed.</p>
+  
+    <h3 id="recovery-under-rejected-payload">
+      
+      
+        <a href="#recovery-under-rejected-payload" class="anchor-link"></a> Recovery under rejected payload
+      
+      
+    </h3>
+
+<p>Decrypted transactions shall be included if:</p>
+
+<ul>
+  <li>The ST bytes (and, if bundled, the ST bundle bytes) and keys were and are validly available, as confirmed by the PTC vote.</li>
+  <li>The ST-commitments were correctly formatted and the aggregate of all <code class="language-plaintext highlighter-rouge">gas_obligation</code> entries was within the <code class="language-plaintext highlighter-rouge">tob_gas_limit</code> (as also confirmed by the attestations).</li>
+  <li>Their ST-commitment entry specified a correct <code class="language-plaintext highlighter-rouge">gas_obligation</code> and <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code>, given the <code class="language-plaintext highlighter-rouge">executable</code> bitfield provided for bundles.</li>
+</ul>
+
+<p>If payload $n$ is rejected, two sets of STs are affected:</p>
+
+<ul>
+  <li>The STs with <code class="language-plaintext highlighter-rouge">decrypted_transactions</code> scheduled for payload $n$, with ST-commitments in beacon block $n-1$ and ST tickets in payload $n-1$.</li>
+  <li>The STs with ST-commitments in beacon block $n$, scheduled for payload $n+1$.</li>
+</ul>
+
+<p>Both sets of STs that shall be included must then be included in the next payload. That payload includes the ST tickets of the associated commitments from beacon block $n$, and <code class="language-plaintext highlighter-rouge">decrypted_transactions</code> for commitments from both beacon block $n-1$ and $n$. The <code class="language-plaintext highlighter-rouge">decrypted_transactions</code> must be ordered according to the ST-commitments: those derived from commitments in beacon block $n-1$ go before those from commitments in beacon block $n$.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">executable</code> bitfield and <code class="language-plaintext highlighter-rouge">gas_obligation</code> for an ST-commitment are fixed by its associated scheduling beacon block, and the key-timeliness outcome for the ST-commitment and <code class="language-plaintext highlighter-rouge">LucidKeyMessage</code> is fixed by the corresponding <code class="language-plaintext highlighter-rouge">LucidKeyTimelinessVote</code>. If an ST-commitment was mis-specified with respect to the original scheduling state, its transactions MUST NOT be included under recovery. When a recovery payload includes commitments from multiple scheduling beacon blocks, they are processed in scheduling-block order, and <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code> is enforced only with respect to commitments from the same scheduling beacon block.</p>
+
+<p>The recovery payload must not commit to new STs, in order for the protocol to catch up. In the baseline specification, decrypted STs are allotted at most <code class="language-plaintext highlighter-rouge">1 / TOB_GAS_FRACTION_DENOMINATOR</code> of the gas limit. The recovery payload can then include two sets of decrypted STs, which at most consume <code class="language-plaintext highlighter-rouge">2 /  TOB_GAS_FRACTION_DENOMINATOR</code> of the block’s gas limit.</p>
+  
+    <h3 id="engine-api-changes">
+      
+      
+        <a href="#engine-api-changes" class="anchor-link"></a> Engine API Changes
+      
+      
+    </h3>
+
+<ul>
+  <li>Add <code class="language-plaintext highlighter-rouge">engine_getInclusionListV2</code> endpoint to retrieve an IL which may contain STs and bundles from the ExecutionEngine.</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">engine_updatePayloadWithInclusionListV2</code> endpoint to update a payload with the IL that may contain STs and bundles that should be used to build the block.</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">engine_updateInclusionListV2</code> endpoint which consumes an updated <code class="language-plaintext highlighter-rouge">InclusionList</code> containing STs, and the 8-byte payload id being built.</li>
+</ul>
+  
+    <h3 id="beacon-chain-rpc-api-changes">
+      
+      
+        <a href="#beacon-chain-rpc-api-changes" class="anchor-link"></a> Beacon Chain RPC API Changes
+      
+      
+    </h3>
+
+<ul>
+  <li>Update <code class="language-plaintext highlighter-rouge">/eth/v2/events</code> endpoint to notify wallets that their ST has been included, and it is safe to publish the key.</li>
+  <li>Update <code class="language-plaintext highlighter-rouge">/eth/v2/events</code> endpoint to notify clients and committees that a key has been released.</li>
+  <li>Add <code class="language-plaintext highlighter-rouge">/eth/v1/beacon/key</code> endpoint to relay the key to the libp2p topic.</li>
+</ul>
+  
+    <h2 id="rationale">
+      
+      
+        <a href="#rationale" class="anchor-link"></a> Rationale
+      
+      
+    </h2>
+  
+    <h3 id="probabilistic-front-running">
+      
+      
+        <a href="#probabilistic-front-running" class="anchor-link"></a> Probabilistic front-running
+      
+      
+    </h3>
+
+<p>Attackers may attempt to probabilistically front-run transactions by preparing various options, that are only executed if they turn out to be profitable upon observing revealed keys of other transactions. LUCID tackles non-reveal of ST-commitments and probabilistic front-running from five different angles:</p>
+
+<ol>
+  <li>The public mempool need not reveal the plaintext transaction, its calldata, or its signer. While the signed ST ticket is visible, the revealed <code class="language-plaintext highlighter-rouge">plaintext_tx</code> may be signed by a different account than the ticket signer, which is not revealed until after commitment, when the decryption key is released.</li>
+  <li>After commitment, an attacker cannot replace ciphertexts, change ordering, or inject new STs. It can only control the binary decision whether to release valid keys for STs/ST bundles it already committed to. A multi-key bundle either fails, or all <code class="language-plaintext highlighter-rouge">executable</code> STs are revealed.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">decrypted_transactions</code> are executed against the header of the block in which their ST ticket was committed to. This prevents builders from being able to inject information into the block after having witnessed decrypted transactions.</li>
+  <li>ST-commitments are ordered by ToB fee, a fraction of which is returned upon reveal. Selective reveal is therefore priced both in expectation and ex post. Concretely: (a) In the case that the front-runner consistently posts ST-commitments which it intends to use for front-running under advantageous circumstances, it must also consistently pay the part of the ToB fee that is not returned upon reveal – <code class="language-plaintext highlighter-rouge">tob_fee / TOB_FEE_FRACTION</code>. (b) In the case that the front-runner happens upon an advantageous circumstance, it must pay the higher penalty for every bit of information it communicates upon non-reveal  – <code class="language-plaintext highlighter-rouge">tob_fee</code>.</li>
+  <li>Each ST specifies the <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code> that may execute before it. This allows users to balance their need for protection from probabilistic front-running with their willingness to pay a high ToB fee. If a sender allows at most $m$ preceding commitments, then an adversarial party can choose between at most $2^{m-1}$ distinct patterns to be executed before the sender—if it purchases all $m$ commitments by paying a higher <code class="language-plaintext highlighter-rouge">tob_fee</code> than the sender for each one. Deliberations concerning <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code> are more important for senders that self-decrypt, whereas bundled STs can leverage the joint ToB fee of all STs of the bundle to reduce the viability of probabilistic front-running (see “Alternative specifications” for further improvements).</li>
+</ol>
+
+<p>The builder also has one bit of reveal optionality. It can elect to either release or not release its payload, upon observing some of the keys. This alters the pre-state which the decrypted transactions are executed against, just like how a non-reveal of an earlier ST-commitment also changes the pre-state. Since the builder is staked, it can also trivially be penalized for a non-reveal at an appropriate level.</p>
+  
+    <h3 id="mev-and-welfare">
+      
+      
+        <a href="#mev-and-welfare" class="anchor-link"></a> MEV and welfare
+      
+      
+    </h3>
+
+<p>The objective of LUCID is to restore a public, permissionless inclusion path for MEV-inducing transactions. Some users may prefer this inclusion path, whereas others continue using trusted private inclusion paths. The welfare claim of LUCID is therefore comparative and optional: it gives users an additional path that trades some private-intermediary conveniences for trustlessness and CR. At the protocol level, welfare is further strengthened by shrinking the share of economic activity that must route through trusted intermediaries—reducing exposure to discretionary exclusion, lowering barriers to builder entry, and keeping trading and competition within Ethereum’s public, composable domain.</p>
+
+<p>To understand the MEV landscape and how it affects encrypted mempools, it is useful to distinguish between:</p>
+
+<ul>
+  <li>Exogenous MEV – induced by information external to the protocol, such as changes in CEX prices, prices on other chains, or other offchain information not yet reflected in the protocol state.</li>
+  <li>Endogenous MEV – induced by the protocol state itself, such as imbalances between pools, available liquidations, or other imbalances internal to the protocol.</li>
+  <li>Autogenous MEV (i.e., transaction-induced MEV) – induced when a transaction’s own execution creates or reveals a new public signal, such as a large repricing trade or other state transition.</li>
+</ul>
+
+<p>LUCID lands new information onchain trustlessly, which is useful when dealing with all three types of MEV, since it prevents front-running. However, differences regarding when the MEV opportunities become public and when they can be acted upon affect their relationship to the encrypted mempool. For example, a common objection to encrypted mempools is that they will reproduce the onchain searching observed on L2s with deterministic sequencing rules. However, LUCID differs materially from L2 sequencing in how new information enters the chain and in the bounded scope of decrypted transactions, making a direct comparison misguided. What follows is first a classification of exogenous/autogenous/endogenous MEV, which then informs a discussion of user and protocol welfare.</p>
+  
+    <h4 id="exogenous-mev">
+      
+      
+        <a href="#exogenous-mev" class="anchor-link"></a> Exogenous MEV
+      
+      
+    </h4>
+
+<p>MEV emerges exogenously when conditions outside of the protocol change such that its state becomes imbalanced relative to the rest of the world. Traders then rush to include transactions onchain in order to restore balance between the protocol state and the outside world. A prominent instance is CEX-DEX arbitrage, in which a price movement on a centralized exchange renders an onchain pool stale. Only the DEX leg is directly visible to Ethereum, while the offsetting leg is executed or hedged on a CEX or other offchain venue. From Ethereum’s perspective, the scarce object is therefore priority access for the onchain leg against stale protocol state. By restoring balance, traders extract value.</p>
+
+<p>On an L1 like Ethereum, exogenous MEV is captured at the “information ingress boundary” (IIB)—the point at which new information enters onchain as the builder commits to a new block. In trusted offchain flow, builders or upstream intermediaries can privately simulate and filter candidate transactions, rely on order matching, private inventory, and other offchain liquidity arrangements. The builder takes in bids on onchain legs for restoring balance relative to the outside world, and includes only the most profitable ones—those that pay the most for the opportunity to execute in the block. In other words, transactions that cannot profitably execute are filtered out or revert offchain. Offchain reverts are beneficial in that transaction intent then does not become public.</p>
+
+<p>When an L2 sequencer that receives private orderflow follows a deterministic scheduling rule, for example ordering by priority fee or on a first-come first-served (FCFS) basis, searchers attempting to extract exogenous MEV without guarantees about the exact state they execute against may instead probe the state during execution. Filtering, fallback logic, and/or reverts then move onchain. Many L2s do not have one discrete IIB per block. The detached relationship between trader and sequencer means that each new transaction acts on exogenous MEV as visible to the sender at submission time. Furthermore, an L2 may utilize sub-blocks, each allowing new information to enter the state, or FCFS ordering such that, from a transaction-ordering perspective, new information may continuously enter and trade against the state.</p>
+
+<p>For the decrypted transactions in LUCID, the relevant point at which new information still can affect internal ordering (the IIB) is the scheduling decision in slot $n$ rather than the moment of execution in slot $n+1$; the relative ordering of decrypted transactions is fixed one slot before they execute (see also the same-slot design, where the decrypted transactions indeed execute toward the end of the block). Most exogenous MEV observable at the IIB of block $n$ is therefore expected to have been captured in block $n$’s own post-ToB segment, before the committed decrypted transactions execute ToB in $n+1$, just as today with offchain builder filtering applied. Onchain searching for exogenous MEV is thus expected to be more limited among decrypted transactions, so conditions on L2s do not translate to LUCID.</p>
+
+<p>There is a narrow secondary IIB in LUCID worth pointing out: key publishers (or self-decrypting senders) can infuse limited new information onchain, by releasing or withholding keys. Since keys are released later than the block commitment time, new exogenous MEV may have emerged in the meantime. Decryptors can therefore selectively withhold or release keys so that only the most profitable (as of the key PTC deadline) pre-committed trades execute. We can expect such trades to be concentrated among the latest decrypted transactions, where the penalty for non-reveal is limited by lower ToB fees. This type of non-reveal does not consume additional blockspace in the way blind searching on an L2 does, since withheld transactions can be replaced by regular transactions in block $n+1$. In essence, it is a form of probabilistic MEV burn. It can be noted that a shorter window between the first IIB and the secondary IIB will serve to reduce the amount of exogenous MEV available for extraction.</p>
+  
+    <h4 id="endogenous-mev">
+      
+      
+        <a href="#endogenous-mev" class="anchor-link"></a> Endogenous MEV
+      
+      
+    </h4>
+
+<p>Endogenous MEV is MEV internal to the protocol state itself, such as DEX pool imbalances that can be rebalanced by arbitrage. On the L1, once the pre-state is known, searchers can identify endogenous MEV opportunities generated in the previous block, for example by transactions not fully internalizing their own backruns, and simulate trades targeting this MEV. Likewise, searchers or the builder may attempt to do so for any other opportunities implied by publicly visible candidate transactions for the current block. Under an idealized model of LUCID, most endogenous MEV observable at the IIB is therefore competed away during block construction, leaving little remaining after the regular transactions have been executed.</p>
+
+<p>The decrypted transactions may produce new endogenous MEV, as, e.g., DEX pools are unbalanced by decrypted transactions. The sender can with the assistance of searchers or other intermediaries still prepare routing and backrunning options offchain, but these cannot be further simulated and filtered after commitment. The exact settlement or backrunning operation can therefore instead be determined onchain after querying the state, whereas candidate routing and backrunning options still can be precomputed offchain at commitment time. This does not reproduce a trusted intermediary’s ability to simulate many candidate backruns against the exact evolving pre-state, but it does preserve a path for pre-committed, targeted backrunning. Importantly, it will lead to increased onchain routing, moving execution competition into the public, composable domain, away from centralized offchain intermediaries that compete on private access and trust.</p>
+
+<p>The sender can place backrunning transactions directly after its trade within a bundle if it is expected to leave residual MEV on the table. The key publisher may also place backrunning transactions there, or at the end of a bundle. Since the backrunning transaction knows the precise operations performed by the MEV-inducing transaction, any required onchain queries can be highly targeted, querying only the most relevant trading pairs or venues before executing the backrunning leg.</p>
+
+<p>Just as for exogenous MEV, in most L2 designs there is no comparable block-level clearing step at the IIB in which sophisticated searchers compete offchain against a known pre-state and the winning opportunities are filtered before execution. Transactions aiming to extract endogenous MEV then need to make queries onchain across the full block. Furthermore, residual opportunities may also emerge between exogenous-MEV-extraction transactions executed across the block. These properties should lead to more onchain searching for endogenous MEV in L2s than in LUCID.</p>
+  
+    <h4 id="autogenous-mev">
+      
+      
+        <a href="#autogenous-mev" class="anchor-link"></a> Autogenous MEV
+      
+      
+    </h4>
+
+<p>An important reason for using the LUCID encrypted mempool is to safeguard transaction-induced autogenous MEV. The transaction may itself reveal a new public signal or opportunity via a large repricing trade or other state transitions whose informational content may not have been observable beforehand. It may also for example atomically settle a series of coincidences-of-wants, or unwind a large lending position whose side effects, such as triggering liquidations or shifting borrowing rates, would be exploitable if disclosed in advance. Thus, the transaction’s own informational or state-changing content can make it vulnerable to being traded around.</p>
+
+<p>The autogenous MEV transaction’s value derives from the information or matching it carries rather than from capturing an existing onchain imbalance. The private nature makes it less sensitive to the exact pre-state than transactions that compete to capture publicly available MEV (exogenous or endogenous), though execution quality still depends on the state of any pool or market touched. LUCID is therefore particularly suitable for allowing these transactions to enter the public inclusion pipeline without first disclosing information to a privileged intermediary.</p>
+
+<p>The content of the transaction becomes public at key release, but the transaction that generates it was already committed to one slot earlier. Later decrypted transactions can react to it only through pre-committed contingent logic, whereas unrestricted competition over the revealed signal can begin among transactions executing after the decrypted transactions. It is assumed that autogenous MEV transactions from LUCID will capture their own endogenous MEV as outlined in the previous subsection.</p>
+
+<p>Additionally, the builder has full control over the state under which the first decrypted bundle executes. At commitment time, the builder can therefore communicate relevant pre-state information to the key publisher (without full disclosure), enabling the first ST-commitment to provide offchain revert protection.</p>
+
+<p>A comparison between L2s and LUCID is the most appropriate for transactions capturing autogenous MEV, given similar properties of the inclusion path. However, it should be noted that onchain searching is particularly appealing under low fees, and that the blockspace available to decrypted transactions is limited, setting an upper bound on how much settlement can move fully onchain.</p>
+  
+    <h4 id="competition-for-the-tob">
+      
+      
+        <a href="#competition-for-the-tob" class="anchor-link"></a> Competition for the ToB
+      
+      
+    </h4>
+
+<p>Competition for ToB positions revolves around the conditional value $V$ that senders assign to execution at a given position. The sender of an autogenous MEV transaction (with value $V_a$) that always reveals can under a <code class="language-plaintext highlighter-rouge">TOB_FEE_FRACTION</code> of $F$ post a ToB fee close to $FV_a$, given that it recoups a $(F-1)/F$ share of the fee after successful reveal. An aggregated bundle of size $B$ of such senders can likewise post a ToB fee approaching $FBV_a$. A sender extracting exogenous MEV, with average value $V_e$ in the states where reveal is chosen and reveal probability $p$, can support a ToB fee of roughly $pV_e/((1-p)+p/F)$. The sender would prefer to reveal with a high probability to keep forfeited ToB fees rare, but such setups require a conservative trade that correspondingly should tend to reduce $V_e$. The sender must commit against a post-state of block $n$ that will be close to equilibrium relative to the outside world, and can only profit from shifts taking place after commitment and before the PTC vote on key timeliness.</p>
+
+<p>As an illustrative benchmark, the analysis will use $p=0.5$, which produces $pV_e/((1-p)+p/F) \approx V_e$. In this case, senders of autogenous MEV transactions can outcompete a sender extracting exogenous MEV roughly when $FBV_a &gt; V_e$, where $V_e$ is the exogenous MEV conditional upon a reveal. Besides fixing $p$, this is also a simplification in that it abstracts from the distribution of exogenous opportunities across positions and states. Under this simplified model, the separation in value that can be assigned to the ToB position is therefore roughly $FB$.</p>
+
+<p>Senders can further leverage <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code>, $m$, to tolerate some preceding commitments, depending on sensitivity to be placed later in the ToB. The additional value separation created under this setup can generally be expressed as $FBf(m)$, where $f(m)$ is increasing, capturing that the marginal value of each additional earlier commitment that could outcompete should be decreasing. The gains are to some extent two-sided, both types of senders can allow the other to precede it.</p>
+
+<p>It should here be noted that the same selector strategy outlined for probabilistic front-running can also be used for extracting exogenous MEV. The sender acquires $m$ earlier commitments and uses the first $m-1$ as binary selectors over $2^{m-1}$ precommitted execution patterns, where the final commitment executes the profitable pattern identified. This allows for constructing a more versatile exogenous MEV arbitrage transaction, with fewer withheld keys per option. The earlier outlined separation in $F$, $B$ and $f(m)$ can therefore be compressed.</p>
+
+<p>In essence, senders targeting exogenous MEV can outbid senders of autogenous MEV in terms of ToB fees if the value of the exogenous MEV is sufficiently larger than the value assigned to autogenous MEV transactions. The issue is that the autogenous MEV sender cannot identify whether someone executing before them extracts exogenous MEV or tries to front-run. The protocol would then need to leverage other means to give room to senders of autogenous MEV transactions, such as for example a trust graph as suggested in <a href="/EIPS/eip-8105">EIP-8105</a> (see Alternative specifications).</p>
+
+<p>Senders who strictly extract exogenous MEV and do not pursue probabilistic front-running can then execute before autogenous MEV senders, if they are trusted by them. Trusted autogenous or endogenous MEV senders can likewise execute before exogenous MEV senders, when they do not compete for the same opportunities. Even so, the differential of $FBf(m)$ is important for establishing a baseline of functionality while reining in monopolistic tendencies in any trust graph.</p>
+
+<p>It can be noted that a sender that does not wish to belong to a bundle, requires absolutely ToB execution, and cannot leverage trust, indeed has a much lower value separation relative to a sender extracting exogenous MEV.</p>
+  
+    <h4 id="user-welfare">
+      
+      
+        <a href="#user-welfare" class="anchor-link"></a> User welfare
+      
+      
+    </h4>
+
+<p>MEV captured via both offchain and onchain paths for both regular and encrypted transactions may be shared with the sender according to the arrangements they make with the relevant service provider (e.g., searchers, MEV-Share nodes, key publishers, applications, or any software developed for facilitating routing and backrunning). The sender accounts for many factors when deciding whether it wishes to use the encrypted mempool or not. These include the expected difference in execution quality—including route quality, liquidity access, and residual MEV capture—between offchain and onchain paths; potential costs (searcher fees, gas fees, key publication fees, etc.); its requirement for CR; the risks associated with having plaintext visible to various trusted parties; its requirements for revert protection; and its fear of probabilistic front-running, etc. Under equilibrium, usage will depend on the importance of these various factors.</p>
+
+<p>Users that need to land MEV-inducing transactions permissionlessly onchain without being front-run or sandwiched are the clearest candidates to use the encrypted mempool. For other users, the encrypted mempool inclusion path comes with both benefits and drawbacks. The welfare claim is not that the encrypted mempool dominates private inclusion on every dimension. Trusted intermediaries can offer, e.g., offchain revert protection, that the public path cannot replicate. Rather, it is that users benefit from having an alternative path whose properties—trustlessness, censorship resistance, and independence from any single intermediary—are not available through private channels. In particular, the ability to land autogenous MEV onchain without disclosing intent to a trusted intermediary is an important capability that no private channel provides by construction. Further more, even modest adoption improves welfare if LUCID gives users a credible outside option that disciplines the terms on which private inclusion is offered.</p>
+  
+    <h4 id="protocol-welfare">
+      
+      
+        <a href="#protocol-welfare" class="anchor-link"></a> Protocol welfare
+      
+      
+    </h4>
+
+<p>LUCID protects autogenous MEV, offers a viable path for capturing endogenous MEV produced by decrypted transactions through pre-committed onchain routing and backrunning, and defers a large fraction of exogenous MEV competition to the post-ToB portion of the block where builder filtering already operates today. This is a gradual introduction of encrypted execution into the block, and can be adjusted further going forward. User welfare improves due to the outside option of a trustless, censorship-resistant inclusion path that complements rather than replaces private channels, and diciplines the terms on which those channels are offered.</p>
+
+<p>At the protocol level, the encrypted mempool yields additional structural benefits. It shrinks the share of economically meaningful activity that must route through trusted intermediaries, reducing Ethereum’s exposure to discretionary exclusion, single-point-of-failure outages, and opaque bilateral relationships that entrench incumbent builders. By lowering barriers to builder entry and weakening the competitive advantage conferred by exclusive order-flow access, LUCID helps preserve a level playing field in block construction.</p>
+
+<p>A consequence of commit-before-reveal execution is that some computation previously performed offchain by builders—settlement simulation, route selection, targeted state queries—moves onchain during the bounded ToB segment of the block. This may consume additional gas relative to a world in which a single intermediary filters and optimizes every transaction privately. However, this aligns well with Ethereum’s plans to scale compute over the next few years, and the cost is bounded by the <code class="language-plaintext highlighter-rouge">tob_gas_limit</code>. It is thus a limited cost for restoring public, composable, and permissionless competition over transaction execution. When the encrypted mempool is underutilized, the unused gas allocation does not encroach on the block gas limit, so regular transactions face no capacity reduction.</p>
+
+<p>In sum, LUCID increases protocol welfare by providing a public inclusion path that protects MEV-sensitive transactions—especially those carrying autogenous MEV whose informational content would be exploitable if disclosed in advance—while preserving full blockspace availability and keeping both inclusion paths open for users to choose between according to their own requirements.</p>
+  
+    <h3 id="key-publisher-liability-for-non-reveal">
+      
+      
+        <a href="#key-publisher-liability-for-non-reveal" class="anchor-link"></a> Key publisher liability for non-reveal
+      
+      
+    </h3>
+
+<p>To keep the first version of the design simple, there is no protocol-level mechanism for having key publishers of multi-key bundles assume liability (and thus incur the penalty) in place of the sender for failing to decrypt. Such a mechanism can be added in a subsequent upgrade. However, key publisher-sponsored liability can be approximated out-of-protocol by including a key publisher-funded sponsor ST in the bundle with the user STs.</p>
+
+<p>Each sender provides some agreed-upon <code class="language-plaintext highlighter-rouge">key_publication_fee = d</code>, and a minimal or 0 <code class="language-plaintext highlighter-rouge">max_tob_fee</code>. The key publisher includes in the bundle its own minimum-gas transaction with a <code class="language-plaintext highlighter-rouge">max_tob_fee</code> at a level of <code class="language-plaintext highlighter-rouge">n * d * TOB_FEE_FRACTION</code>, where <code class="language-plaintext highlighter-rouge">n</code> is the number of STs in the bundle, each paying <code class="language-plaintext highlighter-rouge">d</code>. Because bundle ordering uses the aggregate <code class="language-plaintext highlighter-rouge">tob_fee</code> of executable STs, the bundle now ranks as if the key publisher had posted that ToB fee on behalf of the users.</p>
+
+<p>If the bundle is revealed successfully, the sponsor ST receives back <code class="language-plaintext highlighter-rouge">(TOB_FEE_FRACTION - 1) / TOB_FEE_FRACTION</code> of its <code class="language-plaintext highlighter-rouge">tob_fee</code>, so its net ToB-fee burn is <code class="language-plaintext highlighter-rouge">n * d</code>. That exactly matches the aggregate key publication fees paid by the users. If the bundle is not revealed, the sponsor ST forfeits the full <code class="language-plaintext highlighter-rouge">n * d * TOB_FEE_FRACTION</code>, so the key publisher economically absorbs the non-reveal penalty.</p>
+
+<p>Since the sender still sets the <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code>, it does not assume additional risks if the key publisher reneges on its pledge to sponsor the ToB fee of the bundle as agreed upon. The mempool must naturally protect against spam and reject STs that have no chance of getting included. However, any ST can be validly included even with <code class="language-plaintext highlighter-rouge">max_tob_fee = 0</code>, and key publishers that encourage senders to produce STs relying on ToB fee sponsorship for inclusion—without performing such sponsorship—can also easily be filtered out.</p>
+  
+    <h3 id="ptc-influence-and-state-observation">
+      
+      
+        <a href="#ptc-influence-and-state-observation" class="anchor-link"></a> PTC influence and state observation
+      
+      
+    </h3>
+
+<p>A coalition of PTC members, potentially utilizing forked validator clients, could be bribed to systematically vote “timely” on keys originating from specific key publishers, artificially extending their permitted release window. An analogous concern exists today with the PTC vote on payload timeliness, but the payload vote is binary per slot: a few dishonest votes only affect the single question of whether an entire payload is accepted. In LUCID, key-timeliness votes are cast per ST-commitment, and multiple commitments may have keys arriving near the deadline. A few strategic votes can therefore tip the outcome more frequently, amplifying the expected value of bribery. The committee cannot alter the contents of a commitment, change the ordering of ST-commitments, or inject new transactions after commitment.</p>
+
+<p>Once the PTC key-timeliness votes have been observed, the builder knows which decrypted transactions must be included top-of-block. This fully determines the pre-state for the remainder of the block. The PTC vote on keys can realistically be positioned slightly earlier than the vote on the payload, given the small size of key messages, giving the builder additional construction time when the payload arrives well within its deadline.</p>
+
+<p>An alternative is to avoid a separate PTC vote on keys and instead rely on view-merge. Under this approach, the next-slot builder merges differing frozen views of released keys—for example by including missing keys in the block or by otherwise flagging adherence to them. This reduces the direct per-key voting surface and therefore the scope for bribery or collusive deadline extension by the PTC. The trade-off is that builders may have slightly different pre-states. They may then communicate their intended pre-state to relevant parties, and otherwise proceed with offchain filtering and reverts just like today.</p>
+  
+    <h3 id="alternative-specifications">
+      
+      
+        <a href="#alternative-specifications" class="anchor-link"></a> Alternative specifications
+      
+      
+    </h3>
+  
+    <h4 id="same-slot-decryption">
+      
+      
+        <a href="#same-slot-decryption" class="anchor-link"></a> Same-slot decryption
+      
+      
+    </h4>
+
+<p>A same-slot variant of LUCID is possible if the block is split into two independently propagated chunks. The first chunk contains the ST tickets and all ordinary transactions, and is delivered by the primary payload deadline. The second chunk contains decrypted transactions corresponding to ST-commitments already fixed in the bid and potentially additional regular transactions, and is delivered by the secondary payload deadline. Alternatively, ticket charging can be delayed until the second chunk. The builder still publishes its bid with ST-commitments in the beacon block, but would only construct the second chunk after key publishers have released keys.</p>
+
+<p>The design is inspired by semantic block chunking and the flow is as follows: The builder constructs the bid and the first chunk with ST tickets and regular transactions—including the BAL for executing them—without knowing the ST plaintexts. Once the scheduling beacon block becomes available, the first chunk is released and key publishers publish keys as in the baseline design. The builder decrypts the committed STs, constructs the second chunk including its own BAL, and propagates it while attesters are already validating or executing the first chunk. Decrypted transactions are ordered according to the same pattern as in the baseline design, matching the ST-commitments. The builder may be given the opportunity to include additional regular transactions in the second chunk, ensuring full block utilization under withheld keys. This would turn the design into a mix of block-auction and slot-auction ePBS.</p>
+
+<p>Once attesters have finished executing the first chunk, they switch over to executing the second chunk. The block is valid only if both chunks are timely, which is determined by a singular PTC vote at the deadline of the second chunk. Since the first chunk is committed to in the bid, the builder cannot change the regular transactions upon observing released keys. A benefit of the design is that the builder has responsibility for its included STs, from commitment to execution. A drawback is increased design complexity, requiring semantic block chunking.</p>
+  
+    <h4 id="frame-transaction-integration">
+      
+      
+        <a href="#frame-transaction-integration" class="anchor-link"></a> Frame transaction integration
+      
+      
+    </h4>
+
+<p>LUCID can be integrated with <a href="/EIPS/eip-8141">EIP-8141</a> by allowing <code class="language-plaintext highlighter-rouge">signature_id = FRAME_TX_TYPE</code> to indicate that the ST ticket has no standalone signature and must instead appear inside an enclosing frame transaction. In this mode, the frame transaction has a fixed layout: the first frame is a <code class="language-plaintext highlighter-rouge">VERIFY</code> frame that authenticates the outer frame transaction, and the second frame is a new <code class="language-plaintext highlighter-rouge">ST</code> frame whose <code class="language-plaintext highlighter-rouge">data</code> is the full <code class="language-plaintext highlighter-rouge">SealedTransaction</code> bytes. P2P nodes extract the <code class="language-plaintext highlighter-rouge">SealedTransaction</code> from the <code class="language-plaintext highlighter-rouge">ST</code> frame and otherwise validate it as they do today. The EL extracts the ST ticket from the ST and derives <code class="language-plaintext highlighter-rouge">ticket_from</code> and <code class="language-plaintext highlighter-rouge">ticket_nonce</code> from <code class="language-plaintext highlighter-rouge">tx.sender</code> and <code class="language-plaintext highlighter-rouge">tx.nonce</code> of the enclosing frame transaction respectively.</p>
+
+<p>Bundles can be supported similarly by introducing a reserved <code class="language-plaintext highlighter-rouge">ST_BUNDLE</code> frame whose <code class="language-plaintext highlighter-rouge">data</code> is the full <code class="language-plaintext highlighter-rouge">SealedBundle</code> bytes and adding <code class="language-plaintext highlighter-rouge">FRAME_TX_TYPE</code> as a valid <code class="language-plaintext highlighter-rouge">key_publisher_signature_id</code> in <code class="language-plaintext highlighter-rouge">SealedBundle</code>. Integration requires a future EIP making coordinated additions to both <a href="/EIPS/eip-8141">EIP-8141</a> and LUCID.</p>
+  
+    <h4 id="censorship-resistance-without-focil">
+      
+      
+        <a href="#censorship-resistance-without-focil" class="anchor-link"></a> Censorship resistance without FOCIL
+      
+      
+    </h4>
+
+<p>The design does not strictly require coupling with FOCIL for achieving a reasonable level of censorship resistance for MEV-inducing transactions. Such an integration can therefore be left out from the first implementation. Since the plaintext sender is hidden until reveal, a builder cannot generally censor based on the contents of the plaintext transaction or the identity of its eventual signer. Builders may still rely on a whitelist for visible ticket signers, but absent offsetting external incentives such a builder would be at a competitive disadvantage. It should also be noted that the key publisher is visible in the ST ticket, and some builder may decide to censor based on key publisher identities.</p>
+  
+    <h4 id="additional-bundle-and-key-options">
+      
+      
+        <a href="#additional-bundle-and-key-options" class="anchor-link"></a> Additional bundle and key options
+      
+      
+    </h4>
+
+<p>Two additional bundle and key options can be highlighted: single-key bundles that require all STs to be successfully decrypted, and multi-key bundles that allow any ST decryption to fail.</p>
+
+<ul>
+  <li>The single-key bundles can be useful for more elaborate schemes, for example under threshold decryption. TODO: expand upon various ideas under consideration.</li>
+  <li>Multi-key bundles that allow any ST decryption to fail are also viable. One example is again threshold decryption, where the key publisher cannot beforehand guarantee that the sender provided a correct decryptable ST. For these bundles, <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code> would count each committed ST in the bundle as a commitment.</li>
+</ul>
+
+<p>In the interest of forward-compatibility, a <code class="language-plaintext highlighter-rouge">schemeID</code> byte may be added to the <code class="language-plaintext highlighter-rouge">ciphertext_envelope</code> to facilitate decryption optionality.</p>
+  
+    <h4 id="trust-graph">
+      
+      
+        <a href="#trust-graph" class="anchor-link"></a> Trust graph
+      
+      
+    </h4>
+
+<p>One way to reduce the fee pressure created by <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code> is to distinguish between trusted and untrusted key publishers, inspired by the design proposed in <a href="/EIPS/eip-8105">EIP-8105</a>. The main residual front-running risk comes from earlier commitments whose key publishers the sender does not trust to avoid strategic withholding. Earlier commitments from trusted key publishers need not consume the same safety budget.</p>
+
+<p>A future version can therefore replace or complement <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code> with <code class="language-plaintext highlighter-rouge">max_preceding_untrusted_commitments</code>. Decryptors would be nodes in a directed trust graph maintained in a canonical registry of key publisher addresses and trust edges. A key publisher <code class="language-plaintext highlighter-rouge">A</code> trusts key publisher <code class="language-plaintext highlighter-rouge">B</code> if there is a path from <code class="language-plaintext highlighter-rouge">A</code> to <code class="language-plaintext highlighter-rouge">B</code> in that graph. For an ST or bundle using key publisher <code class="language-plaintext highlighter-rouge">A</code>, an earlier commitment from key publisher <code class="language-plaintext highlighter-rouge">B</code> counts toward the limit only if <code class="language-plaintext highlighter-rouge">A</code> does not trust <code class="language-plaintext highlighter-rouge">B</code>. Trust is directional: commitments from <code class="language-plaintext highlighter-rouge">B</code> may precede <code class="language-plaintext highlighter-rouge">A</code> without consuming <code class="language-plaintext highlighter-rouge">A</code>’s bound when <code class="language-plaintext highlighter-rouge">A</code> trusts <code class="language-plaintext highlighter-rouge">B</code>, but not vice versa unless <code class="language-plaintext highlighter-rouge">B</code> also trusts <code class="language-plaintext highlighter-rouge">A</code>.</p>
+
+<p>This allows users to delegate trust selection to their chosen key publisher instead of listing trusted third parties in every ST. It also reduces pressure toward a single dominant key publisher. For example, a small key publisher can trust a larger, widely used key publisher, allowing its users to be placed after that key publisher’s commitments without requiring those commitments to count against their safety bound. The difference to <a href="/EIPS/eip-8105">EIP-8105</a> is that there is no hard requirement that only trusted key publishers may execute before the transaction, unless <code class="language-plaintext highlighter-rouge">max_preceding_untrusted_commitments = 0</code>. This expansion is viable because of the additional steps that the design takes against probabilistic front-running, including the offchain decryption process. A few untrusted key publishers are therefore unlikely to be a concern for most users.</p>
+  
+    <h2 id="backwards-compatibility">
+      
+      
+        <a href="#backwards-compatibility" class="anchor-link"></a> Backwards Compatibility
+      
+      
+    </h2>
+
+<p>This EIP introduces backward-incompatible changes to both the consensus and execution layers and therefore requires a hard fork. It extends block validity rules, <code class="language-plaintext highlighter-rouge">ExecutionPayloadBid</code>, <code class="language-plaintext highlighter-rouge">ExecutionPayload</code>, <code class="language-plaintext highlighter-rouge">InclusionList</code>, the Engine API, beacon-chain RPC interfaces, and the P2P handling of inclusion lists, sealed transactions, bundles, keys, and key-timeliness votes. Clients that are not upgraded will not be able to validate or construct post-fork blocks correctly.</p>
+
+<p>This EIP does not remove or alter the semantics of existing plaintext transaction types. Legacy transactions and other non-LUCID transactions remain valid and retain their ordinary execution semantics. Users that do not opt into sealed transactions may continue to use the public mempool as before. Wallets, builders, relays, indexers, tracers, and RPC implementations that wish to support LUCID must add support for the new transaction types, commitment rules, and key-propagation flows, etc.</p>
+  
+    <h2 id="security-considerations">
+      
+      
+        <a href="#security-considerations" class="anchor-link"></a> Security Considerations
+      
+      
+    </h2>
+
+<p>Denial-of-service vectors for STs are instances with a low ToB fee and low <code class="language-plaintext highlighter-rouge">max_preceding_commitments</code>, particularly STs with these characteristics that are not intended to be bundled. Given that the utilization of the encrypted mempool is unknown—and may vary going forward—there are no fixed settings that can be established at this point for STs that should or should not be propagated. Furthermore, key publishers that establish a pattern of sponsorship as outlined in the Rationale may garner more permissive bounds during filtering.</p>
+
+<p>Users and wallets must treat the choice of key publishers as a security decision. They should prefer key publishers and encryption instructions that are publicly documented and audited.</p>
+
+<p>The DEM uses <code class="language-plaintext highlighter-rouge">ChaCha20-Poly1305</code>, which must not reuse the same <code class="language-plaintext highlighter-rouge">(k_dem, nonce)</code> pair across different ciphertexts. In this EIP, the DEM nonce is protocol-defined rather than chosen by the encryptor: for STs it is derived from <code class="language-plaintext highlighter-rouge">(chain_id, ticket_from, ticket_nonce)</code>. Decryptors and self-decrypting senders should therefore ensure that the released <code class="language-plaintext highlighter-rouge">k_dem</code> is bound to the intended ticket or bundle context, and that any reusable secret recovered from the opaque <code class="language-plaintext highlighter-rouge">header</code> is not itself revealed. Since the protocol fixes <code class="language-plaintext highlighter-rouge">aad = b""</code>, this binding must come from key derivation rather than AEAD associated data. Reuse of a <code class="language-plaintext highlighter-rouge">(k_dem, nonce)</code> pair can break confidentiality and integrity.</p>
+  
+    <h2 id="copyright">
+      
+      
+        <a href="#copyright" class="anchor-link"></a> Copyright
+      
+      
+    </h2>
+
+<p>Copyright and related rights waived via <a href="/LICENSE">CC0</a>.</p>
+
+  <h2>Citation</h2>
+  <p>Please cite this document as:</p>
+  
+  <p>Anders Elowsson&nbsp;(<a href="https://github.com/anderselowsson">@anderselowsson</a>), Justin Florentine&nbsp;(<a href="https://github.com/jflo">@jflo</a>), Julian Ma&nbsp;(<a href="https://github.com/ma-julian">@ma-julian</a>), "EIP-8184: LUCID encrypted mempool [DRAFT]," <em>Ethereum Improvement Proposals</em>, no. 8184, March 2026. Available: https://eips.ethereum.org/EIPS/eip-8184.</p>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "TechArticle",
+    "headline": "EIP-8184: LUCID encrypted mempool [DRAFT]",
+    "name": "EIP-8184: LUCID encrypted mempool [DRAFT]",
+    "author": "Anders Elowsson (@anderselowsson), Justin Florentine (@jflo), Julian Ma (@ma-julian)",
+    "dateCreated": "2026-03-04",
+    "datePublished": "2026-03-04",
+    
+    "discussionUrl": "https://ethereum-magicians.org/t/eip-8184-lucid-encrypted-mempool/28017",
+    
+    "inLanguage": "en-US",
+    "license": "#copyright",
+    "copyrightYear": "2026"
+  }
+</script>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ethereum Improvement Proposals</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ethereum Improvement Proposals</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ethereum/EIPs"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ethereum/EIPs</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+HTTP/1.1 200 Connection established
+
+HTTP/2 200 
+date: Sun, 05 Jul 2026 16:48:25 GMT
+content-type: text/html; charset=utf-8
+x-powered-by: Express
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+x-xss-protection: 1; mode=block
+set-cookie: _csrf=TZIgSMrUSqk6hm1dqe2Y22Wg; Path=/; Secure
+set-cookie: locale=dev; path=/; expires=Mon, 05 Jul 2027 16:48:25 GMT; secure
+set-cookie: connect.sid=s%3As4wVNfvwy8vZgOn-NYIhM_CYe-gYkgjx.SUzoV65K0QosP8xEinfEf7sKzUhlUc5JkJwM7jNHmS4; Path=/; Expires=Sun, 19 Jul 2026 16:48:25 GMT; HttpOnly; Secure
+content-language: dev
+cache-control: private
+etag: W/"ffd8-5Rx74VOFBp0o2FAvAw2J9d++px8"
+vary: Accept-Encoding
+cf-cache-status: DYNAMIC
+server: cloudflare
+cf-ray: a167db708cb8c02f-ICN
+

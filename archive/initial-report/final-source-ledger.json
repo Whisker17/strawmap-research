@@ -1,0 +1,415 @@
+[
+  {
+    "id": 1,
+    "line": "- [S1] Strawmap landing page and FAQ, `https://strawmap.org/`, local HTTP 200 export, accessed 2026-07-06.",
+    "url": "https://strawmap.org/",
+    "status": "HTTP/2 200 ",
+    "title": "L1 Strawmap — Ethereum Draft Roadmap"
+  },
+  {
+    "id": 2,
+    "line": "- [S2] Strawmap Google Drawing export, `https://docs.google.com/drawings/d/1GkcGfQv9kxgrYQMyu0BYGcZya0gIDG_wQ7GsFJEsdzY/export/png`, accessed 2026-07-06.",
+    "url": "https://docs.google.com/drawings/d/1GkcGfQv9kxgrYQMyu0BYGcZya0gIDG_wQ7GsFJEsdzY/export/png",
+    "status": "HTTP/2 200 ",
+    "title": ""
+  },
+  {
+    "id": 3,
+    "line": "- [S3] EIP-7773 Hardfork Meta - Glamsterdam, `https://eips.ethereum.org/EIPS/eip-7773`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7773",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7773: Hardfork Meta - Glamsterdam"
+  },
+  {
+    "id": 4,
+    "line": "- [S4] EIP-8081 Hardfork Meta - Hegotá, `https://eips.ethereum.org/EIPS/eip-8081`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8081",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8081: Hardfork Meta - Hegotá"
+  },
+  {
+    "id": 5,
+    "line": "- [S5] EIP-7723 process/status definitions, `https://eips.ethereum.org/EIPS/eip-7723`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7723",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7723: Network Upgrade Inclusion Stages"
+  },
+  {
+    "id": 6,
+    "line": "- [S6] Fast Confirmation Rule, `https://fastconfirm.it`.",
+    "url": "https://fastconfirm.it",
+    "status": "HTTP/2 200 ",
+    "title": "FCR — Fast Confirmation Rule for Ethereum | Single-Slot Confirmation"
+  },
+  {
+    "id": 7,
+    "line": "- [S7] EIP-8198 Quick Slots, `https://eips.ethereum.org/EIPS/eip-8198`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8198",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8198: Quick Slots"
+  },
+  {
+    "id": 8,
+    "line": "- [S8] EIP-7732 Enshrined Proposer-Builder Separation, `https://eips.ethereum.org/EIPS/eip-7732`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7732",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7732: Enshrined Proposer-Builder Separation"
+  },
+  {
+    "id": 9,
+    "line": "- [S9] EIP-7805 FOCIL, `https://eips.ethereum.org/EIPS/eip-7805`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7805",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)"
+  },
+  {
+    "id": 10,
+    "line": "- [S10] EIP-7594 PeerDAS, `https://eips.ethereum.org/EIPS/eip-7594`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7594",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7594: PeerDAS - Peer Data Availability Sampling"
+  },
+  {
+    "id": 11,
+    "line": "- [S11] EIP-7691 Blob throughput increase, `https://eips.ethereum.org/EIPS/eip-7691`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7691",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7691: Blob throughput increase"
+  },
+  {
+    "id": 12,
+    "line": "- [S12] EIP-7892 Blob-parameter-only forks, `https://eips.ethereum.org/EIPS/eip-7892`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7892",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7892: Blob Parameter Only Hardforks"
+  },
+  {
+    "id": 13,
+    "line": "- [S13] EIP-8070 Sparse Blobpool, `https://eips.ethereum.org/EIPS/eip-8070`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8070",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8070: eth/72 - Sparse Blobpool"
+  },
+  {
+    "id": 14,
+    "line": "- [S14] EIP-8136 Cell-Level Deltas, `https://eip.tools/eip/8136`.",
+    "url": "https://eip.tools/eip/8136",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8136: Cell-Level Deltas for Data Column Broadcast | EIP.tools"
+  },
+  {
+    "id": 15,
+    "line": "- [S15] Blob streaming HackMD / EIP-Blob-streaming, `https://hackmd.io/@gMH0wL_0Sr69C7I7inO8MQ/B125sCUtZx`.",
+    "url": "https://hackmd.io/@gMH0wL_0Sr69C7I7inO8MQ/B125sCUtZx",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-Blob-streaming - HackMD"
+  },
+  {
+    "id": 16,
+    "line": "- [S16] EIP-7918 Blob base fee bounded by execution cost, `https://eips.ethereum.org/EIPS/eip-7918`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7918",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7918: Blob base fee bounded by execution cost"
+  },
+  {
+    "id": 17,
+    "line": "- [S17] EIP-7999 Unified multidimensional fee market, `https://eips.ethereum.org/EIPS/eip-7999`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7999",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7999: Unified multidimensional fee market"
+  },
+  {
+    "id": 18,
+    "line": "- [S18] Hegotá Repricings, `https://misilva73.github.io/hegota-repricings/`.",
+    "url": "https://misilva73.github.io/hegota-repricings/",
+    "status": "HTTP/2 200 ",
+    "title": "Hegota Repricings"
+  },
+  {
+    "id": 19,
+    "line": "- [S19] EIP-7938 Exponential Gas Limit Increase, `https://eips.ethereum.org/EIPS/eip-7938`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7938",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7938: Exponential Gas Limit Increase"
+  },
+  {
+    "id": 20,
+    "line": "- [S20] EIP-7928 Block-Level Access Lists, `https://eips.ethereum.org/EIPS/eip-7928`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7928",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7928: Block-Level Access Lists"
+  },
+  {
+    "id": 21,
+    "line": "- [S21] EIP-8131 transaction-content byte floor, `https://raw.githubusercontent.com/ethereum/EIPs/master/EIPS/eip-8131.md`.",
+    "url": "https://raw.githubusercontent.com/ethereum/EIPs/master/EIPS/eip-8131.md",
+    "status": "HTTP/2 200 ",
+    "title": ""
+  },
+  {
+    "id": 22,
+    "line": "- [S22] EIP-8279 BAL byte floor, `https://raw.githubusercontent.com/ethereum/EIPs/master/EIPS/eip-8279.md`.",
+    "url": "https://raw.githubusercontent.com/ethereum/EIPs/master/EIPS/eip-8279.md",
+    "status": "HTTP/2 200 ",
+    "title": ""
+  },
+  {
+    "id": 23,
+    "line": "- [S23] EIP-8311 calldata repricing, `https://raw.githubusercontent.com/ethereum/EIPs/master/EIPS/eip-8311.md`.",
+    "url": "https://raw.githubusercontent.com/ethereum/EIPs/master/EIPS/eip-8311.md",
+    "status": "HTTP/2 200 ",
+    "title": ""
+  },
+  {
+    "id": 24,
+    "line": "- [S24] EIP-8025 Optional Execution Proofs, `https://eips.ethereum.org/EIPS/eip-8025`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8025",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8025: Optional Execution Proofs"
+  },
+  {
+    "id": 25,
+    "line": "- [S25] ethp2p repo, HEAD `741d8d9cf682ff93b7d8eb56e0377ba8eea83a7e`, `https://github.com/ethp2p/ethp2p`.",
+    "url": "https://github.com/ethp2p/ethp2p",
+    "status": "HTTP/2 200 ",
+    "title": "GitHub - ethp2p/ethp2p: ethp2p is a next-generation p2p networking stack purpose-built for Ethereum · GitHub"
+  },
+  {
+    "id": 26,
+    "line": "- [S26] Verified-zkEVM/evm-asm repo, HEAD `864fbe8ced0dee1bf5d4371b72d025a5a9319f97`, `https://github.com/Verified-zkEVM/evm-asm`.",
+    "url": "https://github.com/Verified-zkEVM/evm-asm",
+    "status": "HTTP/2 200 ",
+    "title": "GitHub - Verified-zkEVM/evm-asm · GitHub"
+  },
+  {
+    "id": 27,
+    "line": "- [S27] EIP-8200 EVMification, `https://eips.ethereum.org/EIPS/eip-8200`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8200",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8200: EVMification"
+  },
+  {
+    "id": 28,
+    "line": "- [S28] EIP-8141 Frame Transaction, `https://eips.ethereum.org/EIPS/eip-8141`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8141",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8141: Frame Transaction"
+  },
+  {
+    "id": 29,
+    "line": "- [S29] EIP-8250 Keyed Nonces for Frame Transactions, `https://eips.ethereum.org/EIPS/eip-8250`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8250",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8250: Keyed Nonces for Frame Transactions"
+  },
+  {
+    "id": 30,
+    "line": "- [S30] EIP-8272 Recent Roots for Frame Transactions, `https://eips.ethereum.org/EIPS/eip-8272`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8272",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8272: Recent Roots for Frame Transactions"
+  },
+  {
+    "id": 31,
+    "line": "- [S31] EIP-8079 Native rollups, `https://eips.ethereum.org/EIPS/eip-8079`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8079",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8079: Native rollups"
+  },
+  {
+    "id": 32,
+    "line": "- [S32] EIP-8142 Block-in-Blobs, `https://eips.ethereum.org/EIPS/eip-8142`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8142",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8142: Block-in-Blobs (BiB)"
+  },
+  {
+    "id": 33,
+    "line": "- [S33] VOPS research, `https://ethresear.ch/t/a-pragmatic-path-towards-validity-only-partial-statelessness-vops/22236`.",
+    "url": "https://ethresear.ch/t/a-pragmatic-path-towards-validity-only-partial-statelessness-vops/22236",
+    "status": "HTTP/2 200 ",
+    "title": "A pragmatic path towards Validity-Only Partial Statelessness (VOPS) - Execution Layer Research - Ethereum Research"
+  },
+  {
+    "id": 34,
+    "line": "- [S34] Hyper-scaling state research, `https://ethresear.ch/t/hyper-scaling-state-by-creating-new-forms-of-state/24052`.",
+    "url": "https://ethresear.ch/t/hyper-scaling-state-by-creating-new-forms-of-state/24052",
+    "status": "HTTP/2 200 ",
+    "title": "Hyper-scaling state by creating new forms of state - Ethereum Research"
+  },
+  {
+    "id": 35,
+    "line": "- [S35] EIP-7919 Pureth Meta, `https://eips.ethereum.org/EIPS/eip-7919`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-7919",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7919: Pureth Meta"
+  },
+  {
+    "id": 36,
+    "line": "- [S36] EIP-8184 LUCID encrypted mempool, `https://eips.ethereum.org/EIPS/eip-8184`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8184",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8184: LUCID encrypted mempool"
+  },
+  {
+    "id": 37,
+    "line": "- [S37] EIP-8077 announce transactions with nonce, `https://eips.ethereum.org/EIPS/eip-8077`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8077",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8077: eth/XX - announce transactions with nonce"
+  },
+  {
+    "id": 38,
+    "line": "- [S38] PQ public-key registry research, `https://ethresear.ch/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040`.",
+    "url": "https://ethresear.ch/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040",
+    "status": "HTTP/2 200 ",
+    "title": "Exploring the Design Space for a Post-Quantum Public Key Registry for Ethereum Validators - Cryptography - Ethereum Research"
+  },
+  {
+    "id": 39,
+    "line": "- [S39] Dynamic availability / PQ heartbeat research, `https://ethresear.ch/t/why-ethereum-needs-a-dynamically-available-protocol/24418`.",
+    "url": "https://ethresear.ch/t/why-ethereum-needs-a-dynamically-available-protocol/24418",
+    "status": "HTTP/2 200 ",
+    "title": "Why Ethereum Needs a Dynamically Available Protocol - Consensus - Ethereum Research"
+  },
+  {
+    "id": 40,
+    "line": "- [S40] Lean Ethereum EF post, `https://blog.ethereum.org/2025/07/31/lean-ethereum`.",
+    "url": "https://blog.ethereum.org/2025/07/31/lean-ethereum",
+    "status": "HTTP/2 200 ",
+    "title": "lean Ethereum | Ethereum Foundation Blog"
+  },
+  {
+    "id": 41,
+    "line": "- [S41] leanEthereum/leanMultisig / leanVM repo, HEAD `12e61512416548e743040aab4daf83c58a5c5476`, `https://github.com/leanEthereum/leanMultisig`.",
+    "url": "https://github.com/leanEthereum/leanMultisig",
+    "status": "HTTP/2 301 ",
+    "title": "GitHub - leanEthereum/leanVM: Minimal zkVM for Ethereum. · GitHub"
+  },
+  {
+    "id": 42,
+    "line": "- [S42] Ephemeral keys and account abstraction research, `https://ethresear.ch/t/achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction/24273`.",
+    "url": "https://ethresear.ch/t/achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction/24273",
+    "status": "HTTP/2 200 ",
+    "title": "Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction - Cryptography - Ethereum Research"
+  },
+  {
+    "id": 43,
+    "line": "- [S43] RISC-V execution-layer proposal, `https://ethereum-magicians.org/t/long-term-l1-execution-layer-proposal-replace-the-evm-with-risc-v/23617`.",
+    "url": "https://ethereum-magicians.org/t/long-term-l1-execution-layer-proposal-replace-the-evm-with-risc-v/23617",
+    "status": "HTTP/2 200 ",
+    "title": "Long-term L1 execution layer proposal: replace the EVM with RISC-V - Primordial Soup - Fellowship of Ethereum Magicians"
+  },
+  {
+    "id": 44,
+    "line": "- [S44] One-round finality note, `https://notes.ethereum.org/@yannvon/S1wIxIDqbe`.",
+    "url": "https://notes.ethereum.org/@yannvon/S1wIxIDqbe",
+    "status": "HTTP/2 200 ",
+    "title": "All You Need to Know About One-Round Finality - HackMD"
+  },
+  {
+    "id": 45,
+    "line": "- [S45] ethereum.org single-slot finality page, `https://ethereum.org/roadmap/single-slot-finality/`.",
+    "url": "https://ethereum.org/roadmap/single-slot-finality/",
+    "status": "HTTP/2 200 ",
+    "title": "Single slot finality | ethereum.org"
+  },
+  {
+    "id": 46,
+    "line": "- [S46] ethereum.org quantum-resistance roadmap, `https://ethereum.org/roadmap/future-proofing/quantum-resistance/`.",
+    "url": "https://ethereum.org/roadmap/future-proofing/quantum-resistance/",
+    "status": "HTTP/2 200 ",
+    "title": "Post-quantum cryptography on Ethereum | ethereum.org"
+  },
+  {
+    "id": 47,
+    "line": "- [S47] EIP-8007 Glamsterdam Gas Repricings, `https://eips.ethereum.org/EIPS/eip-8007`.",
+    "url": "https://eips.ethereum.org/EIPS/eip-8007",
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8007: Glamsterdam Gas Repricings"
+  },
+  {
+    "id": 48,
+    "line": "- [S48] Orbit SSF validator-set management research, `https://ethresear.ch/t/orbit-ssf-solo-staking-friendly-validator-set-management-for-ssf/19928`.",
+    "url": "https://ethresear.ch/t/orbit-ssf-solo-staking-friendly-validator-set-management-for-ssf/19928",
+    "status": "HTTP/2 200 ",
+    "title": "Orbit SSF: solo-staking-friendly validator set management for SSF - Economics - Ethereum Research"
+  },
+  {
+    "id": 49,
+    "line": "- [S49] Practical endgame on issuance policy, `https://ethresear.ch/t/practical-endgame-on-issuance-policy/20747`.",
+    "url": "https://ethresear.ch/t/practical-endgame-on-issuance-policy/20747",
+    "status": "HTTP/2 200 ",
+    "title": "Practical endgame on issuance policy - Economics - Ethereum Research"
+  },
+  {
+    "id": 50,
+    "line": "- [S50] Timeliness detectors and 51% attack recovery, `https://ethresear.ch/t/timeliness-detectors-and-51-attack-recovery-in-blockchains/6925`.",
+    "url": "https://ethresear.ch/t/timeliness-detectors-and-51-attack-recovery-in-blockchains/6925",
+    "status": "HTTP/2 200 ",
+    "title": "Timeliness detectors and 51% attack recovery in blockchains - Proof-of-Stake - Ethereum Research"
+  },
+  {
+    "id": 51,
+    "line": "- [S51] Minimal VDF randomness beacon, `https://ethresear.ch/t/minimal-vdf-randomness-beacon/3566`.",
+    "url": "https://ethresear.ch/t/minimal-vdf-randomness-beacon/3566",
+    "status": "HTTP/2 200 ",
+    "title": "Minimal VDF randomness beacon - Sharding - Ethereum Research"
+  },
+  {
+    "id": 52,
+    "line": "- [S52] Whisk practical shuffle-based SSLE, `https://ethresear.ch/t/whisk-a-practical-shuffle-based-ssle-protocol-for-ethereum/11763`.",
+    "url": "https://ethresear.ch/t/whisk-a-practical-shuffle-based-ssle-protocol-for-ethereum/11763",
+    "status": "HTTP/2 200 ",
+    "title": "Whisk: A practical shuffle-based SSLE protocol for Ethereum - Consensus - Ethereum Research"
+  },
+  {
+    "id": 53,
+    "line": "- [S53] Secret non-single leader election, `https://ethresear.ch/t/secret-non-single-leader-election/11789`.",
+    "url": "https://ethresear.ch/t/secret-non-single-leader-election/11789",
+    "status": "HTTP/2 200 ",
+    "title": "Secret non-single leader election - Proof-of-Stake - Ethereum Research"
+  },
+  {
+    "id": 54,
+    "line": "- [S54] On in-protocol gas futures, `https://ethresear.ch/t/on-in-protocol-gas-futures/23698`.",
+    "url": "https://ethresear.ch/t/on-in-protocol-gas-futures/23698",
+    "status": "HTTP/2 200 ",
+    "title": "On In-Protocol Gas Futures - Economics - Ethereum Research"
+  },
+  {
+    "id": 55,
+    "line": "- [S55] How to purchase Ethereum GAS in advance, `https://ethresear.ch/t/how-to-purchase-ethereum-gas-in-advance/19069`.",
+    "url": "https://ethresear.ch/t/how-to-purchase-ethereum-gas-in-advance/19069",
+    "status": "HTTP/2 200 ",
+    "title": "How to purchase Ethereum GAS in advance - Applications - Ethereum Research"
+  },
+  {
+    "id": 56,
+    "line": "- [S56] Towards Attester-Includer Separation, `https://ethresear.ch/t/towards-attester-includer-separation/21306/1`.",
+    "url": "https://ethresear.ch/t/towards-attester-includer-separation/21306/1",
+    "status": "HTTP/2 200 ",
+    "title": "Towards Attester-Includer Separation - Proof-of-Stake - Ethereum Research"
+  },
+  {
+    "id": 57,
+    "line": "- [S57] Unblocking faster finality with decoupled consensus, `https://ethresear.ch/t/unblocking-faster-finality-with-decoupled-consensus/24527/1`.",
+    "url": "https://ethresear.ch/t/unblocking-faster-finality-with-decoupled-consensus/24527/1",
+    "status": "HTTP/2 200 ",
+    "title": "Unblocking faster finality with decoupled consensus - Consensus - Ethereum Research"
+  },
+  {
+    "id": 58,
+    "line": "- [S58] Horn: collecting signatures for faster finality, `https://ethresear.ch/t/horn-collecting-signatures-for-faster-finality/14219`.",
+    "url": "https://ethresear.ch/t/horn-collecting-signatures-for-faster-finality/14219",
+    "status": "HTTP/2 200 ",
+    "title": "Horn: Collecting signatures for faster finality - Consensus - Ethereum Research"
+  },
+  {
+    "id": 59,
+    "line": "- [S59] LMD GHOST with 256 validators and a fast-following finality gadget, `https://ethresear.ch/t/lmd-ghost-with-256-validators-and-a-fast-following-finality-gadget/22856`.",
+    "url": "https://ethresear.ch/t/lmd-ghost-with-256-validators-and-a-fast-following-finality-gadget/22856",
+    "status": "HTTP/2 200 ",
+    "title": "LMD GHOST with ~256 validators and a fast-following finality gadget - Ethereum Research"
+  }
+]

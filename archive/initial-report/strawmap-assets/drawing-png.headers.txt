@@ -1,0 +1,47 @@
+HTTP/1.1 200 Connection established
+
+HTTP/2 307 
+content-type: application/binary
+x-robots-tag: noindex, nofollow, nosnippet
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+pragma: no-cache
+expires: Mon, 01 Jan 1990 00:00:00 GMT
+date: Sun, 05 Jul 2026 16:43:43 GMT
+location: https://doc-0s-6g-drawings.googleusercontent.com/export/v7g5ustuhk8vtka1g3l436kimk/0a46s005326tk2s44tuj9eddgg/1783269820000/110474004051498283290/*/1GkcGfQv9kxgrYQMyu0BYGcZya0gIDG_wQ7GsFJEsdzY?exportFormat=png
+p3p: CP="This is not a P3P policy! See g.co/p3phelp for more info."
+cross-origin-resource-policy: cross-origin
+content-security-policy: require-trusted-types-for 'script';report-uri https://csp.withgoogle.com/csp/docs-tt
+content-security-policy: base-uri 'self';object-src 'self' blob:;report-uri https://docs.google.com/drawings/cspreport;script-src 'nonce-9uzK8N72SW9iNslwmLAtUw' 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval'
+server: ESF
+content-length: 0
+x-xss-protection: 0
+x-frame-options: SAMEORIGIN
+x-content-type-options: nosniff
+set-cookie: COMPASS=drawings=CmEACWuJV7ktigbZ5O6-XlxYpMmgacUpHRXvtSPJE8JP6WX8OXBtAKh94ll33sIrjA_ONF9K2c7tYvnMa7EMie4psEOeZjaL6S84tWnMJI4FtT7NLQ3Bd7Lr3-OwjYye3_f7EM-vqtIGGnIACWuJV20Pz78fR27DVwsLaj4qvRhKdBoQWzSCMC22ZB05l5fsCQvQwS8RFqBzfRQC-m1A4iif7ySDYSeXbmnQS8cTNkJf_SX2F3eehk3Xk7SvDX9ygepsPCH0Bdzbo4fvDj5e9AedcLgmBQIJl7cQeao=; Domain=.docs.google.com; Expires=Sun, 05-Jul-2026 17:43:43 GMT; Path=/drawings/d/1GkcGfQv9kxgrYQMyu0BYGcZya0gIDG_wQ7GsFJEsdzY; Secure; HttpOnly; SameSite=none
+set-cookie: NID=532=mVW-AuX79a7Cvt7Rsu-wO9K6cJO_N_pg3jRzRPCwaGXMrEc5TI4GVvKQ1zI-SjurG8xABxHUaTpVEsOxuxNCzOU16Qx5grR6iI504DaJDI3itxrgrb9QBfW5Td7Aki55dV0TreUIsz4TISuXkhhaJT3pO_I1FERQiLN0IERT3IgziH4pHpwXeFIy9L09-Wr69lA; expires=Mon, 04-Jan-2027 16:43:43 GMT; path=/; domain=.google.com; HttpOnly
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+
+HTTP/1.1 200 Connection established
+
+HTTP/2 200 
+content-type: image/png
+x-robots-tag: noindex, nofollow, nosnippet
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+pragma: no-cache
+expires: Mon, 01 Jan 1990 00:00:00 GMT
+date: Sun, 05 Jul 2026 16:43:44 GMT
+content-disposition: attachment; filename="L1protocolstrawmanroadmap.png"; filename*=UTF-8''L1%20protocol%20strawman%20roadmap.png
+access-control-allow-origin: *
+access-control-expose-headers: Cache-Control,Content-Disposition,Content-Length,Content-Type,Date,Expires,Pragma,Server
+cross-origin-resource-policy: cross-origin
+content-security-policy: require-trusted-types-for 'script';report-uri https://csp.withgoogle.com/csp/docs-tt
+content-security-policy: frame-ancestors 'self' https://docs.google.com
+content-security-policy: base-uri 'self';object-src 'self' blob:;report-uri https://doc-0s-6g-drawings.googleusercontent.com/drawings/cspreport;script-src 'nonce-GNnI1wa_RyVlNRU482dMRQ' 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval'
+reporting-endpoints: default="/web-reports?bl=editors.drawings-frontend_20260624.00_p3&context=eJwVz3lUVfUWB_DjOb_zPaCgTJcpme7VIFE0NS25SnC5gLhC0VfHbHoYSpoCIQI55VBW-lLL1zN7vUQvKImQhpRpZg9ZoeYTMjJxBGSQWaYEFHnf_visvb7ru9deaw-vNNhLurTPTpfODtelzBG6VEBFDrpkc9Kl-266FGjQpVL62kOXPvHUpee8dSnHV5eCJzCH6NKeMF3KI1uULh2fz10KXKhL00l5UZdcqWKRLlXTHwm61Ej2ibrkRV1LdUlO0qXzy3Wpiq5u1KW79PRHuhRDjz7TpZF7dcntqC6NoYpy3qFZFboUR3vqdOkQfVOvSyX0M12h30e3yH20eVyLvI08artkP9of0i1_Rf2x3fKwOd1yzZO9chNd39Qr36GP3rwvf0o3zX1yPeXN7JOP0uSlffIMur-tTx6iGRf65QjKdBmQ36GD2QNyIcUteiS_QIukIXkx5Y0eko_SxawhuZIyqiVlA_UfGKZMzRmmmCkzW1beofZSWckLUpSj5LdAUQLpzN8UpYySNilKCiW9ryhpdKFeUS7TzuFCOeYvlO_J3DFDRNLlzlBxjUrmmkX7HrP4k9YfMYv3qG76TNFK0mczxQjyuhgmAqimIkw00QqfcJFOZTHh4jJ5zQkXAfRCRIR4ldauixBb6AsPi8ihR_MsAvEWUZ9qEW10PcMi7pD7UYvwpYJiizCdjxTBNIcW0CpaS7lUQEOdkULrihSNPlbRQQ-XWYVYbhXPvGUV4VR32ipaqbLBKm5QxVNR4iqZ-qJFMJX2R4ty2mqIEePejBGTaYrrbBFKHl6zhZH-ocWKf1LK3H1q4IJ96kT6-3f71Dfo4YxsNaAnW32Cnnp1v5o694CaRWfcbGoZjb1hUydQb4dNHaQ7b-SoLRS1IkeNI--6HNVINe_mqk2U_EGumkE5x3LVI1QTd1BtouWnD6qradO7h9QPaZlfnvoWzXsxT11IJUfy1J-bDquXaPmEfHU11cTmq01kH5evOtMrG_LVNyhhZ4E68vVC1Z2urCxUb9GWjGZ1O_Wcb1Ef0smqFrWEfghrVUspKbtVvfR9q3qFokta1bn01sI29W1K-bxNzaRRuUOqMy0YGIGFdDbPAb_QF6MckUN9xx0hFTti2wlHfEJFTY44RS2lI9FNe78chf00ZZ4TksY5I4Wef9YZLxU543WyTHLBHNpudcFuOpXggrMUUuiCadQW4Ipe2jDOFVupbLorykk87QoHClvsimhKvumGDIqPM-BF-uFtA0rp5BoDSv5y2IAL1G12xwOaeMAd0-n36-64SftuuOMQnYAHfqLJKzwwg9J3e2AdrRnywGZq8_dEL61e6on1JAo94UDnyjxRQWNsXhhPz7zjjXAq2-aNcjL0ecOHVux6DOlUNns0LpKhdDR86ONXfLCXqq_44C515_ui9povGmnHDV_sJrcOX4ymsZ2-GEdvdvkilb5-yQ9FS_1wgr7a4IdCuqT44zcyaf4IpsTX_LGCMpf749oJf9TS--f8sZNMnwYgmGy2AOTTkpoArKR7wUb00Q8TjSilL6ONsNG_t3JS-QdG_EGPZRthItv_jMijpEtGrKCbVEu-5ezpBtXQ1gojnnhkxJO012zCfrr2vAm3KTfdhALyWGNCEZ2g1LUmrKbidSacpD2VJuyj8WMex1RqeOFxtNP23kDsoloRhGYyIAg-5KQFwZNuOQahgXqdgjBAWc5BWE-x44MwnzxsQfCj1itB6KGtDUHYQZekUBw6GIrb-aFopO3HQrGLyqmSrn4TiptkKwpFHj2IM0OZa8bJejNKyHnIDC-q-HQmrlLjh7PQQacHZqHFPgzdNL30WYRR2n_CsYbG_hqOCWRtDsdzdDE_AupKCxzp3CoLKsiQZYEPndvMTCF1FkyhJe6RWEkRHZGIpf1rrZjhGoUI2rkxCnvogS0KSk4UvDuj4EdzzdFISI_GMvoxPxo_0_aqaOymvupoSDXR0EJiMIqGbsdAq46Bs_1seNGpnbX4iQra76CYzo-uwyUqnFeHb-l6fB3u0KL-Oiym-WPrsUNtwL8ocXYDhn3VAHsKyW_ANKpqb8AtejC7EUpsI3rjGjFIv-bcRRVFlNyFd2ATjNTzRzP6_9LajGFtzUh2bkEGrY5vheOJVhioPqYNbZS8pA0Z9MTVNjxJCeZ2LKNjz3Tgg80dWH28A-sp9tV7mE9FS-_hFMXbdUKEdqHP3AVpZhd-i-_mT924Et-DW7TL1oO0oh5kUuonvciiQ7t7cYR8qv6Ekawv38dzVN1zH90DfXhA67z68S7J1n4Mp5ev9iOR8gsHUERa0UOMosOGQXxDnQmD6KeWLwZxj2qPD6KZLg8N4hrNUh4higI9hzCRSiySdoFmHhimWclUKWvBNNVD0czk4K1obvRhotA-psunhXaN1v4mtC00xqxq4-m_odDO09kN0H6hrC5oG6nK1U67Rb1ddlrN2BGaPHWEptGpQAftLNlVOmhOVPD4SK2Y7MaN1Jxo4edOWnGuk_ad6qydoaZCZ62TCn1ctO-pIMNNK6bFGz205fSZ0VPLpobTnlo7PbjtqYn7npo9vR3ppW2imCwvbR596_2Y9iOln_HV1tG2Dl9tB7k42JXsPnwZTtX5RccUb1izUlPS0o1BSxKXpaekrQpJTEvIXJactGrC0rSU5PQlyYmvTZ40edqkaZOnhkya9FrqlP8D1e332Q&build-label=editors.drawings-frontend_20260624.00_p3&imp-sid=CM6pyeT9u5UDFYYtqQEdo34qRQ&is-cached-offline=false&wcrumsspbp=true"
+document-policy: include-js-call-stacks-in-crash-reports
+x-frame-options: ALLOW-FROM https://docs.google.com
+server: ESF
+x-xss-protection: 0
+x-content-type-options: nosniff
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+

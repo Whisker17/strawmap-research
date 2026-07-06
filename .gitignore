@@ -1,0 +1,12 @@
+node_modules
+.next
+.qa
+out
+.vercel
+.react-doctor-report.json
+pnpm-debug.log*
+*.tsbuildinfo
+
+# Local tooling / hidden workspace (machine-specific, not for remote)
+.codegraph
+.omo/

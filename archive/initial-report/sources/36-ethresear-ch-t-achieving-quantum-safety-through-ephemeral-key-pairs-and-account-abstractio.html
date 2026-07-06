@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction - Cryptography - Ethereum Research</title>
+    <meta name="description" content="Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction
+Thanks to @abaiocchi for his contributions and to @asanso for his feedback 
+Abstract
+We propose a quantum-safe wallet design that requires no c&amp;hellip;">
+    <meta name="generator" content="Discourse 3.5.2 - https://github.com/discourse/discourse version cc8d3f6f74bb618b3594ddc8fabcfd7663f63723">
+<link rel="icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/b/b5d7a1aa2f70490e3de763bef97271864784994f_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/3/3483ad4ffed2ab2b130f3e81fdb188ea2c478643_2_180x180.png">
+<meta name="theme-color" media="all" content="#fff">
+
+<meta name="color-scheme" content="light">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://ethresear.ch/t/achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction/24273" />
+
+<link rel="search" type="application/opensearchdescription+xml" href="https://ethresear.ch/opensearch.xml" title="Ethereum Research Search">
+
+    <link href="/stylesheets/color_definitions_light-default_-1_2_d93422173e6af31573562c9ff4e20afcb8a5ec7d.css?__ws=ethresear.ch" media="all" rel="stylesheet" class="light-scheme"/>
+
+<link href="/stylesheets/common_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common"  />
+
+  <link href="/stylesheets/desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop"  />
+
+
+
+    <link href="/stylesheets/checklist_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="checklist"  />
+    <link href="/stylesheets/discourse-details_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-details"  />
+    <link href="/stylesheets/discourse-graphviz_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-graphviz"  />
+    <link href="/stylesheets/discourse-lazy-videos_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+    <link href="/stylesheets/discourse-local-dates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+    <link href="/stylesheets/discourse-math_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-math"  />
+    <link href="/stylesheets/discourse-narrative-bot_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+    <link href="/stylesheets/discourse-presence_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-presence"  />
+    <link href="/stylesheets/discourse-solved_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-solved"  />
+    <link href="/stylesheets/discourse-templates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-templates"  />
+    <link href="/stylesheets/discourse-topic-voting_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+    <link href="/stylesheets/docker_manager_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="docker_manager"  />
+    <link href="/stylesheets/footnote_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="footnote"  />
+    <link href="/stylesheets/poll_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll"  />
+    <link href="/stylesheets/discourse-topic-voting_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting_desktop"  />
+    <link href="/stylesheets/poll_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="/stylesheets/common_theme_4_9581ecb7d67f268461f04d3d4e1b015ea2ad1983.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="4" data-theme-name="easy footer"/>
+    <link href="/stylesheets/desktop_theme_2_6e0603c5f6be3f943ee4806f79959c7a96ab67f5.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop_theme" data-theme-id="2" data-theme-name="default"/>
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction&#39;" href="https://ethresear.ch/t/achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction/24273.rss" />
+    <meta property="og:site_name" content="Ethereum Research" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://ethresear.ch/uploads/default/optimized/3X/d/7/d7643f1aee234c93ba2c8a7cd9281bb79a73bdd1_2_1024x497.png" />
+<meta property="og:image" content="https://ethresear.ch/uploads/default/optimized/3X/d/7/d7643f1aee234c93ba2c8a7cd9281bb79a73bdd1_2_1024x497.png" />
+<meta property="og:url" content="https://ethresear.ch/t/achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction/24273" />
+<meta name="twitter:url" content="https://ethresear.ch/t/achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction/24273" />
+<meta property="og:title" content="Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction" />
+<meta name="twitter:title" content="Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction" />
+<meta property="og:description" content="Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction Thanks to @abaiocchi for his contributions and to @asanso for his feedback  Abstract We propose a quantum-safe wallet design that requires no changes to Ethereum’s signature schemes or protocol rules. By leveraging account abstraction, we make each ECDSA key pair single-use: every transaction rotates the signer while the smart contract wallet address remains constant. This eliminates long-term public key exposure, the c..." />
+<meta name="twitter:description" content="Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction Thanks to @abaiocchi for his contributions and to @asanso for his feedback  Abstract We propose a quantum-safe wallet design that requires no changes to Ethereum’s signature schemes or protocol rules. By leveraging account abstraction, we make each ECDSA key pair single-use: every transaction rotates the signer while the smart contract wallet address remains constant. This eliminates long-term public key exposure, the c..." />
+<meta property="og:article:section" content="Cryptography" />
+<meta property="og:article:section:color" content="000000" />
+<meta property="og:article:tag" content="account-abstraction" />
+<meta property="og:article:tag" content="post-quantum" />
+<meta name="twitter:label1" value="Reading time" />
+<meta name="twitter:data1" value="3 mins 🕑" />
+<meta name="twitter:label2" value="Likes" />
+<meta name="twitter:data2" value="19 ❤" />
+<meta property="article:published_time" content="2026-03-04T10:24:40+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+    
+  </head>
+  <body class="crawler ">
+    
+    <header>
+  <a href="/">Ethereum Research</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction/24273">Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction</a>
+    </h1>
+
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/cryptography/28" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #000000'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>Cryptography</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </span>
+      </div>
+
+      <div class="topic-category">
+        <div class='discourse-tags list-tags'>
+            <a href='https://ethresear.ch/tag/account-abstraction' class='discourse-tag' rel="tag">account-abstraction</a>, 
+            <a href='https://ethresear.ch/tag/post-quantum' class='discourse-tag' rel="tag">post-quantum</a>
+        </div>
+      </div>
+  </div>
+
+  
+
+    <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+      <meta itemprop='headline' content='Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction'>
+      <link itemprop='url' href='https://ethresear.ch/t/achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction/24273'>
+      <meta itemprop='datePublished' content='2026-03-04T10:24:40Z'>
+        <meta itemprop='articleSection' content='Cryptography'>
+      <meta itemprop='keywords' content='account-abstraction, post-quantum'>
+      <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop='name' content='Ethereum Foundation'>
+          <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+            <meta itemprop='url' content='https://ethresear.ch/uploads/default/original/2X/8/84d109b2d8dd6bc4fe5255cd44fc429e5649da32.png'>
+          </div>
+      </div>
+
+
+          <div id='post_1'  class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/mvicari'><span itemprop='name'>mvicari</span></a>
+                
+              </span>
+
+                <link itemprop="mainEntityOfPage" href="https://ethresear.ch/t/achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction/24273">
+
+                <link itemprop="image" href="https://ethresear.ch/uploads/default/original/3X/d/7/d7643f1aee234c93ba2c8a7cd9281bb79a73bdd1.png">
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2026-03-04T10:24:40Z' class='post-time'>
+                    March 4, 2026, 10:24am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-03-04T10:25:46Z'>
+              <span itemprop='position'>1</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <h1><a name="p-58787-achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction-1" class="anchor" href="#p-58787-achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction-1"></a>Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction</h1>
+<p><em>Thanks to <a class="mention" href="/u/abaiocchi">@abaiocchi</a> for his contributions and to <a class="mention" href="/u/asanso">@asanso</a> for his feedback</em></p>
+<h2><a name="p-58787-abstract-2" class="anchor" href="#p-58787-abstract-2"></a>Abstract</h2>
+<p>We propose a quantum-safe wallet design that requires no changes to Ethereum’s signature schemes or protocol rules. By leveraging account abstraction, we make each ECDSA key pair single-use: every transaction rotates the signer while the smart contract wallet address remains constant. This eliminates long-term public key exposure, the core vulnerability that Shor’s algorithm would exploit, using only today’s infrastructure. This aims to solve, at least in the short term, quantum security on the execution layer.</p>
+<h2><a name="p-58787-introduction-3" class="anchor" href="#p-58787-introduction-3"></a>Introduction</h2>
+<p>The quantum threat to elliptic curve cryptography is no longer a distant concern. Shor’s algorithm efficiently solves the discrete logarithm problem and, as a result, ECDSA. While a cryptographically relevant quantum computer doesn’t exist yet, the timeline is shrinking. The Ethereum Foundation has established dedicated post-quantum research efforts, and Vitalik has recently outlined a <a href="https://x.com/VitalikButerin/status/2027075026378543132" rel="noopener nofollow ugc">broader PQ roadmap</a>.</p>
+<p>On Ethereum, an EOA that has never transacted is effectively quantum-safe, since its public key is hidden behind a hash. But the moment it signs a transaction, the public key is permanently exposed onchain, making that address effectively burned from a quantum-resistance standpoint.</p>
+<p>Significant work is being done to bring post-quantum signature schemes directly to the EVM, most notably Falcon (<a href="https://ethresear.ch/t/so-you-wanna-post-quantum-ethereum-transaction-signature/21291">1</a>, <a href="https://ethresear.ch/t/falcon-as-an-ethereum-transaction-signature-the-good-the-bad-and-the-gnarly/21512">2</a>, <a href="https://ethresear.ch/t/the-road-to-post-quantum-ethereum-transaction-is-paved-with-account-abstraction-aa/21783">3</a>, <a href="https://github.com/ZKNoxHQ/ETHFALCON" rel="noopener nofollow ugc">ETHFALCON</a>) and <a href="https://ethresear.ch/t/poqeth-efficient-post-quantum-signature-verification-on-ethereum/21554/1">Poqeth</a>. These efforts are essential for the long term, but onchain verification still costs upwards of 1M gas for Falcon, while hash-based signatures are currently in the ~200k gas range. These costs could be further reduced by <a href="https://eips.ethereum.org/EIPS/eip-8051" rel="noopener nofollow ugc">EIP-8051</a> and <a href="https://eips.ethereum.org/EIPS/eip-8052" rel="noopener nofollow ugc">EIP-8052</a>, once they get added to the EVM.</p>
+<p>Gas cost is not the only challenge in the way of post-quantum signatures: standardization, hardware wallet compatibility and proven resistance to classical attacks are significant obstacles that a new standard for ETH signatures will need to overcome. Even if such a signature was ready, standardization needs time, and fully replacing ECDSA requires protocol-level changes (<a href="https://eips.ethereum.org/EIPS/eip-7701" rel="noopener nofollow ugc">EIP-7701</a>, <a href="https://github.com/ethereum/RIPs/blob/eedf04cdeeb4feb141a271cede23260eb66d03b8/RIPS/rip-7560.md" rel="noopener nofollow ugc">RIP-7560</a>). Our approach is complementary: rather than replacing ECDSA, we make it disposable.</p>
+<h2><a name="p-58787-proposed-design-4" class="anchor" href="#p-58787-proposed-design-4"></a>Proposed Design</h2>
+<p>We can leverage Account Abstraction to maintain a static identity towards the rest of the blockchain (the smart account), while switching the signer’s identity after every transaction. This does not prevent quantum computers from recovering the user’s private key, rather makes the private key that was used to sign the previous transaction useless to sign any future transaction.</p>
+<p>The scheme is really simple:</p>
+<ol>
+<li>User appends an address to the calldata of his userOp</li>
+<li>The Smart Contract Wallet validates the transaction</li>
+<li>The userOp is executed</li>
+<li>The authorized signer on the Smart Contract Wallet is changed to the new address</li>
+</ol>
+<p>After the transaction is executed, the old private key, even if recovered, is completely useless. Only the address has been communicated to the Smart Contract Wallet, so only part of the hash of the public key has been revealed, making the new private key quantum-safe until the next transaction.</p>
+<p>A few practical considerations can be done to ease the process: for instance the user, instead of choosing an arbitrary new address, can generate the addresses to send following a BIP44 derivation path, which is also widely available on currently employed wallets.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/d/7/d7643f1aee234c93ba2c8a7cd9281bb79a73bdd1.png" data-download-href="https://ethresear.ch/uploads/default/d7643f1aee234c93ba2c8a7cd9281bb79a73bdd1" title="scheme"><img src="https://ethresear.ch/uploads/default/optimized/3X/d/7/d7643f1aee234c93ba2c8a7cd9281bb79a73bdd1_2_690x335.png" alt="scheme" data-base62-sha1="uJrqRzG6FxGOItvlU0eiAotCEvf" width="690" height="335" srcset="https://ethresear.ch/uploads/default/optimized/3X/d/7/d7643f1aee234c93ba2c8a7cd9281bb79a73bdd1_2_690x335.png, https://ethresear.ch/uploads/default/optimized/3X/d/7/d7643f1aee234c93ba2c8a7cd9281bb79a73bdd1_2_1035x502.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/d/7/d7643f1aee234c93ba2c8a7cd9281bb79a73bdd1_2_1380x670.png 2x" data-dominant-color="EEEFED"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">scheme</span><span class="informations">1466×712 53.3 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<h2><a name="p-58787-practical-implementation-5" class="anchor" href="#p-58787-practical-implementation-5"></a>Practical Implementation</h2>
+<p>This design can be implemented by making some minor tweaks to the base <a href="https://github.com/asanso/account-abstraction/blob/95d36a70162e48612dd25e2e28f77a95cf627e7f/contracts/samples/SimpleAccount.sol" rel="noopener nofollow ugc">SimpleWallet</a>. All we need is a way to extract the next caller from the calldata and change the owner of the Smart Contract Wallet. We implemented a proof of concept at this <a href="https://github.com/RivaLabsTeam/NiceTry/blob/ba0ad5d5c3a0b02ba44c0cf5ce4a34fa4a14f72d/src/SimpleAccount.sol" rel="noopener nofollow ugc">repo</a>.</p>
+<p>This implementation also aims to solve a key issue we identified: we need to rotate the signer even if the userOp reverts. Otherwise a failed transaction would mean that the current signer of the Smart Contract Wallet is currently exposed. We instead emit an event if a userOp fails, but we still finalize the transaction and execute the rotation part.</p>
+<p>With this implementation we recorded some transactions (<a href="https://sepolia.basescan.org/tx/0x90a7626224823d5b9bc4eeab95c66ee93d3ff06d5303d65a941af1687d885d54" rel="noopener nofollow ugc">example</a>) and we measured ~136k gas units for an ERC20 transfer, a gas overhead of less than 100k with respect to the same token transfer on the same chain (<a href="https://sepolia.basescan.org/tx/0x9e9128d6ce1e23108b0b7738c21a51f6512e23e4a3e8173e69b569bdf6712b83" rel="noopener nofollow ugc">example</a>). This overhead, which is already significantly lower than post quantum signature verifications as of today, comes with the added benefits of Account Abstraction. The gas cost of the user rotation itself, if added to a pre-existing Account Abstraction based wallet is even lower and almost negligible in the greater picture.</p>
+<h3><a name="p-58787-social-recovery-repurposing-6" class="anchor" href="#p-58787-social-recovery-repurposing-6"></a>Social Recovery Repurposing</h3>
+<p>Another way of achieving the same procedure is by exploiting existing social recovery features of Smart Contract Wallets. Unless some ad-hoc limitation forbids this, we can set the recovery guardian for our account to our own address, requesting an identity recovery after every transaction. This comes with a slightly higher gas cost, since we’re abusing a feature meant for a different purpose, but has the upside of being able to start using this quantum-safe wallet design without deploying custom architectures onchain.</p>
+<p>Our experiments with this method show that the gas cost overhead that can be expected for this operation is ~30k, while the whole gas overhead of the architecture we were using (without recovery) was around ~110k.<sup class="footnote-ref"><a href="#footnote-58787-1" id="footnote-ref-58787-1">[1]</a></sup></p>
+<h2><a name="p-58787-known-vulnerabilities-7" class="anchor" href="#p-58787-known-vulnerabilities-7"></a>Known Vulnerabilities</h2>
+<p>There is a vulnerability to this design that we are aware of: the <strong>mempool waiting period</strong>. In this period the user’s public key is visible and a quantum-capable attacker could retrieve his private key and frontrun him.</p>
+<p>This issue is not that deeply concerning at the moment, given that the restricted timeframe the attacker would have to recover the private key would make this exploit extremely harder to exploit if not impossible. If one wants to be completely safe though, the use of <strong>private mempools</strong> can completely eliminate the issue. Furthermore, the vulnerability would be mitigated in the context of L2s due to shorter waiting periods.</p>
+<h2><a name="p-58787-conclusion-8" class="anchor" href="#p-58787-conclusion-8"></a>Conclusion</h2>
+<p>We presented a scheme that achieves quantum safety on the execution layer by rotating ECDSA key pairs after every transaction, using account abstraction to preserve a stable on-chain identity. The approach requires no protocol changes and introduces minimal gas overhead (~100k over a standard transfer). It does not replace post-quantum signature schemes, which remain necessary for a complete long-term solution, but it eliminates long-term public key exposure using only current infrastructure. The main open question is mempool-level exposure: while a transaction is pending, the current signer’s public key is visible, and private mempools are the most immediate mitigation.</p>
+<hr class="footnotes-sep">
+
+<ol class="footnotes-list">
+<li id="footnote-58787-1" class="footnote-item"><p>ERC20 transfer <a href="https://sepolia.lineascan.build/tx/0xea188f09cee4a9e6d9b79c2a2f92716fb902c6526861dbd20b75141dddd0d6ce" rel="noopener nofollow ugc">from EOA</a>, <a href="https://sepolia.lineascan.build/tx/0x25fdc2ad52ff7cc9fad3749e1b9dd3326989319eb1cc94ed52879515fc06862a" rel="noopener nofollow ugc">with simple AA</a>, <a href="https://sepolia.lineascan.build/tx/0x6c4a0f2a31ee206fad11adc80020335eaf9ed0263535aff0f351f473c1980bbd" rel="noopener nofollow ugc">with AA and rotation</a>. <a href="#footnote-ref-58787-1" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="18" />
+              <span class='post-likes'>18 Likes</span>
+            </div>
+
+                <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/native-ephemeral-key-rotation-via-frame-transactions/24526">Native Ephemeral Key Rotation via Frame Transactions</a>
+                        <meta itemprop='position' content='18'>
+                      </div>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/upgrade-any-ethereum-wallet-to-post-quantum-security-in-one-transaction-using-zk-proofs-with-a-hidden-public-key/24754">Upgrade any Ethereum wallet to post-quantum security in one transaction using ZK proofs with a hidden public key</a>
+                        <meta itemprop='position' content='19'>
+                      </div>
+                </div>
+          </div>
+          <div id='post_2' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/mvicari'><span itemprop='name'>mvicari</span></a>
+                
+              </span>
+
+
+                <link itemprop="image" href="https://ethresear.ch/uploads/default/original/3X/2/2/22db66ed70fdbb0382c0c763cbb64054efad94ee.png">
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-05-20T12:59:16Z' class='post-time'>
+                    May 20, 2026, 12:59pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-05-20T13:00:21Z'>
+              <span itemprop='position'>2</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>An update from our side. Since posting this we’ve shifted the core of the design away from rotating <strong>ECDSA</strong> and toward proper post-quantum signature schemes.</p>
+<p>The architectural idea is the same: a stable <strong>ERC-4337</strong> account address with per-transaction signer rotation. What rotates is now a hash-based keypair rather than a disposable <strong>ECDSA</strong> one. The primary motivation is the mempool exposure we flagged in the original write-up.</p>
+<p>We presented the original design at <em>EthCC</em> and across the PQ call series, and feedback converged on the same point: the construction was elegant but the residual mempool window made it hard to recommend as a standalone defense. Hash-based one-time and few-time signatures remove that window entirely, at a gas cost that is not dramatically out of line with the overhead we measured for the <em>ECDSA-rotation</em> scheme.</p>
+<p>What we experimented with, considering <strong>NIST Level 1</strong> security:</p>
+<ul>
+<li><em>Winternitz one-time</em> (<strong>WOTS+C</strong>) as the signature primitive. Onchain verifier <strong><a href="https://github.com/RivaLabs-Core/NiceTry/blob/40a1286d18dee2a92631da82a52e484fa9a3628c/other-implementations/wots/WotsCVerifier.sol" rel="noopener nofollow ugc">available here</a></strong>. Signature size 468 bytes in the current encoding and verify gas ~73k example tx on sepolia</li>
+<li><strong>FORS+C</strong> as a few-time signature. Verifier <strong><a href="https://github.com/RivaLabs-Core/NiceTry/blob/40a1286d18dee2a92631da82a52e484fa9a3628c/src/Verifiers/ForsVerifier.sol" rel="noopener nofollow ugc">available here</a></strong>. signature size 2448 bytes in the current encoding  and verify gas ~35k example <strong><a href="https://sepolia.etherscan.io/tx/0x46315b6a8e94ec36e69e7d497cfb4bd5f3ba72885293e3e27c8336d4ae700c04" rel="noopener nofollow ugc">tx on sepolia</a></strong><br>
+These values depend on parameters that can be tuned while maintaining NIST Level 1 security, trading off a larger signature for cheaper verification and vice-versa.</li>
+</ul>
+<p>Signing cost (hash calls to build the keypair): ~830 for WOTS+C, ~2.4k for our standalone FORS+C, vs. ~35k for full SPHINCS. Fewer hashes also means faster signing, which matters a lot on devices that are slow at hashing such as hardware wallets, where signing time is dominated by hash throughput.</p>
+<p>We’re currently treating FORS+C as the primary scheme. The deciding factor is the failure mode under key reuse, which causes WOTS+C to break catastrophically the moment two messages are signed under the same key. FORS+C degrades gracefully under bounded reuse, which we judged more important than WOTS+C’s advantage in signature size and verification cost, at least for certain use cases.<br>
+<div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/2/2/22db66ed70fdbb0382c0c763cbb64054efad94ee.png" data-download-href="https://ethresear.ch/uploads/default/22db66ed70fdbb0382c0c763cbb64054efad94ee" title="PqUXChart"><img src="https://ethresear.ch/uploads/default/original/3X/2/2/22db66ed70fdbb0382c0c763cbb64054efad94ee.png" alt="PqUXChart" data-base62-sha1="4YmiE3gsHFiMtIouBr9dj9u5PX0" width="512" height="401"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">PqUXChart</span><span class="informations">512×401 31.3 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p>Testing FORS, WOTS, SPHINCS, and <em>Protating ECDSA</em> exposed how much signature size, signing time, gas overhead, and key reuse risk each shape the protocol in practice. The qualitative chart below maps each scheme across these four axes. A smaller area indicates better overall user experience.</p>
+<p>The full spec is available <strong><a href="https://github.com/RivaLabs-Core/Ephemeral-Keys-Protocol" rel="noopener nofollow ugc">on Github</a></strong>, alongside the <strong><a href="https://github.com/RivaLabs-Core/NiceTry" rel="noopener nofollow ugc">reference implementation</a></strong>. Issues, PRs, and pushback all welcome.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+                <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/native-ephemeral-key-rotation-via-frame-transactions/24526/8">Native Ephemeral Key Rotation via Frame Transactions</a>
+                        <meta itemprop='position' content='6'>
+                      </div>
+                </div>
+          </div>
+    </div>
+
+
+    
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/tos' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/privacy' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>

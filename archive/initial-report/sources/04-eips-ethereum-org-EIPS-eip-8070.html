@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    
+      <title>EIP-8070: eth/72 - Sparse Blobpool</title>
+      <meta property="og:title" content="EIP-8070: eth/72 - Sparse Blobpool" />
+    
+    <meta name="description" content="Introduce custody-aligned sampling in the EL blobpool to vacate bandwidth" />
+    <meta property="og:description" content="Introduce custody-aligned sampling in the EL blobpool to vacate bandwidth" />
+    <meta name="twitter:description" content="Introduce custody-aligned sampling in the EL blobpool to vacate bandwidth" />
+  
+  <meta name="generator" content="Jekyll" />
+  <meta property="og:locale" content="en_US" />
+  <link rel="canonical" href="https://eips.ethereum.org/EIPS/eip-8070" />
+  <meta property="og:url" content="https://eips.ethereum.org/EIPS/eip-8070" />
+  <meta property="og:site_name" content="Ethereum Improvement Proposals" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:site" content="@" />
+  <script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": "https://eips.ethereum.org",
+      "name": "Ethereum Improvement Proposals",
+      "description": "Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.",
+      "@context": "https://schema.org"
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://eips.ethereum.org/feed.xml" title="Ethereum Improvement Proposals" /><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/override.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    });
+  </script>
+  <script type="text/javascript">
+    window.MathJax = {
+      loader: {
+        load: ['input/tex-base', 'output/chtml']
+      },
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true,
+        processEnvironments: false,
+        processRefs: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js" integrity="sha384-/1zmJ1mBdfKIOnwPxpdG6yaRrxP6qu3eVYm0cz2nOx+AcL4d3AqEFrwcqGZVVroG" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/citation-js/0.6.7/citation.min.js" integrity="sha512-N+LDFMa9owHXGS+CyMrBvuxq2QuGl3fiB/7cys3aUEL7K6P1soHGqsS0sjHXZpwNd9Kz0m3R4IPy1HYRi6ROEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+    addEventListener('DOMContentLoaded', async () => {
+      const Cite = window.require('citation-js');
+      const citationElements = document.querySelectorAll('.language-csl-json');
+      for (let citationElement of citationElements) {
+        try {
+          const citation = await Cite.async(citationElement);
+          const template = document.createElement('template');
+          template.innerHTML = citation.format('bibliography', {
+            format: 'html',
+            template: 'apa',
+            lang: 'en-US'
+          });
+          if (citationElement.parentElement && citationElement.parentElement.matches('pre')) {
+            citationElement.parentElement.replaceWith(template.content);
+          } else {
+            citationElement.replaceWith(template.content);
+          }
+        } catch (e) {
+          console.error("unable to render citation", e);
+        }
+      }
+    });
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Ethereum Improvement Proposals</a><nav class="site-nav d-flex">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger row p-2"><a class="page-link col" href="/all">All</a><a class="page-link col" href="/core">Core</a><a class="page-link col" href="/networking">Networking</a><a class="page-link col" href="/interface">Interface</a><a class="page-link col" href="/erc">ERC</a><a class="page-link col" href="/meta">Meta</a><a class="page-link col" href="/informational">Informational</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="bi-megaphone-fill" fill="currentColor" viewBox="0 0 16 16">
+    <title>Alert</title>
+    <path d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0v-11zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25.222 25.222 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56V3.224zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009a68.14 68.14 0 0 1 .496.008 64 64 0 0 1 1.51.048zm1.39 1.081c.285.021.569.047.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a65.81 65.81 0 0 1 1.692.064c.327.017.65.037.966.06z"/>
+  </symbol>
+  <symbol id="bi-code" fill="currentColor" viewBox="0 0 16 16">
+    <title>Source</title>
+    <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/>
+  </symbol>
+  <svg id="bi-chat" fill="currentColor" viewBox="0 0 16 16">
+    <title>Discuss</title>
+    <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+  </svg>
+</svg>
+
+<div class="home">
+  
+  
+  
+ 
+  <span class="h5">
+    
+    
+    
+      <span class="badge text-light bg-warning" data-bs-toggle="tooltip" data-bs-title="This EIP is not yet recommended for general use or implementation, as it is subject to normative (breaking) changes.">⚠️ Draft</span>
+    
+    
+    
+       
+    
+      <a class="badge text-light bg-primary" data-bs-toggle="tooltip" data-bs-title="Improvements around devp2p and Light Ethereum Subprotocol, as well as proposed improvements to network protocol specifications of whisper and swarm." href="../networking">Standards Track: Networking</a>
+    
+  </span>
+  <h1 class="page-heading">
+    EIP-8070: eth/72 - Sparse Blobpool
+    <a href="https://ethereum-magicians.org/t/eip-8070-sparse-blobpool/26023" class="no-underline">
+      <svg role="img" aria-label="Discuss" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-chat"/>
+      </svg>
+    </a>
+    <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-8070.md" class="no-underline">
+      <svg role="img" aria-label="Source" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-code"/>
+      </svg>
+    </a>
+  </h1>
+  <h3>Introduce custody-aligned sampling in the EL blobpool to vacate bandwidth</h3>
+  <table class="table table-borderless preamble">
+    <tbody>
+      <tr>
+        <th scope="row">Authors</th>
+        <td>Raúl Kripalani&nbsp;(<a href="https://github.com/raulk">@raulk</a>), Bosul Mun&nbsp;(<a href="https://github.com/healthykim">@healthykim</a>), Francesco D'Amato&nbsp;(<a href="https://github.com/fradamt">@fradamt</a>), Csaba Kiraly&nbsp;(<a href="https://github.com/cskiraly">@cskiraly</a>), Felix Lange&nbsp;(<a href="https://github.com/fjl">@fjl</a>), Marios Ioannou&nbsp;(<a href="https://github.com/mariosioannou-create">@mariosioannou-create</a>), Alex Stokes&nbsp;(<a href="https://github.com/ralexstokes">@ralexstokes</a>), Kamil Salakhiev&nbsp;(<a href="https://github.com/kamilsa">@kamilsa</a>)</td>
+      </tr>
+      
+        <tr>
+          <th scope="row">Created</th>
+          <td>2025-10-29</td>
+        </tr>
+      
+      
+             
+      
+        <tr>
+          <th scope="row">Discussion Link</th>
+          <td><a href="https://ethereum-magicians.org/t/eip-8070-sparse-blobpool/26023" target="_blank" rel="noopener">https://ethereum-magicians.org/t/eip-8070-sparse-blobpool/26023</a></td>
+        </tr>
+      
+      
+        <tr>
+          <th scope="row">Requires</th>
+          <td>
+
+  <a href="eip-4844">EIP-4844</a>, 
+
+  <a href="eip-7594">EIP-7594</a>, 
+
+  <a href="eip-7870">EIP-7870</a>, 
+
+  <a href="eip-8159">EIP-8159</a>
+
+</td>
+        </tr>
+      
+    </tbody>
+  </table>
+  <br/>
+
+  
+
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#motivation">Motivation</a></li>
+  <li><a href="#specification">Specification</a>
+    <ul>
+      <li><a href="#execution-clients--devp2p-changes">Execution clients :: devp2p changes</a></li>
+      <li><a href="#execution-clients--blobpool-behavior">Execution clients :: Blobpool behavior</a></li>
+      <li><a href="#execution-clients--local-block-builders">Execution clients :: Local block builders</a></li>
+      <li><a href="#engine-api-extensions">Engine API extensions</a></li>
+      <li><a href="#parameters">Parameters</a></li>
+    </ul>
+  </li>
+  <li><a href="#rationale">Rationale</a>
+    <ul>
+      <li><a href="#parameter-selection">Parameter selection</a></li>
+      <li><a href="#reliability-framework">Reliability framework</a></li>
+    </ul>
+  </li>
+  <li><a href="#backwards-compatibility">Backwards Compatibility</a></li>
+  <li><a href="#test-cases">Test Cases</a></li>
+  <li><a href="#security-considerations">Security Considerations</a>
+    <ul>
+      <li><a href="#attack-scenarios-and-threat-model">Attack scenarios and threat model</a></li>
+      <li><a href="#peer-disconnection-policies">Peer disconnection policies</a></li>
+      <li><a href="#the-need-for-sampling-noise">The need for sampling noise</a></li>
+      <li><a href="#no-normative-peer-scoring">No normative peer scoring</a></li>
+      <li><a href="#devp2p-message-schema-choices">devp2p message schema choices</a></li>
+      <li><a href="#open-points">Open points</a></li>
+    </ul>
+  </li>
+  <li><a href="#copyright">Copyright</a></li>
+</ul>
+
+  </div>
+
+  <h2 id="abstract">
+      
+      
+        <a href="#abstract" class="anchor-link"></a> Abstract
+      
+      
+    </h2>
+
+<p>This proposal introduces the sparse blobpool, a construction that brings cell-level, custody-aligned sampling in the Execution Layer (EL). For every new type 3 (blob-carrying) transaction, an EL node fetches full blob payloads only with probability p = 0.15, and otherwise it merely samples the blobs, using the same custody assignment as its Consensus Layer (CL) counterpart. For validators, this means downloading as little as 1/8 of the data (8 out of 64 cells), so that the average bandwidth consumption compared to the (current) full blobpool is 0.15 + 0.85/8 ~ 0.25, a ~4x reduction. The choice of p = 0.15 balances reducing bandwidth consumption with guaranteeing the full propagation of txs, by ensuring that for each blob tx there exists a large connected backbone of nodes that have the full blob payload. At an individual node level, p = 0.15 translates to 98.6% probability of least 3/50 neighbours holding the full blob payload, only 0.03% chance of total unavailability. The sampling performed with probability 1 - p = 0.85 enables streamlined data availability checks during block validation, as well as enhancing the availability of the data.</p>
+  
+    <h2 id="motivation">
+      
+      
+        <a href="#motivation" class="anchor-link"></a> Motivation
+      
+      
+    </h2>
+
+<p>As Blob Parameter Only (BPO) forks progressively increase throughput, the full-replication nature of today’s EL blobpool will begin dominating bandwidth utilization, causing us to hit <a href="/EIPS/eip-7870">EIP-7870</a> limits. Furthermore, this traffic will compete, and potentially starve, block and attestation propagation, risking instability and liveness issues. This behavior has already been observed in Fusaka devnets, where the average bandwidth consumption <em>of a full node</em> is dominated by the EL blobpool, since column propagation on the CL benefits from sampling.</p>
+
+<p><img src="/assets/eip-8070/bandwidth-breakdown-fusaka-devnets.png" alt="" /></p>
+
+<p><strong>Figure 1.</strong> <em>Breakdown of the average bandwidth consumption (download) of full nodes in Fusaka Devnet 5, for blob count target/max of 22/33 (left) and 48/72 (right). The average bandwidth consumption of the EL is ~4-5x that of the CL.</em></p>
+
+<p>While the average bandwidth consumption does not reflect that the load on the EL is spread out over time rather than concentrated in a small time window as it is in the CL, the gap between the EL and CL is quite large (~4-5x), and future upgrades will enable the CL to better spread out data propagation in the slot, leaving the EL blobpool as even more of a bottleneck.</p>
+
+<p>The sparse blobpool mechanism brings sampling to the EL as well, with an anticipated ~4x reduction in average bandwidth consumption for a given blobpool load. In doing so, it preserves the unstructured, stochastic nature of the current blobpool rather than introducing complex sharding architectures, prioritizing simplicity and resilience. Moreover, it preserves the CL’s ability to satisfy its own sampling needs with the pre-propagated data in the EL blobpool (through the <code class="language-plaintext highlighter-rouge">getBlobs</code> Engine API). This is achieved by aligning the EL and CL sampling, in particular by having the EL fetch the cells corresponding to the CL custody set. This preserves a key feature of the blobpool, as it stretches the time window for blob data propagation, offloading this work from the critical path of block validation and leading to smoother and less bursty bandwidth utilization patterns over time.</p>
+
+<p>While the scalability gain may be more modest than with other solutions, we believe this design balances between simplicity, security, and scalability, in order to unlock the next tier of blob throughput without requiring user-facing changes, or deeper architectural redesigns.</p>
+  
+    <h2 id="specification">
+      
+      
+        <a href="#specification" class="anchor-link"></a> Specification
+      
+      
+    </h2>
+
+<p>The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “NOT RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in <a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a> and <a href="https://www.rfc-editor.org/rfc/rfc8174">RFC 8174</a>.</p>
+  
+    <h3 id="execution-clients--devp2p-changes">
+      
+      
+        <a href="#execution-clients--devp2p-changes" class="anchor-link"></a> Execution clients :: devp2p changes
+      
+      
+    </h3>
+
+<p>We introduce a new devp2p protocol version, <code class="language-plaintext highlighter-rouge">eth/72</code> extending the existing <code class="language-plaintext highlighter-rouge">eth/71</code> protocol.</p>
+
+<p><strong>Modify <code class="language-plaintext highlighter-rouge">NewPooledTransactionHashes</code> (<code class="language-plaintext highlighter-rouge">0x08</code>) message.</strong>
+Add a new field <code class="language-plaintext highlighter-rouge">cell_mask</code> of type <code class="language-plaintext highlighter-rouge">B_16</code> (<code class="language-plaintext highlighter-rouge">uint128</code>). This field MUST be interpreted as a bitarray of length <code class="language-plaintext highlighter-rouge">CELLS_PER_EXT_BLOB</code>, carrying <code class="language-plaintext highlighter-rouge">1</code> in the indices of columns the announcer has available for <strong>all type 3 txs announced within the message</strong>. This field MUST be set to <code class="language-plaintext highlighter-rouge">nil</code> when no transactions of such type are announced. (TODO: this approach is not expressive enough if the node wants to offer randomly sampled columns, nor if it wants to announce transactions with full and partial availability in a single message).</p>
+
+<ul>
+  <li>old schema (<code class="language-plaintext highlighter-rouge">eth/71</code>): <code class="language-plaintext highlighter-rouge">[types: B, [size_0: P, size_1: P, ...], [hash_0: B_32, hash_1: B_32, ...]]</code></li>
+  <li>new schema (<code class="language-plaintext highlighter-rouge">eth/72</code>): <code class="language-plaintext highlighter-rouge">[types: B, [size_0: P, size_1: P, ...], [hash_0: B_32, hash_1: B_32, ...], cell_mask: B_16]</code></li>
+</ul>
+
+<p><strong>Modify <code class="language-plaintext highlighter-rouge">GetPooledTransactions</code> (<code class="language-plaintext highlighter-rouge">0x09</code>) / <code class="language-plaintext highlighter-rouge">PooledTransactions</code> (<code class="language-plaintext highlighter-rouge">0x10</code>) behaviour.</strong>
+Responses now elide blob payloads for type 3 transactions requested via this RPC. This is performed by setting an RLP <code class="language-plaintext highlighter-rouge">nil</code> literal in the list position corresponding to the transaction’s blob data. Cell proofs and commitments are unaffected and continue to be sent.</p>
+
+<p><strong>New message type <code class="language-plaintext highlighter-rouge">GetCells</code> (<code class="language-plaintext highlighter-rouge">0x14</code>).</strong> Used to request cells for type 3 transactions. It specifies the transaction hashes being requested, along with a <code class="language-plaintext highlighter-rouge">cell_mask</code> specifying which cell indices are needed, with syntax identical as <code class="language-plaintext highlighter-rouge">cell_mask</code> in <code class="language-plaintext highlighter-rouge">NewPooledTransactionHashes</code>.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">eth/72</code>: <code class="language-plaintext highlighter-rouge">[[hash_0: B_32, hash_1: B_32, ...], cell_mask: B_16]</code></li>
+</ul>
+
+<p><strong>New message type <code class="language-plaintext highlighter-rouge">Cells</code> (<code class="language-plaintext highlighter-rouge">0x15</code>).</strong> Used to respond to a <code class="language-plaintext highlighter-rouge">GetCells</code> requests.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">eth/72</code>: <code class="language-plaintext highlighter-rouge">[[hash_0: B_32, hash_1: B_32, ...], cells: [[cell_0_0: B_2048, cell_0_1: B_2048, ...], [cell_1_0: B_2048, cell_1_1: B_2048, ...]], cell_mask: B_16]</code></li>
+</ul>
+  
+    <h3 id="execution-clients--blobpool-behavior">
+      
+      
+        <a href="#execution-clients--blobpool-behavior" class="anchor-link"></a> Execution clients :: Blobpool behavior
+      
+      
+    </h3>
+
+<p><strong>New transaction hash.</strong>
+Upon receiving a <code class="language-plaintext highlighter-rouge">NewPooledTransactionHashes</code> announcement containing a previously unknown type 3 transaction hash, the node makes a probabilistic decision about fetching the blob payload: it decides to fetch the full blob payload with probability p = 0.15 (provider role), or simply sample otherwise (sampler role). This decision MAY be remembered for some period chosen by the implementer, in which case stateless heuristics are RECOMMENDED (e.g. calculating a hash by appending some time-bound value mixed in with stable transaction properties, and applying p to it).</p>
+
+<p><strong>Provider role.</strong>
+If the node is a provider, and the announcing peer signaled full availability, the node MUST request the signed transaction and full blob data from that peer via <code class="language-plaintext highlighter-rouge">GetPooledTransactions</code> and <code class="language-plaintext highlighter-rouge">GetCells</code> with an all-ones <code class="language-plaintext highlighter-rouge">cell_mask</code> bitmap. Upon successful retrieval and validation (as per <a href="/EIPS/eip-7594">EIP-7594</a>), the node MUST in turn announce the transaction hash to its peers via <code class="language-plaintext highlighter-rouge">NewPooledTransactionHashes</code>, also with an all-ones <code class="language-plaintext highlighter-rouge">cell_mask</code>.</p>
+
+<p><strong>Sampler role.</strong>
+If the node is a sampler, the node MUST only request the transaction payload via <code class="language-plaintext highlighter-rouge">GetPooledTransactions</code>. It SHOULD await to observe at least 2 distinct provider announcements, and to successfully receive and validate the signed transaction, before acting further. It then MUST request custody-aligned cells from peers that announced overlapping availability, including providers. When fetching from a provider, the node MUST request <code class="language-plaintext highlighter-rouge">C_extra</code> random columns in addition to its custody set (see “Sampling noise” in Rationale). The responder MAY truncate its <code class="language-plaintext highlighter-rouge">Cells</code> response depending on its current capacity, returning fewer cells than requested.</p>
+
+<p><strong>Ensuring fairness.</strong>
+Nodes MAY keep a record of the frequency of full payload fetches made by each peer, relative to their sampling requests. Nodes MAY elect to disconnect peers who exceed some locally-determined fairness heuristic. Such heuristics are not object of standardization.</p>
+
+<p><strong>Supernode behaviour.</strong>
+Supernodes (nodes intending to fetch every blob payload in full) MUST load balance requests across samplers and providers. Furthermore, supernodes SHOULD prioritize reconstructing blobs and proofs from 64 columns. Supernodes SHOULD maintain a larger peerset in order to satisfy their increased blob fetching needs without over-stressing a small set of neighbours and violating fairness.</p>
+
+<p><strong>Sampler eviction</strong>
+A sampler MAY drop a transaction if it has not observed sufficient network saturation (i.e., announcements from other peers for the same blob) within a defined period.</p>
+
+<p><strong>Continued sampling</strong>
+Tenured transactions MAY be subject to resampling in order to test for liveness and confirm confidence of continued network-wide availability.</p>
+  
+    <h3 id="execution-clients--local-block-builders">
+      
+      
+        <a href="#execution-clients--local-block-builders" class="anchor-link"></a> Execution clients :: Local block builders
+      
+      
+    </h3>
+
+<p><strong>Eager mode for block builders.</strong>
+By default block builder <strong>SHOULD</strong> permanently act in eager mode: it acts as a provider (<code class="language-plaintext highlighter-rouge">p = 1.0</code>) for every type 3 transaction it intends to include, fetching the full blob payload. This guarantees that the builder holds complete blob data for all transactions in the payload.</p>
+
+<p>A builder <strong>MAY</strong> choose to act as a provider with <code class="language-plaintext highlighter-rouge">p = 0.15</code> probability, and switch to eager mode 2-3 slots prior to block building. But this is not recommended as this creates a clear pattern for the builder’s networking behavior and compromises its privacy, increasing the risk of DoS attacks against it.</p>
+  
+    <h3 id="engine-api-extensions">
+      
+      
+        <a href="#engine-api-extensions" class="anchor-link"></a> Engine API extensions
+      
+      
+    </h3>
+
+<p><strong>Method <code class="language-plaintext highlighter-rouge">engine_forkchoiceUpdatedV4</code></strong></p>
+
+<p>This EIP extends <code class="language-plaintext highlighter-rouge">engine_forkchoiceUpdatedV4</code> as defined in the Amsterdam Engine API specification by adding an optional <code class="language-plaintext highlighter-rouge">custodyColumns</code> parameter, allowing the CL to inform the EL of its current blob column custody set.</p>
+
+<p>Request:</p>
+
+<ul>
+  <li>method: <code class="language-plaintext highlighter-rouge">engine_forkchoiceUpdatedV4</code></li>
+  <li>params:
+    <ol>
+      <li><code class="language-plaintext highlighter-rouge">forkchoiceState</code>: <code class="language-plaintext highlighter-rouge">ForkchoiceStateV1</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">payloadAttributes</code>: <code class="language-plaintext highlighter-rouge">Object|null</code> - Instance of <code class="language-plaintext highlighter-rouge">PayloadAttributesV4</code> or <code class="language-plaintext highlighter-rouge">null</code>.</li>
+      <li><code class="language-plaintext highlighter-rouge">custodyColumns</code>: <code class="language-plaintext highlighter-rouge">DATA|null</code> - 16-byte value interpreted as a bitarray of length <code class="language-plaintext highlighter-rouge">CELLS_PER_EXT_BLOB</code>, where a <code class="language-plaintext highlighter-rouge">1</code> at position <code class="language-plaintext highlighter-rouge">i</code> indicates the CL node has custody of column <code class="language-plaintext highlighter-rouge">i</code>. <code class="language-plaintext highlighter-rouge">null</code> if the CL does not provide custody services.</li>
+    </ol>
+  </li>
+  <li>timeout: 8s</li>
+</ul>
+
+<p>Response:</p>
+
+<p>Refer to the response for <code class="language-plaintext highlighter-rouge">engine_forkchoiceUpdatedV3</code>.</p>
+
+<p>Specification:</p>
+
+<ol>
+  <li>CL MUST include a <code class="language-plaintext highlighter-rouge">custodyColumns</code> value after startup or when its columns custody set changes. It MUST also resend it after any Engine API interruption or reconnection.</li>
+  <li>EL MUST return an Ok response if the request is well-formed. All subsequent sampling requests MUST adopt the new custody set. Queued sampling requests MAY be patched to reflect the new custody set.</li>
+  <li>For type 3 transactions pending in the blobpool:
+    <ol>
+      <li>If the custody set has expanded relative to the previously known set, the Execution client MUST issue new sampling requests for the delta columns. It SHOULD broadcast updated <code class="language-plaintext highlighter-rouge">NewPooledTransactionHashes</code> announcements reflecting the expanded available set when act as a sampler.</li>
+      <li>If the custody set has contracted, the Execution client MAY prune dropped cells from local storage, but only AFTER broadcasting an updated <code class="language-plaintext highlighter-rouge">NewPooledTransactionHashes</code> announcement with the reduced available set, to avoid peers perceiving availability fault.</li>
+    </ol>
+  </li>
+  <li>The Execution client MUST treat a <code class="language-plaintext highlighter-rouge">custodyColumns</code> value identical to the current custody set as a no-op with respect to blobpool state, while still processing the rest of the forkchoice update normally.</li>
+</ol>
+
+<p><strong>Method <code class="language-plaintext highlighter-rouge">engine_getBlobsV4</code></strong></p>
+
+<p>Called by the Consensus layer client to retrieve blob cells from the Execution layer blobpool.</p>
+
+<p>Request:</p>
+
+<ul>
+  <li>method: <code class="language-plaintext highlighter-rouge">engine_getBlobsV4</code></li>
+  <li>params:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">versioned_blob_hashes</code>: []bytes32, an array of blob versioned hashes.</li>
+      <li><code class="language-plaintext highlighter-rouge">indices_bitarray</code>: uint128, a bitarray denoting the indices of the cells to retrieve.</li>
+    </ul>
+  </li>
+  <li>timeout: 500ms</li>
+</ul>
+
+<p>Response:</p>
+
+<ul>
+  <li>result: <code class="language-plaintext highlighter-rouge">[]BlobCellsAndProofsV1</code></li>
+  <li>error: code and message set in case an error occurs during processing of the request.</li>
+</ul>
+
+<p><strong>Data structure <code class="language-plaintext highlighter-rouge">BlobCellsAndProofsV1</code></strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">blob_cells</code>: a sequence of byte arrays <code class="language-plaintext highlighter-rouge">[]bytes</code> representing the partial matrix of the requested blobs, with <code class="language-plaintext highlighter-rouge">nil</code> entries for missing cells.</li>
+  <li><code class="language-plaintext highlighter-rouge">proofs</code>: <code class="language-plaintext highlighter-rouge">Array of DATA</code> - Array of <code class="language-plaintext highlighter-rouge">KZGProof</code> as defined in <a href="/EIPS/eip-4844">EIP-4844</a>, 48 bytes each (<code class="language-plaintext highlighter-rouge">DATA</code>)</li>
+</ul>
+  
+    <h3 id="parameters">
+      
+      
+        <a href="#parameters" class="anchor-link"></a> Parameters
+      
+      
+    </h3>
+
+<ul>
+  <li><strong>Fetching probability</strong>: p = 0.15</li>
+  <li><strong>Mesh degree</strong>: D = 50 (default peerset size)</li>
+  <li><strong>Sampling requirement</strong>: Minimum <code class="language-plaintext highlighter-rouge">SAMPLES_PER_SLOT = 8</code> columns per node as per PeerDAS specification</li>
+  <li><strong>Reconstruction threshold</strong>: 64 cells required for Reed-Solomon decoding</li>
+  <li><strong>Minimum providers to sample</strong>: minimum 2 providers should be observed before sampling</li>
+  <li><strong>Extra random columns per request</strong>: <code class="language-plaintext highlighter-rouge">C_extra = 1</code></li>
+</ul>
+  
+    <h2 id="rationale">
+      
+      
+        <a href="#rationale" class="anchor-link"></a> Rationale
+      
+      
+    </h2>
+  
+    <h3 id="parameter-selection">
+      
+      
+        <a href="#parameter-selection" class="anchor-link"></a> Parameter selection
+      
+      
+    </h3>
+
+<p>The choice of p = 0.15 balances bandwidth reduction with availability guarantees. Mathematical analysis for a mesh degree D = 50 shows:</p>
+
+<ul>
+  <li><strong>Primary reliability</strong>: Probability of having at least 3 peers with complete blob payload is 98.6%</li>
+  <li><strong>Secondary reliability</strong>: Via reconstruction from partial availability, recovery probability exceeds 80% when 6+ provider peers exist.</li>
+  <li><strong>Total unavailability</strong>: Only 0.03% chance with these parameters.</li>
+</ul>
+  
+    <h3 id="reliability-framework">
+      
+      
+        <a href="#reliability-framework" class="anchor-link"></a> Reliability framework
+      
+      
+    </h3>
+
+<p><strong>Primary reliability.</strong> Let $X$ be the number of direct peers with the full payload. With $X∼Binomial(D,p)$, the probability that at least $k$ honest peers hold the full blob payload for a type 3 tx is:</p>
+
+\[P(X \geq k) = 1 - \sum_{i=0}^{k-1} \binom{D}{i} p^i (1-p)^{D-i}\]
+
+<p>Evaluating for sensible values of $p$ and $k$ yields, where $D=50$ (Geth’s default mesh degree):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>$p$</th>
+      <th>$k = 6$</th>
+      <th>$k = 5$</th>
+      <th>$k = 4$</th>
+      <th>$k = 3$</th>
+      <th>$k = 2$</th>
+      <th>$k = 1$</th>
+      <th>$P(0)$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0.05</td>
+      <td>0.037776</td>
+      <td>0.103617</td>
+      <td>0.239592</td>
+      <td>0.459467</td>
+      <td>0.720568</td>
+      <td>0.923055</td>
+      <td>0.076945</td>
+    </tr>
+    <tr>
+      <td>0.08</td>
+      <td>0.208126</td>
+      <td>0.371050</td>
+      <td>0.574704</td>
+      <td>0.774026</td>
+      <td>0.917288</td>
+      <td>0.984534</td>
+      <td>0.015466</td>
+    </tr>
+    <tr>
+      <td>0.10</td>
+      <td>0.383877</td>
+      <td>0.568802</td>
+      <td>0.749706</td>
+      <td>0.888271</td>
+      <td>0.966214</td>
+      <td>0.994846</td>
+      <td>0.005154</td>
+    </tr>
+    <tr>
+      <td>0.125</td>
+      <td>0.606513</td>
+      <td>0.765366</td>
+      <td>0.886232</td>
+      <td>0.958237</td>
+      <td>0.989739</td>
+      <td>0.998740</td>
+      <td>0.001260</td>
+    </tr>
+    <tr>
+      <td><strong>0.15</strong></td>
+      <td><strong>0.780647</strong></td>
+      <td><strong>0.887895</strong></td>
+      <td><strong>0.953953</strong></td>
+      <td><strong>0.985811</strong></td>
+      <td><strong>0.997095</strong></td>
+      <td><strong>0.999704</strong></td>
+      <td><strong>0.000296</strong></td>
+    </tr>
+    <tr>
+      <td>0.20</td>
+      <td>0.951973</td>
+      <td>0.981504</td>
+      <td>0.994344</td>
+      <td>0.998715</td>
+      <td>0.999807</td>
+      <td>0.999986</td>
+      <td>0.000014</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Secondary reliability.</strong> Probability that a payload can be reconstructed from partial availability when primary reliability fails. Let $Y$ be the number of distinct columns available from sampler peers. Given $k$ provider peers that failed to serve the full payload, a node with $D - k$ sampler peers (each holding 8 random columns, assuming they’re all minimal custody full nodes) can reconstruct with probability $P(Y \geq 64 \mid n = D - k)$. For the adversarial scenario where we attained $k = 3$, yet all failed to serve the blob data, with $D = 50$, secondary reliability exceeds 99.9% as samplers provide an expected 124 distinct columns from 47 peers.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Providers ($k$)</th>
+      <th>Samplers ($n=D-k$)</th>
+      <th>$E[Distinct Columns]$</th>
+      <th>$P(Y ≥ 64)$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>50</td>
+      <td>125.1</td>
+      <td>&gt;99.99%</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>49</td>
+      <td>124.9</td>
+      <td>&gt;99.99%</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>48</td>
+      <td>124.6</td>
+      <td>&gt;99.99%</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>47</td>
+      <td>124.3</td>
+      <td>&gt;99.99%</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>46</td>
+      <td>124.0</td>
+      <td>&gt;99.99%</td>
+    </tr>
+    <tr>
+      <td>…</td>
+      <td>…</td>
+      <td>…</td>
+      <td>…</td>
+    </tr>
+    <tr>
+      <td>~40</td>
+      <td>~10</td>
+      <td>~68</td>
+      <td>~80%</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Minimum threshold</strong>: Approximately $n_{\min} \approx 10$ samplers needed for reasonable reconstruction probability (&gt;80%).</p>
+  
+    <h2 id="backwards-compatibility">
+      
+      
+        <a href="#backwards-compatibility" class="anchor-link"></a> Backwards Compatibility
+      
+      
+    </h2>
+
+<p>This EIP changes the <code class="language-plaintext highlighter-rouge">eth</code> protocol and requires rolling out a new version, <code class="language-plaintext highlighter-rouge">eth/72</code>. Supporting multiple versions of a wire protocol is possible. Rolling out a new version does not break older clients immediately, since they can keep using protocol version <code class="language-plaintext highlighter-rouge">eth/71</code>.</p>
+
+<p>This EIP does not change consensus rules and does not strictly require a hard fork. We are assessing the gradual rollout possibilities. In the meantime, it is RECOMMENDED that this EIP be deployed within the context of a hard fork.</p>
+  
+    <h2 id="test-cases">
+      
+      
+        <a href="#test-cases" class="anchor-link"></a> Test Cases
+      
+      
+    </h2>
+
+<p>TBD</p>
+  
+    <h2 id="security-considerations">
+      
+      
+        <a href="#security-considerations" class="anchor-link"></a> Security Considerations
+      
+      
+    </h2>
+  
+    <h3 id="attack-scenarios-and-threat-model">
+      
+      
+        <a href="#attack-scenarios-and-threat-model" class="anchor-link"></a> Attack scenarios and threat model
+      
+      
+    </h3>
+
+<p>The goal of threat modeling is to identify potential attack vectors and vulnerabilities in the proposed sparse blobpool mechanism that may hurt the security, availability, or integrity of the type 3 transaction propagation. The threat model assumes a permissionless environment where adversaries can freely join the network, create multiple identities (Sybil attacks), and behave maliciously. Adversaries may aim to disrupt the network, degrade performance, censor transactions, or manipulate the availability of blob data. Below are some potential attack scenarios and their implications:</p>
+
+<p><strong>DoS attacks.</strong> An important consideration in all mempool sharding mechanisms is the possibility of DoS attacks. This refers to the case where a malicious sender posts a transaction to the mempool disclosing only part of it, which makes the transaction impossible to be included in any future block, while still consuming mempool resources. In this system, such a sender can be detected by nodes that request the full payload of the transaction.</p>
+
+<p><strong>Selective withholding attacks.</strong> A malicious peer might selectively withhold full blob data for certain type 3 transactions (e.g. produced by a certain L2), thus slowing down their propagation and potentially leading to reduced availability. This can be mitigated by ensuring a sufficiently large and diverse peerset.</p>
+
+<p><strong>Eclipse attacks.</strong> Malicious peers can try to isolate a victim node by controlling all its connections, serving only partial blob data and preventing it from obtaining the full payload. This hurts the victim’s ability to propagate transactions and can lead to reduced availability of blob data and potential censorship of the honest peer. However, periodic rotation of connections and keeping track of neighbor peer’s rate of full payload announcements can help mitigate this attack.</p>
+
+<p><strong>Free rider attacks.</strong> A peer can send an excessive volume of blob data requests without reciprocating with announcements, thus consuming bandwidth without contributing to the network. This can be mitigated by keeping track of the requests to announcements ratio of peers and disconnecting those that exceed a certain threshold.</p>
+  
+    <h3 id="peer-disconnection-policies">
+      
+      
+        <a href="#peer-disconnection-policies" class="anchor-link"></a> Peer disconnection policies
+      
+      
+    </h3>
+
+<p>Nodes MAY keep a record of the frequency of full payload and column requests made by each peer. If a frequency exceeds some quota or the probabilistic expectation by some tolerance threshold, the node MAY decide to disconnect the offending peer alleging abuse as a reason. This prevents nodes from spending too much upload bandwidth on peers that fetch full payloads much more often that the expected p = 0.15.</p>
+  
+    <h3 id="the-need-for-sampling-noise">
+      
+      
+        <a href="#the-need-for-sampling-noise" class="anchor-link"></a> The need for sampling noise
+      
+      
+    </h3>
+
+<p>Custody-aligned sampling generates in stable and predictable request patterns that attackers could game. For example, a malicious node may trick a victim by pretending to be a provider when in reality it only stores the few, predictable columns the victim is expected to sample. To defend against this, this EIP introduces the simple mechanism of “sampling noise.”</p>
+
+<p>When a peer requests its custody columns from a provider, it must also request at least ONE randomly selected column. A failure to serve this extra column can be interpreted as a strong sign of misbehavior. The attacker could choose to timeout, but after a number of repetitions, the victim would likely disconnect anyway due to high failure rates.</p>
+
+<p>This simple mechanism reinforces key model assumptions (a provider is truly a provider) in exchange for negligible overhead per request (MAX_BLOBS_PER_TX x CELL_SIZE + proofs = ~12KiB).</p>
+  
+    <h3 id="no-normative-peer-scoring">
+      
+      
+        <a href="#no-normative-peer-scoring" class="anchor-link"></a> No normative peer scoring
+      
+      
+    </h3>
+
+<p>An earlier design considered a peer scoring system to grade peers by tracking their statistical ratio of requests to announcements (leechiness vs. helpfulness). After careful consideration, we deemed this approach brittle and dropped the feature. Our rationale was that such mechanism would strongly encode assumptions and confine the system to conform to some modellic behaviour, thus reducing flexibility and resilience in the face of environmental changes, shocks, or unexpected/improbable events (properties that are crucial in open and permissionless systems). Instead, we defer to implementations to define their own local heuristics for peer disconnection, if any.</p>
+  
+    <h3 id="devp2p-message-schema-choices">
+      
+      
+        <a href="#devp2p-message-schema-choices" class="anchor-link"></a> devp2p message schema choices
+      
+      
+    </h3>
+
+<p>We note that <code class="language-plaintext highlighter-rouge">cell_mask</code> field in <code class="language-plaintext highlighter-rouge">NewPooledTransactionHashes</code> is not expressive enough to signal different local availability for type 3 txs announced within the same message. This limitation implies that (a) fully and partially available txs cannot be announced together, and (b) availability of randomly sampled columns cannot be signaled in practice (because indices vary per tx), only custody columns can be consistently announced (they’re shared across all sampled transactions).</p>
+
+<p>Nevertheless, the sender can efficiently split and group announcements: fully-available txs can be bundled together, and partially-available txs can be announced in separate messages. Per-message dispatch overhead is minimal (one uint64 request_id and one uint8 message_type), and more expressive designs are likely to incur in higher overhead. Furthermore, from a protocol flow perspective, devp2p supports concurrent requests and unordered responses (via <code class="language-plaintext highlighter-rouge">request_id</code> correlation), so this approach is not affected by head-of-line blocking either (at least from a protocol perspective).</p>
+
+<p>We considered more expressive designs, ranging from simple arrays of <code class="language-plaintext highlighter-rouge">cell_mask</code>s (one per tx), to union types express full availability more compactly, to more complex schemes involving run-length encoding and compression. But we concluded that the added complexity was not justified at this time.</p>
+  
+    <h3 id="open-points">
+      
+      
+        <a href="#open-points" class="anchor-link"></a> Open points
+      
+      
+    </h3>
+
+<ul>
+  <li>Further threat modelling and security hardening.</li>
+  <li>RBF (replace-by-fee) impact.</li>
+</ul>
+  
+    <h2 id="copyright">
+      
+      
+        <a href="#copyright" class="anchor-link"></a> Copyright
+      
+      
+    </h2>
+
+<p>Copyright and related rights waived via <a href="/LICENSE">CC0</a>.</p>
+
+  <h2>Citation</h2>
+  <p>Please cite this document as:</p>
+  
+  <p>Raúl Kripalani&nbsp;(<a href="https://github.com/raulk">@raulk</a>), Bosul Mun&nbsp;(<a href="https://github.com/healthykim">@healthykim</a>), Francesco D'Amato&nbsp;(<a href="https://github.com/fradamt">@fradamt</a>), Csaba Kiraly&nbsp;(<a href="https://github.com/cskiraly">@cskiraly</a>), Felix Lange&nbsp;(<a href="https://github.com/fjl">@fjl</a>), Marios Ioannou&nbsp;(<a href="https://github.com/mariosioannou-create">@mariosioannou-create</a>), Alex Stokes&nbsp;(<a href="https://github.com/ralexstokes">@ralexstokes</a>), Kamil Salakhiev&nbsp;(<a href="https://github.com/kamilsa">@kamilsa</a>), "EIP-8070: eth/72 - Sparse Blobpool [DRAFT]," <em>Ethereum Improvement Proposals</em>, no. 8070, October 2025. Available: https://eips.ethereum.org/EIPS/eip-8070.</p>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "TechArticle",
+    "headline": "EIP-8070: eth/72 - Sparse Blobpool [DRAFT]",
+    "name": "EIP-8070: eth/72 - Sparse Blobpool [DRAFT]",
+    "author": "Raúl Kripalani (@raulk), Bosul Mun (@healthykim), Francesco D'Amato (@fradamt), Csaba Kiraly (@cskiraly), Felix Lange (@fjl), Marios Ioannou (@mariosioannou-create), Alex Stokes (@ralexstokes), Kamil Salakhiev (@kamilsa)",
+    "dateCreated": "2025-10-29",
+    "datePublished": "2025-10-29",
+    
+    "discussionUrl": "https://ethereum-magicians.org/t/eip-8070-sparse-blobpool/26023",
+    
+    "inLanguage": "en-US",
+    "license": "#copyright",
+    "copyrightYear": "2025"
+  }
+</script>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ethereum Improvement Proposals</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ethereum Improvement Proposals</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ethereum/EIPs"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ethereum/EIPs</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

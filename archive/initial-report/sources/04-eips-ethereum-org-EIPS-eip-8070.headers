@@ -1,0 +1,25 @@
+HTTP/1.1 200 Connection established
+
+HTTP/2 200 
+server: GitHub.com
+content-type: text/html; charset=utf-8
+x-origin-cache: HIT
+last-modified: Sun, 05 Jul 2026 16:13:37 GMT
+access-control-allow-origin: *
+etag: "6a4a82b1-b8ad"
+expires: Sun, 05 Jul 2026 16:57:30 GMT
+cache-control: max-age=600
+x-proxy-cache: MISS
+x-github-request-id: 7FBE:1B8400:D47C81:D7E137:6A4A8AA1
+accept-ranges: bytes
+age: 0
+date: Sun, 05 Jul 2026 16:47:30 GMT
+via: 1.1 varnish
+x-served-by: cache-icn1450025-ICN
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1783270050.375869,VS0,VE193
+vary: Accept-Encoding
+x-fastly-request-id: 34f2319a4d41f616b385b9e9d50d4552651a339a
+content-length: 47277
+

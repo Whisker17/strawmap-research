@@ -1,0 +1,18 @@
+HTTP/1.1 200 Connection established
+
+HTTP/2 200 
+age: 73935
+cache-control: public, max-age=0, must-revalidate
+content-type: text/html; charset=utf-8
+date: Sat, 04 Jul 2026 20:15:27 GMT
+etag: "69x9880w434hbi"
+server: Vercel
+strict-transport-security: max-age=63072000
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+x-matched-path: /main/[site]/[[...page]]
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 180
+x-vercel-cache: HIT
+x-vercel-id: icn1::iad1::z5n74-1783270063581-957acb2248a1
+content-length: 209142
+

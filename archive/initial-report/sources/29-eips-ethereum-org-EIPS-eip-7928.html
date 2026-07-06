@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    
+      <title>EIP-7928: Block-Level Access Lists</title>
+      <meta property="og:title" content="EIP-7928: Block-Level Access Lists" />
+    
+    <meta name="description" content="Enforced block access lists with state locations and post-transaction state diffs" />
+    <meta property="og:description" content="Enforced block access lists with state locations and post-transaction state diffs" />
+    <meta name="twitter:description" content="Enforced block access lists with state locations and post-transaction state diffs" />
+  
+  <meta name="generator" content="Jekyll" />
+  <meta property="og:locale" content="en_US" />
+  <link rel="canonical" href="https://eips.ethereum.org/EIPS/eip-7928" />
+  <meta property="og:url" content="https://eips.ethereum.org/EIPS/eip-7928" />
+  <meta property="og:site_name" content="Ethereum Improvement Proposals" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:site" content="@" />
+  <script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": "https://eips.ethereum.org",
+      "name": "Ethereum Improvement Proposals",
+      "description": "Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.",
+      "@context": "https://schema.org"
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://eips.ethereum.org/feed.xml" title="Ethereum Improvement Proposals" /><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/override.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    });
+  </script>
+  <script type="text/javascript">
+    window.MathJax = {
+      loader: {
+        load: ['input/tex-base', 'output/chtml']
+      },
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true,
+        processEnvironments: false,
+        processRefs: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js" integrity="sha384-/1zmJ1mBdfKIOnwPxpdG6yaRrxP6qu3eVYm0cz2nOx+AcL4d3AqEFrwcqGZVVroG" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/citation-js/0.6.7/citation.min.js" integrity="sha512-N+LDFMa9owHXGS+CyMrBvuxq2QuGl3fiB/7cys3aUEL7K6P1soHGqsS0sjHXZpwNd9Kz0m3R4IPy1HYRi6ROEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+    addEventListener('DOMContentLoaded', async () => {
+      const Cite = window.require('citation-js');
+      const citationElements = document.querySelectorAll('.language-csl-json');
+      for (let citationElement of citationElements) {
+        try {
+          const citation = await Cite.async(citationElement);
+          const template = document.createElement('template');
+          template.innerHTML = citation.format('bibliography', {
+            format: 'html',
+            template: 'apa',
+            lang: 'en-US'
+          });
+          if (citationElement.parentElement && citationElement.parentElement.matches('pre')) {
+            citationElement.parentElement.replaceWith(template.content);
+          } else {
+            citationElement.replaceWith(template.content);
+          }
+        } catch (e) {
+          console.error("unable to render citation", e);
+        }
+      }
+    });
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Ethereum Improvement Proposals</a><nav class="site-nav d-flex">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger row p-2"><a class="page-link col" href="/all">All</a><a class="page-link col" href="/core">Core</a><a class="page-link col" href="/networking">Networking</a><a class="page-link col" href="/interface">Interface</a><a class="page-link col" href="/erc">ERC</a><a class="page-link col" href="/meta">Meta</a><a class="page-link col" href="/informational">Informational</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="bi-megaphone-fill" fill="currentColor" viewBox="0 0 16 16">
+    <title>Alert</title>
+    <path d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0v-11zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25.222 25.222 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56V3.224zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009a68.14 68.14 0 0 1 .496.008 64 64 0 0 1 1.51.048zm1.39 1.081c.285.021.569.047.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a65.81 65.81 0 0 1 1.692.064c.327.017.65.037.966.06z"/>
+  </symbol>
+  <symbol id="bi-code" fill="currentColor" viewBox="0 0 16 16">
+    <title>Source</title>
+    <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/>
+  </symbol>
+  <svg id="bi-chat" fill="currentColor" viewBox="0 0 16 16">
+    <title>Discuss</title>
+    <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+  </svg>
+</svg>
+
+<div class="home">
+  
+  
+  
+ 
+  <span class="h5">
+    
+    
+    
+      <span class="badge text-light bg-warning" data-bs-toggle="tooltip" data-bs-title="This EIP is not yet recommended for general use or implementation, as it is subject to normative (breaking) changes.">⚠️ Draft</span>
+    
+    
+    
+       
+    
+      <a class="badge text-light bg-primary" data-bs-toggle="tooltip" data-bs-title="Improvements requiring a consensus fork, as well as changes that are not necessarily consensus critical but may be relevant to “core dev” discussions." href="../core">Standards Track: Core</a>
+    
+  </span>
+  <h1 class="page-heading">
+    EIP-7928: Block-Level Access Lists
+    <a href="https://ethereum-magicians.org/t/eip-7928-block-level-access-lists/23337" class="no-underline">
+      <svg role="img" aria-label="Discuss" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-chat"/>
+      </svg>
+    </a>
+    <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7928.md" class="no-underline">
+      <svg role="img" aria-label="Source" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-code"/>
+      </svg>
+    </a>
+  </h1>
+  <h3>Enforced block access lists with state locations and post-transaction state diffs</h3>
+  <table class="table table-borderless preamble">
+    <tbody>
+      <tr>
+        <th scope="row">Authors</th>
+        <td>Toni Wahrstätter&nbsp;(<a href="https://github.com/nerolation">@nerolation</a>), Dankrad Feist&nbsp;(<a href="https://github.com/dankrad">@dankrad</a>), Francesco D`Amato&nbsp;(<a href="https://github.com/fradamt">@fradamt</a>), Jochem Brouwer&nbsp;(<a href="https://github.com/jochem-brouwer">@jochem-brouwer</a>), Ignacio Hagopian&nbsp;(<a href="https://github.com/jsign">@jsign</a>), Felipe Selmo&nbsp;(<a href="https://github.com/fselmo">@fselmo</a>), Rahul&nbsp;(<a href="https://github.com/raxhvl">@raxhvl</a>), Stefan&nbsp;(<a href="https://github.com/qu0b">@qu0b</a>)</td>
+      </tr>
+      
+        <tr>
+          <th scope="row">Created</th>
+          <td>2025-03-31</td>
+        </tr>
+      
+      
+             
+      
+        <tr>
+          <th scope="row">Discussion Link</th>
+          <td><a href="https://ethereum-magicians.org/t/eip-7928-block-level-access-lists/23337" target="_blank" rel="noopener">https://ethereum-magicians.org/t/eip-7928-block-level-access-lists/23337</a></td>
+        </tr>
+      
+      
+    </tbody>
+  </table>
+  <br/>
+
+  
+
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#motivation">Motivation</a></li>
+  <li><a href="#specification">Specification</a>
+    <ul>
+      <li><a href="#block-structure-modification">Block Structure Modification</a></li>
+      <li><a href="#rlp-data-structures">RLP Data Structures</a></li>
+      <li><a href="#scope-and-inclusion">Scope and Inclusion</a></li>
+      <li><a href="#block-access-list-size-constraint">Block Access List Size Constraint</a></li>
+      <li><a href="#gas-validation-before-state-access">Gas Validation Before State Access</a></li>
+      <li><a href="#ordering-uniqueness-and-determinism">Ordering, Uniqueness and Determinism</a></li>
+      <li><a href="#blockaccessindex-assignment">BlockAccessIndex Assignment</a></li>
+      <li><a href="#recording-semantics-by-change-type">Recording Semantics by Change Type</a></li>
+      <li><a href="#edge-cases-normative">Edge Cases (Normative)</a></li>
+      <li><a href="#engine-api">Engine API</a></li>
+      <li><a href="#state-transition-function">State Transition Function</a></li>
+      <li><a href="#concrete-example">Concrete Example</a></li>
+    </ul>
+  </li>
+  <li><a href="#rationale">Rationale</a>
+    <ul>
+      <li><a href="#bal-design-choice">BAL Design Choice</a></li>
+      <li><a href="#bal-size-considerations-60m-block-gas-limit">BAL Size Considerations (60m block gas limit)</a></li>
+      <li><a href="#asynchronous-validation">Asynchronous Validation</a></li>
+    </ul>
+  </li>
+  <li><a href="#backwards-compatibility">Backwards Compatibility</a></li>
+  <li><a href="#security-considerations">Security Considerations</a>
+    <ul>
+      <li><a href="#validation-overhead">Validation Overhead</a></li>
+      <li><a href="#block-size">Block Size</a></li>
+      <li><a href="#early-rejection-of-malicious-bals">Early Rejection of Malicious BALs</a></li>
+    </ul>
+  </li>
+  <li><a href="#copyright">Copyright</a></li>
+</ul>
+
+  </div>
+
+  <h2 id="abstract">
+      
+      
+        <a href="#abstract" class="anchor-link"></a> Abstract
+      
+      
+    </h2>
+
+<p>This EIP introduces Block-Level Access Lists (BALs) that record all accounts and storage locations accessed during block execution, along with their post-execution values. BALs enable parallel disk reads, parallel transaction validation, parallel state root computation and executionless state updates.</p>
+  
+    <h2 id="motivation">
+      
+      
+        <a href="#motivation" class="anchor-link"></a> Motivation
+      
+      
+    </h2>
+
+<p>Transaction execution cannot be parallelized without knowing in advance which addresses and storage slots will be accessed. While <a href="/EIPS/eip-2930">EIP-2930</a> introduced optional transaction access lists, they are not enforced.</p>
+
+<p>This proposal enforces access lists at the block level, enabling:</p>
+
+<ul>
+  <li>Parallel disk reads and transaction execution</li>
+  <li>Parallel post-state root calculation</li>
+  <li>State reconstruction without executing transactions</li>
+  <li>Reduced execution time to <code class="language-plaintext highlighter-rouge">parallel IO + parallel EVM</code></li>
+</ul>
+  
+    <h2 id="specification">
+      
+      
+        <a href="#specification" class="anchor-link"></a> Specification
+      
+      
+    </h2>
+  
+    <h3 id="block-structure-modification">
+      
+      
+        <a href="#block-structure-modification" class="anchor-link"></a> Block Structure Modification
+      
+      
+    </h3>
+
+<p>We introduce a new field to the block header, <code class="language-plaintext highlighter-rouge">block_access_list_hash</code>, which contains the Keccak-256 hash of the RLP-encoded block access list. When no state changes are present, this field is the hash of an empty RLP list <code class="language-plaintext highlighter-rouge">0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347</code>, i.e. <code class="language-plaintext highlighter-rouge">keccak256(rlp.encode([]))</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Header</span><span class="p">:</span>
+    <span class="c1"># Existing fields
+</span>    <span class="p">...</span>
+    
+    <span class="n">block_access_list_hash</span><span class="p">:</span> <span class="n">Hash32</span> <span class="o">=</span> <span class="n">keccak256</span><span class="p">(</span><span class="n">rlp</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="n">block_access_list</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">BlockAccessList</code> is not included in the block body. The EL stores BALs separately and transmits them as a field in the <code class="language-plaintext highlighter-rouge">ExecutionPayload</code> via the engine API. The BAL is RLP-encoded as a list of <code class="language-plaintext highlighter-rouge">AccountChanges</code>. When no state changes are present, this field is the empty RLP list <code class="language-plaintext highlighter-rouge">0xc0</code>, i.e. <code class="language-plaintext highlighter-rouge">rlp.encode([])</code>.</p>
+  
+    <h3 id="rlp-data-structures">
+      
+      
+        <a href="#rlp-data-structures" class="anchor-link"></a> RLP Data Structures
+      
+      
+    </h3>
+
+<p>BALs use RLP encoding following the pattern: <code class="language-plaintext highlighter-rouge">address -&gt; field -&gt; block_access_index -&gt; change</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Type aliases for RLP encoding
+</span><span class="n">Address</span> <span class="o">=</span> <span class="n">bytes20</span>  <span class="c1"># 20-byte Ethereum address
+</span><span class="n">StorageKey</span> <span class="o">=</span> <span class="n">uint256</span>  <span class="c1"># Storage slot key
+</span><span class="n">StorageValue</span> <span class="o">=</span> <span class="n">uint256</span>  <span class="c1"># Storage value
+</span><span class="n">Bytecode</span> <span class="o">=</span> <span class="nb">bytes</span>  <span class="c1"># Variable-length contract bytecode
+</span><span class="n">BlockAccessIndex</span> <span class="o">=</span> <span class="n">uint32</span>  <span class="c1"># Block access index (0 for pre-execution, 1..n for transactions, n+1 for post-execution)
+</span><span class="n">Balance</span> <span class="o">=</span> <span class="n">uint256</span>  <span class="c1"># Post-transaction balance in wei
+</span><span class="n">Nonce</span> <span class="o">=</span> <span class="n">uint64</span>  <span class="c1"># Account nonce
+</span>
+<span class="c1"># Core change structures (RLP encoded as lists)
+# StorageChange: [block_access_index, new_value]
+</span><span class="n">StorageChange</span> <span class="o">=</span> <span class="p">[</span><span class="n">BlockAccessIndex</span><span class="p">,</span> <span class="n">StorageValue</span><span class="p">]</span>
+
+<span class="c1"># BalanceChange: [block_access_index, post_balance]
+</span><span class="n">BalanceChange</span> <span class="o">=</span> <span class="p">[</span><span class="n">BlockAccessIndex</span><span class="p">,</span> <span class="n">Balance</span><span class="p">]</span>
+
+<span class="c1"># NonceChange: [block_access_index, new_nonce]
+</span><span class="n">NonceChange</span> <span class="o">=</span> <span class="p">[</span><span class="n">BlockAccessIndex</span><span class="p">,</span> <span class="n">Nonce</span><span class="p">]</span>
+
+<span class="c1"># CodeChange: [block_access_index, new_code]
+</span><span class="n">CodeChange</span> <span class="o">=</span> <span class="p">[</span><span class="n">BlockAccessIndex</span><span class="p">,</span> <span class="n">Bytecode</span><span class="p">]</span>
+
+<span class="c1"># SlotChanges: [slot, [changes]]
+# All changes to a single storage slot
+</span><span class="n">SlotChanges</span> <span class="o">=</span> <span class="p">[</span><span class="n">StorageKey</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">StorageChange</span><span class="p">]]</span>
+
+<span class="c1"># AccountChanges: [address, storage_changes, storage_reads, balance_changes, nonce_changes, code_changes]
+# All changes for a single account, grouped by field type
+</span><span class="n">AccountChanges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Address</span><span class="p">,</span>                    <span class="c1"># address
+</span>    <span class="n">List</span><span class="p">[</span><span class="n">SlotChanges</span><span class="p">],</span>          <span class="c1"># storage_changes (slot -&gt; [block_access_index -&gt; new_value])
+</span>    <span class="n">List</span><span class="p">[</span><span class="n">StorageKey</span><span class="p">],</span>           <span class="c1"># storage_reads (read-only storage keys)
+</span>    <span class="n">List</span><span class="p">[</span><span class="n">BalanceChange</span><span class="p">],</span>        <span class="c1"># balance_changes ([block_access_index -&gt; post_balance])
+</span>    <span class="n">List</span><span class="p">[</span><span class="n">NonceChange</span><span class="p">],</span>          <span class="c1"># nonce_changes ([block_access_index -&gt; new_nonce])
+</span>    <span class="n">List</span><span class="p">[</span><span class="n">CodeChange</span><span class="p">]</span>            <span class="c1"># code_changes ([block_access_index -&gt; new_code])
+</span><span class="p">]</span>
+
+<span class="c1"># BlockAccessList: List of AccountChanges
+</span><span class="n">BlockAccessList</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span><span class="n">AccountChanges</span><span class="p">]</span>
+</code></pre></div></div>
+  
+    <h3 id="scope-and-inclusion">
+      
+      
+        <a href="#scope-and-inclusion" class="anchor-link"></a> Scope and Inclusion
+      
+      
+    </h3>
+
+<p><strong><code class="language-plaintext highlighter-rouge">BlockAccessList</code></strong> is the set of all addresses accessed during block execution.</p>
+
+<p>It <strong>MUST</strong> include:</p>
+
+<ul>
+  <li>Addresses with state changes (storage, balance, nonce, or code).</li>
+  <li>
+    <p>Addresses accessed without state changes, including:</p>
+
+    <ul>
+      <li>Targets of <code class="language-plaintext highlighter-rouge">BALANCE</code>, <code class="language-plaintext highlighter-rouge">EXTCODESIZE</code>, <code class="language-plaintext highlighter-rouge">EXTCODECOPY</code>, <code class="language-plaintext highlighter-rouge">EXTCODEHASH</code> opcodes</li>
+      <li>Targets of <code class="language-plaintext highlighter-rouge">CALL</code>, <code class="language-plaintext highlighter-rouge">CALLCODE</code>, <code class="language-plaintext highlighter-rouge">DELEGATECALL</code>, <code class="language-plaintext highlighter-rouge">STATICCALL</code> (even if they revert; see <a href="#gas-validation-before-state-access">Gas Validation Before State Access</a> for inclusion conditions)</li>
+      <li>Target addresses of <code class="language-plaintext highlighter-rouge">CREATE</code>/<code class="language-plaintext highlighter-rouge">CREATE2</code> only once the EVM accesses the computed address: on post-access out-of-gas, on creation collision, or when creation setup increments the new account’s nonce; not on address computation alone, nor when creation fails before access (e.g. insufficient sender balance for the endowment, nonce overflow, or call stack depth limit)</li>
+      <li>Deployed contract addresses from creation transactions, i.e. transactions with an empty <code class="language-plaintext highlighter-rouge">to</code> field, which are always included since the deployment address is unconditionally accessed during transaction setup</li>
+      <li>Transaction sender and recipient addresses (even for zero-value transfers)</li>
+      <li>Beneficiary addresses for <code class="language-plaintext highlighter-rouge">SELFDESTRUCT</code></li>
+      <li>System contract addresses accessed during pre/post-execution; the system caller address, <code class="language-plaintext highlighter-rouge">SYSTEM_ADDRESS</code> (<code class="language-plaintext highlighter-rouge">0xfffffffffffffffffffffffffffffffffffffffe</code>), MUST NOT be included unless it experiences state access itself</li>
+      <li>Withdrawal recipient addresses, regardless of whether the withdrawal amount is non-zero</li>
+      <li>Precompiled contracts when called or accessed</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Addresses with no state changes <strong>MUST</strong> still be present with empty change lists.</p>
+
+<p>Entries from an <a href="/EIPS/eip-2930">EIP-2930</a> access list <strong>MUST NOT</strong> be included automatically. Only addresses and storage slots that are actually touched or changed during execution are recorded.</p>
+  
+    <h3 id="block-access-list-size-constraint">
+      
+      
+        <a href="#block-access-list-size-constraint" class="anchor-link"></a> Block Access List Size Constraint
+      
+      
+    </h3>
+
+<p>The block access list is constrained by the block gas limit rather than a fixed maximum number of items. The constraint is defined as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bal_items &lt;= block_gas_limit // ITEM_COST
+</code></pre></div></div>
+
+<p>Where:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">bal_items = storage_keys + addresses</code></li>
+  <li><code class="language-plaintext highlighter-rouge">ITEM_COST = 2000</code></li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">storage_keys</code> is the total number of storage keys across all accounts, and <code class="language-plaintext highlighter-rouge">addresses</code> is the total number of unique addresses accessed in the block. With <a href="/EIPS/eip-7981">EIP-7981</a>, the cheapest way to add an item to the BAL is a cold <code class="language-plaintext highlighter-rouge">SLOAD</code> at <code class="language-plaintext highlighter-rouge">COLD_SLOAD_COST</code> (2100, as defined in <a href="/EIPS/eip-2929">EIP-2929</a>). <code class="language-plaintext highlighter-rouge">ITEM_COST</code> is set deliberately below this minimum to create a buffer of approximately <code class="language-plaintext highlighter-rouge">block_gas_limit / 42000</code> extra items, which absorbs BAL entries from system contract execution (e.g., <a href="/EIPS/eip-2935">EIP-2935</a>, <a href="/EIPS/eip-4788">EIP-4788</a>, <a href="/EIPS/eip-7002">EIP-7002</a>, <a href="/EIPS/eip-7251">EIP-7251</a>) and withdrawal recipients (<a href="/EIPS/eip-4895">EIP-4895</a>) that do not consume block gas.</p>
+  
+    <h3 id="gas-validation-before-state-access">
+      
+      
+        <a href="#gas-validation-before-state-access" class="anchor-link"></a> Gas Validation Before State Access
+      
+      
+    </h3>
+
+<p>State-accessing opcodes perform gas validation in two phases:</p>
+
+<ul>
+  <li><strong>Pre-state validation</strong>: Gas costs determinable without state access (memory expansion, base opcode cost, warm/cold access cost)</li>
+  <li><strong>Post-state validation</strong>: Gas costs requiring state access (account existence, <a href="/EIPS/eip-7702">EIP-7702</a> delegation resolution)</li>
+</ul>
+
+<p>Pre-state validation MUST pass before any state access occurs. If pre-state validation fails, the target resource (address or storage slot) is never accessed and MUST NOT be included in the BAL.</p>
+
+<p>Once pre-state validation passes, the target is accessed and included in the BAL. Post-state costs are then calculated; their order is implementation-defined since the target has already been accessed.</p>
+
+<p>The following table specifies pre-state validation costs in addition to the base opcode cost (gas constants as defined in <a href="/EIPS/eip-2929">EIP-2929</a>):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Instruction</th>
+      <th>Pre-state Validation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BALANCE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">access_cost</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SELFBALANCE</code></td>
+      <td>None (accesses current contract, always warm)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EXTCODESIZE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">access_cost</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EXTCODEHASH</code></td>
+      <td><code class="language-plaintext highlighter-rouge">access_cost</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EXTCODECOPY</code></td>
+      <td><code class="language-plaintext highlighter-rouge">access_cost</code> + <code class="language-plaintext highlighter-rouge">memory_expansion</code> + <code class="language-plaintext highlighter-rouge">GAS_COPY</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CALL</code></td>
+      <td><code class="language-plaintext highlighter-rouge">access_cost</code> + <code class="language-plaintext highlighter-rouge">memory_expansion</code> + <code class="language-plaintext highlighter-rouge">GAS_CALL_VALUE</code> (if value &gt; 0)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CALLCODE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">access_cost</code> + <code class="language-plaintext highlighter-rouge">memory_expansion</code> + <code class="language-plaintext highlighter-rouge">GAS_CALL_VALUE</code> (if value &gt; 0)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DELEGATECALL</code></td>
+      <td><code class="language-plaintext highlighter-rouge">access_cost</code> + <code class="language-plaintext highlighter-rouge">memory_expansion</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">STATICCALL</code></td>
+      <td><code class="language-plaintext highlighter-rouge">access_cost</code> + <code class="language-plaintext highlighter-rouge">memory_expansion</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CREATE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">memory_expansion</code> + <code class="language-plaintext highlighter-rouge">INITCODE_WORD_COST</code> + <code class="language-plaintext highlighter-rouge">GAS_CREATE</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CREATE2</code></td>
+      <td><code class="language-plaintext highlighter-rouge">memory_expansion</code> + <code class="language-plaintext highlighter-rouge">INITCODE_WORD_COST</code> + <code class="language-plaintext highlighter-rouge">GAS_KECCAK256_WORD</code> + <code class="language-plaintext highlighter-rouge">GAS_CREATE</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SLOAD</code></td>
+      <td><code class="language-plaintext highlighter-rouge">access_cost</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SSTORE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">access_cost</code>, and more than <code class="language-plaintext highlighter-rouge">GAS_CALL_STIPEND</code> available</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SELFDESTRUCT</code></td>
+      <td><code class="language-plaintext highlighter-rouge">GAS_SELF_DESTRUCT</code> + <code class="language-plaintext highlighter-rouge">access_cost</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Where:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">access_cost</code>: For account-accessing opcodes: <code class="language-plaintext highlighter-rouge">COLD_ACCOUNT_ACCESS_COST</code> if cold, <code class="language-plaintext highlighter-rouge">WARM_STORAGE_READ_COST</code> if warm. For storage-accessing opcodes (<code class="language-plaintext highlighter-rouge">SLOAD</code> and <code class="language-plaintext highlighter-rouge">SSTORE</code>): <code class="language-plaintext highlighter-rouge">COLD_SLOAD_COST</code> if cold, <code class="language-plaintext highlighter-rouge">WARM_STORAGE_READ_COST</code> if warm.</li>
+  <li><code class="language-plaintext highlighter-rouge">memory_expansion</code>: Gas cost to expand memory for input/output regions</li>
+</ul>
+
+<p>Post-state costs (e.g., <code class="language-plaintext highlighter-rouge">GAS_NEW_ACCOUNT</code> for calls to empty accounts, <code class="language-plaintext highlighter-rouge">GAS_SELF_DESTRUCT_NEW_ACCOUNT</code> if beneficiary does not exist) do not affect BAL inclusion since the target has already been accessed.</p>
+  
+    <h4 id="eip-7702-delegation">
+      
+      
+        <a href="#eip-7702-delegation" class="anchor-link"></a> EIP-7702 Delegation
+      
+      
+    </h4>
+
+<p>When a call target has an <a href="/EIPS/eip-7702">EIP-7702</a> delegation, the target is accessed to resolve the delegation, which also accesses the delegated address. The delegated address requires its own <code class="language-plaintext highlighter-rouge">access_cost</code> check before being accessed; if that gas check fails, the delegated address MUST NOT appear in the BAL. Otherwise both the original call target and the delegated address MUST appear in the BAL, including when the call subsequently fails its sender-balance (<code class="language-plaintext highlighter-rouge">sender_balance &gt;= value</code>) or call-stack-depth check, since the delegation is resolved before those checks.</p>
+
+<p>Note: Delegated accounts cannot be empty, so <code class="language-plaintext highlighter-rouge">GAS_NEW_ACCOUNT</code> never applies when resolving delegations.</p>
+  
+    <h4 id="sstore">
+      
+      
+        <a href="#sstore" class="anchor-link"></a> SSTORE
+      
+      
+    </h4>
+
+<p><code class="language-plaintext highlighter-rouge">SSTORE</code> performs an implicit read of the current storage value for gas calculation. Before this read, the frame MUST cover the storage slot’s <code class="language-plaintext highlighter-rouge">access_cost</code> and MUST also satisfy the <code class="language-plaintext highlighter-rouge">GAS_CALL_STIPEND</code> sentry (<code class="language-plaintext highlighter-rouge">gas_left &gt; GAS_CALL_STIPEND</code>); because the access cost can exceed <code class="language-plaintext highlighter-rouge">GAS_CALL_STIPEND</code> after repricing, the stipend sentry alone is no longer sufficient. If <code class="language-plaintext highlighter-rouge">SSTORE</code> fails this check, the storage slot MUST NOT appear in <code class="language-plaintext highlighter-rouge">storage_reads</code> or <code class="language-plaintext highlighter-rouge">storage_changes</code>.</p>
+  
+    <h3 id="ordering-uniqueness-and-determinism">
+      
+      
+        <a href="#ordering-uniqueness-and-determinism" class="anchor-link"></a> Ordering, Uniqueness and Determinism
+      
+      
+    </h3>
+
+<p>The following ordering rules <strong>MUST</strong> apply:</p>
+
+<ul>
+  <li><strong>Accounts</strong>: Lexicographic by address</li>
+  <li><strong>storage_changes</strong>: Slots lexicographic by storage key; within each slot, changes by block access index (ascending)</li>
+  <li><strong>storage_reads</strong>: Lexicographic by storage key</li>
+  <li><strong>balance_changes, nonce_changes, code_changes</strong>: By block access index (ascending)</li>
+</ul>
+
+<p>The following uniqueness constraints <strong>MUST</strong> hold:</p>
+
+<ul>
+  <li>Each address <strong>MUST</strong> appear exactly once in <code class="language-plaintext highlighter-rouge">BlockAccessList</code>.</li>
+  <li>Each storage key <strong>MUST</strong> appear at most once in <code class="language-plaintext highlighter-rouge">storage_changes</code> per account.</li>
+  <li>Each storage key <strong>MUST</strong> appear at most once in <code class="language-plaintext highlighter-rouge">storage_reads</code> per account.</li>
+  <li>A storage key <strong>MUST NOT</strong> appear in both <code class="language-plaintext highlighter-rouge">storage_changes</code> and <code class="language-plaintext highlighter-rouge">storage_reads</code> for the same account.</li>
+  <li>Each <code class="language-plaintext highlighter-rouge">block_access_index</code> <strong>MUST</strong> appear at most once per change list (<code class="language-plaintext highlighter-rouge">balance_changes</code>, <code class="language-plaintext highlighter-rouge">nonce_changes</code>, <code class="language-plaintext highlighter-rouge">code_changes</code>, and per-slot <code class="language-plaintext highlighter-rouge">StorageChange</code> list).</li>
+  <li>Each <code class="language-plaintext highlighter-rouge">SlotChanges</code> entry <strong>MUST</strong> contain at least one <code class="language-plaintext highlighter-rouge">StorageChange</code>.</li>
+</ul>
+  
+    <h3 id="blockaccessindex-assignment">
+      
+      
+        <a href="#blockaccessindex-assignment" class="anchor-link"></a> BlockAccessIndex Assignment
+      
+      
+    </h3>
+
+<p><code class="language-plaintext highlighter-rouge">BlockAccessIndex</code> values <strong>MUST</strong> be assigned as follows:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">0</code> for <strong>pre‑execution</strong> system contract calls.</li>
+  <li><code class="language-plaintext highlighter-rouge">1 … n</code> for transactions (in block order).</li>
+  <li><code class="language-plaintext highlighter-rouge">n + 1</code> for <strong>post‑execution</strong> system contract calls.</li>
+</ul>
+  
+    <h3 id="recording-semantics-by-change-type">
+      
+      
+        <a href="#recording-semantics-by-change-type" class="anchor-link"></a> Recording Semantics by Change Type
+      
+      
+    </h3>
+  
+    <h4 id="storage">
+      
+      
+        <a href="#storage" class="anchor-link"></a> Storage
+      
+      
+    </h4>
+
+<ul>
+  <li>
+    <p><strong>Writes include:</strong></p>
+
+    <ul>
+      <li>Any value change (post‑value ≠ pre‑value).</li>
+      <li><strong>Zeroing</strong> a slot (pre‑value exists, post‑value is zero).</li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Reads include:</strong></p>
+
+    <ul>
+      <li>Slots accessed via <code class="language-plaintext highlighter-rouge">SLOAD</code> that are not written.</li>
+      <li>Slots written with unchanged values (i.e., <code class="language-plaintext highlighter-rouge">SSTORE</code> where post-value equals pre-value, also known as “no-op writes”).</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Note: Implementations MUST compare each write against the storage value as of immediately before the current <code class="language-plaintext highlighter-rouge">block_access_index</code> (i.e., the cumulative state from all prior indices, falling back to the pre-block state) to correctly distinguish between actual writes and no-op writes. A no-op write MUST NOT remove <code class="language-plaintext highlighter-rouge">storage_changes</code> entries from earlier indices for the same slot.</p>
+  
+    <h4 id="balance-balance_changes">
+      
+      
+        <a href="#balance-balance_changes" class="anchor-link"></a> Balance (<code class="language-plaintext highlighter-rouge">balance_changes</code>)
+      
+      
+    </h4>
+
+<p>Record <strong>post‑transaction</strong> balances (<code class="language-plaintext highlighter-rouge">uint256</code>) for:</p>
+
+<ul>
+  <li>Transaction <strong>senders</strong> (gas + value).</li>
+  <li>Transaction <strong>recipients</strong> (only if <code class="language-plaintext highlighter-rouge">value &gt; 0</code>).</li>
+  <li>CALL/CALLCODE <strong>senders</strong> (value).</li>
+  <li>CALL/CALLCODE <strong>recipients</strong> (only if <code class="language-plaintext highlighter-rouge">value &gt; 0</code>).</li>
+  <li>CREATE/CREATE2 recipients (only if <code class="language-plaintext highlighter-rouge">value &gt; 0</code>).</li>
+  <li><strong>COINBASE</strong> (rewards + fees).</li>
+  <li><strong>SELFDESTRUCT/SENDALL</strong> beneficiaries.</li>
+  <li><strong>Withdrawal recipients</strong> (system withdrawals, <a href="/EIPS/eip-4895">EIP-4895</a>).</li>
+</ul>
+
+<p>For unaltered account balances:</p>
+
+<p>If an account’s balance changes during a transaction, but its post-transaction balance is equal to its pre-transaction balance, then the change <strong>MUST NOT</strong> be recorded in <code class="language-plaintext highlighter-rouge">balance_changes</code>. The sender and recipient address <strong>MUST</strong> be included in <code class="language-plaintext highlighter-rouge">AccountChanges</code>.</p>
+
+<p>The following special cases require addresses to be included with empty changes if no other state changes occur:</p>
+
+<ul>
+  <li>Zero-value transfer recipients</li>
+  <li>Calling a same-transaction SELFDESTRUCT on an address that had a zero pre-transaction balance</li>
+</ul>
+
+<p>A zero-value block reward <strong>MUST NOT</strong> trigger a balance change in the block access list and <strong>MUST NOT</strong>, by itself, cause the recipient address to be included. The recipient <strong>MUST</strong> still be included if it is accessed for other reasons (e.g., transaction fee accounting).</p>
+  
+    <h4 id="code">
+      
+      
+        <a href="#code" class="anchor-link"></a> Code
+      
+      
+    </h4>
+
+<p>Track <strong>post‑transaction runtime bytecode</strong> for deployed or modified contracts, and <strong>delegation indicators</strong> for successful delegations as defined in <a href="/EIPS/eip-7702">EIP-7702</a>.</p>
+  
+    <h4 id="nonce">
+      
+      
+        <a href="#nonce" class="anchor-link"></a> Nonce
+      
+      
+    </h4>
+
+<p>Record <strong>post‑transaction nonces</strong> for:</p>
+
+<ul>
+  <li>EOA senders.</li>
+  <li>Contracts that performed a successful <code class="language-plaintext highlighter-rouge">CREATE</code> or <code class="language-plaintext highlighter-rouge">CREATE2</code>.</li>
+  <li>Deployed contracts.</li>
+  <li><a href="/EIPS/eip-7702">EIP-7702</a> authorities.</li>
+</ul>
+  
+    <h3 id="edge-cases-normative">
+      
+      
+        <a href="#edge-cases-normative" class="anchor-link"></a> Edge Cases (Normative)
+      
+      
+    </h3>
+
+<ul>
+  <li><strong>COINBASE / Fee Recipient:</strong> The COINBASE address follows the same inclusion rules as any other account. It is included when accessed (e.g., during transaction fee accounting) and excluded when not accessed (e.g., empty blocks with no relevant withdrawals).</li>
+  <li><strong>Precompiled contracts:</strong> Precompiles <strong>MUST</strong> be included when accessed. If a precompile receives value, it is recorded with a balance change. Otherwise, it is included with empty change lists.</li>
+  <li><strong>SENDALL:</strong> For positive-value selfdestructs, the sender and beneficiary are recorded with a balance change.</li>
+  <li><strong>SELFDESTRUCT (in-transaction):</strong> Accounts destroyed within a transaction <strong>MUST</strong> be included in <code class="language-plaintext highlighter-rouge">AccountChanges</code> without nonce or code changes. However, if the account had a positive balance pre-transaction, the balance change to zero <strong>MUST</strong> be recorded. Storage keys within the self-destructed contracts that were modified or read <strong>MUST</strong> be included as a <code class="language-plaintext highlighter-rouge">storage_reads</code> entry.</li>
+  <li><strong>Accessed but unchanged:</strong> Include the address with empty changes (e.g., targets of <code class="language-plaintext highlighter-rouge">EXTCODEHASH</code>, <code class="language-plaintext highlighter-rouge">EXTCODESIZE</code>, <code class="language-plaintext highlighter-rouge">BALANCE</code>, <code class="language-plaintext highlighter-rouge">STATICCALL</code>, etc.).</li>
+  <li><strong>Zero‑value transfers / Unchanged balance in transaction:</strong> Include the address; omit from <code class="language-plaintext highlighter-rouge">balance_changes</code>.</li>
+  <li><strong>Gas refunds:</strong> Record the <strong>final</strong> balance of the sender after each transaction.</li>
+  <li><strong>Block rewards:</strong> Record the <strong>final</strong> balance of the fee recipient after each transaction.</li>
+  <li><strong>Exceptional halts:</strong> Record the <strong>final</strong> nonce and balance of the sender, and the <strong>final</strong> balance of the fee recipient after each transaction. State changes from the reverted call are discarded, but all accessed addresses <strong>MUST</strong> be included. If no changes remain, addresses are included with empty lists; if storage was read, the corresponding keys <strong>MUST</strong> appear in <code class="language-plaintext highlighter-rouge">storage_reads</code>.</li>
+  <li><strong>Pre‑execution system contract calls:</strong> All state changes <strong>MUST</strong> use <code class="language-plaintext highlighter-rouge">block_access_index = 0</code>.</li>
+  <li><strong>Post‑execution system contract calls:</strong> All state changes <strong>MUST</strong> use <code class="language-plaintext highlighter-rouge">block_access_index = len(transactions) + 1</code>.</li>
+  <li><strong>EIP-7702 Delegations:</strong> The authority address <strong>MUST</strong> be included with nonce and code changes after any successful delegation set, update, or clear. If authorization fails after the authority address has been loaded and added to <code class="language-plaintext highlighter-rouge">accessed_addresses</code> (per <a href="/EIPS/eip-2929">EIP-2929</a>), it <strong>MUST</strong> still be included with an empty change set; if authorization fails before the authority is loaded, it <strong>MUST NOT</strong> be included. The delegation target <strong>MUST NOT</strong> be included during delegation creation or modification and MUST only be included once it is actually loaded as an execution target (e.g., via <code class="language-plaintext highlighter-rouge">CALL</code>/<code class="language-plaintext highlighter-rouge">CALLCODE</code>/<code class="language-plaintext highlighter-rouge">DELEGATECALL</code>/<code class="language-plaintext highlighter-rouge">STATICCALL</code> under authority execution).</li>
+  <li><strong>EIP‑4895 (Consensus layer withdrawals):</strong> Recipients are recorded with their final balance after the withdrawal.</li>
+  <li><strong>EIP‑2935 (block hash):</strong> Record system contract storage diffs of the <strong>single</strong> updated storage slot in the ring buffer.</li>
+  <li><strong>EIP‑4788 (beacon root):</strong> Record system contract storage diffs of the <strong>two</strong> updated storage slots in the ring buffer.</li>
+  <li><strong>EIP‑7002 (withdrawals):</strong> Record system contract storage diffs of storage slots <strong>0–3</strong> (4 slots) after the dequeuing call. The dequeue also reads up to 3 × <code class="language-plaintext highlighter-rouge">MAX_WITHDRAWAL_REQUESTS_PER_BLOCK</code> queue data slots (from slot 4 onward), which appear as storage_reads.</li>
+  <li><strong>EIP‑7251 (consolidations):</strong> Record system contract storage diffs of storage slots <strong>0–3</strong> (4 slots) after the dequeuing call. The dequeue also reads up to 4 × <code class="language-plaintext highlighter-rouge">MAX_CONSOLIDATION_REQUESTS_PER_BLOCK</code> queue data slots (from slot 4 onward), which appear as storage_reads.</li>
+</ul>
+  
+    <h3 id="engine-api">
+      
+      
+        <a href="#engine-api" class="anchor-link"></a> Engine API
+      
+      
+    </h3>
+
+<p>The Engine API is extended with new structures and methods to support block-level access lists:</p>
+
+<p><strong>ExecutionPayloadV4</strong> extends ExecutionPayloadV3 with:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">blockAccessList</code>: RLP-encoded block access list</li>
+</ul>
+
+<p><strong>engine_newPayloadV5</strong> validates execution payloads:</p>
+
+<ul>
+  <li>Accepts <code class="language-plaintext highlighter-rouge">ExecutionPayloadV4</code> structure</li>
+  <li>Validates that computed access list matches provided <code class="language-plaintext highlighter-rouge">blockAccessList</code></li>
+  <li>Returns <code class="language-plaintext highlighter-rouge">INVALID</code> if access list is malformed or doesn’t match</li>
+</ul>
+
+<p><strong>engine_getPayloadV6</strong> builds execution payloads:</p>
+
+<ul>
+  <li>Returns <code class="language-plaintext highlighter-rouge">ExecutionPayloadV4</code> structure</li>
+  <li>Collects all account accesses and state changes during transaction execution</li>
+  <li>Populates <code class="language-plaintext highlighter-rouge">blockAccessList</code> field with RLP-encoded access list</li>
+</ul>
+
+<p><strong>Block processing flow:</strong></p>
+
+<p>When processing a block:</p>
+
+<ol>
+  <li>The EL receives the BAL in the ExecutionPayload</li>
+  <li>The EL computes <code class="language-plaintext highlighter-rouge">block_access_list_hash = keccak256(blockAccessList)</code> and includes it in the block header</li>
+  <li>The EL executes the block and generates the actual BAL</li>
+  <li>If the generated BAL doesn’t match the provided BAL, the block is invalid (the hash in the header would be wrong)</li>
+</ol>
+
+<p>The execution layer provides the RLP-encoded <code class="language-plaintext highlighter-rouge">blockAccessList</code> to the consensus layer via the Engine API. The consensus layer stores it as a field in the SSZ <code class="language-plaintext highlighter-rouge">ExecutionPayload</code> container. For long-term storage, the full <code class="language-plaintext highlighter-rouge">blockAccessList</code> bytes MAY be pruned and replaced by the field’s SSZ <code class="language-plaintext highlighter-rouge">hash_tree_root</code>, preserving the Merkle commitment within the <code class="language-plaintext highlighter-rouge">ExecutionPayload</code> tree.</p>
+
+<p><strong>Retrieval methods</strong> for historical BALs:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">engine_getPayloadBodiesByHashV2</code>: Returns <code class="language-plaintext highlighter-rouge">ExecutionPayloadBodyV2</code> objects containing transactions, withdrawals, and <code class="language-plaintext highlighter-rouge">blockAccessList</code></li>
+  <li><code class="language-plaintext highlighter-rouge">engine_getPayloadBodiesByRangeV2</code>: Returns <code class="language-plaintext highlighter-rouge">ExecutionPayloadBodyV2</code> objects containing transactions, withdrawals, and <code class="language-plaintext highlighter-rouge">blockAccessList</code></li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">blockAccessList</code> field contains the RLP-encoded BAL or <code class="language-plaintext highlighter-rouge">null</code> for pre-Amsterdam blocks or when data has been pruned.</p>
+
+<p>The EL MUST retain BALs for at least the duration of the weak subjectivity period (<code class="language-plaintext highlighter-rouge">=3533 epochs</code>) to support synchronization with re-execution after being offline for less than the WSP.</p>
+  
+    <h3 id="state-transition-function">
+      
+      
+        <a href="#state-transition-function" class="anchor-link"></a> State Transition Function
+      
+      
+    </h3>
+
+<p>The state transition function must validate that the provided BAL matches the actual state accesses.</p>
+
+<p><strong>Implementation Note:</strong> The BAL itself does not need to enter the state transition function. Implementations MAY validate by generating a virtual BAL during execution, hashing it, and comparing against the <code class="language-plaintext highlighter-rouge">block_access_list_hash</code> in the header. This is the approach used in the execution-specs reference implementation.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">validate_block</span><span class="p">(</span><span class="n">execution_payload</span><span class="p">,</span> <span class="n">block_header</span><span class="p">):</span>
+    <span class="c1"># 1. Compute hash from received BAL and set in header
+</span>    <span class="n">block_header</span><span class="p">.</span><span class="n">block_access_list_hash</span> <span class="o">=</span> <span class="n">keccak</span><span class="p">(</span><span class="n">execution_payload</span><span class="p">.</span><span class="n">blockAccessList</span><span class="p">)</span>
+    
+    <span class="c1"># 2. Execute block and collect actual accesses
+</span>    <span class="n">actual_bal</span> <span class="o">=</span> <span class="n">execute_and_collect_accesses</span><span class="p">(</span><span class="n">execution_payload</span><span class="p">)</span>
+    
+    <span class="c1"># 3. Verify actual execution matches provided BAL
+</span>    <span class="c1"># If this fails, the block is invalid (the hash in the header would be wrong)
+</span>    <span class="k">assert</span> <span class="n">rlp</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="n">actual_bal</span><span class="p">)</span> <span class="o">==</span> <span class="n">execution_payload</span><span class="p">.</span><span class="n">blockAccessList</span>
+
+<span class="k">def</span> <span class="nf">execute_and_collect_accesses</span><span class="p">(</span><span class="n">block</span><span class="p">):</span>
+    <span class="s">"""Execute block and collect all state accesses into BAL format"""</span>
+    <span class="n">accesses</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="c1"># Pre-execution system contracts (block_access_index = 0)
+</span>    <span class="n">track_system_contracts_pre</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">accesses</span><span class="p">,</span> <span class="n">block_access_index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Execute transactions (block_access_index = 1..n)
+</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">block</span><span class="p">.</span><span class="n">transactions</span><span class="p">):</span>
+        <span class="n">execute_transaction</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+        <span class="n">track_state_changes</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="n">accesses</span><span class="p">,</span> <span class="n">block_access_index</span><span class="o">=</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Withdrawals and post-execution (block_access_index = len(txs) + 1)
+</span>    <span class="n">post_index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">block</span><span class="p">.</span><span class="n">transactions</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">withdrawal</span> <span class="ow">in</span> <span class="n">block</span><span class="p">.</span><span class="n">withdrawals</span><span class="p">:</span>
+        <span class="n">apply_withdrawal</span><span class="p">(</span><span class="n">withdrawal</span><span class="p">)</span>
+        <span class="n">track_balance_change</span><span class="p">(</span><span class="n">withdrawal</span><span class="p">.</span><span class="n">address</span><span class="p">,</span> <span class="n">accesses</span><span class="p">,</span> <span class="n">post_index</span><span class="p">)</span>
+    <span class="n">track_system_contracts_post</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">accesses</span><span class="p">,</span> <span class="n">post_index</span><span class="p">)</span>
+    
+    <span class="c1"># Convert to BAL format and sort
+</span>    <span class="k">return</span> <span class="n">build_bal</span><span class="p">(</span><span class="n">accesses</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">track_state_changes</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="n">accesses</span><span class="p">,</span> <span class="n">block_access_index</span><span class="p">):</span>
+    <span class="s">"""Track all state changes from a transaction"""</span>
+    <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">get_touched_addresses</span><span class="p">(</span><span class="n">tx</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">addr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">accesses</span><span class="p">:</span>
+            <span class="n">accesses</span><span class="p">[</span><span class="n">addr</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">'storage_writes'</span><span class="p">:</span> <span class="p">{},</span>  <span class="c1"># slot -&gt; [(index, value)]
+</span>                <span class="s">'storage_reads'</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+                <span class="s">'balance_changes'</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s">'nonce_changes'</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s">'code_changes'</span><span class="p">:</span> <span class="p">[]</span>
+            <span class="p">}</span>
+        
+        <span class="c1"># Track storage changes
+</span>        <span class="k">for</span> <span class="n">slot</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">get_storage_writes</span><span class="p">(</span><span class="n">addr</span><span class="p">).</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">slot</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">accesses</span><span class="p">[</span><span class="n">addr</span><span class="p">][</span><span class="s">'storage_writes'</span><span class="p">]:</span>
+                <span class="n">accesses</span><span class="p">[</span><span class="n">addr</span><span class="p">][</span><span class="s">'storage_writes'</span><span class="p">][</span><span class="n">slot</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">accesses</span><span class="p">[</span><span class="n">addr</span><span class="p">][</span><span class="s">'storage_writes'</span><span class="p">][</span><span class="n">slot</span><span class="p">].</span><span class="n">append</span><span class="p">((</span><span class="n">block_access_index</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        
+        <span class="c1"># Track reads (slots accessed but not written)
+</span>        <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">get_storage_reads</span><span class="p">(</span><span class="n">addr</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">slot</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">accesses</span><span class="p">[</span><span class="n">addr</span><span class="p">][</span><span class="s">'storage_writes'</span><span class="p">]:</span>
+                <span class="n">accesses</span><span class="p">[</span><span class="n">addr</span><span class="p">][</span><span class="s">'storage_reads'</span><span class="p">].</span><span class="n">add</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span>
+        
+        <span class="c1"># Track balance, nonce, code changes
+</span>        <span class="k">if</span> <span class="n">balance_changed</span><span class="p">(</span><span class="n">addr</span><span class="p">):</span>
+            <span class="n">accesses</span><span class="p">[</span><span class="n">addr</span><span class="p">][</span><span class="s">'balance_changes'</span><span class="p">].</span><span class="n">append</span><span class="p">((</span><span class="n">block_access_index</span><span class="p">,</span> <span class="n">get_balance</span><span class="p">(</span><span class="n">addr</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">nonce_changed</span><span class="p">(</span><span class="n">addr</span><span class="p">):</span>
+            <span class="n">accesses</span><span class="p">[</span><span class="n">addr</span><span class="p">][</span><span class="s">'nonce_changes'</span><span class="p">].</span><span class="n">append</span><span class="p">((</span><span class="n">block_access_index</span><span class="p">,</span> <span class="n">get_nonce</span><span class="p">(</span><span class="n">addr</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">code_changed</span><span class="p">(</span><span class="n">addr</span><span class="p">):</span>
+            <span class="n">accesses</span><span class="p">[</span><span class="n">addr</span><span class="p">][</span><span class="s">'code_changes'</span><span class="p">].</span><span class="n">append</span><span class="p">((</span><span class="n">block_access_index</span><span class="p">,</span> <span class="n">get_code</span><span class="p">(</span><span class="n">addr</span><span class="p">)))</span>
+
+<span class="k">def</span> <span class="nf">build_bal</span><span class="p">(</span><span class="n">accesses</span><span class="p">):</span>
+    <span class="s">"""Convert collected accesses to BAL format"""</span>
+    <span class="n">bal</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">accesses</span><span class="p">.</span><span class="n">keys</span><span class="p">()):</span>  <span class="c1"># Sort addresses lexicographically
+</span>        <span class="n">data</span> <span class="o">=</span> <span class="n">accesses</span><span class="p">[</span><span class="n">addr</span><span class="p">]</span>
+        
+        <span class="c1"># Format storage changes: [slot, [[index, value], ...]]
+</span>        <span class="n">storage_changes</span> <span class="o">=</span> <span class="p">[[</span><span class="n">slot</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">changes</span><span class="p">)]</span> 
+                          <span class="k">for</span> <span class="n">slot</span><span class="p">,</span> <span class="n">changes</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'storage_writes'</span><span class="p">].</span><span class="n">items</span><span class="p">())]</span>
+        
+        <span class="c1"># Account entry: [address, storage_changes, reads, balance_changes, nonce_changes, code_changes]
+</span>        <span class="n">bal</span><span class="p">.</span><span class="n">append</span><span class="p">([</span>
+            <span class="n">addr</span><span class="p">,</span>
+            <span class="n">storage_changes</span><span class="p">,</span>
+            <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'storage_reads'</span><span class="p">])),</span>
+            <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'balance_changes'</span><span class="p">]),</span>
+            <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'nonce_changes'</span><span class="p">]),</span>
+            <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'code_changes'</span><span class="p">])</span>
+        <span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">bal</span>
+</code></pre></div></div>
+
+<p>The BAL MUST be complete and accurate. Missing or spurious entries invalidate the block. Spurious entries MAY be detected by validating BAL indices, which MUST never be higher than <code class="language-plaintext highlighter-rouge">len(transactions) + 1</code>.</p>
+
+<p>Clients MAY invalidate immediately if any transaction exceeds declared state.</p>
+
+<p>Clients MUST store BALs separately from blocks and make them available via the engine API.</p>
+  
+    <h3 id="concrete-example">
+      
+      
+        <a href="#concrete-example" class="anchor-link"></a> Concrete Example
+      
+      
+    </h3>
+
+<p>Example block:</p>
+
+<p><strong>Pre-execution:</strong></p>
+
+<ul>
+  <li>EIP-2935: Store parent hash at block hash contract (<code class="language-plaintext highlighter-rouge">0x0000F90827F1C53a10cb7A02335B175320002935</code>)</li>
+  <li>EIP-7002: Omitted for simplicity.</li>
+</ul>
+
+<p><strong>Transactions:</strong></p>
+
+<ol>
+  <li>Alice (0xaaaa…) sends 1 ETH to Bob (0xbbbb…), checks balance of 0x2222…</li>
+  <li>Charlie (0xcccc…) calls factory (0xffff…) deploying contract at 0xdddd…</li>
+</ol>
+
+<p><strong>Post-execution:</strong></p>
+
+<ul>
+  <li>Withdrawal of 100 ETH to Eve (0xabcd…)</li>
+  <li>EIP-7002 and EIP-7251 omitted for simplicity.</li>
+</ul>
+
+<p>Note: Pre-execution system contract uses block_access_index = 0. Post-execution withdrawal uses block_access_index = 3 (len(transactions) + 1)</p>
+
+<p>Resulting BAL (RLP structure):</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span>
+    <span class="c1"># Addresses are sorted lexicographically
+</span>    <span class="p">[</span> <span class="c1"># AccountChanges for 0x0000F90827F1C53a10cb7A02335B175320002935 (Block hash contract)
+</span>        <span class="mh">0x0000F90827F1C53a10cb7A02335B175320002935</span><span class="p">,</span>
+        <span class="p">[</span> <span class="c1"># storage_changes
+</span>            <span class="p">[</span><span class="sa">b</span><span class="s">'</span><span class="se">\x00</span><span class="s">...</span><span class="se">\x0f\xa0</span><span class="s">'</span><span class="p">,</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="sa">b</span><span class="s">'...'</span><span class="p">]]]</span>  <span class="c1"># slot, [[block_access_index, parent_hash]]
+</span>        <span class="p">],</span>
+        <span class="p">[],</span>  <span class="c1"># storage_reads
+</span>        <span class="p">[],</span>  <span class="c1"># balance_changes
+</span>        <span class="p">[],</span>  <span class="c1"># nonce_changes
+</span>        <span class="p">[]</span>   <span class="c1"># code_changes
+</span>    <span class="p">],</span>
+    <span class="p">[</span> <span class="c1"># AccountChanges for 0x2222... (Address checked by Alice)
+</span>        <span class="mh">0x2222</span><span class="p">...,</span>
+        <span class="p">[],</span>  <span class="c1"># storage_changes
+</span>        <span class="p">[],</span>  <span class="c1"># storage_reads
+</span>        <span class="p">[],</span>  <span class="c1"># balance_changes (no change, just checked)
+</span>        <span class="p">[],</span>  <span class="c1"># nonce_changes
+</span>        <span class="p">[]</span>   <span class="c1"># code_changes
+</span>    <span class="p">],</span>
+    <span class="p">[</span> <span class="c1"># AccountChanges for 0xaaaa... (Alice - sender tx 0)
+</span>        <span class="mh">0xaaaa</span><span class="p">...,</span>
+        <span class="p">[],</span>  <span class="c1"># storage_changes
+</span>        <span class="p">[],</span>  <span class="c1"># storage_reads
+</span>        <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="n">x</span><span class="p">...</span><span class="mi">29</span><span class="n">a241a</span><span class="p">]],</span>  <span class="c1"># balance_changes: [[block_access_index, post_balance]]
+</span>        <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">]],</span>  <span class="c1"># nonce_changes: [[block_access_index, new_nonce]]
+</span>        <span class="p">[]</span>  <span class="c1"># code_changes
+</span>    <span class="p">],</span>
+    <span class="p">[</span> <span class="c1"># AccountChanges for 0xabcd... (Eve - withdrawal recipient)
+</span>        <span class="mh">0xabcd</span><span class="p">...,</span>
+        <span class="p">[],</span>  <span class="c1"># storage_changes
+</span>        <span class="p">[],</span>  <span class="c1"># storage_reads
+</span>        <span class="p">[[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="n">x</span><span class="p">...</span><span class="mi">5</span><span class="n">f5e100</span><span class="p">]],</span>  <span class="c1"># balance_changes: 100 ETH withdrawal
+</span>        <span class="p">[],</span>  <span class="c1"># nonce_changes
+</span>        <span class="p">[]</span>   <span class="c1"># code_changes
+</span>    <span class="p">],</span>
+    <span class="p">[</span> <span class="c1"># AccountChanges for 0xbbbb... (Bob - recipient tx 0)
+</span>        <span class="mh">0xbbbb</span><span class="p">...,</span>
+        <span class="p">[],</span>  <span class="c1"># storage_changes
+</span>        <span class="p">[],</span>  <span class="c1"># storage_reads
+</span>        <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="n">x</span><span class="p">...</span><span class="n">b9aca00</span><span class="p">]],</span>  <span class="c1"># balance_changes: +1 ETH
+</span>        <span class="p">[],</span>  <span class="c1"># nonce_changes
+</span>        <span class="p">[]</span>   <span class="c1"># code_changes
+</span>    <span class="p">],</span>
+    <span class="p">[</span> <span class="c1"># AccountChanges for 0xcccc... (Charlie - sender tx 1)
+</span>        <span class="mh">0xcccc</span><span class="p">...,</span>
+        <span class="p">[],</span>  <span class="c1"># storage_changes
+</span>        <span class="p">[],</span>  <span class="c1"># storage_reads
+</span>        <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="n">x</span><span class="p">...</span><span class="n">bc16d67</span><span class="p">]],</span>  <span class="c1"># balance_changes: after gas
+</span>        <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]],</span>  <span class="c1"># nonce_changes
+</span>        <span class="p">[]</span>  <span class="c1"># code_changes
+</span>    <span class="p">],</span>
+    <span class="p">[</span> <span class="c1"># AccountChanges for 0xdddd... (Deployed contract)
+</span>        <span class="mh">0xdddd</span><span class="p">...,</span>
+        <span class="p">[],</span>  <span class="c1"># storage_changes
+</span>        <span class="p">[],</span>  <span class="c1"># storage_reads
+</span>        <span class="p">[],</span>  <span class="c1"># balance_changes
+</span>        <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span>  <span class="c1"># nonce_changes: new contract nonce
+</span>        <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="sa">b</span><span class="s">'</span><span class="se">\x60\x80\x60\x40</span><span class="s">...'</span><span class="p">]]</span>  <span class="c1"># code_changes: deployed bytecode
+</span>    <span class="p">],</span>
+    <span class="p">[</span> <span class="c1"># AccountChanges for 0xeeee... (COINBASE)
+</span>        <span class="mh">0xeeee</span><span class="p">...,</span>
+        <span class="p">[],</span>  <span class="c1"># storage_changes
+</span>        <span class="p">[],</span>  <span class="c1"># storage_reads
+</span>        <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="n">x</span><span class="p">...</span><span class="mi">05</span><span class="n">f5e1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="n">x</span><span class="p">...</span><span class="mi">0</span><span class="n">bebc2</span><span class="p">]],</span>  <span class="c1"># balance_changes: after tx fees
+</span>        <span class="p">[],</span>  <span class="c1"># nonce_changes
+</span>        <span class="p">[]</span>   <span class="c1"># code_changes
+</span>    <span class="p">],</span>
+    <span class="p">[</span> <span class="c1"># AccountChanges for 0xffff... (Factory contract)
+</span>        <span class="mh">0xffff</span><span class="p">...,</span>
+        <span class="p">[</span> <span class="c1"># storage_changes
+</span>            <span class="p">[</span><span class="sa">b</span><span class="s">'</span><span class="se">\x00</span><span class="s">...</span><span class="se">\x01</span><span class="s">'</span><span class="p">,</span> <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="sa">b</span><span class="s">'</span><span class="se">\x00</span><span class="s">...</span><span class="se">\xdd\xdd</span><span class="s">...'</span><span class="p">]]]</span>  <span class="c1"># slot 1, deployed address
+</span>        <span class="p">],</span>
+        <span class="p">[],</span>  <span class="c1"># storage_reads
+</span>        <span class="p">[],</span>  <span class="c1"># balance_changes
+</span>        <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]],</span>  <span class="c1"># nonce_changes: after CREATE
+</span>        <span class="p">[]</span>  <span class="c1"># code_changes
+</span>    <span class="p">]</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<p>RLP-encoded and compressed: ~400-500 bytes.</p>
+  
+    <h2 id="rationale">
+      
+      
+        <a href="#rationale" class="anchor-link"></a> Rationale
+      
+      
+    </h2>
+  
+    <h3 id="bal-design-choice">
+      
+      
+        <a href="#bal-design-choice" class="anchor-link"></a> BAL Design Choice
+      
+      
+    </h3>
+
+<p>This design variant was chosen for several key reasons:</p>
+
+<ol>
+  <li>
+    <p><strong>Size vs parallelization</strong>: BALs include all accessed addresses (even unchanged) for complete parallel IO and execution.</p>
+  </li>
+  <li>
+    <p><strong>Storage values for writes</strong>: Post-execution values enable state reconstruction during sync without individual proofs against state root.</p>
+  </li>
+  <li>
+    <p><strong>Overhead analysis</strong>: Historical data shows ~70 KiB average BAL size.</p>
+  </li>
+  <li>
+    <p><strong>Transaction independence</strong>: 60-80% of transactions access disjoint storage slots, enabling effective parallelization. The remaining 20-40% can be parallelized by having post-transaction state diffs.</p>
+  </li>
+  <li>
+    <p><strong>RLP encoding</strong>: Native Ethereum encoding format, maintains compatibility with existing infrastructure.</p>
+  </li>
+</ol>
+  
+    <h3 id="bal-size-considerations-60m-block-gas-limit">
+      
+      
+        <a href="#bal-size-considerations-60m-block-gas-limit" class="anchor-link"></a> BAL Size Considerations (60m block gas limit)
+      
+      
+    </h3>
+
+<p><strong>Average BAL size</strong>: ~72.4 KiB (compressed)</p>
+
+<ul>
+  <li>Storage writes: ~29.2 KiB (40.3%)</li>
+  <li>Storage reads: ~18.7 KiB (25.8%)</li>
+  <li>Balance diffs: ~6.7 KiB (9.2%)</li>
+  <li>Nonce diffs: ~1.1 KiB (1.5%)</li>
+  <li>Code diffs: ~1.2 KiB (1.6%)</li>
+  <li>Account addresses (with diffs): ~7.7 KiB (10.7%)</li>
+  <li>Touched-only addresses: ~3.5 KiB (4.8%)</li>
+  <li>RLP encoding overhead: ~4.4 KiB (6.1%)</li>
+</ul>
+
+<p>Smaller than current worst-case calldata blocks.</p>
+
+<p>An empirical analysis has been done <a href="/assets/eip-7928/bal_size_analysis">here</a>. An updated analysis for a 60 million block gas limit can be found <a href="/assets/eip-7928/bal_size_analysis_60m">here</a>.</p>
+  
+    <h3 id="asynchronous-validation">
+      
+      
+        <a href="#asynchronous-validation" class="anchor-link"></a> Asynchronous Validation
+      
+      
+    </h3>
+
+<p>BAL verification occurs alongside parallel IO and EVM operations without delaying block processing.</p>
+  
+    <h2 id="backwards-compatibility">
+      
+      
+        <a href="#backwards-compatibility" class="anchor-link"></a> Backwards Compatibility
+      
+      
+    </h2>
+
+<p>This proposal requires changes to the block structure and engine API that are not backwards compatible and require a hard fork.</p>
+  
+    <h2 id="security-considerations">
+      
+      
+        <a href="#security-considerations" class="anchor-link"></a> Security Considerations
+      
+      
+    </h2>
+  
+    <h3 id="validation-overhead">
+      
+      
+        <a href="#validation-overhead" class="anchor-link"></a> Validation Overhead
+      
+      
+    </h3>
+
+<p>Validating access lists and balance diffs adds validation overhead but is essential to prevent acceptance of invalid blocks.</p>
+  
+    <h3 id="block-size">
+      
+      
+        <a href="#block-size" class="anchor-link"></a> Block Size
+      
+      
+    </h3>
+
+<p>Increased block size impacts propagation but overhead (~70 KiB average) is reasonable for performance gains.</p>
+  
+    <h3 id="early-rejection-of-malicious-bals">
+      
+      
+        <a href="#early-rejection-of-malicious-bals" class="anchor-link"></a> Early Rejection of Malicious BALs
+      
+      
+    </h3>
+
+<p>Since <code class="language-plaintext highlighter-rouge">storage_reads</code> entries are not mapped to specific transaction indices, their validity can only be confirmed after executing all transactions. A malicious proposer could exploit this by declaring phantom storage reads that are never accessed, forcing clients into unnecessary I/O prefetching and significant data download while the block remains unrejectable until completion.</p>
+
+<p>To mitigate this, clients SHOULD enforce a gas-budget feasibility check at transaction boundaries. Let:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">R_remaining</code> = number of declared storage reads not yet accessed</li>
+  <li><code class="language-plaintext highlighter-rouge">G_remaining</code> = remaining block gas</li>
+</ul>
+
+<p>The following invariant must hold:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G_remaining &gt;= R_remaining * 2000
+</code></pre></div></div>
+
+<p>Where 2000 is the minimum gas cost for a storage read (via <a href="/EIPS/eip-2930">EIP-2930</a> access lists: 1900 upfront + 100 warm read). If this check fails, the block can be rejected immediately as invalid, since insufficient gas remains to access the declared reads. This check SHOULD be performed periodically (e.g., every 8 transactions) to enable early rejection without impacting parallel execution.</p>
+  
+    <h2 id="copyright">
+      
+      
+        <a href="#copyright" class="anchor-link"></a> Copyright
+      
+      
+    </h2>
+
+<p>Copyright and related rights waived via <a href="/LICENSE">CC0</a>.</p>
+
+  <h2>Citation</h2>
+  <p>Please cite this document as:</p>
+  
+  <p>Toni Wahrstätter&nbsp;(<a href="https://github.com/nerolation">@nerolation</a>), Dankrad Feist&nbsp;(<a href="https://github.com/dankrad">@dankrad</a>), Francesco D`Amato&nbsp;(<a href="https://github.com/fradamt">@fradamt</a>), Jochem Brouwer&nbsp;(<a href="https://github.com/jochem-brouwer">@jochem-brouwer</a>), Ignacio Hagopian&nbsp;(<a href="https://github.com/jsign">@jsign</a>), Felipe Selmo&nbsp;(<a href="https://github.com/fselmo">@fselmo</a>), Rahul&nbsp;(<a href="https://github.com/raxhvl">@raxhvl</a>), Stefan&nbsp;(<a href="https://github.com/qu0b">@qu0b</a>), "EIP-7928: Block-Level Access Lists [DRAFT]," <em>Ethereum Improvement Proposals</em>, no. 7928, March 2025. Available: https://eips.ethereum.org/EIPS/eip-7928.</p>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "TechArticle",
+    "headline": "EIP-7928: Block-Level Access Lists [DRAFT]",
+    "name": "EIP-7928: Block-Level Access Lists [DRAFT]",
+    "author": "Toni Wahrstätter (@nerolation), Dankrad Feist (@dankrad), Francesco D`Amato (@fradamt), Jochem Brouwer (@jochem-brouwer), Ignacio Hagopian (@jsign), Felipe Selmo (@fselmo), Rahul (@raxhvl), Stefan (@qu0b)",
+    "dateCreated": "2025-03-31",
+    "datePublished": "2025-03-31",
+    
+    "discussionUrl": "https://ethereum-magicians.org/t/eip-7928-block-level-access-lists/23337",
+    
+    "inLanguage": "en-US",
+    "license": "#copyright",
+    "copyrightYear": "2025"
+  }
+</script>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ethereum Improvement Proposals</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ethereum Improvement Proposals</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ethereum/EIPs"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ethereum/EIPs</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

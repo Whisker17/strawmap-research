@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    
+      <title>EIP-8200: EVMification</title>
+      <meta property="og:title" content="EIP-8200: EVMification" />
+    
+    <meta name="description" content="Replace RIPEMD-160, MODEXP, BLAKE2f, and BLS12 map-to-curve precompiles with equivalent EVM bytecode" />
+    <meta property="og:description" content="Replace RIPEMD-160, MODEXP, BLAKE2f, and BLS12 map-to-curve precompiles with equivalent EVM bytecode" />
+    <meta name="twitter:description" content="Replace RIPEMD-160, MODEXP, BLAKE2f, and BLS12 map-to-curve precompiles with equivalent EVM bytecode" />
+  
+  <meta name="generator" content="Jekyll" />
+  <meta property="og:locale" content="en_US" />
+  <link rel="canonical" href="https://eips.ethereum.org/EIPS/eip-8200" />
+  <meta property="og:url" content="https://eips.ethereum.org/EIPS/eip-8200" />
+  <meta property="og:site_name" content="Ethereum Improvement Proposals" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:site" content="@" />
+  <script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": "https://eips.ethereum.org",
+      "name": "Ethereum Improvement Proposals",
+      "description": "Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.",
+      "@context": "https://schema.org"
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://eips.ethereum.org/feed.xml" title="Ethereum Improvement Proposals" /><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/override.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    });
+  </script>
+  <script type="text/javascript">
+    window.MathJax = {
+      loader: {
+        load: ['input/tex-base', 'output/chtml']
+      },
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true,
+        processEnvironments: false,
+        processRefs: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js" integrity="sha384-/1zmJ1mBdfKIOnwPxpdG6yaRrxP6qu3eVYm0cz2nOx+AcL4d3AqEFrwcqGZVVroG" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/citation-js/0.6.7/citation.min.js" integrity="sha512-N+LDFMa9owHXGS+CyMrBvuxq2QuGl3fiB/7cys3aUEL7K6P1soHGqsS0sjHXZpwNd9Kz0m3R4IPy1HYRi6ROEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+    addEventListener('DOMContentLoaded', async () => {
+      const Cite = window.require('citation-js');
+      const citationElements = document.querySelectorAll('.language-csl-json');
+      for (let citationElement of citationElements) {
+        try {
+          const citation = await Cite.async(citationElement);
+          const template = document.createElement('template');
+          template.innerHTML = citation.format('bibliography', {
+            format: 'html',
+            template: 'apa',
+            lang: 'en-US'
+          });
+          if (citationElement.parentElement && citationElement.parentElement.matches('pre')) {
+            citationElement.parentElement.replaceWith(template.content);
+          } else {
+            citationElement.replaceWith(template.content);
+          }
+        } catch (e) {
+          console.error("unable to render citation", e);
+        }
+      }
+    });
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Ethereum Improvement Proposals</a><nav class="site-nav d-flex">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger row p-2"><a class="page-link col" href="/all">All</a><a class="page-link col" href="/core">Core</a><a class="page-link col" href="/networking">Networking</a><a class="page-link col" href="/interface">Interface</a><a class="page-link col" href="/erc">ERC</a><a class="page-link col" href="/meta">Meta</a><a class="page-link col" href="/informational">Informational</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="bi-megaphone-fill" fill="currentColor" viewBox="0 0 16 16">
+    <title>Alert</title>
+    <path d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0v-11zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25.222 25.222 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56V3.224zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009a68.14 68.14 0 0 1 .496.008 64 64 0 0 1 1.51.048zm1.39 1.081c.285.021.569.047.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a65.81 65.81 0 0 1 1.692.064c.327.017.65.037.966.06z"/>
+  </symbol>
+  <symbol id="bi-code" fill="currentColor" viewBox="0 0 16 16">
+    <title>Source</title>
+    <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/>
+  </symbol>
+  <svg id="bi-chat" fill="currentColor" viewBox="0 0 16 16">
+    <title>Discuss</title>
+    <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+  </svg>
+</svg>
+
+<div class="home">
+  
+  
+  
+ 
+  <span class="h5">
+    
+    
+    
+      <span class="badge text-light bg-warning" data-bs-toggle="tooltip" data-bs-title="This EIP is not yet recommended for general use or implementation, as it is subject to normative (breaking) changes.">⚠️ Draft</span>
+    
+    
+    
+       
+    
+      <a class="badge text-light bg-primary" data-bs-toggle="tooltip" data-bs-title="Improvements requiring a consensus fork, as well as changes that are not necessarily consensus critical but may be relevant to “core dev” discussions." href="../core">Standards Track: Core</a>
+    
+  </span>
+  <h1 class="page-heading">
+    EIP-8200: EVMification
+    <a href="https://ethereum-magicians.org/t/eip-8200-evmification/28036" class="no-underline">
+      <svg role="img" aria-label="Discuss" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-chat"/>
+      </svg>
+    </a>
+    <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-8200.md" class="no-underline">
+      <svg role="img" aria-label="Source" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-code"/>
+      </svg>
+    </a>
+  </h1>
+  <h3>Replace RIPEMD-160, MODEXP, BLAKE2f, and BLS12 map-to-curve precompiles with equivalent EVM bytecode</h3>
+  <table class="table table-borderless preamble">
+    <tbody>
+      <tr>
+        <th scope="row">Authors</th>
+        <td>Kevaundray Wedderburn&nbsp;(<a href="https://github.com/kevaundray">@kevaundray</a>)</td>
+      </tr>
+      
+        <tr>
+          <th scope="row">Created</th>
+          <td>2026-03-21</td>
+        </tr>
+      
+      
+             
+      
+        <tr>
+          <th scope="row">Discussion Link</th>
+          <td><a href="https://ethereum-magicians.org/t/eip-8200-evmification/28036" target="_blank" rel="noopener">https://ethereum-magicians.org/t/eip-8200-evmification/28036</a></td>
+        </tr>
+      
+      
+        <tr>
+          <th scope="row">Requires</th>
+          <td>
+
+  <a href="eip-152">EIP-152</a>, 
+
+  <a href="eip-2537">EIP-2537</a>, 
+
+  <a href="eip-7666">EIP-7666</a>, 
+
+  <a href="eip-7823">EIP-7823</a>, 
+
+  <a href="eip-7883">EIP-7883</a>
+
+</td>
+        </tr>
+      
+    </tbody>
+  </table>
+  <br/>
+
+  
+
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#motivation">Motivation</a></li>
+  <li><a href="#specification">Specification</a>
+    <ul>
+      <li><a href="#constants">Constants</a></li>
+      <li><a href="#deployment">Deployment</a></li>
+      <li><a href="#gas-costs">Gas Costs</a></li>
+    </ul>
+  </li>
+  <li><a href="#rationale">Rationale</a>
+    <ul>
+      <li><a href="#same-mechanism-as-eip-7666">Same mechanism as EIP-7666</a></li>
+      <li><a href="#accepting-evm-gas-costs">Accepting EVM gas costs</a></li>
+      <li><a href="#bytecode-at-precompile-address-vs-library-contracts">Bytecode at precompile address vs. library contracts</a></li>
+    </ul>
+  </li>
+  <li><a href="#backwards-compatibility">Backwards Compatibility</a></li>
+  <li><a href="#test-cases">Test Cases</a></li>
+  <li><a href="#security-considerations">Security Considerations</a>
+    <ul>
+      <li><a href="#gas-cost-changes">Gas cost changes</a></li>
+      <li><a href="#implementation-correctness">Implementation correctness</a></li>
+    </ul>
+  </li>
+  <li><a href="#copyright">Copyright</a></li>
+</ul>
+
+  </div>
+
+  <h2 id="abstract">
+      
+      
+        <a href="#abstract" class="anchor-link"></a> Abstract
+      
+      
+    </h2>
+
+<p>Replaces the RIPEMD-160 (<code class="language-plaintext highlighter-rouge">0x03</code>), MODEXP (<code class="language-plaintext highlighter-rouge">0x05</code>), BLAKE2f (<code class="language-plaintext highlighter-rouge">0x09</code>), BLS12_MAP_FP_TO_G1 (<code class="language-plaintext highlighter-rouge">0x10</code>), and BLS12_MAP_FP2_TO_G2 (<code class="language-plaintext highlighter-rouge">0x11</code>) precompiles. At the start of executing the block in which this change activates, deploy EVM bytecode at each precompile address that provides equivalent functionality. This follows the same approach as <a href="/EIPS/eip-7666">EIP-7666</a>, which EVMifies the identity precompile (<code class="language-plaintext highlighter-rouge">0x04</code>).</p>
+  
+    <h2 id="motivation">
+      
+      
+        <a href="#motivation" class="anchor-link"></a> Motivation
+      
+      
+    </h2>
+
+<p>Ethereum’s precompiles impose ongoing maintenance costs and increase the risk of consensus bugs across client implementations. Some also represent a significant barrier for zkEVM implementations since each precompile usually requires a separate, optimized non-EVM implementation.</p>
+
+<p><a href="/EIPS/eip-7666">EIP-7666</a> demonstrates this approach with the identity precompile. This EIP extends the same technique to five additional precompiles that either see limited use or can be evmified with a small cost:</p>
+
+<ul>
+  <li><strong>RIPEMD-160</strong> (<code class="language-plaintext highlighter-rouge">0x03</code>): A hash function with minimal on-chain usage. Its primary historical use case (Bitcoin-style address derivation) is not common in Ethereum contracts.</li>
+  <li><strong>MODEXP</strong> (<code class="language-plaintext highlighter-rouge">0x05</code>): Modular exponentiation. In our analysis, we saw that 99.99% of modexp usage came from 256 bit modulus for SNARK verification, whereas the very rarely used RSA modulis occupied the rest.</li>
+  <li><strong>BLAKE2f</strong> (<code class="language-plaintext highlighter-rouge">0x09</code>): The BLAKE2 compression function. Our analysis shows that this is now predominantly used by a single contract.</li>
+  <li><strong>BLS12_MAP_FP_TO_G1</strong> (<code class="language-plaintext highlighter-rouge">0x10</code>): Maps a base field element to a G1 point on the BLS12-381 curve. This is pure field arithmetic that can be implemented in EVM.</li>
+  <li><strong>BLS12_MAP_FP2_TO_G2</strong> (<code class="language-plaintext highlighter-rouge">0x11</code>): Maps an extension field element to a G2 point on the BLS12-381 curve. This is pure field arithmetic that can be implemented in EVM.</li>
+</ul>
+
+<p>Replacing these precompiles with EVM bytecode reduces the number of special-cased implementations that every Ethereum client must maintain, simplifying the protocol and making it more accessible to new client implementations.</p>
+  
+    <h2 id="specification">
+      
+      
+        <a href="#specification" class="anchor-link"></a> Specification
+      
+      
+    </h2>
+
+<p>The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “NOT RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in <a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a> and <a href="https://www.rfc-editor.org/rfc/rfc8174">RFC 8174</a>.</p>
+  
+    <h3 id="constants">
+      
+      
+        <a href="#constants" class="anchor-link"></a> Constants
+      
+      
+    </h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RIPEMD160_ADDRESS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">0x0000000000000000000000000000000000000003</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MODEXP_ADDRESS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">0x0000000000000000000000000000000000000005</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BLAKE2F_ADDRESS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">0x0000000000000000000000000000000000000009</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BLS12_MAP_FP_TO_G1_ADDRESS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">0x0000000000000000000000000000000000000010</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BLS12_MAP_FP2_TO_G2_ADDRESS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">0x0000000000000000000000000000000000000011</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RIPEMD160_EVM_CODE</code></td>
+      <td>&lt;– TODO: bytecode –&gt;</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MODEXP_EVM_CODE</code></td>
+      <td>&lt;– TODO: bytecode –&gt;</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BLAKE2F_EVM_CODE</code></td>
+      <td>&lt;– TODO: bytecode –&gt;</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BLS12_MAP_FP_TO_G1_EVM_CODE</code></td>
+      <td>&lt;– TODO: bytecode –&gt;</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BLS12_MAP_FP2_TO_G2_EVM_CODE</code></td>
+      <td>&lt;– TODO: bytecode –&gt;</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h3 id="deployment">
+      
+      
+        <a href="#deployment" class="anchor-link"></a> Deployment
+      
+      
+    </h3>
+
+<p>At the start of the block in which this fork activates, for each precompile address and its corresponding EVM code listed above:</p>
+
+<ol>
+  <li>Set the code of the address to the corresponding <code class="language-plaintext highlighter-rouge">EVM_CODE</code>.</li>
+  <li>Starting from and including that block, the address MUST no longer be treated as a precompile.</li>
+</ol>
+  
+    <h3 id="gas-costs">
+      
+      
+        <a href="#gas-costs" class="anchor-link"></a> Gas Costs
+      
+      
+    </h3>
+
+<p>After activation, calls to these addresses are charged according to standard EVM execution costs rather than the precompile-specific gas formulas. The expected gas cost differences are documented below.</p>
+  
+    <h4 id="ripemd-160">
+      
+      
+        <a href="#ripemd-160" class="anchor-link"></a> RIPEMD-160
+      
+      
+    </h4>
+
+<p>The current precompile charges <code class="language-plaintext highlighter-rouge">600 + 120 * ceil(len(data) / 32)</code> gas. The EVM implementation will charge the sum of the opcodes executed, which is expected to differ.</p>
+
+<p>&lt;– TODO: gas comparison with bytecode version –&gt;</p>
+  
+    <h4 id="modexp">
+      
+      
+        <a href="#modexp" class="anchor-link"></a> MODEXP
+      
+      
+    </h4>
+
+<p>The current precompile uses a complex formula based on the lengths of the base, exponent, and modulus, as well as the iteration count derived from the exponent. The EVM implementation will charge standard opcode costs. Due to the complexity of modular exponentiation in EVM, gas costs are expected to be higher for large inputs.</p>
+
+<p>&lt;– TODO: gas comparison with bytecode version –&gt;</p>
+  
+    <h4 id="blake2f">
+      
+      
+        <a href="#blake2f" class="anchor-link"></a> BLAKE2f
+      
+      
+    </h4>
+
+<p>The current precompile charges <code class="language-plaintext highlighter-rouge">rounds</code> gas (the number of rounds specified in the input). The EVM implementation will charge the sum of the opcodes executed.</p>
+
+<p>&lt;– TODO: gas comparison with bytecode version –&gt;</p>
+  
+    <h4 id="bls12_map_fp_to_g1">
+      
+      
+        <a href="#bls12_map_fp_to_g1" class="anchor-link"></a> BLS12_MAP_FP_TO_G1
+      
+      
+    </h4>
+
+<p>The current precompile charges <code class="language-plaintext highlighter-rouge">5500</code> gas. The EVM implementation will charge the sum of the opcodes executed.</p>
+
+<p>&lt;– TODO: gas comparison with bytecode version –&gt;</p>
+  
+    <h4 id="bls12_map_fp2_to_g2">
+      
+      
+        <a href="#bls12_map_fp2_to_g2" class="anchor-link"></a> BLS12_MAP_FP2_TO_G2
+      
+      
+    </h4>
+
+<p>The current precompile charges <code class="language-plaintext highlighter-rouge">23800</code> gas. The EVM implementation will charge the sum of the opcodes executed.</p>
+
+<p>&lt;– TODO: gas comparison with bytecode version –&gt;</p>
+  
+    <h2 id="rationale">
+      
+      
+        <a href="#rationale" class="anchor-link"></a> Rationale
+      
+      
+    </h2>
+  
+    <h3 id="same-mechanism-as-eip-7666">
+      
+      
+        <a href="#same-mechanism-as-eip-7666" class="anchor-link"></a> Same mechanism as EIP-7666
+      
+      
+    </h3>
+
+<p>This EIP follows the same deployment mechanism established by <a href="/EIPS/eip-7666">EIP-7666</a>: deploying EVM bytecode directly at the precompile address at fork time. This preserves backward compatibility for contracts that call these addresses, as they continue to work with the same interface.</p>
+  
+    <h3 id="accepting-evm-gas-costs">
+      
+      
+        <a href="#accepting-evm-gas-costs" class="anchor-link"></a> Accepting EVM gas costs
+      
+      
+    </h3>
+
+<p>Rather than attempting to replicate the exact gas formulas of the original precompiles, this EIP accepts the natural EVM execution gas costs. Gas repricings have been done in the Ethereum ecosystem several times before and their effects are well understood. Nevertheless, we will carry out an impact analysis of each precompile.</p>
+  
+    <h3 id="bytecode-at-precompile-address-vs-library-contracts">
+      
+      
+        <a href="#bytecode-at-precompile-address-vs-library-contracts" class="anchor-link"></a> Bytecode at precompile address vs. library contracts
+      
+      
+    </h3>
+
+<p>Deploying the bytecode directly at the existing precompile address ensures that all existing contracts calling these addresses continue to function without modification. Alternative approaches such as removing the precompile and expecting callers to use library contracts at other addresses would break backward compatibility of already deployed contracts.</p>
+  
+    <h2 id="backwards-compatibility">
+      
+      
+        <a href="#backwards-compatibility" class="anchor-link"></a> Backwards Compatibility
+      
+      
+    </h2>
+
+<p>The functionality at each address is preserved. Gas costs will differ from the current precompile-specific formulas, which may affect contracts that depend on precise gas calculations when calling these precompiles. We have updated the gas cost of precompiles in the past and have accepted that contracts relying on hardcoded gas costs for precompiles is bad practice.</p>
+  
+    <h2 id="test-cases">
+      
+      
+        <a href="#test-cases" class="anchor-link"></a> Test Cases
+      
+      
+    </h2>
+
+<p>&lt;– TODO –&gt;</p>
+  
+    <h2 id="security-considerations">
+      
+      
+        <a href="#security-considerations" class="anchor-link"></a> Security Considerations
+      
+      
+    </h2>
+  
+    <h3 id="gas-cost-changes">
+      
+      
+        <a href="#gas-cost-changes" class="anchor-link"></a> Gas cost changes
+      
+      
+    </h3>
+
+<p>The change in gas costs could affect contracts that rely on specific gas behavior when calling these precompiles. Contracts that pass a fixed gas amount to these addresses may revert if the EVM implementation costs more than the precompile did.</p>
+  
+    <h3 id="implementation-correctness">
+      
+      
+        <a href="#implementation-correctness" class="anchor-link"></a> Implementation correctness
+      
+      
+    </h3>
+
+<p>The EVM bytecode deployed at each address must be thoroughly tested and audited to ensure it produces identical outputs to the original precompile for all valid inputs, and handles invalid inputs in the same way.</p>
+  
+    <h2 id="copyright">
+      
+      
+        <a href="#copyright" class="anchor-link"></a> Copyright
+      
+      
+    </h2>
+
+<p>Copyright and related rights waived via <a href="/LICENSE">CC0</a>.</p>
+
+  <h2>Citation</h2>
+  <p>Please cite this document as:</p>
+  
+  <p>Kevaundray Wedderburn&nbsp;(<a href="https://github.com/kevaundray">@kevaundray</a>), "EIP-8200: EVMification [DRAFT]," <em>Ethereum Improvement Proposals</em>, no. 8200, March 2026. Available: https://eips.ethereum.org/EIPS/eip-8200.</p>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "TechArticle",
+    "headline": "EIP-8200: EVMification [DRAFT]",
+    "name": "EIP-8200: EVMification [DRAFT]",
+    "author": "Kevaundray Wedderburn (@kevaundray)",
+    "dateCreated": "2026-03-21",
+    "datePublished": "2026-03-21",
+    
+    "discussionUrl": "https://ethereum-magicians.org/t/eip-8200-evmification/28036",
+    
+    "inLanguage": "en-US",
+    "license": "#copyright",
+    "copyrightYear": "2026"
+  }
+</script>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ethereum Improvement Proposals</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ethereum Improvement Proposals</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ethereum/EIPs"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ethereum/EIPs</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

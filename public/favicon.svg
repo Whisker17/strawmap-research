@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Ethereum Strawmap Dossier</title>
+  <rect width="64" height="64" rx="12" fill="#f4f1e8"/>
+  <path d="M14 13h26l10 10v28H14z" fill="#fffdf7" stroke="#b85f3f" stroke-width="4"/>
+  <path d="M40 13v12h12" fill="none" stroke="#b85f3f" stroke-width="4"/>
+  <path d="M22 33h20M22 42h15" stroke="#1f1a14" stroke-width="4" stroke-linecap="round"/>
+</svg>

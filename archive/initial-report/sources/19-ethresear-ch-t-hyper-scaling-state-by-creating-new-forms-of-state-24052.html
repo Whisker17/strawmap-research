@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Hyper-scaling state by creating new forms of state - Ethereum Research</title>
+    <meta name="description" content="Special thanks to Guillaume Ballet, Marius van der Wijden, Jialei Rong, CPerezz, Han, soispoke, Justin Drake, Maria Silva and Anders Elowsson for feedback and review 
+In order to scale Ethereum over the next five years, &amp;hellip;">
+    <meta name="generator" content="Discourse 3.5.2 - https://github.com/discourse/discourse version cc8d3f6f74bb618b3594ddc8fabcfd7663f63723">
+<link rel="icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/b/b5d7a1aa2f70490e3de763bef97271864784994f_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/3/3483ad4ffed2ab2b130f3e81fdb188ea2c478643_2_180x180.png">
+<meta name="theme-color" media="all" content="#fff">
+
+<meta name="color-scheme" content="light">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://ethresear.ch/t/hyper-scaling-state-by-creating-new-forms-of-state/24052" />
+
+<link rel="search" type="application/opensearchdescription+xml" href="https://ethresear.ch/opensearch.xml" title="Ethereum Research Search">
+
+    <link href="/stylesheets/color_definitions_light-default_-1_2_d93422173e6af31573562c9ff4e20afcb8a5ec7d.css?__ws=ethresear.ch" media="all" rel="stylesheet" class="light-scheme"/>
+
+<link href="/stylesheets/common_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common"  />
+
+  <link href="/stylesheets/desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop"  />
+
+
+
+    <link href="/stylesheets/checklist_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="checklist"  />
+    <link href="/stylesheets/discourse-details_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-details"  />
+    <link href="/stylesheets/discourse-graphviz_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-graphviz"  />
+    <link href="/stylesheets/discourse-lazy-videos_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+    <link href="/stylesheets/discourse-local-dates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+    <link href="/stylesheets/discourse-math_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-math"  />
+    <link href="/stylesheets/discourse-narrative-bot_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+    <link href="/stylesheets/discourse-presence_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-presence"  />
+    <link href="/stylesheets/discourse-solved_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-solved"  />
+    <link href="/stylesheets/discourse-templates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-templates"  />
+    <link href="/stylesheets/discourse-topic-voting_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+    <link href="/stylesheets/docker_manager_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="docker_manager"  />
+    <link href="/stylesheets/footnote_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="footnote"  />
+    <link href="/stylesheets/poll_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll"  />
+    <link href="/stylesheets/discourse-topic-voting_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting_desktop"  />
+    <link href="/stylesheets/poll_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="/stylesheets/common_theme_4_9581ecb7d67f268461f04d3d4e1b015ea2ad1983.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="4" data-theme-name="easy footer"/>
+    <link href="/stylesheets/desktop_theme_2_6e0603c5f6be3f943ee4806f79959c7a96ab67f5.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop_theme" data-theme-id="2" data-theme-name="default"/>
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;Hyper-scaling state by creating new forms of state&#39;" href="https://ethresear.ch/t/hyper-scaling-state-by-creating-new-forms-of-state/24052.rss" />
+    <meta property="og:site_name" content="Ethereum Research" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://ethresear.ch/uploads/default/original/3X/e/1/e165989576cfffbf44becb81d0adbe4baa889a2e.png" />
+<meta property="og:image" content="https://ethresear.ch/uploads/default/original/3X/e/1/e165989576cfffbf44becb81d0adbe4baa889a2e.png" />
+<meta property="og:url" content="https://ethresear.ch/t/hyper-scaling-state-by-creating-new-forms-of-state/24052" />
+<meta name="twitter:url" content="https://ethresear.ch/t/hyper-scaling-state-by-creating-new-forms-of-state/24052" />
+<meta property="og:title" content="Hyper-scaling state by creating new forms of state" />
+<meta name="twitter:title" content="Hyper-scaling state by creating new forms of state" />
+<meta property="og:description" content="Special thanks to Guillaume Ballet, Marius van der Wijden, Jialei Rong, CPerezz, Han, soispoke, Justin Drake, Maria Silva and Anders Elowsson for feedback and review  In order to scale Ethereum over the next five years, we need to scale three resources: execution (EVM computation, signature verification…), data (transaction sender, recipient, signature, calldata…) and state (account balances, code, storage). Our goal is to scale Ethereum by ~1000x. But there is a fundamental asymmetry between th..." />
+<meta name="twitter:description" content="Special thanks to Guillaume Ballet, Marius van der Wijden, Jialei Rong, CPerezz, Han, soispoke, Justin Drake, Maria Silva and Anders Elowsson for feedback and review  In order to scale Ethereum over the next five years, we need to scale three resources: execution (EVM computation, signature verification…), data (transaction sender, recipient, signature, calldata…) and state (account balances, code, storage). Our goal is to scale Ethereum by ~1000x. But there is a fundamental asymmetry between th..." />
+<meta name="twitter:label1" value="Reading time" />
+<meta name="twitter:data1" value="13 mins 🕑" />
+<meta name="twitter:label2" value="Likes" />
+<meta name="twitter:data2" value="22 ❤" />
+<meta property="article:published_time" content="2026-02-05T15:38:04+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+        <link rel="next" href="/t/hyper-scaling-state-by-creating-new-forms-of-state/24052?page=2">
+
+    
+  </head>
+  <body class="crawler ">
+    
+    <header>
+  <a href="/">Ethereum Research</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/hyper-scaling-state-by-creating-new-forms-of-state/24052">Hyper-scaling state by creating new forms of state</a>
+    </h1>
+
+
+  </div>
+
+  
+
+    <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+      <meta itemprop='headline' content='Hyper-scaling state by creating new forms of state'>
+      <link itemprop='url' href='https://ethresear.ch/t/hyper-scaling-state-by-creating-new-forms-of-state/24052'>
+      <meta itemprop='datePublished' content='2026-02-05T15:38:04Z'>
+        <meta itemprop='articleSection' content='Uncategorized'>
+      <meta itemprop='keywords' content=''>
+      <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop='name' content='Ethereum Foundation'>
+          <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+            <meta itemprop='url' content='https://ethresear.ch/uploads/default/original/2X/8/84d109b2d8dd6bc4fe5255cd44fc429e5649da32.png'>
+          </div>
+      </div>
+
+
+          <div id='post_1'  class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/vbuterin'><span itemprop='name'>vbuterin</span></a>
+                
+              </span>
+
+                <link itemprop="mainEntityOfPage" href="https://ethresear.ch/t/hyper-scaling-state-by-creating-new-forms-of-state/24052">
+
+                <link itemprop="image" href="https://ethresear.ch/uploads/default/original/3X/e/1/e165989576cfffbf44becb81d0adbe4baa889a2e.png">
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2026-02-05T15:38:04Z' class='post-time'>
+                    February 5, 2026,  3:38pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-05T15:38:04Z'>
+              <span itemprop='position'>1</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p><em>Special thanks to Guillaume Ballet, Marius van der Wijden, Jialei Rong, CPerezz, Han, soispoke, Justin Drake, Maria Silva and Anders Elowsson for feedback and review</em></p>
+<p>In order to scale Ethereum over the next five years, we need to scale three resources: <strong>execution</strong> (EVM computation, signature verification…), <strong>data</strong> (transaction sender, recipient, signature, calldata…) and <strong>state</strong> (account balances, code, storage). Our goal is to scale Ethereum by ~1000x. But there is a fundamental asymmetry between the first two of these resources and the third.</p>
+<br>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Short term</th>
+<th>Long term</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Execution</strong> &nbsp;&nbsp;</td>
+<td>ePBS, block-level access lists (BAL) and gas repricings → <strong>~10-30x increase</strong></td>
+<td>ZK-EVMs (most nodes can avoid re-executing blocks entirely) → <strong>~1000x increase</strong> <br><br> For a few specific types of computation (signatures, SNARKs/STARKs), off-chain aggregation could get us <strong>~10000x</strong></td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td>p2p improvements, multidimensional gas → <strong>~10-20x increase</strong></td>
+<td>Blocks in blobs + PeerDAS → 8 MB/sec (<strong>~500x increase</strong>)</td>
+</tr>
+<tr>
+<td><strong>State</strong></td>
+<td>Syncing with BALs, p2p improvements, database improvements → <strong>~5-30x increase</strong></td>
+<td>?</td>
+</tr>
+</tbody>
+</table>
+</div><br>
+<p>In the short term, we can increase the efficiency of all three resources. But to achieve the 1000x gain desired for the longer term, we need magic bullets. ZK-EVMs are the magic bullet of execution. PeerDAS is the magic bullet of data. But there is no magic bullet of state. So what do we do?</p>
+<p>This post proposes an ambitious solution: alongside making incremental improvements to the current state (eg. binary tree, leaf expiry), and pricing improvements like multidimensional gas, <strong>we introduce new (much cheaper, but more restrictive) forms of state alongside the existing state</strong>.</p>
+<p>The major tradeoff is that if we set “target” levels for state growth to eg. 20x today, and execution to 1000x today, then the “relative prices” between execution and storage will change drastically compared to today. Creating a new storage slot may literally be more expensive than verifying a STARK (!!). Likely, both will be cheap, but mental models of what is <em>cheaper</em> will change drastically.</p>
+<p>Developers will thus have a choice: they could either have <em>reasonably low</em> transaction fees if they keep building applications the same way that they do today, or <em>very low</em> transaction fees if they re-design their apps to make use of the newer forms of storage. For common use cases (eg. ERC20 balances, NFTs), there will be standardized workflows for this. For more complex use cases (eg. defi), they will have to figure out application-specific tricks to do it themselves.</p>
+<h2><a name="p-58317-why-cant-we-scale-state-as-is-by-more-than-10-20x-1" class="anchor" href="#p-58317-why-cant-we-scale-state-as-is-by-more-than-10-20x-1"></a>Why can’t we scale state as-is by more than ~10-20x?</h2>
+<br>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/e/1/e165989576cfffbf44becb81d0adbe4baa889a2e.png" data-download-href="https://ethresear.ch/uploads/default/e165989576cfffbf44becb81d0adbe4baa889a2e" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/e/1/e165989576cfffbf44becb81d0adbe4baa889a2e_2_690x406.png" alt="" data-base62-sha1="w9X69SaJyKRXVhR4ZBJq8OQCnZY" role="presentation" width="690" height="406" srcset="https://ethresear.ch/uploads/default/optimized/3X/e/1/e165989576cfffbf44becb81d0adbe4baa889a2e_2_690x406.png, https://ethresear.ch/uploads/default/original/3X/e/1/e165989576cfffbf44becb81d0adbe4baa889a2e.png 1.5x, https://ethresear.ch/uploads/default/original/3X/e/1/e165989576cfffbf44becb81d0adbe4baa889a2e.png 2x" data-dominant-color="EBEFE8"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">920×542 31.5 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<br>
+<p>Today, state is growing at a rate of about 100 GB per year. If we increase it by 20x, this becomes 2 TB per year. After 4 years, this implies a state size of 8 TB.</p>
+<p>This state will not have to be stored by fully validating nodes (as they can get everything they need with ZK-EVM + PeerDAS), and it will not even have to be stored by FOCIL nodes (VOPS is significantly smaller; it will be under 1 TB even with no changes, likely under 512 or even 256 GB, and it can be optimized further). But it will be required by builders (not just sophisticated builders, also local “home builders” running “vanilla” software).</p>
+<p>Storing 8 TB on disk is not difficult in itself. We may need some tricks to store only part of the state “hot” and charge extra gas for other parts, so that they can be stored in a flat file instead of a DB, but ultimately 8 TB disks are easy to obtain. There are two “hard parts”: one short-term and one long-term:</p>
+<ul>
+<li><strong>Short term: database efficiency</strong>. Present-day databases in clients were not designed to handle multi-terabyte states. A major problem today is that state writes need to make log(n) updates to the tree, and each of those updates is itself log(n) operations in the database, and the concrete factors blow up quickly once n is many times larger than RAM. There are already database designs that solve this problem; they just need to be refined and widely adopted.</li>
+<li><strong>Long term: syncing</strong>. We want being a builder to be permissionless, and not unreasonable to set up. Even with perfect efficiency, 8 TB takes a long time to sync, and in many cases even runs up against monthly bandwidth limits.</li>
+</ul>
+<p>This is all in addition to questions of <em>who you sync the state from</em>, who runs RPC nodes, and a host of other issues. As a first approximation, with each doubling of the state size, the number of actors willing to do some function with the state altruistically (or even at a fee) will cut in half. Database efficiency improvements, using HDDs and flat files instead of SSDs and databases, etc, help only partially with some of the issues, and do not help at all with others.</p>
+<p>Unlike data and computation, these are not areas where we can say “we rely on professional builders for scale, if they all disappear, regular builders can just build blocks that are 10% as large”. To build a block at all, you need the full state. Decreasing the gas limit does not make the state any smaller.</p>
+<p>This means that (i) we need to be more conservative about state than computation and data, and (ii) many “sharding” techniques that work for computation and data do <em>not</em> work for state storage.</p>
+<h2><a name="p-58317-why-strong-statelessness-is-probably-insufficient-2" class="anchor" href="#p-58317-why-strong-statelessness-is-probably-insufficient-2"></a>Why strong statelessness is probably insufficient</h2>
+<p>One major strategy that has been proposed to get around this problem is <strong>strong statelessness</strong>. We would require users making transactions to (i) specify which accounts and storage slots their transaction reads and writes, with a rule that any attempted reads or writes outside this set will fail, and (ii) provide Merkle branches proving their state accesses.</p>
+<p>If we do this, we no longer need builders to store the full state. Instead, either users themselves would store state (and updated proofs) relevant to their own use, or a decentralized network would store state (eg. each node would keep a random 1/16th).</p>
+<br>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/e/3/e3aab25edf3b771c81045d9d0b239754cda82136.png" data-download-href="https://ethresear.ch/uploads/default/e3aab25edf3b771c81045d9d0b239754cda82136" title=""><img src="https://ethresear.ch/uploads/default/original/3X/e/3/e3aab25edf3b771c81045d9d0b239754cda82136.png" alt="" data-base62-sha1="wu26jKVkCDt7nshHcOn3CQSDeKO" role="presentation" width="581" height="491"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">581×491 25.1 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<br>
+<p>There are three major downsides to this approach:</p>
+<ul>
+<li><strong>Off-chain infrastructure dependency</strong>: realistically, users would not be able to store state and proofs relevant to their own use, because what is “relevant to their own use” will keep changing, and because many users would not be online all the time to download updated branches. So we would need a decentralized network for state storage and retrieval. This also has privacy consequences for users.</li>
+<li><strong>Backwards incompatibility</strong>: applications where the storage accessed is a dynamic function of the execution of the transaction are fundamentally incompatible with binding access lists. This could include onchain order books, appendable lists, and many other types of structures. For these applications, users would need to simulate locally, make an access list, and then a large portion of the time the transaction would will simply fail onchain (while consuming gas) and they would have to repeatedly retry.</li>
+<li><strong>Bandwidth cost</strong>: for each storage slot accessed, transactions would need to provide ~1000 byte proofs. This greatly increases transaction size (eg. a simple ERC20 transfer might take up 4 kB of witness data: one branch for the sender account, one for the ERC20 token, one for the sender balance, one for the recipient balance, compared to ~200 bytes today)</li>
+</ul>
+<p>A weaker version of strong statelessness is an idea that has been called “<strong>cold state</strong>”. The idea is that some state (eg. state that has not been accessed for &gt;1 year) would still be accessible, but with an asynchronous delay (realistically, between one second and one slot). This would allow builders to run without having that storage, as whenever they are met with a read they would ping a decentralized network for the data.</p>
+<p>This solution may work, but it is brittle because of its tight infrastructure dependency, and it has the same backwards incompatibility problem. There are worst-case transactions that have a deep multi-hop dependency graph going through different regions of cold state: call A, depending on the output call some other address B, depending on the output of that call some other address C…</p>
+<h2><a name="p-58317-why-state-expiry-is-very-hard-to-make-backwards-compatible-3" class="anchor" href="#p-58317-why-state-expiry-is-very-hard-to-make-backwards-compatible-3"></a>Why state expiry is very hard to make backwards-compatible</h2>
+<p>There has been a decade of attempts to propose <em>state expiry</em>: designs where state that is not accessed for a long time is automatically removed from the active state, and users who want to continue using that state have to actively “resurrect” it.</p>
+<p>The inevitable problem that these designs all run into is: <strong>when you create new state, how do you prove that there was never anything there before</strong>?</p>
+<p>If you create an account at address X, you have to prove that nothing else was created at address X, not just this year, or the previous year, but every previous year in Ethereum’s history.</p>
+<br>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/3/6/36a17f7b128fc759ee5c60f3ab3a678a2f340587.png" data-download-href="https://ethresear.ch/uploads/default/36a17f7b128fc759ee5c60f3ab3a678a2f340587" title=""><img src="https://ethresear.ch/uploads/default/original/3X/3/6/36a17f7b128fc759ee5c60f3ab3a678a2f340587.png" alt="" data-base62-sha1="7NhN3qarTNznYgPIC9jFRpxLHvx" role="presentation" width="531" height="261"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">531×261 12.7 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p><em>If we create a new tree every year to represent state modified in that year (“repeated <a href="https://ethresear.ch/t/regenesis-resetting-ethereum-to-reduce-the-burden-of-large-blockchain-and-state/7582">regenesis</a>”), then creating a new account in year N requires N lookups.</em></p>
+<br>
+<p>One idea invented to mitigate this issue is the <em>address period</em> mechanism: we add a new account creation ruleset (“CREATE3”) that lets you create an address that is provably only valid to create in year &gt;= N. When you create such an account, there would be no need to provide a proof for any year &lt; N, because such an account existing then is impossible.</p>
+<p>However, this design has major limitations once we start trying to integrate it into the nitty gritty real Ethereum world. Particularly, notice that for each new account, we need to create not just <em>accounts</em>, but also <em>storage slots</em>. If you create a new account X, then you have to create the ERC20 balance of X, for every token that you want to hold. This is made worse because address period mechanisms are not “understood” by existing ERC20s: even though the Ethereum protocol might understand that an account X, with an address that somehow encodes “2033” via a new address-generation mechanism, could not have been created before 2033, the storage slot for the balance of X is sha256(…, X), which is an opaque mechanism that the protocol does not understand.</p>
+<p>We <em>could</em> solve this with some clever tricks. One idea is for new ERC20s to be designed in a way that spawns a new child contract each year, which holds the balances of accounts associated with that year. Another idea is to make a new type of storage that can be owned by a token contract, but “lives with” your account, which can thus be expired and resurrected along with your account. But both of these ideas already require ERC20 token contracts to completely rewrite their logic, hence it is not backwards-compatible.</p>
+<p>All attempts to make state expiry backwards-compatible seem to run into similar issues, which all stem from this problem of not having good ways to prove inexistence. Also unfortunately, there is no way to create a mapping of “what addresses / storage slots were not created before” that is significantly smaller or simpler than the current state. A map {32-byte key: {0,1}} has all of the implementation complexities of a map {32-byte key: 32-byte value}.</p>
+<h2><a name="p-58317-lessons-learned-from-these-explorations-4" class="anchor" href="#p-58317-lessons-learned-from-these-explorations-4"></a>Lessons learned from these explorations</h2>
+<p>We can compress the big-picture lessons from our exploration of strong statelessness and state expiry into two big “stylized facts”:</p>
+<ol>
+<li><strong>Replacing all state accesses with Merkle branches is too much (bandwidth-wise), replacing exceptional-case state accesses with Merkle branches is acceptable.</strong> “State expiry” is in fact an example of precisely the latter: if we assume that eg. 90% of state accesses touch state less than six months old, and 10% touch older state, then we can keep only the recent state in the “mandatory-for-builders” bucket, and require witnesses for the older state, and instead of paying 20x overhead, we would on average only pay 2x overhead (plus the original tx). <br><br> This kind of exploration seems to inevitably lead to the conclusion that we need <strong>tiered state</strong>: a distinction between high-value state that we know will be accessed often, and lower-value state that we expect will be accessed rarely. Tiering can be done either (i) by recency, as in state expiry proposals, or (ii) through explicit separate classes of state (eg. VOPS is a very limited version of this). <br><br></li>
+<li><strong>Backwards-compatibility is very difficult</strong>. Lower tiers of state are not just <em>more expensive</em> to manipulate in certain ways (esp. dynamic synchronous calls), they <em>cannot be manipulated that way at all</em>. Hence, if we want to avoid outright breaking applications, the only option may be to push existing applications into the more expensive tier of state, and require developers to actively opt in to use newer cheaper tiers of state.</li>
+</ol>
+<h2><a name="p-58317-what-would-it-look-like-to-create-new-cheaper-types-of-state-5" class="anchor" href="#p-58317-what-would-it-look-like-to-create-new-cheaper-types-of-state-5"></a>What would it look like to create new cheaper types of state?</h2>
+<p>If existing state cannot be made to expire backwards-compatibly, the natural solution is to accept the lack of backwards-compatibility, and instead take a “barbell solution”</p>
+<ul>
+<li><strong>Keep existing state almost exactly as is, but allow it to become relatively more expensive</strong> (ie. execution may get 1000x cheaper, but new state creation might only get 20x cheaper)</li>
+<li><strong>Create new types of state</strong> that are designed from the start to be friendly to extremely high levels of scalability.</li>
+</ul>
+<p>When designing these new types of state, we should keep in mind the reality of what kinds of objects make up the bulk of Ethereum’s state is today: balances such as ERC20 tokens and NFTs.</p>
+<h2><a name="p-58317-temporary-storage-6" class="anchor" href="#p-58317-temporary-storage-6"></a>Temporary storage</h2>
+<p>One idea is to create a new class of temporary storage which is medium-length in duration. For example, we could have a new tree which gets zeroed out each time a new period (eg. 1 month) begins.</p>
+<p>This type of storage would be ideal for handling throwaway state of onchain events: auctions, governance votes, individual events inside of games, fraud proof challenge mechanisms, etc. Its gas cost could be set quite low, allowing it to scale 1000x along with execution.</p>
+<p>To implement ERC20-style balances on top of this kind of state, one would inevitably have to resolve a problem: what happens if someone goes into a cave for over a month?</p>
+<p>One nice thing about the ERC20 use case is that it is friendly to out-of-order resurrection. For example: if you receive 100 DAI in 2025, then forget about it, then receive 50 DAI in that same account in 2027, and then finally remember you had your earlier balance and resurrect it, you get your 150 DAI back. You don’t even have to provide any proof of whether or not anything happened to your account in 2026 (if you also got coins then, you could provide that proof later). The only thing we want to prevent is using the same historical state to resurrect your balance twice.</p>
+<p>Here is a sketch of how resurrection could work:</p>
+<ul>
+<li>As part of the tree design, store in each node the total number of leaves “under” that node. This makes it practical to, within a proof of any leaf, simultaneously verify the leaf’s index (in left-to-right order) in the tree: you would add up the totals of all left-facing sister nodes in the proof.</li>
+<li>For each month, we would store a bitfield of permanent state, one bit per value in the tree at time of deletion. This bitfield is initialized to all-zeroes.</li>
+<li>If, during month N, an account X had the authority to write to a slot Y, then during any month &gt; N, the account can edit its corresponding bitfield value. Also, anyone at any time can simply provide a proof.</li>
+</ul>
+<br>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/0/1/01d0421b15ca73102bda7ba8b2b7cb347d8f6d53.png" data-download-href="https://ethresear.ch/uploads/default/01d0421b15ca73102bda7ba8b2b7cb347d8f6d53" title=""><img src="https://ethresear.ch/uploads/default/original/3X/0/1/01d0421b15ca73102bda7ba8b2b7cb347d8f6d53.png" alt="" data-base62-sha1="g2FskJhwzpV0epPHA4wKSOvYPx" role="presentation" width="690" height="216" data-dominant-color="F9FAFB"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">961×301 9.01 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<br>
+<ul>
+<li>An ERC20 contract would by default store balances in the current tree, but it would have a balance resurrection feature, which takes as input a branch proving the sender’s historical state entry, and resurrects the balance while flipping the bit from 0 to 1, so it cannot be resurrected again.</li>
+</ul>
+<p>Today, state grows by ~100 GB per year. If we scale Ethereum by 1000x, we could imagine that same level of state growth multiplied by 1000, but all stored in temporary trees. This would imply ~8 TB of state (assuming 1-month expiry), plus a negligible amount (1 bit per 64 byte state entry, so 8 TB * 1/8 / 64 = 16 GB per month) of permanent storage.</p>
+<h2><a name="p-58317-utxos-7" class="anchor" href="#p-58317-utxos-7"></a>UTXOs</h2>
+<p>Alternatively, we could take the temporary storage idea to its logical extreme: <strong>set the expiry period to zero</strong>. Essentially, contracts could create records, and these records would be hashed into a tree in that block, and immediately go straight into history. For each block, you would have a bitfield in the state that would store whether the records are “spent” or “unspent”, and that would be permanent state, but otherwise that’s it.</p>
+<br>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/7/0/70f869e2bd2858a92e955aecc418fdfce27ad2dc.png" data-download-href="https://ethresear.ch/uploads/default/70f869e2bd2858a92e955aecc418fdfce27ad2dc" title=""><img src="https://ethresear.ch/uploads/default/original/3X/7/0/70f869e2bd2858a92e955aecc418fdfce27ad2dc.png" alt="" data-base62-sha1="g7nHqmQ3XN4E6oZ7hxnfFy5mXMM" role="presentation" width="690" height="329" data-dominant-color="FAF9F8"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">791×378 13.7 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<br>
+<p>Potentially, UTXOs could be built simply by reusing the existing LOG mechanism, and adding the state bitfield mechanism on top. If we <em>really</em> want, it could even be done as a fully out-of-protocol ERC, though this has some disadvantages: a few random users would get the responsibility to pay 256x as much as everyone else to be the first to create a new storage slot that represents a size-256 section of a bitfield.</p>
+<p>ERC20s, NFTs, and all kinds of other state can be built on top of these kinds of UTXOs.</p>
+<p>There is also a hybrid version between these two ideas. We do UTXOs, but we make the last eg. month of trees directly accessible from the state, without witnesses. This reduces bandwidth load (at the expense of a higher storage size). The main difference between this and the temporary storage idea is that here, there would only be one “interface” for dealing with previously created objects (as UTXOs) rather than two (as current-epoch storage slots, and as previous-epoch UTXOs).</p>
+<h2><a name="p-58317-a-strong-stateless-storage-tree-8" class="anchor" href="#p-58317-a-strong-stateless-storage-tree-8"></a>A strong-stateless storage tree</h2>
+<p>We could also make a single storage tree, which requires Merkle branches to access (or alternatively, nodes have to store the top N-8 levels of it (ie. 1/256 the size), and nodes would provide 256-byte witnesses). This new storage tree would live alongside the existing one, so we would have two storage trees: a witness-required cheaper one and a witness-free expensive one.</p>
+<p>My view, however, is that this is inferior to the temporary storage proposal. The reason is that in the long run, if most of such a tree is forgotten junk, and people only care about a few parts of it, then the network would have to store at worst the entire tree including the junk, or at best extra-long Merkle branches proving the useful state (as each useful state object would be “surrounded” by junk in the tree). Whereas a two-tree design only admits two “tiers” of storage, a temporary storage design creates space for a state expiry mechanism to be built on top, allowing recency tiering to live on top of economic tiering.</p>
+<h2><a name="p-58317-consequences-for-developer-experience-9" class="anchor" href="#p-58317-consequences-for-developer-experience-9"></a>Consequences for developer experience</h2>
+<p>Here is a sketch of how some applications and workflows would work with these kinds of tiered architecture:</p>
+<ul>
+<li><strong>User accounts</strong> (including new per-account state associated with native AA) would live in permanent storage. User accounts would thus be cheaply and easily accessible at all times.</li>
+<li><strong>Smart contract code</strong> would all live in permanent storage.</li>
+<li><strong>NFTs, ERC20 token balances, etc</strong> would live in UTXOs or temporary storage.</li>
+<li><strong>State associated with short-term events</strong> (eg. auctions, fraud-proof games, oracle games, governance actions) would live in temporary storage.</li>
+<li><strong>Core defi contracts</strong> would live in permanent storage to maximize composability.</li>
+<li><strong>Individual units of defi activity</strong> (eg. CDPs) would in many cases live in UTXOs or temporary storage.</li>
+</ul>
+<p>At the beginning, developers could continue to put everything into existing permanent storage. Probably, NFTs and ERC20 token balances would be the easiest to move into UTXOs or temporary storage. From there, the ecosystem would optimize for more efficient storage use over time.</p>
+<p>The underlying hypothesis here is that “mixed permanent storage and UTXOs” would be much easier to develop for than “only UTXOs”. One major reason why Ethereum has been so successful as a developer platform is that accounts and storage slots are simply much more developer-friendly than UTXOs. If we can deliver developer-friendly abstractions that allow eg. 95% of use of state to move to UTXOs without significant pain, and keep the last 5% as permanent storage (and give developers confused by even that the ability to just keep using permanent storage for everything at the expense of higher cost), then we can get most of the scaling benefit of UTXOs and most of the developer-friendliness benefits of Ethereum-style accounts and storage slots at the same time.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="11" />
+              <span class='post-likes'>11 Likes</span>
+            </div>
+
+                <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/solving-spam-state-bloat-and-fee-volatility-with-a-single-parameter/24088/16">Solving Spam, State Bloat, and Fee Volatility with a Single Parameter</a>
+                        <meta itemprop='position' content='2'>
+                      </div>
+                </div>
+          </div>
+          <div id='post_3' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/DanielVF'><span itemprop='name'>DanielVF</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-05T17:34:58Z' class='post-time'>
+                    February 5, 2026,  5:34pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-05T17:34:58Z'>
+              <span itemprop='position'>3</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>A natural use case for monthly storage would be trading orderbooks. The natural operation of these  involves oceans of writes by market makers who are repositioning orders. This is very expense on the EVM. It would fantastic for them if these orders could all go to a place with essentially zero long term storage costs.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_4' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/adlerjohn'><span itemprop='name'>adlerjohn</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-05T17:58:22Z' class='post-time'>
+                    February 5, 2026,  5:58pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-05T17:58:22Z'>
+              <span itemprop='position'>4</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Your proposal is written as overly-prescriptive, and risks sending people down these prescriptive paths rather than leaving things open for broad exploration. (This is a comment on writing style, not intention.) The crux of your proposal is a separate class of state with different behavior.</p>
+<p>UTXOs indeed have a number of nice properties over accounts for certain applications. A novel proposal from more than half a decade ago that is very similar to your hybrid UTXOs idea was posted here:</p>
+<aside class="quote quote-modified" data-post="1" data-topic="5547">
+  <div class="title">
+    <div class="quote-controls"></div>
+    <img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/adlerjohn/48/2924_2.png" class="avatar">
+    <div class="quote-title__text-content">
+      <a href="https://ethresear.ch/t/practical-parallel-transaction-validation-without-state-lookups-using-merkle-accumulators/5547">Practical parallel transaction validation without state lookups using Merkle accumulators</a> <a class="badge-category__wrapper " href="/c/cryptography/28"><span data-category-id="28" style="--category-badge-color: #000000; --category-badge-text-color: #FFFFFF;" data-drop-close="true" class="badge-category --style-square "><span class="badge-category__name">Cryptography</span></span></a>
+    </div>
+  </div>
+  <blockquote>
+    Background 
+The UTXO data model is more conducive for parallelism compared to the accounts data model, but still suffers from the issue that in order to full validate a transaction, state lookups must be performed. Without <a href="https://ethresear.ch/t/state-fees-formerly-state-rent-pre-eip-proposal-version-3/4996">state rent</a>, the ever-growing chain state will make transactions more and more expensive to validate. Even with state rent, this is a problem. 
+Suggestions to alleviate this issue boil down to <a href="https://eprint.iacr.org/2018/1188" rel="noopener nofollow ugc">stateless clients</a>, which use some sort of accumulator over the state. Accumulators ar…
+  </blockquote>
+</aside>
+
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_6' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/rjl493456442'><span itemprop='name'>rjl493456442</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-06T06:16:01Z' class='post-time'>
+                    February 6, 2026,  6:16am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-06T06:16:01Z'>
+              <span itemprop='position'>6</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Thanks for sharing, i try to want to confirm if I understand correctly regarding the “temporary storage” solution:</p>
+<p>The temporary storage is managed by a trie that is completely zeroed out at the start of every period (e.g., monthly). This prevents state bloat by physically deleting old data from the active set.</p>
+<p>To prevent “double-resurrecting” a historical state, the protocol maintains a permanent bitfield for every past month. Each bit represents a leaf index in that month’s tree and the bitfield tracks whether a specific historical state has already been resurrected.</p>
+<p>Users can selectively “pull” historical state from any past month into the current “live” tree by providing a Merkle proof. The index-tracking tree design empowers the verification that the specific state hasn’t been claimed yet.</p>
+<p>Does this imply that all states in temporary storage must be “mathematically additive”? For example, ERC20 balances suits this model very well. But this model doesn’t generally suit all the scenarios.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_7' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/igor53627'><span itemprop='name'>igor53627</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-06T07:51:14Z' class='post-time'>
+                    February 6, 2026,  7:51am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-06T07:51:14Z'>
+              <span itemprop='position'>7</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>good for scaling, not good for privacy (worse that it is now)</p>
+<p>the move toward strong statelessness (specifically for the proposed “new forms of state” like temporary storage or utxos) moves the activity of state storage from nodes to users. the cost of this shift is that users must broadcast their exact access patterns to the network before execution, making their activity significantly more transparent and easier to profile than under the current “implicit” access model. And yes, “strong statelessness” is not compatible with “encrypted mempool”.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_8' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/vbuterin'><span itemprop='name'>vbuterin</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-06T09:38:26Z' class='post-time'>
+                    February 6, 2026,  9:38am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-06T09:38:26Z'>
+              <span itemprop='position'>8</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>The application would be responsible for providing the resurrection rules. So if it’s additive (the common case), then you would only need to provide one branch. If it’s non-additive, then the application would have to have rules where resurrecting requires providing one branch for each expired period, proving that there are no newer states that you are skipping over. This can be made more data-efficient with ZKPs.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="3" />
+              <span class='post-likes'>3 Likes</span>
+            </div>
+
+          </div>
+          <div id='post_9' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/MicahZoltu'><span itemprop='name'>MicahZoltu</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-06T09:43:39Z' class='post-time'>
+                    February 6, 2026,  9:43am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-06T09:43:39Z'>
+              <span itemprop='position'>9</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="vbuterin" data-post="1" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/vbuterin/48/91_2.png" class="avatar"> vbuterin:</div>
+<blockquote>
+<p>Storing 8 TB on disk is not difficult in itself.</p>
+</blockquote>
+</aside>
+<aside class="quote no-group" data-username="vbuterin" data-post="1" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/vbuterin/48/91_2.png" class="avatar"> vbuterin:</div>
+<blockquote>
+<p>8 TB disks are easy to obtain</p>
+</blockquote>
+</aside>
+<aside class="quote no-group" data-username="vbuterin" data-post="1" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/vbuterin/48/91_2.png" class="avatar"> vbuterin:</div>
+<blockquote>
+<p>This is all in addition to questions of <em>who you sync the state from</em>, who runs RPC nodes, and a host of other issues.</p>
+</blockquote>
+</aside>
+<p>While I know you have written in the past about RPC nodes, I feel like every time we discuss state growth, RPC nodes should be the primary thing we are discussing and we should not be relegating them to a footnote.  1x state is already a huge problem on the RPC front, and 20x is massively worse.  Every solution proposed here should include a section that outlines how it integrates with future end-user-operated RPC nodes that someone is <em>hopefully</em> building.</p>
+<p>More generally, I personally don’t think we should even <em>consider</em> allowing state to grow further until <em>after</em> one or more end-user operable RPC nodes exist.  We have seen in the past with L2s and light clients that just saying, “it is theoretically possible for someone to build X” doesn’t mean X will ever actually be built, and it is even less likely that X will be built in a cypherpunk way rather than something that masquerades as X.</p>
+<p>If we had fully functional trustless partial state nodes available today then I think it would be reasonable to discuss the 20x state systems you are describing here, but without them any 20x state system is either a long term aspiration that we aren’t actually working towards, or (more likely IMO) it provides cover for people to build the 20x system without solving the RPC problem.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_11' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/kladkogex'><span itemprop='name'>kladkogex</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-06T11:19:30Z' class='post-time'>
+                    February 6, 2026, 11:19am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-06T11:19:30Z'>
+              <span itemprop='position'>11</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="vbuterin" data-post="1" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/vbuterin/48/91_2.png" class="avatar"> vbuterin:</div>
+<blockquote>
+<p><strong>Short term: database efficiency</strong>. Present-day databases in clients were not designed to handle multi-terabyte states.</p>
+</blockquote>
+</aside>
+<p>This is not true.</p>
+<p>You can <strong>trivially make the ETH state database</strong> parallel by splitting it into shards based on the first bytes of the key, and then running it either on multiple disks or across multiple nodes. There are already <strong>too many Ethereum nodes anyway</strong> essentially wasting computational time and storage, so moving from single nodes to clusters of nodes makes total sense.</p>
+<p><strong>The syncing argument is also trivially not true.</strong> Syncing between clusters can be done in parallel; therefore, the syncing time <strong>will be constant no matter how large the state is</strong>.</p>
+<p>To summarize, both arguments are incorrect if one takes state parallelization into account.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_12' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/leohio'><span itemprop='name'>leohio</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-06T13:55:50Z' class='post-time'>
+                    February 6, 2026,  1:55pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-07T08:43:43Z'>
+              <span itemprop='position'>12</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="vbuterin" data-post="1" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/vbuterin/48/91_2.png" class="avatar"> vbuterin:</div>
+<blockquote>
+<ul>
+<li><strong>Create new types of state</strong> that are designed from the start to be friendly to extremely high levels of scalability.</li>
+</ul>
+</blockquote>
+</aside>
+<p>To summarize, the benefits you get from temporary (prunable) data storage are:<br>
+(i) applications where you can discard all intermediate data as long as you know only the final result after the expiration date—such as voting—and<br>
+(ii) asset types that can be represented as UTXOs, where you set the expiry to zero, making expired assets able to get recovered with data submission by storing only a 0/1 flag on-chain. In both cases, there are many potential use cases, and we can expect significant state minimization.</p>
+<aside class="quote no-group" data-username="vbuterin" data-post="1" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/vbuterin/48/91_2.png" class="avatar"> vbuterin:</div>
+<blockquote>
+<p><strong>Keep existing state almost exactly as is, but allow it to become relatively more expensive</strong> (ie. execution may get 1000x cheaper, but new state creation might only get 20x cheaper)</p>
+</blockquote>
+</aside>
+<p>What I want to propose is a specification for the <strong>storage tree structure</strong> and <strong>gas model</strong> for this approach, assuming that the “new type” described above exists.</p>
+<p>With this new-type storage, a huge amount of data that does not need to be shared by many people will be deleted, and what remains will be the data that <em>should</em> be shared by many people—for example, the balances of a Uniswap pool.</p>
+<p>One important perspective here is the <strong>frequency of storage reads/writes</strong>. If we try to minimize the data size of this storage, we would use the techniques discussed in the zkRollup context.</p>
+<p>For example, Alice sends 2.1 ETH to a smart contract S. Then, due to some contract logic, the smart contract sends 2.1 ETH back to Alice. Even if you repeat this 1,000 times, the state ends up the same as it started. So you could verify only the final result, constrain all transaction data only inside the ZKP, and discard it entirely.</p>
+<p>If users who adopt your proposed “new type” send many transactions to a single shared smart contract, it should still be possible to store only the final outcome—i.e., the final value of the contract balance (one slot)—and store everything else in the new type. In other words, <strong>no state growth</strong>. Anyone who wants intermediate data can keep it, and it’s not a super-critical security matter.</p>
+<p>In that case, the <strong>degree of concentration in write frequency</strong>—in other words, how much the activity can be “compressed”—should relate to state growth. If gas becomes cheaper the more concentrated the writes are, then just as Solidity programmers try to pack lots of data into a single struct to reduce gas, application developers will design their apps to share as small a piece of state as possible.</p>
+<p>Next, the <strong>tree structure</strong>. Isn’t it strange that frequently updated storage (like a Uniswap pool balance) and storage that is rarely used are recorded at the same depth in the tree? The more frequently updated storage should move closer to the top (shallower depth), and this could make a difference especially for ZKP proving speed and bandwidth.</p>
+<p>In this research, <a href="https://arxiv.org/pdf/2403.00406" rel="noopener nofollow ugc">Adoptive Merkle Tree</a>, they study dynamically changing the depth of the leaf for a given slot’s tree. This is maybe the first one for this direction and taking a very direct approach, but it made already 13% cut of average path length even including leaves very low frequency of reading.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_13' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/keone'><span itemprop='name'>keone</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-08T03:53:13Z' class='post-time'>
+                    February 8, 2026,  3:53am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-08T03:53:13Z'>
+              <span itemprop='position'>13</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>If “strong statelessness is probably insufficient” [infeasible] and “state expiry is very hard to make backwards-compatible”, then it becomes even more pressing to make state consumption incentive-compatible - i.e. charge the right amount to create state, and rebate the right amount to clean it up.</p>
+<p>When a user creates a storage slot, they cause 10,000 nodes to have to allocate storage and maintain it in perpetuity. The cost should reflect that. But in order to charge the proper amount, the user also needs to be paid back almost all of that cost when they clear storage. If storage charges/rebates are “unfair”, then many users will be dissuaded from using the network.</p>
+<p>I recognize that previously, storage clearing rebates were a larger fraction of the original creation costs, but that this was discontinued in <a href="https://eips.ethereum.org/EIPS/eip-3529" rel="noopener nofollow ugc">EIP-3529</a> because users (especially MEV bots) were abusing the system by creating “GasTokens” - filler slots created when gas prices are low, which could be destructed when gas prices are high. EIP-3529 addressed this “problem” by significantly reducing the magnitude of storage clearing rebates and adding additional caps, but in the process made it even less worthwhile to clear storage.</p>
+<p>The fundamental issue preventing substantial, uncapped rebates is that gas is unidimensional. Storage charges/rebates are being multiplied by the same gas price that is used to multiply costs of state access, compute, or network bandwidth, even though storage is a long-term concern while the other resources should be priced based on instantaneous congestion.</p>
+<p>Charges for storage creation, and rebates for storage cleanup, need to be charged separately from other gas costs. They should not be multiplied by a variable gas price since doing so creates a solvency risk. (The GasToken problem mentioned above is effectively a solvency risk, although gas for a full transaction was not allowed to be negative, and GasToken-clearing actions were always paired with other gas-intensive operations.)</p>
+<p>If storage creation/cleanup charges are moved completely out of the gas calculation and into a separate storage charge, then transactions can (and should) incur negative ETH spend if they clean up storage. With the benefit of hindsight, this is how Solana and Sui both operate. More generally, this is what an incentive-compatible storage market looks like.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="2" />
+              <span class='post-likes'>2 Likes</span>
+            </div>
+
+          </div>
+          <div id='post_14' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/kladkogex'><span itemprop='name'>kladkogex</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-10T18:26:58Z' class='post-time'>
+                    February 10, 2026,  6:26pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-10T18:26:58Z'>
+              <span itemprop='position'>14</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="leohio" data-post="12" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/leohio/48/10414_2.png" class="avatar"> leohio:</div>
+<blockquote>
+<p>frequency of reading.</p>
+</blockquote>
+</aside>
+<p>Well the entire advantage of Ethereum in the first place  was not having UTXOs <img src="https://ethresear.ch/images/emoji/facebook_messenger/slight_smile.png?v=14" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"></p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_15' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/kladkogex'><span itemprop='name'>kladkogex</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-10T18:38:26Z' class='post-time'>
+                    February 10, 2026,  6:38pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-11T15:20:02Z'>
+              <span itemprop='position'>15</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>People won’t bother clearing storage anyway, since the gain is tiny <img src="https://ethresear.ch/images/emoji/facebook_messenger/rofl.png?v=14" title=":rofl:" class="emoji" alt=":rofl:" loading="lazy" width="20" height="20"></p>
+<p>Ethereum pays validators over $1B USD per year. They can buy an incredible amount of storage. Once the Ethereum Foundation discovers the concept of database sharding, Ethereum nodes can become clusters.</p>
+<p>The current status quo is someone like Binance running millions of identical virtual machines doing exactly the same thing. There would be no harm at all if Binance split these into 16-machine clusters.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_16' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/MicahZoltu'><span itemprop='name'>MicahZoltu</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-11T05:00:20Z' class='post-time'>
+                    February 11, 2026,  5:00am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-11T05:00:20Z'>
+              <span itemprop='position'>16</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="kladkogex" data-post="15" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/kladkogex/48/22366_2.png" class="avatar"> kladkogex:</div>
+<blockquote>
+<p>Once the Ethereum Foundation discovers the concept of database sharding, Ethereum nodes can become clusters.</p>
+</blockquote>
+</aside>
+<p>Database sharding doesn’t solve the real problem, which has nothing to do with block building and validation, which is that users wanting to actually use the blockchain must be able to execute against its head state, which currently requires such a user having access to the whole DB.  We want people to be able to do this in a decentralized/P2P way, not through central intermediaries (which already actively censor).</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_17' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/igor53627'><span itemprop='name'>igor53627</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-11T07:41:36Z' class='post-time'>
+                    February 11, 2026,  7:41am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-11T07:41:36Z'>
+              <span itemprop='position'>17</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <blockquote>
+<p>which is that users wanting to actually use the blockchain must be able to execute against its head state, which currently requires such a user having access to the whole DB.</p>
+</blockquote>
+<p>actually, we can solve the state-access problem today without any protocol-level changes. By adding a PIR ‘sidecar’ (Plinko, 2-DPF, etc.) on top of existing nodes, clients can privately retrieve only the specific state they need for execution. This scales to the full Ethereum mainnet today (given<br>
+some operational assumptions.. but it’s another topic). For integrity of PIR data, e.g Binius-based sum-checks prove that the server’s PIR response matches the committed state (which is ETL-ed from the execution client into the PIR DB). This transforms the ‘centralized intermediary’ into an untrusted, provable bitstream. Because the server is blind to what the user is requesting, it can no longer actively censor or profile data access and users can request minimal data required for their needs. Bingo</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_18' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/MicahZoltu'><span itemprop='name'>MicahZoltu</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-11T10:02:15Z' class='post-time'>
+                    February 11, 2026, 10:02am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-11T10:02:15Z'>
+              <span itemprop='position'>18</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="igor53627" data-post="17" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/igor53627/48/22363_2.png" class="avatar"> Igor:</div>
+<blockquote>
+<p>the server is blind to what the user is requesting, it can no longer actively censor or profile data access and users can request minimal data required for their needs.</p>
+</blockquote>
+</aside>
+<p>It can still censor users based on other factors like region, usage of a VPN, country of credit card used, etc. which is something that centarlized services already censor on.</p>
+<p>Also, we have learned repeatedly that just describing a good idea without an implementation in the wild is a good way to never see a good idea implemented.  Often times the sharp corners aren’t discovered until people actually try to build it, or we realize that the “simple” idea in theory is insanely complicated in reality.  See L2s as the canonical example.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_20' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/weiihann'><span itemprop='name'>weiihann</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-11T10:56:59Z' class='post-time'>
+                    February 11, 2026, 10:56am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-11T10:56:59Z'>
+              <span itemprop='position'>20</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="keone" data-post="13" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/keone/48/11020_2.png" class="avatar"> keone:</div>
+<blockquote>
+<p>More generally, this is what an incentive-compatible storage market looks like.</p>
+</blockquote>
+</aside>
+<p>Even if there’s an incentive for clearing, average users likely wouldn’t do it. The majority of state now is mappings of addresses to some values (i.e., balances, allowances, etc.). Imagine a user has non-zero balances in 1000 tokens, I find it impractical for the user to clear out the storage just to get the refund. They would have to send many transactions or create a contract to call the contracts to do so, which is not very user-friendly.</p>
+<p>I think such a mechanism is only doable if we have address-based storage. For example, if we store balances from different contracts under some form of grouping mechanism (e.g., under the same trie), users can send a single transaction and clear them off. No contract logic is needed.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_21' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/kladkogex'><span itemprop='name'>kladkogex</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-11T15:33:05Z' class='post-time'>
+                    February 11, 2026,  3:33pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-11T15:36:20Z'>
+              <span itemprop='position'>21</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="MicahZoltu" data-post="16" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/micahzoltu/48/18591_2.png" class="avatar"> MicahZoltu:</div>
+<blockquote>
+<p>We want people to be able to do this in a decentralized/P2P way, not through central intermediaries (which already actively censor).</p>
+</blockquote>
+</aside>
+<p>Ethereum Foundation made a purpose year after year to centralize pretty much everything in the ecosystem. There is pretty much nothing left  that is decentralized.</p>
+<ul>
+<li>The network is now controlled by three large corporations.</li>
+<li>The entire rollup vision turned into a centralized nightmare.  Rollups are single computers.  The entire purpose of running them is for large corporations to avoid KYC/AML regulations.</li>
+<li>Liquid staking that EF hugely supported is another centralization engine</li>
+</ul>
+<p>I am not sure why having the above we keep talking about people running ETH nodes on raspberry PI?  As far I am concerned, there is nothing bad about a small business running a cluster of 16 nodes.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_22' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/MicahZoltu'><span itemprop='name'>MicahZoltu</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-11T16:15:05Z' class='post-time'>
+                    February 11, 2026,  4:15pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-11T16:15:05Z'>
+              <span itemprop='position'>22</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="kladkogex" data-post="21" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/kladkogex/48/22366_2.png" class="avatar"> kladkogex:</div>
+<blockquote>
+<p>Ethereum Foundation made a purpose year after year to centralize pretty much everything in the ecosystem. There is pretty much nothing left that is decentralized.</p>
+</blockquote>
+</aside>
+<p>Not all of us have <em>completely</em> given up hope that Ethereum can make its way back into the light.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_23' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/kladkogex'><span itemprop='name'>kladkogex</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-11T18:36:18Z' class='post-time'>
+                    February 11, 2026,  6:36pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-11T18:36:18Z'>
+              <span itemprop='position'>23</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <aside class="quote no-group" data-username="MicahZoltu" data-post="22" data-topic="24052">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/micahzoltu/48/18591_2.png" class="avatar"> MicahZoltu:</div>
+<blockquote>
+<p>Not all of us have <em>completely</em> given up hope that Ethereum can make its way back into the light.</p>
+</blockquote>
+</aside>
+<p>Well the hope never dies :)))   I think we are at a moment of maximum chaos  :)))</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+          <div id='post_24' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/igor53627'><span itemprop='name'>igor53627</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-02-12T10:37:56Z' class='post-time'>
+                    February 12, 2026, 10:37am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-02-12T10:37:56Z'>
+              <span itemprop='position'>24</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <blockquote>
+<p>It can still censor users based on other factors like region, usage of a VPN, country of credit card used, etc. which is something that centarlized services already censor on.</p>
+</blockquote>
+<p>Well. Some privacy-friendly RPC providers, e.g. Publicnodes, DRPC, Llama Nodes, etc., offer RPC services for free / without registration as a public good. Some of them are okay (I don’t want to speak for them but it’s discussed) to host PIR nodes. So far, each node is much heavier infrastructure-wise than an archive node, and practical schemes require high-end GPUs for subsecond scans of the full state for queries or hints generation for pre-processing. VPN usage is easy to hide in the era of mass OpenClaw/ Tailscale, region-based restrictions are meaningless on the internet post-dial-up era (you are, likely, too young to remember that if your landline phone number starts from +7 it’s not easy to call to a BBS’s number starting with +1.. with tcp/ip geographic restrictions is a meme)</p>
+<blockquote>
+<p>Also, we have learned repeatedly that just describing a good idea without an implementation in the wild is a good way to never see a good idea implemented</p>
+</blockquote>
+<p>Agree. I have no interest in theorycrafting (PIR is not easy but simpler than launching the first evm2evm bridge in prod or launching xDai..  no doubts tbh). JFYI PIR is solved as a research primitive end-to-end for multiple scheme (with different trade-offs); it just needs incentives to productize and launch. Since most RPC providers are in a red ocean and PMF for private RPC is almost nonexistent, there should be external incentives to make it a norm. We don’t need to change protocol to make it happen. A subproduct of PIR is ultra-light client which is only proving data needed for atomic operation (that’s what I started my comment)</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="0" />
+              <span class='post-likes'></span>
+            </div>
+
+          </div>
+    </div>
+
+      <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement' class="topic-body crawler-post">
+            <span itemprop='name'><b><a rel="next" itemprop="url" href="/t/hyper-scaling-state-by-creating-new-forms-of-state/24052?page=2">next page →</a></b></span>
+      </div>
+
+    
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/tos' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/privacy' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>

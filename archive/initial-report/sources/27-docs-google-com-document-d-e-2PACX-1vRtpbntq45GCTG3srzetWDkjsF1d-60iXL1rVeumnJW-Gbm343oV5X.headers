@@ -1,0 +1,22 @@
+HTTP/1.1 200 Connection established
+
+HTTP/2 401 
+content-type: text/html; charset=utf-8
+cache-control: no-cache, no-store, max-age=0, must-revalidate
+pragma: no-cache
+expires: Mon, 01 Jan 1990 00:00:00 GMT
+date: Sun, 05 Jul 2026 16:48:15 GMT
+x-chromium-appcache-fallback-override: disallow-fallback
+p3p: CP="This is not a P3P policy! See g.co/p3phelp for more info."
+content-security-policy: require-trusted-types-for 'script';report-uri https://csp.withgoogle.com/csp/docs-tt
+content-security-policy: base-uri 'self';object-src 'none';report-uri https://docs.google.com/document/cspreport;script-src 'report-sample' 'nonce-du4qHB27IvQ2Y_xYvVhgqA' 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval';worker-src 'self' blob:
+referrer-policy: origin
+server: ESF
+x-xss-protection: 0
+x-content-type-options: nosniff
+set-cookie: NID=532=TZDPXXediGdhsAZtMs8raQvYSVllxkTiXy3Q7BZM535tmwguLhxcNaIg9zmbuyTYfij86jOaocZ7_MGnM7GQAbxj2PzfX0QAe3uiLgBFVes_5v9623HKuha0XwOQlWkE06PVFiQGb-olN2zUsvXfvEWP9DJVBCcBcfEGfvuIp5j_2Bct9FFYO8xvNikjtktYj90; expires=Mon, 04-Jan-2027 16:48:15 GMT; path=/; domain=.google.com; HttpOnly
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+accept-ranges: none
+vary: Accept-Encoding
+x-l2-request-path: l2-managed-5
+

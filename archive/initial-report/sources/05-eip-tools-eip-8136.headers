@@ -1,0 +1,16 @@
+HTTP/1.1 200 Connection established
+
+HTTP/2 200 
+age: 0
+cache-control: private, no-cache, no-store, max-age=0, must-revalidate
+content-type: text/html; charset=utf-8
+date: Sun, 05 Jul 2026 16:47:32 GMT
+link: </_next/static/media/bb3ef058b751a6ad-s.p.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/e4af272ccee01ff0-s.p.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2"
+server: Vercel
+strict-transport-security: max-age=63072000
+vary: RSC, Next-Router-State-Tree, Next-Router-Prefetch
+x-matched-path: /eip/[eipOrNo]
+x-powered-by: Next.js
+x-vercel-cache: MISS
+x-vercel-id: icn1::iad1::x5mhf-1783270051948-77a1be6a4dc4
+

@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    
+      <title>EIP-7732: Enshrined Proposer-Builder Separation</title>
+      <meta property="og:title" content="EIP-7732: Enshrined Proposer-Builder Separation" />
+    
+    <meta name="description" content="Separates the ethereum block in consensus and execution parts, adds a mechanism for the consensus proposer to choose the execution proposer." />
+    <meta property="og:description" content="Separates the ethereum block in consensus and execution parts, adds a mechanism for the consensus proposer to choose the execution proposer." />
+    <meta name="twitter:description" content="Separates the ethereum block in consensus and execution parts, adds a mechanism for the consensus proposer to choose the execution proposer." />
+  
+  <meta name="generator" content="Jekyll" />
+  <meta property="og:locale" content="en_US" />
+  <link rel="canonical" href="https://eips.ethereum.org/EIPS/eip-7732" />
+  <meta property="og:url" content="https://eips.ethereum.org/EIPS/eip-7732" />
+  <meta property="og:site_name" content="Ethereum Improvement Proposals" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:site" content="@" />
+  <script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": "https://eips.ethereum.org",
+      "name": "Ethereum Improvement Proposals",
+      "description": "Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.",
+      "@context": "https://schema.org"
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://eips.ethereum.org/feed.xml" title="Ethereum Improvement Proposals" /><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/override.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    });
+  </script>
+  <script type="text/javascript">
+    window.MathJax = {
+      loader: {
+        load: ['input/tex-base', 'output/chtml']
+      },
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true,
+        processEnvironments: false,
+        processRefs: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js" integrity="sha384-/1zmJ1mBdfKIOnwPxpdG6yaRrxP6qu3eVYm0cz2nOx+AcL4d3AqEFrwcqGZVVroG" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/citation-js/0.6.7/citation.min.js" integrity="sha512-N+LDFMa9owHXGS+CyMrBvuxq2QuGl3fiB/7cys3aUEL7K6P1soHGqsS0sjHXZpwNd9Kz0m3R4IPy1HYRi6ROEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+    addEventListener('DOMContentLoaded', async () => {
+      const Cite = window.require('citation-js');
+      const citationElements = document.querySelectorAll('.language-csl-json');
+      for (let citationElement of citationElements) {
+        try {
+          const citation = await Cite.async(citationElement);
+          const template = document.createElement('template');
+          template.innerHTML = citation.format('bibliography', {
+            format: 'html',
+            template: 'apa',
+            lang: 'en-US'
+          });
+          if (citationElement.parentElement && citationElement.parentElement.matches('pre')) {
+            citationElement.parentElement.replaceWith(template.content);
+          } else {
+            citationElement.replaceWith(template.content);
+          }
+        } catch (e) {
+          console.error("unable to render citation", e);
+        }
+      }
+    });
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Ethereum Improvement Proposals</a><nav class="site-nav d-flex">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger row p-2"><a class="page-link col" href="/all">All</a><a class="page-link col" href="/core">Core</a><a class="page-link col" href="/networking">Networking</a><a class="page-link col" href="/interface">Interface</a><a class="page-link col" href="/erc">ERC</a><a class="page-link col" href="/meta">Meta</a><a class="page-link col" href="/informational">Informational</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="bi-megaphone-fill" fill="currentColor" viewBox="0 0 16 16">
+    <title>Alert</title>
+    <path d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0v-11zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25.222 25.222 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56V3.224zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009a68.14 68.14 0 0 1 .496.008 64 64 0 0 1 1.51.048zm1.39 1.081c.285.021.569.047.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a65.81 65.81 0 0 1 1.692.064c.327.017.65.037.966.06z"/>
+  </symbol>
+  <symbol id="bi-code" fill="currentColor" viewBox="0 0 16 16">
+    <title>Source</title>
+    <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/>
+  </symbol>
+  <svg id="bi-chat" fill="currentColor" viewBox="0 0 16 16">
+    <title>Discuss</title>
+    <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+  </svg>
+</svg>
+
+<div class="home">
+  
+  
+  
+ 
+  <span class="h5">
+    
+    
+    
+      <span class="badge text-light bg-warning" data-bs-toggle="tooltip" data-bs-title="This EIP is not yet recommended for general use or implementation, as it is subject to normative (breaking) changes.">⚠️ Draft</span>
+    
+    
+    
+       
+    
+      <a class="badge text-light bg-primary" data-bs-toggle="tooltip" data-bs-title="Improvements requiring a consensus fork, as well as changes that are not necessarily consensus critical but may be relevant to “core dev” discussions." href="../core">Standards Track: Core</a>
+    
+  </span>
+  <h1 class="page-heading">
+    EIP-7732: Enshrined Proposer-Builder Separation
+    <a href="https://ethereum-magicians.org/t/eip-7732-enshrined-proposer-builder-separation-epbs/19634" class="no-underline">
+      <svg role="img" aria-label="Discuss" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-chat"/>
+      </svg>
+    </a>
+    <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7732.md" class="no-underline">
+      <svg role="img" aria-label="Source" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-code"/>
+      </svg>
+    </a>
+  </h1>
+  <h3>Separates the ethereum block in consensus and execution parts, adds a mechanism for the consensus proposer to choose the execution proposer.</h3>
+  <table class="table table-borderless preamble">
+    <tbody>
+      <tr>
+        <th scope="row">Authors</th>
+        <td>Francesco D'Amato&nbsp;&lt;<a href="mailto:francesco.damato@ethereum.org">francesco.damato@ethereum.org</a>&gt;, Nico Flaig&nbsp;&lt;<a href="mailto:nflaig@protonmail.com">nflaig@protonmail.com</a>&gt;, Barnabé Monnot&nbsp;&lt;<a href="mailto:barnabe.monnot@ethereum.org">barnabe.monnot@ethereum.org</a>&gt;, Michael Neuder&nbsp;&lt;<a href="mailto:michael.neuder@ethereum.org">michael.neuder@ethereum.org</a>&gt;, Potuz&nbsp;(<a href="https://github.com/potuz">@potuz</a>), Justin Traglia&nbsp;&lt;<a href="mailto:jtraglia@ethereum.org">jtraglia@ethereum.org</a>&gt;, Terence Tsao&nbsp;&lt;<a href="mailto:ttsao@offchainlabs.com">ttsao@offchainlabs.com</a>&gt;</td>
+      </tr>
+      
+        <tr>
+          <th scope="row">Created</th>
+          <td>2024-06-28</td>
+        </tr>
+      
+      
+             
+      
+        <tr>
+          <th scope="row">Discussion Link</th>
+          <td><a href="https://ethereum-magicians.org/t/eip-7732-enshrined-proposer-builder-separation-epbs/19634" target="_blank" rel="noopener">https://ethereum-magicians.org/t/eip-7732-enshrined-proposer-builder-separation-epbs/19634</a></td>
+        </tr>
+      
+      
+    </tbody>
+  </table>
+  <br/>
+
+  
+
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#motivation">Motivation</a></li>
+  <li><a href="#specification">Specification</a>
+    <ul>
+      <li><a href="#execution-layer">Execution Layer</a></li>
+      <li><a href="#consensus-layer">Consensus Layer</a></li>
+      <li><a href="#engine-api">Engine API</a></li>
+    </ul>
+  </li>
+  <li><a href="#rationale">Rationale</a>
+    <ul>
+      <li><a href="#staked-builders">Staked builders</a></li>
+      <li><a href="#delayed-validation">Delayed validation</a></li>
+      <li><a href="#fork-choice">Fork choice</a></li>
+      <li><a href="#ptc-equivocations">PTC equivocations</a></li>
+      <li><a href="#withdrawals">Withdrawals</a></li>
+      <li><a href="#three-state-transition-functions">Three state transition functions</a></li>
+      <li><a href="#compatible-designs">Compatible designs</a></li>
+    </ul>
+  </li>
+  <li><a href="#backwards-compatibility">Backwards Compatibility</a></li>
+  <li><a href="#security-considerations">Security Considerations</a>
+    <ul>
+      <li><a href="#free-option-problem">Free option problem</a></li>
+      <li><a href="#builder-safety">Builder safety</a></li>
+      <li><a href="#malicious-ptc">Malicious PTC</a></li>
+    </ul>
+  </li>
+  <li><a href="#copyright">Copyright</a></li>
+</ul>
+
+  </div>
+
+  <h2 id="abstract">
+      
+      
+        <a href="#abstract" class="anchor-link"></a> Abstract
+      
+      
+    </h2>
+
+<p>This EIP fundamentally changes the way an Ethereum block is validated by decoupling the execution validation from the consensus validation both logically as well as temporally. It does so by introducing a new in-protocol entity called <em>builders</em> and adding a new duty (submitting <em>payload timeliness attestations</em>) to Ethereum validators. The <code class="language-plaintext highlighter-rouge">ExecutionPayload</code> field of the <code class="language-plaintext highlighter-rouge">BeaconBlockBody</code> is removed and instead it is replaced by a signed commitment (a <code class="language-plaintext highlighter-rouge">SignedExecutionPayloadBid</code> object) from a builder to later reveal the corresponding execution payload. This commitment specifies in particular the blockhash of the execution block and a <em>value</em> to be paid to the beacon block proposer. When processing the <code class="language-plaintext highlighter-rouge">BeaconBlock</code>, the committed value is deducted from the builder’s beacon chain balance and later a withdrawal is placed to an address, of the proposer’s choosing, in the execution layer. A subset of validators in the beacon committee is assigned to the <em>Payload Timeliness Committee</em> (PTC), these validators are tasked to attest (by broadcasting a <code class="language-plaintext highlighter-rouge">PayloadAttestationMessage</code>) to whether the corresponding builder has revealed the committed execution payload (with the right blockhash) in a timely fashion and whether the correspoding blob data was available according to their view. PTC members are not required to validate the execution payload, execution validation is thus deferred until the next beacon block validation. While builder’s are staked entities, their stake is not actively validating the beacon chain, they are not subject to the usual deposit and exit churn/queues and can be staked for as little as 1ETH. While the in-protocol payment via withdrawals is trustlessly deducted from this stake, the protocol also accomodates for trusted payments in the form of <em>promises</em> to be fulfiled elsewhere.</p>
+  
+    <h2 id="motivation">
+      
+      
+        <a href="#motivation" class="anchor-link"></a> Motivation
+      
+      
+    </h2>
+
+<p>This EIP solves a different set of unrelated important problems.</p>
+
+<ul>
+  <li>An overwhelming majority of beacon block proposers outsource the construction of the execution payload within their blocks to a third party (henceforth called a <em>builder</em>). In order to do so, they request the hash tree root (HTR) of a promised execution payload and submit a <code class="language-plaintext highlighter-rouge">SignedBlindedBeaconBlock</code> to a trusted party that is tasked with replacing the HTR with the full execution payload (received from the builder) before broadcasting. This EIP allows for a trust-free fair exchange between the beacon block proposer and the builder, guaranteeing that an honest beacon block proposer will receive payment from the builder regardless of the latter’s actions and that the honest builder’s payload will be the canonical head of the chain regardless of the proposer’s action.</li>
+  <li>Currently, validators have the time between receiving the full beacon block (including an execution payload) and the attesting deadline (4 seconds in Ethereum mainnet) to perform both consensus and execution state transition functions, check blob data availability and evaluate the new head of the blockchain. The remainder of the slot time is spent doing less CPU-intense and critical task. By separating the validation of the execution and consensus part of the block, validators are only tasked to perform the consensus state transition function in this critical time before attesting, while execution and data availability validation is deferred for most of the remainder of the slot (between the builder’s reveal time and the next attestation deadline).</li>
+  <li>By removing the full execution payload size from the consensus block, it allows for faster network propagation on the critical path.</li>
+  <li>It removes the increased reorg likeliness of including blob transactions in blocks given the natural increase in timelines for data availability checks and the fact that the builder may broadcast the blob sidecars even before attestations for the beacon block have been released.</li>
+  <li>It prevents validators from missing attestations and strengthens the weight properties of fork choice in the event that builders produce invalid payloads.</li>
+  <li>It removes the need to use trusted middleware in order to delegate block construction to a builder.</li>
+</ul>
+  
+    <h2 id="specification">
+      
+      
+        <a href="#specification" class="anchor-link"></a> Specification
+      
+      
+    </h2>
+  
+    <h3 id="execution-layer">
+      
+      
+        <a href="#execution-layer" class="anchor-link"></a> Execution Layer
+      
+      
+    </h3>
+
+<p>No changes are required.</p>
+  
+    <h3 id="consensus-layer">
+      
+      
+        <a href="#consensus-layer" class="anchor-link"></a> Consensus Layer
+      
+      
+    </h3>
+
+<p>The full consensus changes can be found in the consensus-specs Github repository. They are split between:</p>
+
+<ul>
+  <li><a href="https://github.com/ethereum/consensus-specs/blob/c94138e73e0e70eb4b27f9be4d4e9325fa1aebf7/specs/gloas/beacon-chain.md">Beacon Chain</a> changes.</li>
+  <li><a href="https://github.com/ethereum/consensus-specs/blob/c94138e73e0e70eb4b27f9be4d4e9325fa1aebf7/specs/gloas/fork-choice.md">Fork choice</a> changes.</li>
+  <li><a href="https://github.com/ethereum/consensus-specs/blob/c94138e73e0e70eb4b27f9be4d4e9325fa1aebf7/specs/gloas/p2p-interface.md">P2P</a> changes.</li>
+  <li><a href="https://github.com/ethereum/consensus-specs/blob/c94138e73e0e70eb4b27f9be4d4e9325fa1aebf7/specs/gloas/validator.md">Honest validator guide</a> changes.</li>
+  <li>A new <a href="https://github.com/ethereum/consensus-specs/blob/c94138e73e0e70eb4b27f9be4d4e9325fa1aebf7/specs/gloas/builder.md">honest builder</a> guide.</li>
+  <li><a href="https://github.com/ethereum/consensus-specs/blob/c94138e73e0e70eb4b27f9be4d4e9325fa1aebf7/specs/gloas/fork.md">Fork logic</a> changes.</li>
+</ul>
+
+<p>A summary of the main changes is included below, the <a href="#rationale">Rationale</a> section contains explanation for most of the design decisions around these changes.</p>
+  
+    <h4 id="beacon-chain-changes">
+      
+      
+        <a href="#beacon-chain-changes" class="anchor-link"></a> Beacon chain changes
+      
+      
+    </h4>
+  
+    <h5 id="types">
+      
+      
+        <a href="#types" class="anchor-link"></a> Types
+      
+      
+    </h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>SSZ equivalent</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BuilderIndex</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uint64</code></td>
+      <td>Builder registry index</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h5 id="constants">
+      
+      
+        <a href="#constants" class="anchor-link"></a> Constants
+      
+      
+    </h5>
+  
+    <h6 id="index-flags">
+      
+      
+        <a href="#index-flags" class="anchor-link"></a> Index flags
+      
+      
+    </h6>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BUILDER_INDEX_FLAG</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uint64(2**40)</code></td>
+      <td>Bitwise flag which indicates that a <code class="language-plaintext highlighter-rouge">ValidatorIndex</code> should be treated as a <code class="language-plaintext highlighter-rouge">BuilderIndex</code></td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h5 id="domains">
+      
+      
+        <a href="#domains" class="anchor-link"></a> Domains
+      
+      
+    </h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DOMAIN_BEACON_BUILDER</code></td>
+      <td><code class="language-plaintext highlighter-rouge">DomainType('0x0B000000')</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DOMAIN_PTC_ATTESTER</code></td>
+      <td><code class="language-plaintext highlighter-rouge">DomainType('0x0C000000')</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DOMAIN_PROPOSER_PREFERENCES</code></td>
+      <td><code class="language-plaintext highlighter-rouge">DomainType('0x0D000000')</code></td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h5 id="misc">
+      
+      
+        <a href="#misc" class="anchor-link"></a> Misc
+      
+      
+    </h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BUILDER_INDEX_SELF_BUILD</code></td>
+      <td><code class="language-plaintext highlighter-rouge">BuilderIndex(UINT64_MAX)</code></td>
+      <td>Value which indicates the proposer built the payload</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BUILDER_PAYMENT_THRESHOLD_NUMERATOR</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uint64(6)</code></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BUILDER_PAYMENT_THRESHOLD_DENOMINATOR</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uint64(10)</code></td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h5 id="withdrawal-prefixes">
+      
+      
+        <a href="#withdrawal-prefixes" class="anchor-link"></a> Withdrawal prefixes
+      
+      
+    </h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BUILDER_WITHDRAWAL_PREFIX</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Bytes1('0x03')</code></td>
+      <td>Withdrawal credential prefix for a builder</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h5 id="preset">
+      
+      
+        <a href="#preset" class="anchor-link"></a> Preset
+      
+      
+    </h5>
+  
+    <h6 id="misc-1">
+      
+      
+        <a href="#misc-1" class="anchor-link"></a> Misc
+      
+      
+    </h6>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PTC_SIZE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uint64(2**9)</code> (= 512)</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h6 id="max-operations-per-block">
+      
+      
+        <a href="#max-operations-per-block" class="anchor-link"></a> Max operations per block
+      
+      
+    </h6>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MAX_PAYLOAD_ATTESTATIONS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">4</code></td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h6 id="state-list-lengths">
+      
+      
+        <a href="#state-list-lengths" class="anchor-link"></a> State list lengths
+      
+      
+    </h6>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+      <th>Unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BUILDER_REGISTRY_LIMIT</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uint64(2**40)</code> (= 1,099,511,627,776)</td>
+      <td>Builders</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BUILDER_PENDING_WITHDRAWALS_LIMIT</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uint64(2**20)</code> (= 1,048,576)</td>
+      <td>Builder pending withdrawals</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h6 id="withdrawals-processing">
+      
+      
+        <a href="#withdrawals-processing" class="anchor-link"></a> Withdrawals processing
+      
+      
+    </h6>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MAX_BUILDERS_PER_WITHDRAWALS_SWEEP</code></td>
+      <td><code class="language-plaintext highlighter-rouge">2**14</code> (= 16,384)</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h5 id="configuration">
+      
+      
+        <a href="#configuration" class="anchor-link"></a> Configuration
+      
+      
+    </h5>
+  
+    <h6 id="time-parameters">
+      
+      
+        <a href="#time-parameters" class="anchor-link"></a> Time parameters
+      
+      
+    </h6>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+      <th style="text-align: center">Unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MIN_BUILDER_WITHDRAWABILITY_DELAY</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uint64(2**6)</code> (= 64)</td>
+      <td style="text-align: center">epochs</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h5 id="containers">
+      
+      
+        <a href="#containers" class="anchor-link"></a> Containers
+      
+      
+    </h5>
+  
+    <h6 id="new-containers">
+      
+      
+        <a href="#new-containers" class="anchor-link"></a> New containers
+      
+      
+    </h6>
+  
+    <h6 id="builder">
+      
+      
+        <a href="#builder" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">Builder</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Builder</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">pubkey</span><span class="p">:</span> <span class="n">BLSPubkey</span>
+    <span class="n">version</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="n">execution_address</span><span class="p">:</span> <span class="n">ExecutionAddress</span>
+    <span class="n">balance</span><span class="p">:</span> <span class="n">Gwei</span>
+    <span class="n">deposit_epoch</span><span class="p">:</span> <span class="n">Epoch</span>
+    <span class="n">withdrawable_epoch</span><span class="p">:</span> <span class="n">Epoch</span>
+</code></pre></div></div>
+  
+    <h6 id="builderpendingpayment">
+      
+      
+        <a href="#builderpendingpayment" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">BuilderPendingPayment</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BuilderPendingPayment</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">weight</span><span class="p">:</span> <span class="n">Gwei</span>
+    <span class="n">withdrawal</span><span class="p">:</span> <span class="n">BuilderPendingWithdrawal</span>
+</code></pre></div></div>
+  
+    <h6 id="builderpendingwithdrawal">
+      
+      
+        <a href="#builderpendingwithdrawal" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">BuilderPendingWithdrawal</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BuilderPendingWithdrawal</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">fee_recipient</span><span class="p">:</span> <span class="n">ExecutionAddress</span>
+    <span class="n">amount</span><span class="p">:</span> <span class="n">Gwei</span>
+    <span class="n">builder_index</span><span class="p">:</span> <span class="n">BuilderIndex</span>
+</code></pre></div></div>
+  
+    <h6 id="payloadattestationdata">
+      
+      
+        <a href="#payloadattestationdata" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">PayloadAttestationData</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PayloadAttestationData</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">beacon_block_root</span><span class="p">:</span> <span class="n">Root</span>
+    <span class="n">slot</span><span class="p">:</span> <span class="n">Slot</span>
+    <span class="n">payload_present</span><span class="p">:</span> <span class="n">boolean</span>
+    <span class="n">blob_data_available</span><span class="p">:</span> <span class="n">boolean</span>
+</code></pre></div></div>
+  
+    <h6 id="payloadattestation">
+      
+      
+        <a href="#payloadattestation" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">PayloadAttestation</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PayloadAttestation</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">aggregation_bits</span><span class="p">:</span> <span class="n">Bitvector</span><span class="p">[</span><span class="n">PTC_SIZE</span><span class="p">]</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">PayloadAttestationData</span>
+    <span class="n">signature</span><span class="p">:</span> <span class="n">BLSSignature</span>
+</code></pre></div></div>
+  
+    <h6 id="payloadattestationmessage">
+      
+      
+        <a href="#payloadattestationmessage" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">PayloadAttestationMessage</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">PayloadAttestationMessage</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">validator_index</span><span class="p">:</span> <span class="n">ValidatorIndex</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">PayloadAttestationData</span>
+    <span class="n">signature</span><span class="p">:</span> <span class="n">BLSSignature</span>
+</code></pre></div></div>
+  
+    <h6 id="indexedpayloadattestation">
+      
+      
+        <a href="#indexedpayloadattestation" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">IndexedPayloadAttestation</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">IndexedPayloadAttestation</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">attesting_indices</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ValidatorIndex</span><span class="p">,</span> <span class="n">PTC_SIZE</span><span class="p">]</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">PayloadAttestationData</span>
+    <span class="n">signature</span><span class="p">:</span> <span class="n">BLSSignature</span>
+</code></pre></div></div>
+  
+    <h6 id="executionpayloadbid">
+      
+      
+        <a href="#executionpayloadbid" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">ExecutionPayloadBid</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ExecutionPayloadBid</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">parent_block_hash</span><span class="p">:</span> <span class="n">Hash32</span>
+    <span class="n">parent_block_root</span><span class="p">:</span> <span class="n">Root</span>
+    <span class="n">block_hash</span><span class="p">:</span> <span class="n">Hash32</span>
+    <span class="n">prev_randao</span><span class="p">:</span> <span class="n">Bytes32</span>
+    <span class="n">fee_recipient</span><span class="p">:</span> <span class="n">ExecutionAddress</span>
+    <span class="n">gas_limit</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="n">builder_index</span><span class="p">:</span> <span class="n">BuilderIndex</span>
+    <span class="n">slot</span><span class="p">:</span> <span class="n">Slot</span>
+    <span class="n">value</span><span class="p">:</span> <span class="n">Gwei</span>
+    <span class="n">execution_payment</span><span class="p">:</span> <span class="n">Gwei</span>
+    <span class="n">blob_kzg_commitments</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">KZGCommitment</span><span class="p">,</span> <span class="n">MAX_BLOB_COMMITMENTS_PER_BLOCK</span><span class="p">]</span>
+</code></pre></div></div>
+  
+    <h6 id="signedexecutionpayloadbid">
+      
+      
+        <a href="#signedexecutionpayloadbid" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">SignedExecutionPayloadBid</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SignedExecutionPayloadBid</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">message</span><span class="p">:</span> <span class="n">ExecutionPayloadBid</span>
+    <span class="n">signature</span><span class="p">:</span> <span class="n">BLSSignature</span>
+</code></pre></div></div>
+  
+    <h6 id="executionpayloadenvelope">
+      
+      
+        <a href="#executionpayloadenvelope" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">ExecutionPayloadEnvelope</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ExecutionPayloadEnvelope</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">payload</span><span class="p">:</span> <span class="n">ExecutionPayload</span>
+    <span class="n">execution_requests</span><span class="p">:</span> <span class="n">ExecutionRequests</span>
+    <span class="n">builder_index</span><span class="p">:</span> <span class="n">BuilderIndex</span>
+    <span class="n">beacon_block_root</span><span class="p">:</span> <span class="n">Root</span>
+    <span class="n">slot</span><span class="p">:</span> <span class="n">Slot</span>
+    <span class="n">state_root</span><span class="p">:</span> <span class="n">Root</span>
+</code></pre></div></div>
+  
+    <h6 id="signedexecutionpayloadenvelope">
+      
+      
+        <a href="#signedexecutionpayloadenvelope" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">SignedExecutionPayloadEnvelope</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SignedExecutionPayloadEnvelope</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">message</span><span class="p">:</span> <span class="n">ExecutionPayloadEnvelope</span>
+    <span class="n">signature</span><span class="p">:</span> <span class="n">BLSSignature</span>
+</code></pre></div></div>
+  
+    <h6 id="modified-containers">
+      
+      
+        <a href="#modified-containers" class="anchor-link"></a> Modified containers
+      
+      
+    </h6>
+  
+    <h6 id="beaconblockbody">
+      
+      
+        <a href="#beaconblockbody" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">BeaconBlockBody</code>
+      
+      
+    </h6>
+
+<p><em>Note</em>: The removed fields (<code class="language-plaintext highlighter-rouge">execution_payload</code>, <code class="language-plaintext highlighter-rouge">blob_kzg_commitments</code>, and
+<code class="language-plaintext highlighter-rouge">execution_requests</code>) now exist in <code class="language-plaintext highlighter-rouge">ExecutionPayloadEnvelope</code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BeaconBlockBody</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">randao_reveal</span><span class="p">:</span> <span class="n">BLSSignature</span>
+    <span class="n">eth1_data</span><span class="p">:</span> <span class="n">Eth1Data</span>
+    <span class="n">graffiti</span><span class="p">:</span> <span class="n">Bytes32</span>
+    <span class="n">proposer_slashings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ProposerSlashing</span><span class="p">,</span> <span class="n">MAX_PROPOSER_SLASHINGS</span><span class="p">]</span>
+    <span class="n">attester_slashings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AttesterSlashing</span><span class="p">,</span> <span class="n">MAX_ATTESTER_SLASHINGS_ELECTRA</span><span class="p">]</span>
+    <span class="n">attestations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Attestation</span><span class="p">,</span> <span class="n">MAX_ATTESTATIONS_ELECTRA</span><span class="p">]</span>
+    <span class="n">deposits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Deposit</span><span class="p">,</span> <span class="n">MAX_DEPOSITS</span><span class="p">]</span>
+    <span class="n">voluntary_exits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SignedVoluntaryExit</span><span class="p">,</span> <span class="n">MAX_VOLUNTARY_EXITS</span><span class="p">]</span>
+    <span class="n">sync_aggregate</span><span class="p">:</span> <span class="n">SyncAggregate</span>
+    <span class="c1"># [Modified in Gloas:EIP7732]
+</span>    <span class="c1"># Removed `execution_payload`
+</span>    <span class="n">bls_to_execution_changes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SignedBLSToExecutionChange</span><span class="p">,</span> <span class="n">MAX_BLS_TO_EXECUTION_CHANGES</span><span class="p">]</span>
+    <span class="c1"># [Modified in Gloas:EIP7732]
+</span>    <span class="c1"># Removed `blob_kzg_commitments`
+</span>    <span class="c1"># [Modified in Gloas:EIP7732]
+</span>    <span class="c1"># Removed `execution_requests`
+</span>    <span class="c1"># [New in Gloas:EIP7732]
+</span>    <span class="n">signed_execution_payload_bid</span><span class="p">:</span> <span class="n">SignedExecutionPayloadBid</span>
+    <span class="c1"># [New in Gloas:EIP7732]
+</span>    <span class="n">payload_attestations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PayloadAttestation</span><span class="p">,</span> <span class="n">MAX_PAYLOAD_ATTESTATIONS</span><span class="p">]</span>
+</code></pre></div></div>
+  
+    <h6 id="beaconstate">
+      
+      
+        <a href="#beaconstate" class="anchor-link"></a> <code class="language-plaintext highlighter-rouge">BeaconState</code>
+      
+      
+    </h6>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BeaconState</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">genesis_time</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="n">genesis_validators_root</span><span class="p">:</span> <span class="n">Root</span>
+    <span class="n">slot</span><span class="p">:</span> <span class="n">Slot</span>
+    <span class="n">fork</span><span class="p">:</span> <span class="n">Fork</span>
+    <span class="n">latest_block_header</span><span class="p">:</span> <span class="n">BeaconBlockHeader</span>
+    <span class="n">block_roots</span><span class="p">:</span> <span class="n">Vector</span><span class="p">[</span><span class="n">Root</span><span class="p">,</span> <span class="n">SLOTS_PER_HISTORICAL_ROOT</span><span class="p">]</span>
+    <span class="n">state_roots</span><span class="p">:</span> <span class="n">Vector</span><span class="p">[</span><span class="n">Root</span><span class="p">,</span> <span class="n">SLOTS_PER_HISTORICAL_ROOT</span><span class="p">]</span>
+    <span class="n">historical_roots</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Root</span><span class="p">,</span> <span class="n">HISTORICAL_ROOTS_LIMIT</span><span class="p">]</span>
+    <span class="n">eth1_data</span><span class="p">:</span> <span class="n">Eth1Data</span>
+    <span class="n">eth1_data_votes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Eth1Data</span><span class="p">,</span> <span class="n">EPOCHS_PER_ETH1_VOTING_PERIOD</span> <span class="o">*</span> <span class="n">SLOTS_PER_EPOCH</span><span class="p">]</span>
+    <span class="n">eth1_deposit_index</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="n">validators</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Validator</span><span class="p">,</span> <span class="n">VALIDATOR_REGISTRY_LIMIT</span><span class="p">]</span>
+    <span class="n">balances</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Gwei</span><span class="p">,</span> <span class="n">VALIDATOR_REGISTRY_LIMIT</span><span class="p">]</span>
+    <span class="n">randao_mixes</span><span class="p">:</span> <span class="n">Vector</span><span class="p">[</span><span class="n">Bytes32</span><span class="p">,</span> <span class="n">EPOCHS_PER_HISTORICAL_VECTOR</span><span class="p">]</span>
+    <span class="n">slashings</span><span class="p">:</span> <span class="n">Vector</span><span class="p">[</span><span class="n">Gwei</span><span class="p">,</span> <span class="n">EPOCHS_PER_SLASHINGS_VECTOR</span><span class="p">]</span>
+    <span class="n">previous_epoch_participation</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ParticipationFlags</span><span class="p">,</span> <span class="n">VALIDATOR_REGISTRY_LIMIT</span><span class="p">]</span>
+    <span class="n">current_epoch_participation</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ParticipationFlags</span><span class="p">,</span> <span class="n">VALIDATOR_REGISTRY_LIMIT</span><span class="p">]</span>
+    <span class="n">justification_bits</span><span class="p">:</span> <span class="n">Bitvector</span><span class="p">[</span><span class="n">JUSTIFICATION_BITS_LENGTH</span><span class="p">]</span>
+    <span class="n">previous_justified_checkpoint</span><span class="p">:</span> <span class="n">Checkpoint</span>
+    <span class="n">current_justified_checkpoint</span><span class="p">:</span> <span class="n">Checkpoint</span>
+    <span class="n">finalized_checkpoint</span><span class="p">:</span> <span class="n">Checkpoint</span>
+    <span class="n">inactivity_scores</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">uint64</span><span class="p">,</span> <span class="n">VALIDATOR_REGISTRY_LIMIT</span><span class="p">]</span>
+    <span class="n">current_sync_committee</span><span class="p">:</span> <span class="n">SyncCommittee</span>
+    <span class="n">next_sync_committee</span><span class="p">:</span> <span class="n">SyncCommittee</span>
+    <span class="c1"># [Modified in Gloas:EIP7732]
+</span>    <span class="c1"># Removed `latest_execution_payload_header`
+</span>    <span class="c1"># [New in Gloas:EIP7732]
+</span>    <span class="n">latest_execution_payload_bid</span><span class="p">:</span> <span class="n">ExecutionPayloadBid</span>
+    <span class="n">next_withdrawal_index</span><span class="p">:</span> <span class="n">WithdrawalIndex</span>
+    <span class="n">next_withdrawal_validator_index</span><span class="p">:</span> <span class="n">ValidatorIndex</span>
+    <span class="n">historical_summaries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">HistoricalSummary</span><span class="p">,</span> <span class="n">HISTORICAL_ROOTS_LIMIT</span><span class="p">]</span>
+    <span class="n">deposit_requests_start_index</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="n">deposit_balance_to_consume</span><span class="p">:</span> <span class="n">Gwei</span>
+    <span class="n">exit_balance_to_consume</span><span class="p">:</span> <span class="n">Gwei</span>
+    <span class="n">earliest_exit_epoch</span><span class="p">:</span> <span class="n">Epoch</span>
+    <span class="n">consolidation_balance_to_consume</span><span class="p">:</span> <span class="n">Gwei</span>
+    <span class="n">earliest_consolidation_epoch</span><span class="p">:</span> <span class="n">Epoch</span>
+    <span class="n">pending_deposits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PendingDeposit</span><span class="p">,</span> <span class="n">PENDING_DEPOSITS_LIMIT</span><span class="p">]</span>
+    <span class="n">pending_partial_withdrawals</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PendingPartialWithdrawal</span><span class="p">,</span> <span class="n">PENDING_PARTIAL_WITHDRAWALS_LIMIT</span><span class="p">]</span>
+    <span class="n">pending_consolidations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PendingConsolidation</span><span class="p">,</span> <span class="n">PENDING_CONSOLIDATIONS_LIMIT</span><span class="p">]</span>
+    <span class="n">proposer_lookahead</span><span class="p">:</span> <span class="n">Vector</span><span class="p">[</span><span class="n">ValidatorIndex</span><span class="p">,</span> <span class="p">(</span><span class="n">MIN_SEED_LOOKAHEAD</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">SLOTS_PER_EPOCH</span><span class="p">]</span>
+    <span class="c1"># [New in Gloas:EIP7732]
+</span>    <span class="n">builders</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Builder</span><span class="p">,</span> <span class="n">BUILDER_REGISTRY_LIMIT</span><span class="p">]</span>
+    <span class="c1"># [New in Gloas:EIP7732]
+</span>    <span class="n">next_withdrawal_builder_index</span><span class="p">:</span> <span class="n">BuilderIndex</span>
+    <span class="c1"># [New in Gloas:EIP7732]
+</span>    <span class="n">execution_payload_availability</span><span class="p">:</span> <span class="n">Bitvector</span><span class="p">[</span><span class="n">SLOTS_PER_HISTORICAL_ROOT</span><span class="p">]</span>
+    <span class="c1"># [New in Gloas:EIP7732]
+</span>    <span class="n">builder_pending_payments</span><span class="p">:</span> <span class="n">Vector</span><span class="p">[</span><span class="n">BuilderPendingPayment</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">SLOTS_PER_EPOCH</span><span class="p">]</span>
+    <span class="c1"># [New in Gloas:EIP7732]
+</span>    <span class="n">builder_pending_withdrawals</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BuilderPendingWithdrawal</span><span class="p">,</span> <span class="n">BUILDER_PENDING_WITHDRAWALS_LIMIT</span><span class="p">]</span>
+    <span class="c1"># [New in Gloas:EIP7732]
+</span>    <span class="n">latest_block_hash</span><span class="p">:</span> <span class="n">Hash32</span>
+    <span class="c1"># [New in Gloas:EIP7732]
+</span>    <span class="n">payload_expected_withdrawals</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Withdrawal</span><span class="p">,</span> <span class="n">MAX_WITHDRAWALS_PER_PAYLOAD</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">BeaconState</code> container is modified with the addition of:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">builders</code>, of type <code class="language-plaintext highlighter-rouge">List[Builder, BUILDER_REGISTRY_LIMIT]</code> to track the new in-protocol staked builders.</li>
+  <li><code class="language-plaintext highlighter-rouge">next_withdrawal_builder_index</code> of type <code class="language-plaintext highlighter-rouge">BuilderIndex</code> to help tracking builder withdrawals.</li>
+  <li><code class="language-plaintext highlighter-rouge">execution_payload_availability</code>, of type <code class="language-plaintext highlighter-rouge">Bitvector[SLOTS_PER_HISTORICAL_ROOT]</code> to track the presence of execution payloads on the canonical chain.</li>
+  <li><code class="language-plaintext highlighter-rouge">builder_pending_payments</code>, of type <code class="language-plaintext highlighter-rouge">Vector[BuilderPendingPayment, 2 * SLOTS_PER_EPOCH]</code> to track pending payments from builders to proposers before the execution payload has been processed.</li>
+  <li><code class="language-plaintext highlighter-rouge">builder_pending_withdrawals</code>, of type <code class="language-plaintext highlighter-rouge">List[BuilderPendingWithdrawal, BUILDER_PENDING_WITHDRAWALS_LIMIT]</code> to track pending withdrawals to the execution layer with the builders’ payments.</li>
+  <li><code class="language-plaintext highlighter-rouge">latest_block_hash</code>, of type <code class="language-plaintext highlighter-rouge">Hash32</code>, to track the blockhash of the last execution payload in the blockchain.</li>
+  <li><code class="language-plaintext highlighter-rouge">payload_expected_withdrawals</code> of type <code class="language-plaintext highlighter-rouge">List[Withdrawal, MAX_WITHDRAWALS_PER_PAYLOAD]</code> to track the latest withdrawals that were deducted in the consensus layer and need to still be honored in the Execution Layer.</li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">BeaconBlockBody</code> is modified with the addition of:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">signed_execution_payload_bid</code> of type <code class="language-plaintext highlighter-rouge">SignedExecutionPayloadBid</code> with the builder’s commitment.</li>
+  <li><code class="language-plaintext highlighter-rouge">payload_attestations</code> of type <code class="language-plaintext highlighter-rouge">List[PayloadAttestation, MAX_PAYLOAD_ATTESTATIONS]</code> a list of PTC attestations from the previous slot.</li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">ExecutionPayloadHeader</code> object is changed (and renamed to <code class="language-plaintext highlighter-rouge">ExecutionPayloadBid</code>) to only track the minimum information needed to commit to a builder’s payload.</p>
+
+<p>State transition logic is modified by:</p>
+
+<ul>
+  <li>A new beacon state getter <code class="language-plaintext highlighter-rouge">get_ptc</code> returns the PTC members for a given slot.</li>
+  <li><code class="language-plaintext highlighter-rouge">process_withdrawals</code> is modified as follows. Withdrawals are obtained directly from the beacon state instead of the execution payload. They are deducted from the beacon chain. The beacon state <code class="language-plaintext highlighter-rouge">latest_withdrawals_root</code> is updated with the HTR of this list. The next execution payload MUST include withdrawals matching the <code class="language-plaintext highlighter-rouge">state.latest_withdrawals_root</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">process_execution_payload</code> is removed from <code class="language-plaintext highlighter-rouge">process_block</code>. Instead a new function <code class="language-plaintext highlighter-rouge">process_execution_payload_bid</code> is included, this function validates the <code class="language-plaintext highlighter-rouge">SignedExecutionPayloadBid</code> included in the <code class="language-plaintext highlighter-rouge">BeaconBlockBody</code>, ensures the payment from the builder’s balance can be deducted and adds a <code class="language-plaintext highlighter-rouge">BuilderPendingPayment</code> object to the beacon state.</li>
+  <li><code class="language-plaintext highlighter-rouge">process_deposit_request</code> is removed from <code class="language-plaintext highlighter-rouge">process_operations</code> and deferred until <code class="language-plaintext highlighter-rouge">process_execution_payload</code>. Special care is added for deposit requests from new validator pubkeys, with withdrawal credentials starting with the prefix <code class="language-plaintext highlighter-rouge">BUILDER_WITHDRAWAL_PREFIX</code>. These deposits are immediately added to the beacon chain and processed as new builders.</li>
+  <li><code class="language-plaintext highlighter-rouge">process_withdrawal_request</code> is removed from <code class="language-plaintext highlighter-rouge">process_operations</code> and deferred until <code class="language-plaintext highlighter-rouge">process_execution_payload</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">process_consolidation_request</code> is removed from <code class="language-plaintext highlighter-rouge">process_operations</code> and deferred until <code class="language-plaintext highlighter-rouge">process_execution_payload</code>.</li>
+  <li>A new <code class="language-plaintext highlighter-rouge">process_payload_attestation</code> is added to <code class="language-plaintext highlighter-rouge">process_operations</code>, this function validates the payload timeliness attestations broadcast by the PTC members.</li>
+  <li><code class="language-plaintext highlighter-rouge">process_execution_payload</code> is now called as a separate helper when receiving a <code class="language-plaintext highlighter-rouge">SignedExecutionPayloadEnvelope</code> on the P2P layer. This function in particular checks that the HTR of the resulting beacon state coincides with the committed one in the payload envelope. On sucessful processing of the execution payload, the corresponding <code class="language-plaintext highlighter-rouge">BuilderPendingPayment</code> is removed from the beacon state and a <code class="language-plaintext highlighter-rouge">BuilderPendingWithdrawal</code> is queued.</li>
+</ul>
+
+<p>Epoch processing is modified by addition of a new helper function <code class="language-plaintext highlighter-rouge">process_builder_pending_payments</code>, that processes the builder pending payments from those payloads that were not included in the canonical chain. 
+Although there is no change in the <code class="language-plaintext highlighter-rouge">AttestationData</code> object, the <code class="language-plaintext highlighter-rouge">index</code> field which is unused since the Electra fork, is now repurposed to signal payload availability. The value of <code class="language-plaintext highlighter-rouge">0</code> is used when attesting to the current beacon block or a past beacon block without a payload present, and the value of <code class="language-plaintext highlighter-rouge">1</code> is used to attest to a past beacon block with a payload present.</p>
+  
+    <h4 id="fork-choice-changes">
+      
+      
+        <a href="#fork-choice-changes" class="anchor-link"></a> Fork-Choice changes
+      
+      
+    </h4>
+
+<p>Forkchoice is changed substantially to deal with the fact that forkchoice nodes can have different payload content.</p>
+  
+    <h4 id="p2p-changes">
+      
+      
+        <a href="#p2p-changes" class="anchor-link"></a> P2P changes
+      
+      
+    </h4>
+
+<ul>
+  <li>A new global topic for broadcasting <code class="language-plaintext highlighter-rouge">SignedExecutionPayloadBid</code> messages (builder bids).</li>
+  <li>A new global topic for broadcasting <code class="language-plaintext highlighter-rouge">PayloadAttestationMessage</code> objects.</li>
+  <li>A new global topic for broadcasting <code class="language-plaintext highlighter-rouge">ProposerPreferences</code> objects.</li>
+</ul>
+  
+    <h3 id="engine-api">
+      
+      
+        <a href="#engine-api" class="anchor-link"></a> Engine API
+      
+      
+    </h3>
+
+<p>No changes needed.</p>
+  
+    <h2 id="rationale">
+      
+      
+        <a href="#rationale" class="anchor-link"></a> Rationale
+      
+      
+    </h2>
+  
+    <h3 id="staked-builders">
+      
+      
+        <a href="#staked-builders" class="anchor-link"></a> Staked builders
+      
+      
+    </h3>
+
+<p>Being a builder is a new type of entity tracked in the beacon state. As such builders are staked in the beacon chain and they have their own withdrawal credential prefix. This allows for in-protocol trustless enforcement of the builder’s payment to the proposer. Alternatively, payment could be enforced in the Execution Layer (EL) at the cost of adding the corresponding EL consensus-changing logic. Payments in the EL have the advantage of not requiring the builder to periodically submit deposit transactions to replenish their validator balance. Both systems require availability of funds before the payload is revealed: in the Consensus Layer (CL) this is done by getting builders to stake. In the EL this is done with a balance check and a payment transaction. This transaction can be checked without executing the payload only if it the first transaction of the block.</p>
+  
+    <h3 id="delayed-validation">
+      
+      
+        <a href="#delayed-validation" class="anchor-link"></a> Delayed validation
+      
+      
+    </h3>
+
+<p>The Payload Timeliness Committee members do not need to validate the execution payload before attesting to it. They perform basic checks such as verifying the builder’s signature, and the correct blockhash is included. This takes away the full execution payload validation from the hot path of validation of an Ethereum block, giving the next proposer 6 seconds (<code class="language-plaintext highlighter-rouge">SECONDS_PER_SLOT * 2 // INTERVALS_PER_SLOT</code>) to validate the payload and every other validator 9 seconds (<code class="language-plaintext highlighter-rouge">SECONDS_PER_SLOT * 3 // INTERVALS_PER_SLOT</code>). From a user UX perspective, a transaction included in slot <code class="language-plaintext highlighter-rouge">N</code> by the builder is not widely validated until the proposer of slot <code class="language-plaintext highlighter-rouge">N+1</code> releases their beacon block on top of block <code class="language-plaintext highlighter-rouge">N</code> first and the attesters of slot <code class="language-plaintext highlighter-rouge">N+1</code> vote on this beacon block as the head of the chain.</p>
+  
+    <h3 id="fork-choice">
+      
+      
+        <a href="#fork-choice" class="anchor-link"></a> Fork choice
+      
+      
+    </h3>
+
+<p>The following features of fork choice are guaranteed under specified margins of security:</p>
+
+<ul>
+  <li>Proposer unconditional payment.</li>
+  <li>Builder reveal safety.</li>
+  <li>Builder withhold safety.</li>
+</ul>
+
+<p>Proposer unconditional payment refers to the following. An Ethereum slot can be either:</p>
+
+<ul>
+  <li><em>Full</em>: both the beacon block and the execution payload have been revealed and included on-chain.</li>
+  <li><em>Skipped</em>: No beacon block (and therefore no execution payload) has been included on-chain for this slot.</li>
+  <li><em>Empty</em>: The beacon block has been included on-chain, but the committed execution payload has not.</li>
+</ul>
+
+<p>Proposer unconditional payment refers to the fact that in the third scenario the beacon block proposer received payment from the corresponding builder.</p>
+
+<p>Builder reveal safety refers to the fact that if the builder acted honestly and revealed a payload in a timely fashion (as attested by the PTC) then the revealed payload will be included on-chain.</p>
+
+<p>Builder withhold safety refers to the fact that if some beacon block containing a builder’s commitment is withheld and revealed late, the builder will not be charged the value of the bid. In particular, the payload does not even need to be revealed in this case.</p>
+
+<p>The precise method by which these safety mechanisms are enforced is by allowing attestations to also signal their view of the slot as in either of the above options <em>Full</em>, <em>Skipped</em> or <em>Empty</em>. For this, the <code class="language-plaintext highlighter-rouge">index</code> field in the <code class="language-plaintext highlighter-rouge">AttestationData</code> is used as explained above.</p>
+  
+    <h3 id="ptc-equivocations">
+      
+      
+        <a href="#ptc-equivocations" class="anchor-link"></a> PTC equivocations
+      
+      
+    </h3>
+
+<p>There is no penalty for PTC nor payload equivocation (that is revealing the right payload and also a withheld message at the same time). A collusion of a builder controlling network partition with a single malicious PTC member could cause a split view by achieving consensus both on payload withheld and a payload present. This could be mitigated by setting <code class="language-plaintext highlighter-rouge">PAYLOAD_TIMELY_THRESHOLD</code> to be 2/3 of the PTC, in which case the malicious operator would have to control at least 33% of the PTC.</p>
+
+<p>Another mitigation mechanism is to add new slashing conditions for payload equivocation or PTC equivocations (both are signed messages by validators).</p>
+
+<p>Since this attack results in a split view at a cost for the builder (the payload is revealed and may not be included) this EIP opted for simplicity of implementation.</p>
+  
+    <h3 id="withdrawals">
+      
+      
+        <a href="#withdrawals" class="anchor-link"></a> Withdrawals
+      
+      
+    </h3>
+
+<p>Withdrawals from the beacon chain are complex in nature, they involve removing funds from one layer and crediting them on another, with different trigger mechanisms that can start from either layer. Before applying the consensus layer state transition function to a given beacon state <code class="language-plaintext highlighter-rouge">pre_state</code> and processing a given signed beacon block <code class="language-plaintext highlighter-rouge">block</code>, the set of withdrawals that are expected to be deducted from the beacon chain are completely determined by <code class="language-plaintext highlighter-rouge">pre_state</code>. Previous to this EIP the set of withdrawals that are credited on the execution layer are included in <code class="language-plaintext highlighter-rouge">block</code>. The block is deemed invalid if these withdrawals do not match. With the separation included in this EIP, these operations of deducting and crediting become asynchronous:</p>
+
+<ul>
+  <li>When processing the beacon block, the withdrawals are deducted from the beacon chain.</li>
+  <li>The set of withdrawals just deducted is committed to the beacon state <code class="language-plaintext highlighter-rouge">post_state</code>.</li>
+  <li>When processing any execution payload whose parent beacon state is <code class="language-plaintext highlighter-rouge">post_state</code>, the payload is deemed invalid if it doesn’t include precisely the list of withdrawals committed to <code class="language-plaintext highlighter-rouge">post_state</code>.</li>
+</ul>
+
+<p>This asynchronous mechanism has some consequences as slots may be <em>empty</em> as defined above. In these cases, the consensus layer does not process any more withdrawals until an execution payload has fulfilled the outstanding ones. An alternative design would be to defer all of withdrawal processing to the execution payload validation phase (ie. <code class="language-plaintext highlighter-rouge">process_execution_payload</code>). This has the advantage of not needing to track the fulfilled withdrawals on the beacon chain. The logic changes when several payloads are missing, in which case balances on the beacon chain change and therefore a withdrawal that would be possible with the former mechanism may be different, or even impossible with the latter.</p>
+  
+    <h3 id="three-state-transition-functions">
+      
+      
+        <a href="#three-state-transition-functions" class="anchor-link"></a> Three state transition functions
+      
+      
+    </h3>
+
+<p>The current EIP adds an extra state transition function to the block processing in Ethereum. Processing a <code class="language-plaintext highlighter-rouge">SignedBeaconBlock</code> changes the consensus layer <code class="language-plaintext highlighter-rouge">BeaconState</code>. A <code class="language-plaintext highlighter-rouge">SignedExecutionPayloadEnvelope</code> changes both the execution layer state and the consensus layer one. As such, the envelope commits to the consensus layer post-state-transition beacon state root.</p>
+  
+    <h3 id="compatible-designs">
+      
+      
+        <a href="#compatible-designs" class="anchor-link"></a> Compatible designs
+      
+      
+    </h3>
+  
+    <h4 id="inclusion-lists">
+      
+      
+        <a href="#inclusion-lists" class="anchor-link"></a> Inclusion lists
+      
+      
+    </h4>
+
+<p>This EIP is fully compatible with forkchoice enforced inclusion lists as specified in <a href="/EIPS/eip-7805">EIP-7805</a> or similar.</p>
+  
+    <h4 id="slot-auctions">
+      
+      
+        <a href="#slot-auctions" class="anchor-link"></a> Slot auctions
+      
+      
+    </h4>
+
+<p>A simple change to this EIP is to remove the blockhash commitment from the <code class="language-plaintext highlighter-rouge">SignedExecutionPayloadBid</code>. This allows the builder to commit any payload to the slot. A preliminary security analysis shows that payload equivocation does not weaken fork choice’s FFG. Some advantages of Slot auctions include:</p>
+
+<ul>
+  <li>Better user experience as any submitted transaction can be included in the next block (with block auctions a transaction sent in the first half of the slot can only be included in the following block).</li>
+  <li>Longer continuous time to build blocks.</li>
+  <li>Better compatibility designs with fork choice enforced inclusion list proposals.</li>
+</ul>
+  
+    <h2 id="backwards-compatibility">
+      
+      
+        <a href="#backwards-compatibility" class="anchor-link"></a> Backwards Compatibility
+      
+      
+    </h2>
+
+<p>This EIP introduces backward incompatible changes to the block validation rule set on the consensus layer and must be accompanied by a hard fork.</p>
+  
+    <h2 id="security-considerations">
+      
+      
+        <a href="#security-considerations" class="anchor-link"></a> Security Considerations
+      
+      
+    </h2>
+  
+    <h3 id="free-option-problem">
+      
+      
+        <a href="#free-option-problem" class="anchor-link"></a> Free option problem
+      
+      
+    </h3>
+
+<p>Economically rational but malicious (as defined by the honest builder guide) builders may chose to withhold their payload in the event that it would be profitable for them. This could result in missed slots and degradation of user experience of Ethereum. Some preliminary data in the form of simulation suggests that the number of these occurrences may be noticeable. Some mitigations were proposed in the form of variable penalties for builders that fail to include their payload envelopes in the canonical chain.</p>
+  
+    <h3 id="builder-safety">
+      
+      
+        <a href="#builder-safety" class="anchor-link"></a> Builder safety
+      
+      
+    </h3>
+
+<ul>
+  <li>A colluding set of proposers and attesters controlling consecutive blocks and more than 20% of the total stake can reorg a builder’s payload and force it to pay the bid’s value.</li>
+  <li>There is no possible <em>unbundling</em> of the builder’s payload in the same slot, that is, if the builder reveals a payload for the head of the chain, no other payload is possible for the current slot.</li>
+</ul>
+  
+    <h3 id="malicious-ptc">
+      
+      
+        <a href="#malicious-ptc" class="anchor-link"></a> Malicious PTC
+      
+      
+    </h3>
+
+<p>The expected time for a malicious attacker, controlling 35% of the total stake, to have a majority control on the PTC is 205 000 years.</p>
+  
+    <h2 id="copyright">
+      
+      
+        <a href="#copyright" class="anchor-link"></a> Copyright
+      
+      
+    </h2>
+
+<p>Copyright and related rights waived via <a href="/LICENSE">CC0</a>.</p>
+
+  <h2>Citation</h2>
+  <p>Please cite this document as:</p>
+  
+  <p>Francesco D'Amato&nbsp;&lt;<a href="mailto:francesco.damato@ethereum.org">francesco.damato@ethereum.org</a>&gt;, Nico Flaig&nbsp;&lt;<a href="mailto:nflaig@protonmail.com">nflaig@protonmail.com</a>&gt;, Barnabé Monnot&nbsp;&lt;<a href="mailto:barnabe.monnot@ethereum.org">barnabe.monnot@ethereum.org</a>&gt;, Michael Neuder&nbsp;&lt;<a href="mailto:michael.neuder@ethereum.org">michael.neuder@ethereum.org</a>&gt;, Potuz&nbsp;(<a href="https://github.com/potuz">@potuz</a>), Justin Traglia&nbsp;&lt;<a href="mailto:jtraglia@ethereum.org">jtraglia@ethereum.org</a>&gt;, Terence Tsao&nbsp;&lt;<a href="mailto:ttsao@offchainlabs.com">ttsao@offchainlabs.com</a>&gt;, "EIP-7732: Enshrined Proposer-Builder Separation [DRAFT]," <em>Ethereum Improvement Proposals</em>, no. 7732, June 2024. Available: https://eips.ethereum.org/EIPS/eip-7732.</p>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "TechArticle",
+    "headline": "EIP-7732: Enshrined Proposer-Builder Separation [DRAFT]",
+    "name": "EIP-7732: Enshrined Proposer-Builder Separation [DRAFT]",
+    "author": "Francesco D'Amato <francesco.damato@ethereum.org>, Nico Flaig <nflaig@protonmail.com>, Barnabé Monnot <barnabe.monnot@ethereum.org>, Michael Neuder <michael.neuder@ethereum.org>, Potuz (@potuz), Justin Traglia <jtraglia@ethereum.org>, Terence Tsao <ttsao@offchainlabs.com>",
+    "dateCreated": "2024-06-28",
+    "datePublished": "2024-06-28",
+    
+    "discussionUrl": "https://ethereum-magicians.org/t/eip-7732-enshrined-proposer-builder-separation-epbs/19634",
+    
+    "inLanguage": "en-US",
+    "license": "#copyright",
+    "copyrightYear": "2024"
+  }
+</script>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ethereum Improvement Proposals</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ethereum Improvement Proposals</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ethereum/EIPs"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ethereum/EIPs</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

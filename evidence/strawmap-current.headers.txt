@@ -1,0 +1,15 @@
+HTTP/1.1 200 Connection established
+
+HTTP/2 200 
+accept-ranges: bytes
+age: 34229
+cache-control: public,max-age=300
+cache-status: "Netlify Edge"; hit
+content-type: text/html; charset=UTF-8
+date: Mon, 06 Jul 2026 02:13:39 GMT
+etag: "28659659dffc16c1185e95aa5cac4bf4-ssl"
+server: Netlify
+strict-transport-security: max-age=31536000
+x-nf-request-id: 01KWTK7QRFJR3K2QJVNRMKAF9E
+content-length: 16929
+

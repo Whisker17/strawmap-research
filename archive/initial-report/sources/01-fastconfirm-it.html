@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FCR — Fast Confirmation Rule for Ethereum | Single-Slot Confirmation</title>
+    <meta name="description" content="Confirm Ethereum transactions in ~13 seconds instead of ~13 minutes. FCR offers deterministic single-slot confirmation with no hard fork required." />
+    <meta name="keywords" content="FCR, Fast Confirmation Rule, Ethereum, single-slot confirmation, blockchain, finality, consensus, attestations" />
+    <meta name="author" content="Ethereum Foundation" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://fastconfirm.it" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://fastconfirm.it" />
+    <meta property="og:title" content="FCR — Fast Confirmation Rule for Ethereum" />
+    <meta property="og:description" content="Confirm Ethereum transactions in ~13 seconds instead of ~13 minutes. Deterministic single-slot confirmation — no hard fork required." />
+    <meta property="og:image" content="https://fastconfirm.it/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="FCR — 1 slot. Fast Confirmation Rule. Single-slot confirmation for Ethereum." />
+    <meta property="og:site_name" content="Fast Confirmation Rule" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="FCR — Fast Confirmation Rule for Ethereum" />
+    <meta name="twitter:description" content="Confirm Ethereum transactions in ~13 seconds instead of ~13 minutes. Deterministic single-slot confirmation — no hard fork required." />
+    <meta name="twitter:image" content="https://fastconfirm.it/og-image.png" />
+    <meta name="twitter:image:alt" content="FCR — 1 slot. Fast Confirmation Rule. Single-slot confirmation for Ethereum." />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#f05f36" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Fast Confirmation Rule",
+      "alternateName": "FCR",
+      "url": "https://fastconfirm.it",
+      "description": "Confirm Ethereum transactions in ~13 seconds instead of ~13 minutes. Deterministic single-slot confirmation with no hard fork required.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Ethereum Foundation",
+        "url": "https://ethereum.org"
+      }
+    }
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script type="module" crossorigin src="/assets/main-A4J3EJNs.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/style-DdOp_Uml.js">
+    <link rel="stylesheet" crossorigin href="/assets/style-CnXzwZvV.css">
+  </head>
+  <body class="bg-primary min-h-screen flex items-center justify-center p-2 md:p-8 lg:p-16">
+    <div class="bg-background rounded-2xl md:rounded-[50px] w-full max-w-[1400px] relative">
+
+      <!-- Hero Section (fixed in place, no scroll) -->
+      <section id="overview" class="h-screen flex flex-col items-center justify-center relative px-3 md:px-4">
+        <div class="text-center space-y-2 md:space-y-8">
+          <div>
+            <svg class="mx-auto mb-2 md:mb-4" width="25" height="42" viewBox="0 0 71 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M35.0179 90.652V119.613L3.05176e-05 68.2642L35.0179 90.652Z" fill="#f05f36"/>
+              <path d="M70.0387 68.2642L35.0184 119.613V90.652L70.0387 68.2642Z" fill="#f05f36"/>
+              <path d="M70.0387 61.0285L35.0184 41.0524V83.4187L70.0387 61.0285Z" fill="#f05f36"/>
+              <path d="M70.0387 61.0293L35.0184 0V41.0532L70.0387 61.0293Z" fill="#f05f36"/>
+              <path d="M35.0179 0V41.0532L0 61.0293L35.0179 0Z" fill="#f05f36"/>
+              <path d="M35.0179 41.0524V83.4187L3.05176e-05 61.0285L35.0179 41.0524Z" fill="#f05f36"/>
+            </svg>
+            <div class="text-primary text-base md:text-4xl font-light uppercase" style="letter-spacing:4px;">Fast Confirmation Rule</div>
+            <h1 class="text-primary font-black leading-none tracking-tighter">
+              <span class="block md:inline text-[40vw] md:text-[280px] lg:text-[20vw]">1</span><span class="hidden md:inline text-[280px] lg:text-[20vw]"> </span><span class="block md:inline text-[28vw] md:text-[280px] lg:text-[20vw]">slot</span>
+            </h1>
+            <h2 class="text-primary text-2xl md:text-5xl lg:text-[3.5vw] font-extrabold leading-tight mx-auto lg:whitespace-nowrap">
+              Single-slot confirmation<br class="lg:hidden"> for Ethereum.
+            </h2>
+          </div>
+          <div class="space-y-2 md:space-y-6">
+            <p class="text-text-muted text-xs md:text-xl mx-auto">
+              Confirm transactions in ~13 seconds — down from ~13 minutes. No hard fork required.
+            </p>
+            <div class="flex justify-center gap-3 md:gap-7">
+              <a href="https://fastconfirm.paperform.co/" target="_blank" rel="noopener noreferrer" class="bg-primary text-background text-xs md:text-base font-medium px-6 md:px-14 py-2 md:py-4 rounded-full hover:bg-primary-dark transition-colors">
+                Get in Touch
+              </a>
+              <a href="#use-cases" class="border-2 border-primary text-primary text-xs md:text-base font-medium px-6 md:px-14 py-2 md:py-4 rounded-full hover:bg-primary hover:text-background transition-colors">
+                Use Cases
+              </a>
+            </div>
+          </div>
+        </div>
+        <a href="#overview-stats" class="absolute bottom-4 md:bottom-24 flex flex-col items-center gap-1 md:gap-2 text-text-muted hover:text-primary transition-colors scroll-hint">
+          <span class="text-xs font-light uppercase" style="letter-spacing:2px;">Scroll to learn more</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </section>
+
+      <!-- Scrolling content that covers the hero -->
+      <div id="scroll-content" class="relative z-10 bg-background rounded-t-[40px] md:rounded-t-[60px]">
+
+      <!-- Sticky Header (hidden until scroll-content reaches top) -->
+      <header id="header" class="sticky top-0 z-50 transition-opacity duration-300 opacity-0">
+        <div class="flex items-center justify-between bg-background py-4 border-b-2 border-transparent transition-all duration-300" id="header-inner">
+          <div class="flex flex-col min-[1200px]:flex-row min-[1200px]:items-baseline min-[1200px]:gap-2">
+            <span class="text-primary text-3xl md:text-4xl font-bold tracking-tight">FCR</span>
+            <span id="header-subtitle" class="text-primary text-[9px] md:text-[10px] font-light uppercase transition-all duration-300" style="letter-spacing:2px;">Fast Confirmation Rule</span>
+          </div>
+          <div class="hidden lg:flex items-center gap-8">
+            <nav id="header-nav" class="flex items-center gap-6 transition-all duration-300">
+              <a href="#overview-stats" class="nav-link text-xs font-medium tracking-wide">OVERVIEW</a>
+              <a href="#use-cases" class="nav-link text-xs font-medium tracking-wide">USE CASES</a>
+              <a href="#risk" class="nav-link text-xs font-medium tracking-wide">TRADE-OFFS</a>
+              <a href="#implement" class="nav-link text-xs font-medium tracking-wide">IMPLEMENT</a>
+              <a href="#faq" class="nav-link text-xs font-medium tracking-wide">FAQ</a>
+            </nav>
+            <a href="https://fastconfirm.paperform.co/" target="_blank" rel="noopener noreferrer" class="bg-primary text-white text-sm font-medium px-5 py-2.5 rounded-full hover:bg-primary-dark transition-colors whitespace-nowrap">
+              Get in Touch
+            </a>
+          </div>
+          <!-- Hamburger button (mobile) -->
+          <button id="menu-toggle" class="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5" aria-label="Toggle menu">
+            <span class="hamburger-line block w-6 h-0.5 bg-primary transition-all duration-300"></span>
+            <span class="hamburger-line block w-6 h-0.5 bg-primary transition-all duration-300"></span>
+            <span class="hamburger-line block w-6 h-0.5 bg-primary transition-all duration-300"></span>
+          </button>
+        </div>
+        <!-- Mobile menu -->
+        <nav id="mobile-menu" class="lg:hidden hidden flex-col bg-background pb-6 border-b-2 border-primary/10">
+          <a href="#overview-stats" class="mobile-nav-link text-primary text-sm font-medium tracking-wide py-3 hover:text-primary-dark">OVERVIEW</a>
+          <a href="#use-cases" class="mobile-nav-link text-primary text-sm font-medium tracking-wide py-3 hover:text-primary-dark">USE CASES</a>
+          <a href="#risk" class="mobile-nav-link text-primary text-sm font-medium tracking-wide py-3 hover:text-primary-dark">TRADE-OFFS</a>
+          <a href="#implement" class="mobile-nav-link text-primary text-sm font-medium tracking-wide py-3 hover:text-primary-dark">IMPLEMENT</a>
+          <a href="#faq" class="mobile-nav-link text-primary text-sm font-medium tracking-wide py-3 hover:text-primary-dark">FAQ</a>
+          <a href="https://fastconfirm.paperform.co/" target="_blank" rel="noopener noreferrer" class="bg-primary text-white text-sm font-medium px-5 py-2.5 rounded-full hover:bg-primary-dark transition-colors text-center mt-4">
+            Get in Touch
+          </a>
+        </nav>
+      </header>
+
+      <!-- Stats Bar -->
+      <div id="overview-stats" class="flex flex-col md:flex-row items-center justify-around md:divide-x divide-primary/20 py-4 pt-6 md:pt-8 gap-6 md:gap-0">
+        <div class="text-center px-4 md:px-6 flex-1">
+          <div class="text-primary text-5xl md:text-6xl font-black" data-count-to="98" data-count-prefix="~" data-count-suffix="%">~0%</div>
+          <div class="text-text-muted text-xs uppercase tracking-wider mt-1">Speed Improvement</div>
+        </div>
+        <div class="text-center px-4 md:px-6 flex-1 border-y md:border-y-0 border-primary/20 py-6 md:py-0 w-full md:w-auto">
+          <div class="text-primary text-5xl md:text-6xl font-black" data-count-to="13" data-count-prefix="~" data-count-suffix="s">~0s</div>
+          <div class="text-text-muted text-xs uppercase tracking-wider mt-1">Confirmation Time</div>
+        </div>
+        <div class="text-center px-4 md:px-6 flex-1">
+          <div class="text-primary text-5xl md:text-6xl font-black" data-count-to="0">0</div>
+          <div class="text-text-muted text-xs uppercase tracking-wider mt-1">Hard Forks Required</div>
+        </div>
+      </div>
+
+      <!-- Feature Intro -->
+      <section class="space-y-8 mt-24 md:mt-32 lg:mt-40">
+        <h3 class="text-primary text-2xl md:text-3xl lg:text-[2.8vw] font-extrabold leading-tight text-center">
+          Fast and Secure confirmations for users.
+        </h3>
+        <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+            <p class="text-text-muted text-[18px] leading-relaxed">
+              <span class="text-primary font-semibold">FCR reduces L1 deposit time to a single slot — approximately 13 seconds.</span> That's a ~98% reduction compared to waiting for finality.
+            </p>
+            <p class="text-text-muted text-[18px] leading-relaxed">
+              <span class="text-primary font-semibold">FCR relies on counting attestations</span> and is proven safe under normal network conditions. Waiting for a fixed number of blocks is not.
+            </p>
+            <p class="text-text-muted text-[18px] leading-relaxed">
+              <span class="text-primary font-semibold">No hard fork. No devnet.</span> FCR is a consensus client feature. Enable it with a configuration flag and query a single API endpoint.
+            </p>
+        </div>
+      </section>
+
+      <!-- Block Simulation (FCR vs Finality only) -->
+      <section id="simulation" class="space-y-8 mt-24 md:mt-32 lg:mt-40">
+        <h3 class="text-primary text-3xl md:text-4xl lg:text-5xl font-extrabold">See It in Action</h3>
+        <p class="text-text-muted text-sm md:text-base max-w-3xl">
+          Watch how FCR confirms blocks in real time compared to waiting for finality.
+        </p>
+        <div id="sim-container"></div>
+      </section>
+
+      <!-- Use Cases Section (elevated) -->
+      <section id="use-cases" class="space-y-8 mt-24 md:mt-32 lg:mt-40">
+        <div class="space-y-4">
+          <h3 class="text-primary text-3xl md:text-4xl lg:text-5xl font-extrabold">Use Cases</h3>
+          <p class="text-text-muted text-sm md:text-base max-w-3xl">
+            From exchanges to rollups, any application waiting on Ethereum confirmations can benefit from FCR. Here's how different players in the ecosystem can put single-slot confirmation to work.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Exchanges -->
+          <div class="use-case-card rounded-3xl p-6 md:p-8 space-y-4 border-2 border-primary/40">
+            <i data-lucide="arrow-up-down" class="w-12 h-12 md:w-16 md:h-16 text-primary" stroke-width="1"></i>
+            <h4 class="text-primary text-2xl md:text-3xl font-bold">Exchanges</h4>
+            <ul class="text-text-muted text-lg space-y-4">
+              <li class="flex items-start gap-3">
+                <span class="text-primary mt-1.5 text-[8px]">●</span>
+                <span>Don't leave your users worrying. Credit deposits within seconds.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-primary mt-1.5 text-[8px]">●</span>
+                <span>Deepen order book liquidity. Minimize time assets are idle while waiting to be confirmed.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-primary mt-1.5 text-[8px]">●</span>
+                <span>Proven safe under normal conditions — stronger than waiting for a fixed number of blocks.</span>
+              </li>
+            </ul>
+            <a href="/Fast Confirmation Rule for Exchanges.pdf" target="_blank" class="use-case-btn inline-flex items-center gap-2 mt-2 px-4 py-2 border-2 border-primary text-primary text-sm font-medium rounded-full hover:bg-primary hover:text-background transition-colors">
+              One pager info
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/><path stroke-linecap="round" stroke-linejoin="round" d="M13 3v5a1 1 0 001 1h5"/></svg>
+            </a>
+          </div>
+
+          <!-- Cross-Chain Bridges -->
+          <div class="use-case-card rounded-3xl p-6 md:p-8 space-y-4 border-2 border-primary/40">
+            <i data-lucide="link" class="w-12 h-12 md:w-16 md:h-16 text-primary" stroke-width="1"></i>
+            <h4 class="text-primary text-2xl md:text-3xl font-bold">Cross-Chain Bridges</h4>
+            <ul class="text-text-muted text-lg space-y-4">
+              <li class="flex items-start gap-3">
+                <span class="text-primary mt-1.5 text-[8px]">●</span>
+                <span>Manage risk with provable security. Under normal network conditions, reorgs are no concern with FCR.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-primary mt-1.5 text-[8px]">●</span>
+                <span>Reduce capital lockup for cross-chain transfers.</span>
+              </li>
+            </ul>
+            <a href="/FCR_Interop_One_Pager.pdf" target="_blank" class="use-case-btn inline-flex items-center gap-2 mt-2 px-4 py-2 border-2 border-primary text-primary text-sm font-medium rounded-full hover:bg-primary hover:text-background transition-colors">
+              One pager info
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/><path stroke-linecap="round" stroke-linejoin="round" d="M13 3v5a1 1 0 001 1h5"/></svg>
+            </a>
+          </div>
+
+          <!-- L2s -->
+          <div class="use-case-card rounded-3xl p-6 md:p-8 space-y-4 border-2 border-primary/40">
+            <i data-lucide="layers" class="w-12 h-12 md:w-16 md:h-16 text-primary" stroke-width="1"></i>
+            <h4 class="text-primary text-2xl md:text-3xl font-bold">L2s</h4>
+            <ul class="text-text-muted text-lg space-y-4">
+              <li class="flex items-start gap-3">
+                <span class="text-primary mt-1.5 text-[8px]">●</span>
+                <span>Confirm deposits from L1 within seconds.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-primary mt-1.5 text-[8px]">●</span>
+                <span>Tap into Ethereum's liquidity within seconds.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-primary mt-1.5 text-[8px]">●</span>
+                <span>Automatically fall back to a safe head block if there are too few attestations.</span>
+              </li>
+            </ul>
+            <a href="/Fast Confirmation Rule for L2s.pdf" target="_blank" class="use-case-btn inline-flex items-center gap-2 mt-2 px-4 py-2 border-2 border-primary text-primary text-sm font-medium rounded-full hover:bg-primary hover:text-background transition-colors">
+              One pager info
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/><path stroke-linecap="round" stroke-linejoin="round" d="M13 3v5a1 1 0 001 1h5"/></svg>
+            </a>
+          </div>
+
+          <!-- RPC & Infrastructure Providers -->
+          <div class="use-case-card rounded-3xl p-6 md:p-8 space-y-4 border-2 border-primary/40">
+            <i data-lucide="server" class="w-12 h-12 md:w-16 md:h-16 text-primary" stroke-width="1"></i>
+            <h4 class="text-primary text-2xl md:text-3xl font-bold">RPC & Infrastructure Providers</h4>
+            <ul class="text-text-muted text-lg space-y-4">
+              <li class="flex items-start gap-3">
+                <span class="text-primary mt-1.5 text-[8px]">●</span>
+                <span>The <code class="bg-text/10 px-1.5 py-0.5 rounded text-xs">safe</code> block tag will return the last fast-confirmed block. RPCs automatically support FCR — no implementation required.</span>
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="text-primary mt-1.5 text-[8px]">●</span>
+                <span>Be aware the change may impact customers currently relying on the <code class="bg-text/10 px-1.5 py-0.5 rounded text-xs">safe</code> tag returning the last justified block.</span>
+              </li>
+            </ul>
+            <a href="/Fast Confirmation Rule for RPCs.pdf" target="_blank" class="use-case-btn inline-flex items-center gap-2 mt-2 px-4 py-2 border-2 border-primary text-primary text-sm font-medium rounded-full hover:bg-primary hover:text-background transition-colors">
+              One pager info
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/><path stroke-linecap="round" stroke-linejoin="round" d="M13 3v5a1 1 0 001 1h5"/></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comparison Table (Trade-offs) — FCR in middle column -->
+      <section id="risk" class="space-y-8 mt-24 md:mt-32 lg:mt-40">
+        <div class="space-y-4">
+          <h3 class="text-primary text-3xl md:text-4xl lg:text-5xl font-extrabold">Trade-offs</h3>
+          <p class="text-text-muted text-sm md:text-base max-w-3xl">
+            FCR sits between k-deep confirmation and full finality — offering deterministic guarantees at near-instant speed. The right choice depends on your security requirements and latency tolerance.
+          </p>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs md:text-base border-collapse md:table-fixed">
+            <colgroup class="hidden md:table-column-group">
+              <col class="w-[28%]">
+              <col class="w-[24%]">
+              <col class="w-[24%]">
+              <col class="w-[24%]">
+            </colgroup>
+            <thead>
+              <tr>
+                <th class="text-left text-text-muted font-medium py-3 px-4 border-b-2 border-text-muted/20"></th>
+                <th class="text-left text-text font-bold py-3 px-4 border-b-2 border-text-muted/20">k-deep</th>
+                <th class="text-left text-primary font-bold py-3 px-4 border-b-2 border-primary/40 bg-primary/5 rounded-t-lg">FCR</th>
+                <th class="text-left text-text font-bold py-3 px-4 border-b-2 border-text-muted/20">Finality</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-text font-medium py-3 px-4 border-b border-text-muted/10">
+                  Communication model
+                </td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">Synchrony</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10 bg-primary/5">Synchrony <a href="#assumption-sync" class="text-primary text-[11px] font-medium hover:underline ml-1">Learn more &darr;</a></td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">Asynchrony</td>
+              </tr>
+              <tr>
+                <td class="text-text font-medium py-3 px-4 border-b border-text-muted/10">
+                  Adversarial threshold
+                </td>
+                <td class="text-red-600 font-bold py-3 px-4 border-b border-text-muted/10">Unknown</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10 bg-primary/5">25% <a href="#assumption-adversary" class="text-primary text-[11px] font-medium hover:underline ml-1">Learn more &darr;</a></td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">33%</td>
+              </tr>
+              <tr>
+                <td class="text-text font-medium py-3 px-4 border-b border-text-muted/10">Economic security</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">&#10007;</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10 bg-primary/5">&#10007;</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">&#10003;</td>
+              </tr>
+              <tr>
+                <td class="text-text font-medium py-3 px-4 border-b border-text-muted/10">Latency</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">k &times; 12s</td>
+                <td class="text-primary font-bold py-3 px-4 border-b border-text-muted/10 bg-primary/5">~13 seconds</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">~13 minutes</td>
+              </tr>
+              <tr>
+                <td class="text-text font-medium py-3 px-4 border-b border-text-muted/10">Deterministic guarantee</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">&#10007;</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10 bg-primary/5">&#10003;</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">&#10003;</td>
+              </tr>
+              <tr>
+                <td class="text-text font-medium py-3 px-4 border-b border-text-muted/10">Confidence model</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">&mdash;</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10 bg-primary/5">Deterministic under network assumptions</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">Unconditional permanence</td>
+              </tr>
+              <tr>
+                <td class="text-text font-medium py-3 px-4 border-b border-text-muted/10">Best suited for</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">&mdash;</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10 bg-primary/5">L2 deposits, exchange deposits, bridge transfers</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">High-value settlements, irreversible operations</td>
+              </tr>
+              <tr>
+                <td class="text-text font-medium py-3 px-4 border-b border-text-muted/10">Failure behavior</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">&mdash;</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10 bg-primary/5">Falls back to finalized block</td>
+                <td class="text-text-muted py-3 px-4 border-b border-text-muted/10">Stalls until supermajority restored</td>
+              </tr>
+              <tr class="bg-text-muted/5">
+                <td class="text-text font-medium py-4 px-4 align-top rounded-bl-lg">Summary</td>
+                <td class="text-text-muted py-4 px-4 align-top">Waits for a fixed number of blocks with no formal safety guarantee.</td>
+                <td class="text-primary font-bold py-4 px-4 align-top bg-primary/10">Deterministic confirmation in ~13 seconds under normal network conditions — falling back to finality if conditions deteriorate.</td>
+                <td class="text-text-muted py-4 px-4 align-top rounded-br-lg">Unconditional permanence backed by slashable stake, but takes ~13 minutes.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+      </section>
+
+      <!-- Assumptions Section -->
+      <section id="assumptions" class="space-y-12 mt-24 md:mt-32 lg:mt-40">
+        <div class="space-y-4">
+          <h3 class="text-primary text-3xl md:text-4xl lg:text-5xl font-extrabold">Assumptions</h3>
+          <p class="text-text-muted text-sm md:text-base max-w-3xl">
+            FCR relies on two assumptions. When it detects that either breaks, it falls back to finality. Under rare conditions, a briefly-confirmed block may be reorganized.
+          </p>
+        </div>
+
+        <div class="space-y-16">
+          <!-- Assumption 1: Synchrony -->
+          <div id="assumption-sync" class="space-y-6 scroll-mt-24">
+            <div class="space-y-2">
+              <div class="text-primary text-sm font-medium tracking-wider">ASSUMPTION 01</div>
+              <h4 class="text-primary text-2xl md:text-3xl font-bold">Communication model (synchrony)</h4>
+              <p class="text-text-muted text-sm md:text-base max-w-[600px]">
+                FCR requires attestations to be received by all honest validators by the end of the slot in which they are sent.
+              </p>
+            </div>
+            <!-- <div id="sim-async-container"></div> -->
+          </div>
+
+          <!-- Assumption 2: Adversarial threshold -->
+          <div id="assumption-adversary" class="space-y-6 scroll-mt-24">
+            <div class="space-y-2">
+              <div class="text-primary text-sm font-medium tracking-wider">ASSUMPTION 02</div>
+              <h4 class="text-primary text-2xl md:text-3xl font-bold">Adversarial threshold (&lt;25%)</h4>
+              <p class="text-text-muted text-sm md:text-base max-w-[600px]">
+                FCR requires that at least 75% of total stake is honest and participating.
+              </p>
+            </div>
+            <!-- <div id="sim-adversary-container"></div> -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Implementation Steps -->
+      <section id="implement" class="space-y-12 mt-24 md:mt-32 lg:mt-40">
+        <h3 class="text-primary text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight">
+          High value.<br>
+          Low lift.
+        </h3>
+        <p class="text-text-muted text-base md:text-lg max-w-xl">
+          Enable a configuration flag on your consensus client. Query the safe block via JSON-RPC — no new endpoints needed. No hard fork. No devnet. No protocol change.
+        </p>
+
+        <div class="space-y-6">
+          <!-- Step 1 -->
+          <div class="border-2 border-primary/40 rounded-3xl p-6 md:p-8 transition-colors duration-300 hover:bg-[rgba(0,0,0,0.02)]">
+            <div class="grid lg:grid-cols-2 gap-6 items-center">
+              <div class="space-y-4">
+                <div class="text-primary text-sm font-medium tracking-wider">STEP 01</div>
+                <h4 class="text-primary text-2xl md:text-3xl font-bold">Enable the flag</h4>
+                <p class="text-text-muted text-sm md:text-base">Add the flag to your consensus client startup command.</p>
+              </div>
+              <div class="bg-text rounded-sm p-5 md:p-6 space-y-3">
+                <div class="text-background/60 text-xs uppercase tracking-wider">Consensus Client</div>
+                <code class="code-block text-background text-sm md:text-base block">lighthouse bn --enable-fast-confirmation</code>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="border-2 border-primary/40 rounded-3xl p-6 md:p-8 transition-colors duration-300 hover:bg-[rgba(0,0,0,0.02)]">
+            <div class="grid lg:grid-cols-2 gap-6 items-center">
+              <div class="space-y-4">
+                <div class="text-primary text-sm font-medium tracking-wider">STEP 02</div>
+                <h4 class="text-primary text-2xl md:text-3xl font-bold">Query status</h4>
+                <p class="text-text-muted text-sm md:text-base">Use the existing JSON-RPC API to get the most recent confirmed block. The safe tag will return the last fast-confirmed block.</p>
+              </div>
+              <div class="bg-text rounded-sm p-5 md:p-6 space-y-3">
+                <div class="text-background/60 text-xs uppercase tracking-wider">JSON-RPC API</div>
+                <code class="code-block text-background text-sm md:text-base block">eth_getBlockByNumber("safe")</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section id="faq" class="space-y-8 mt-24 md:mt-32 lg:mt-40">
+        <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
+          <div class="lg:w-1/3">
+            <h3 class="text-primary text-3xl md:text-4xl font-bold">Frequently asked</h3>
+            <p class="text-text-muted text-sm md:text-base mt-4 hidden lg:block">
+              The Fast Confirmation Rule is built on rigorous research, but using it is simple. Below are answers to common questions. For anything else, reach out to fastconfirm@ethereum.org.
+            </p>
+          </div>
+
+          <div class="lg:w-2/3 space-y-3">
+            <details class="group border-b border-text-muted/20 pb-3">
+              <summary class="flex items-center justify-between py-2 cursor-pointer">
+                <span class="text-text font-medium text-sm md:text-base">How much faster is FCR?</span>
+                <span class="faq-icon text-primary text-xl font-light">+</span>
+              </summary>
+              <div class="pt-2 text-text-muted text-sm leading-relaxed">
+                Under normal network conditions, FCR confirms a block in a single slot — approximately 13 seconds. That's a ~98% reduction compared to the ~13 minutes it currently takes for finality.
+              </div>
+            </details>
+
+            <details class="group border-b border-text-muted/20 pb-3">
+              <summary class="flex items-center justify-between py-2 cursor-pointer">
+                <span class="text-text font-medium text-sm md:text-base">Does FCR require a hard fork?</span>
+                <span class="faq-icon text-primary text-xl font-light">+</span>
+              </summary>
+              <div class="pt-2 text-text-muted text-sm leading-relaxed">
+                No. FCR is a client-side feature implemented in consensus clients. No protocol change, no devnet, and no hard fork are required. Nodes run the rule locally.
+              </div>
+            </details>
+
+            <details class="group border-b border-text-muted/20 pb-3">
+              <summary class="flex items-center justify-between py-2 cursor-pointer">
+                <span class="text-text font-medium text-sm md:text-base">Is FCR as secure as finality?</span>
+                <span class="faq-icon text-primary text-xl font-light">+</span>
+              </summary>
+              <div class="pt-2 text-text-muted text-sm leading-relaxed">
+                No — they offer different guarantees. Finality (Casper FFG) is backed by slashable stake: reverting a finalized block requires burning at least 33% of all staked ETH. FCR provides no economic security — there is nothing at stake if the rule is violated. Instead, FCR offers a deterministic guarantee: under network synchrony and with less than 25% adversarial stake, a confirmed block <em>will</em> be finalized. It is a complementary tool optimized for speed, not a replacement for finality.
+              </div>
+            </details>
+
+            <details class="group border-b border-text-muted/20 pb-3">
+              <summary class="flex items-center justify-between py-2 cursor-pointer">
+                <span class="text-text font-medium text-sm md:text-base">What happens if network conditions are poor?</span>
+                <span class="faq-icon text-primary text-xl font-light">+</span>
+              </summary>
+              <div class="pt-2 text-text-muted text-sm leading-relaxed">
+                In most of the scenarios, FCR would just stall and eventually revert to finality.
+                In some extreme circumstances, this could lead to a Fast Confirmed block being reorged.
+              </div>
+            </details>
+
+            <details class="group border-b border-text-muted/20 pb-3">
+              <summary class="flex items-center justify-between py-2 cursor-pointer">
+                <span class="text-text font-medium text-sm md:text-base">Can an adversary delay my confirmation?</span>
+                <span class="faq-icon text-primary text-xl font-light">+</span>
+              </summary>
+              <div class="pt-2 text-text-muted text-sm leading-relaxed">
+                An adversary controlling more than 5% of the stake can cause FCR to be delayed.
+                The delay depends on the percentage controlled.
+                For example, if the adversary controls 15% of the stake, it can delay Fast Confirmations by one additional slot meaning that Fast Confirmation would take two slots.
+                If it controls 18% of the stake, by two additional slots; if it controls 20% of the stake, by three additional slots.
+              </div>
+            </details>
+
+            <details class="group border-b border-text-muted/20 pb-3">
+              <summary class="flex items-center justify-between py-2 cursor-pointer">
+                <span class="text-text font-medium text-sm md:text-base">Does FCR affect L2 security?</span>
+                <span class="faq-icon text-primary text-xl font-light">+</span>
+              </summary>
+              <div class="pt-2 text-text-muted text-sm leading-relaxed">
+                FCR does not weaken L2 security. L2s that read the safe head will confirm L1 deposits faster, but they will never act on an invalid block. In the worst case — an adversary with &gt;25% stake — FCR stalls and the L2 falls back to the finalized head. If an L1 reorg were to occur under extreme conditions, the L2 would reorg with it, consistent with its existing security model.
+              </div>
+            </details>
+
+            <details class="group border-b border-text-muted/20 pb-3">
+              <summary class="flex items-center justify-between py-2 cursor-pointer">
+                <span class="text-text font-medium text-sm md:text-base">What are slots and epochs?</span>
+                <span class="faq-icon text-primary text-xl font-light">+</span>
+              </summary>
+              <div class="pt-2 text-text-muted text-sm leading-relaxed">
+                A <strong>slot</strong> is a 12-second window in which a validator can propose a block. An <strong>epoch</strong> is a group of 32 slots (~6.4 minutes). Finality typically requires 2 epochs (~13 minutes). FCR confirms within a single slot (~13 seconds, including attestation propagation time).
+              </div>
+            </details>
+
+            <details class="group border-b border-text-muted/20 pb-3">
+              <summary class="flex items-center justify-between py-2 cursor-pointer">
+                <span class="text-text font-medium text-sm md:text-base">How do I adopt FCR?</span>
+                <span class="faq-icon text-primary text-xl font-light">+</span>
+              </summary>
+              <div class="pt-2 text-text-muted text-sm leading-relaxed">
+                Enable the fast confirmation flag on your consensus client, then query <code class="bg-text/10 px-1.5 py-0.5 rounded text-xs">eth_getBlockByNumber("safe")</code> via JSON-RPC. The safe tag will return the last fast-confirmed block. No new API endpoints are needed.
+              </div>
+            </details>
+
+            <details class="group border-b border-text-muted/20 pb-3">
+              <summary class="flex items-center justify-between py-2 cursor-pointer">
+                <span class="text-text font-medium text-sm md:text-base">What does the API return if something goes wrong?</span>
+                <span class="faq-icon text-primary text-xl font-light">+</span>
+              </summary>
+              <div class="pt-2 text-text-muted text-sm leading-relaxed">
+                The safe tag always returns the last fast-confirmed block. If FCR stalls (e.g., due to poor network conditions), it simply stops advancing — the tag continues to return the most recent block that was confirmed or the most recent finalized block if FCR reverted to finality. There is no error state; the response is always a valid block.
+              </div>
+            </details>
+
+            <details class="group border-b border-text-muted/20 pb-3">
+              <summary class="flex items-center justify-between py-2 cursor-pointer">
+                <span class="text-text font-medium text-sm md:text-base">Which clients support FCR?</span>
+                <span class="faq-icon text-primary text-xl font-light">+</span>
+              </summary>
+              <div class="pt-2 text-text-muted text-sm leading-relaxed">
+                Standardized specifications are being integrated into the Ethereum consensus specs (PR #4747). Lodestar is furthest along in implementation. Support is also actively being developed in Lighthouse, Prysm, and Teku.
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="bg-primary rounded-3xl px-12 py-20 md:px-16 md:py-28 lg:px-20 lg:py-32 text-center space-y-6 mt-24 md:mt-32 lg:mt-40">
+        <h3 class="text-background text-3xl md:text-4xl lg:text-5xl font-extrabold">Ready to get started?</h3>
+        <p class="text-background text-lg md:text-xl opacity-90">High value. Low lift. Start using Fast Confirmation Rule today.</p>
+        <a href="https://fastconfirm.paperform.co/" target="_blank" rel="noopener noreferrer" class="inline-block bg-background text-primary text-sm md:text-base font-medium px-8 py-4 rounded-full hover:opacity-90 transition-opacity uppercase tracking-wider">
+          Get in Touch
+        </a>
+        <p class="text-background text-sm md:text-base">
+          Get in touch via fastconfirm@ethereum.org for questions
+        </p>
+      </section>
+
+      <!-- Footer -->
+      <footer class="mt-24 md:mt-32 lg:mt-40">
+        <div class="bg-background rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-start justify-between gap-8">
+          <div class="flex items-center gap-8">
+            <div class="flex flex-col">
+              <span class="text-primary text-2xl font-bold tracking-tight">FCR</span>
+              <span class="text-primary text-[9px] md:text-[10px] font-light uppercase" style="letter-spacing:2px;">Fast Confirmation Rule</span>
+            </div>
+            <img src="/iniciative.svg" alt="ethereum initiative by foundation" class="h-8" />
+          </div>
+          <div class="flex gap-12 md:gap-16">
+            <div class="space-y-3">
+              <div class="text-primary text-xs font-medium tracking-wider">Resource Hub</div>
+              <div class="space-y-2">
+                <a href="https://www.overleaf.com/read/cvfzznvcwffh#057762" target="_blank" rel="noopener noreferrer" class="block text-text-muted text-xs font-medium hover:text-primary transition-colors">DOCUMENTATION</a>
+                <a href="https://github.com/ethereum/consensus-specs/pull/4747" target="_blank" rel="noopener noreferrer" class="block text-text-muted text-xs font-medium hover:text-primary transition-colors">GITHUB</a>
+                <a href="https://ethresear.ch/t/confirmation-rule-for-ethereum-pos/15454" target="_blank" rel="noopener noreferrer" class="block text-text-muted text-xs font-medium hover:text-primary transition-colors">ETHRESEAR.CH</a>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div class="text-primary text-xs font-medium tracking-wider">Community</div>
+              <div class="space-y-2">
+                <a href="https://blog.ethereum.org" target="_blank" rel="noopener noreferrer" class="block text-text-muted text-xs font-medium hover:text-primary transition-colors">ETHEREUM FOUNDATION BLOG</a>
+                <a href="https://ethereum-magicians.org" target="_blank" rel="noopener noreferrer" class="block text-text-muted text-xs font-medium hover:text-primary transition-colors">DEVELOPER FORUM</a>
+                <a href="https://ethereum.org" target="_blank" rel="noopener noreferrer" class="block text-text-muted text-xs font-medium hover:text-primary transition-colors">ETHEREUM.ORG</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+      </div><!-- end scroll-content -->
+    </div>
+    <script>document.addEventListener('DOMContentLoaded', () => lucide.createIcons());</script>
+  </body>
+</html>

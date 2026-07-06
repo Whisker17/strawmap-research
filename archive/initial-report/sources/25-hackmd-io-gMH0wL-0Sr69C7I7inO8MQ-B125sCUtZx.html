@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="dev" data-themeable="true" theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="csrf-token" content="U4egI00R-duD-ZIih-aAzLl2hkEsBDgy6elc">
+    
+    
+    <meta name="description" content="Introduces ahead-of-time blob propagation via ticket-based capacity reservation.">
+    
+    <title>EIP-Blob-streaming - HackMD</title>
+    <link rel="icon" type="image/png" href="https://hackmd.io/favicon.png">
+	<link rel="apple-touch-icon" href="https://hackmd.io/apple-touch-icon.png">
+	<!--  meta value for server side given sign in boolean -->
+    <meta name="signin" content="false">
+
+    <script nonce="bf06cf9e-1885-4daa-9fdb-f27c55442d27">
+  (() => {
+    const resolveTheme = (preferredTheme) => {
+      if (preferredTheme) return preferredTheme
+      if (
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+      ) {
+        return 'dark'
+      }
+      return 'light'
+    }
+
+    const uiTheme = resolveTheme('dark' || null)
+    const contentTheme = resolveTheme('' || null)
+
+    document.documentElement.setAttribute('theme', uiTheme)
+    window.__HMD_INITIAL_UI_THEME__ = uiTheme
+    window.__HMD_INITIAL_CONTENT_THEME__ = contentTheme
+  })()
+</script>
+
+    
+<script nonce="bf06cf9e-1885-4daa-9fdb-f27c55442d27">
+  window.domain = 'hackmd.io'
+  window.urlpath = ''
+  window.debug = false || window.localStorage.getItem('HMD_DEBUG_FLAG') === 'true'
+  window.version = '1.3.0'
+  window.brand = 'HackMD'
+
+  
+  window.NOTE_ID = 'hQ6I9k33QK-L5sJfpAljmA'
+  
+
+  
+  window.PUBLISH_TYPE = 'view'
+  
+
+  window.GOOGLE_DRIVE_API_KEY = 'AIzaSyAHmcP5gL_64ZafuAYOvJruFAIaYgHQaY4'
+  window.GOOGLE_DRIVE_CLIENT_ID = '65857506266-76uhhee8se8dgs1i0q8fhtj1prg0ar27.apps.googleusercontent.com'
+  window.DROPBOX_APP_KEY = 'rdoizrlnkuha23r'
+  
+  window.PLANTUML_SERVER = 'https://ptuml.hackmd.io'
+
+  window.ASSET_URL = 'https://assets.hackmd.io'
+
+  window.USER_CAN_CREATE_TEAM = true
+  window.USER_CAN_DELETE_ACCOUNT = true
+  window.USER_DELETE_ACCOUNT_VIA_EMAIL = true
+  window.PAYMENT_ENABLED = true
+  window.PAYMENT_PROMOTION_BANNER_ENABLED = false
+  window.GITHUB_SYNC_ENABLED = true
+  window.GITLAB_SYNC_ENABLED = false
+  window.GITLAB_SYNC_BASE_URL = ''
+  window.VCS_SYNC_MODE = 'github'
+  window.VCS_PROVIDER_NAME = 'GitHub'
+  window.FREE_TEAM_NUM = 20
+  window.FREE_TEAM_MEMBER_NUM = 3
+  window.FREE_PUBLIC_TEAM_NUM = 10
+  window.FOLDER_ENABLE = true
+
+  
+  window.EE_SITE_ENABLE = false
+  window.EE_SITE_NAME = 'false'
+  window.EE_SITE_LINK = 'false'
+  window.EESITE_INFO = false
+  window.ENTERPRISE_DISCOVERY_ENABLE = false
+  window.ENTERPRISE_DISCOVERY_TEAM = true
+  window.ENTERPRISE_DISCOVERY_NOTE = true
+  window.ENTERPRISE_DISCOVERY_VIEW_PERMISSION = 'guest'
+  
+  window.ALLOW_ANONYMOUS = true
+  window.ALLOW_ANONYMOUS_EDIT = false
+  window.ALLOW_DOWNLOAD_PDF = true
+  window.PUBLIC_OVERVIEW = false
+  window.INTERNAL_PUBLIC_OVERVIEW = false
+  window.FULL_TEXT_SEARCH_ENABLE = false
+  window.ALGOLIA_SEARCH_ENABLE = true
+  window.MARKETING_EMAIL_ENABLE = true
+  window.EMAIL_INVITATION_ENABLE = true
+  
+  
+  
+    window.WALLET_CONNECT_PROJECT_ID = '91d6fa182b725b5895a17a170a5878c1'
+  
+  window.API_MANAGEMENT_UI_ENABLE = true
+  window.FEEDBACK_UI_ENABLE = true
+  window.PUBLISH_ENABLE = true
+
+  
+
+  
+  window.SHOW_OVERVIEW = false
+  
+
+  
+  window.MENTIONS = {}
+  
+
+  
+  window.MENTION_ANCHORS = []
+  
+
+  
+  window.COMMENT_ANCHORS = [["c46c2241-447e-4e21-8081-9ee6b6e17229",523,549,1772709978679,1778072016882],["1e8d1700-6135-44b6-ae1d-c5111a0eb3ed",921,29,1773740608640,1778072016882],["e891bb31-098f-41dc-8d32-59e79e65c1b7",979,93,1773232862717,1778072016882],["743944da-3967-4f71-a44b-2a12b6571706",1073,0,1773232960998,1778072016882],["24015442-a406-4722-9c63-583b9e1039fc",1073,0,1772710319996,1778072016882],["8edb0302-cf6c-4659-bfb1-5a2e9a8cafa5",1073,0,1772710093148,1778072016882],["a333e462-2b68-46ec-99f7-a1e3c3389481",1235,54,1773233144653,1778072016882],["16559745-1334-4d0a-b034-6adad6b43506",1361,109,1773233338571,1778072016882],["a221019c-2bf3-4dfb-a789-c4d662aef719",2511,47,1773907952270,1778072016882],["ba5a659e-e4f2-4e04-b1ff-95c7bfcdd586",2534,1,1773839123999,1778072016882],["8fadca0e-6906-48e2-819a-8720ada8d311",2674,49,1773908063949,1778072016882],["b04b7476-e7e9-4a7d-8f92-c8cf328dcd0c",2725,12,1773839280021,1778072016882],["26759b1e-24c2-4425-8f4e-8e8beaaa7610",2981,161,1772712335409,1778072016882],["e3aeb436-2626-47a6-90f8-5cc219afe901",4580,12,1773839858365,1778072016882],["a199520e-b03f-420d-897c-9140abf1299a",4604,43,1773839822817,1778072016882],["e6342851-c0de-46b6-8710-3c2103672a5d",4751,16,1773912704019,1778072016882],["da77be61-6f47-4973-8784-b463054f4225",4840,12,1773908592445,1778072016882],["4d1c5c63-3939-49ab-9a3a-ba841929deba",6212,6,1773841974003,1778072016882],["d0a57694-e57e-4ef5-9233-970718da6612",6235,6,1773233493073,1778072016882],["c6560025-d5a4-45eb-9297-d88980ce7d9a",6250,22,1773908714330,1778072016882],["d968ffce-4d9f-4d9d-8192-44861676750e",6703,109,1772715001820,1778072016882],["98777c03-85b9-4e50-9a1d-3d7c22e0101e",6888,461,1773840494956,1778072016882],["08b71042-3044-4f09-8389-e8220fb02d94",7663,40,1773840526463,1778072016882],["012d6d6d-8fa1-4b74-a49e-e901c86746b3",9132,18,1773909537133,1778072016882],["6ce130e5-ec78-4c6c-ba88-645c08b7d983",9441,282,1773841314959,1778072016882],["94b80005-bf11-440c-982e-8c7c4eca5088",10631,219,1773841905836,1778072016882],["d1578904-3369-47f7-a0b9-0619f37f4101",11652,14,1773910132636,1778072016882],["4b10801f-d7d1-4870-9da1-903099940579",11672,70,1773910193234,1778072016882],["1326ba64-a7d4-4568-b78f-bd1ce382de9e",13868,11,1773937908418,1778072016882],["ce4406de-ad0c-4fe3-8f97-8084afbf42d6",26595,20,1773821870030,1778072016882],["0edb870d-06d7-499b-a1a8-61569699dace",26940,106,1773821976502,1778072016882],["5c1570da-bba0-4bcc-b32d-b1fed34ea501",28328,27,1773217075315,1778072016882],["8cabc1eb-144c-4145-8282-9354d6a10d88",28771,45,1773217295800,1778072016882],["f18fee1b-ae56-4511-b678-5181a8bc7548",28817,184,1773154454648,1778072016882],["af93a89b-9e28-4099-82db-f06eec3bee4c",33555,43,1773771985155,1778072016882],["1bb67273-c6bb-4ab5-9b3c-7e3212ab4dcd",36245,14,1773912657456,1778072016882]]
+  
+
+  
+  window.IS_OWNER = false
+  
+
+  
+  window.IS_TEAM_ADMIN = false
+  
+
+  
+  window.IS_TEAM_MEMBER = false
+  
+
+  
+  window.IS_INVITEE_ADMIN = false
+  
+
+  
+  window.USER_PROFILE = '%7B%22name%22%3A%22Guest%20Fitzgerald%22%7D'
+  
+
+  
+  window.VERSION_TIME = '1778072017476'
+  
+
+  
+  window.canEdit = false
+  
+
+  
+  window.canWriteComment = false
+  
+
+  
+  window.canHideComment = false
+  
+
+  window.TRASH_NOTE_DELETE_AFTER_FREE = 3
+  window.TRASH_NOTE_DELETE_AFTER_PAID = 30
+
+  
+    window.ENABLED_PREVIEW_FEATURE = {}
+  
+
+  
+    window.ACTIVE_PREVIEW_FEATURE = ["beta-slide-preview","beta-note-insights","beta-community","beta-new-publish-share-ui","beta-neo-book"]
+  
+
+  
+
+  
+
+  
+    window.IS_OWNER_UPGRADED = false
+  
+
+  
+    window.IMGUR_FALLBACK_CDN = 'https://imgur-backup.hackmd.io'
+  
+
+  
+    window.YAML_METADATA_ENABLED = false
+  
+
+  
+    window.NOTE_CAPACITY_LIMIT = 50
+  
+
+  
+    window.DOCUMENT_MAX_LENGTH = 100000
+  
+
+  
+    window.SOCIAL_NETWORK_FEATURES_ENABLED = true
+  
+
+  
+    window.PUBLISHMENT_MODERATION_ENABLED = true
+  
+
+  
+    window.COMMENT_ENABLED = true
+  
+
+  
+    window.COMMENT_PERMISSION = "signed_in_users"
+  
+
+  window.SUGGEST_EDIT_ENABLED = true
+  
+    window.SUGGEST_EDIT_ENABLED = true
+  
+
+  
+    window.SUGGEST_EDIT_PERMISSION = "signed_in_users"
+  
+  
+    window.canWriteSuggestEdit = false
+  
+
+  window.CITATION_ENABLED = true
+
+  window.NOTE_FROM_COMMENT_ENABLED = true
+
+  
+    window.NOTE_FEATURES = {"emoji-reply":"signed_in_users","citation":"disabled"}
+  
+
+  
+    window.REALTIME_CLIENT_WITH_CREDENTIALS = false
+  
+
+  
+
+  
+    window.PREFERRED_UI_THEME = "dark"
+  
+
+  
+
+  
+    window.CUSTOM_STYLE_ENABLED = "true"
+  
+
+  
+
+  
+    window.ITERABLE_ENABLED = false
+  
+  
+    window.ITERABLE_API_KEY = "c2c36a44c2614fb19aa3b46d660bbce2"
+  
+
+  
+    window.CUSTOMERIO_ENABLED = true
+  
+  
+    window.CUSTOMERIO_WRITE_KEY = "90283c80a6498bb8d1ee"
+  
+  
+    window.CUSTOMERIO_SITE_ID = "9947d0d46b7ece25dea7"
+  
+
+  
+    window.TEXT_SELECTION_CHANGED = false
+  
+
+  
+    window.CAN_VIEW_HISTORY_AT_REVISION = false
+  
+
+  
+    window.GUIDED_COMMENT_ENABLED = true
+  
+
+  
+    window.ENCODED_SESSION_ID = "KheOCljia0h9IUkQb0VGkKu2EeTMmtZ4rd1pRclSHyg="
+  
+
+  
+    window.COMMUNITY_ENABLED = true
+  
+
+  
+    window.NOTE_INSIGHTS_DEBUG_API_ENABLED = false
+  
+
+  
+
+  
+</script>
+
+
+    
+<!-- Google Tag Manager -->
+<script nonce="bf06cf9e-1885-4daa-9fdb-f27c55442d27">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KLW9Z3');</script>
+<!-- End Google Tag Manager -->
+
+
+    
+
+
+
+
+
+
+    <meta property="fb:app_id" content="1436904003272070">
+
+
+
+    <meta name="robots" content="noindex, nofollow">
+
+
+
+
+    <meta name="twitter:image:src" content="https://hackmd.io/api/_/preview/hQ6I9k33QK-L5sJfpAljmA">
+    <meta name="twitter:image:alt" content="EIP-Blob-streaming - HackMD">
+
+
+<meta name="twitter:site" content="@hackmdio" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="EIP-Blob-streaming - HackMD" />
+
+
+    <meta name="twitter:description" content="Introduces ahead-of-time blob propagation via ticket-based capacity reservation." />
+
+
+
+    <meta property="og:image" content="https://hackmd.io/api/_/preview/hQ6I9k33QK-L5sJfpAljmA">
+    <meta property="og:image:alt" content="EIP-Blob-streaming - HackMD">
+
+
+<meta property="og:site_name" content="HackMD" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="EIP-Blob-streaming - HackMD" />
+
+
+    <meta property="og:description" content="Introduces ahead-of-time blob propagation via ticket-based capacity reservation." />
+
+
+
+
+<!-- article meta -->
+
+
+
+
+
+<!-- profile meta -->
+
+
+
+     <link href="https://assets.hackmd.io/build/font-vendor.ea8218d7d4f468b2c430.css" rel="stylesheet"><link href="https://assets.hackmd.io/build/common-vendor.fd34b1d1ad1390fa8864.css" rel="stylesheet"><link href="https://assets.hackmd.io/build/pretty-vendor.8a8442e30c89d342d615.css" rel="stylesheet"><link href="https://assets.hackmd.io/build/pretty.a51e5e5bab692ec464a7.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js" integrity="sha256-3Jy/GbSLrg0o9y5Z5n1uw0qxZECH7C6OQpVBgNFYa0g=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js" integrity="sha256-g6iAfvZp+nDQ2TdTR/VVKJf3bGro4ub5fvWSWVRi2NE=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js" integrity="sha256-8E4Is26QH0bD52WoQpcB+R/tcWQtpzlCojrybUd7Mxo=" crossorigin="anonymous"></script>
+<![endif]-->
+
+    
+
+
+    <script nonce="bf06cf9e-1885-4daa-9fdb-f27c55442d27">
+  window.__shouldIgnoreTracker = function() {
+    const isDebug = window.debug === true
+    const isLocal = /^localhost$|^127(\.[0-9]+){0,2}\.[0-9]+$|^\[::1?\]$|^local\.localhost$/.test(location.hostname) || location.protocol === 'file:'
+    const isAutomation = Boolean(window._phantom || window.__nightmare || window.navigator.webdriver || window.Cypress)
+    return isDebug || isLocal || isAutomation
+  }
+</script>
+
+<!-- plausible -->
+<script defer data-domain="hackmd.io" src="https://tracks.hackmd.io/js/script.js"></script>
+<script nonce="bf06cf9e-1885-4daa-9fdb-f27c55442d27">
+  window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments); }
+  const keyboardWhiteList = ['a', 'span', 'button']
+
+  function getTaggedEventAttributes (e) {
+    const eventAttrs = { name: null, props: {} }
+    if (!e || !e.classList) return eventAttrs
+    const psEvent = /plausible-event-(.+)(=|--)(.+)/
+    for (const className of [...e.classList]) {
+      const [, key, , val] = className.match(psEvent) || []
+      if (!key || !val) continue
+      const value = val.replace(/\+/g, ' ')
+      switch (key.toLowerCase()) {
+        case 'name':
+          eventAttrs.name = value
+          break
+        default:
+          eventAttrs.props[key] = value
+          break
+      }
+    }
+    return eventAttrs
+  }
+
+  function shouldIgnore () {
+    return window.__shouldIgnoreTracker() || window.localStorage.getItem('plausible_ignore') === 'true'
+  }
+
+  function handler (e) {
+    if (!window.plausible) return
+    if (!e.target || !('className' in e.target)) return
+    const ele = e.target
+
+    const eventAttrs = getTaggedEventAttributes(ele)
+    if (!eventAttrs.name) return
+    if (ele?.href) eventAttrs.props.url = ele.href
+
+    if (shouldIgnore()) {
+      if (window.debug) logDebugEventMsg(eventAttrs)
+      return
+    }
+    window.plausible(eventAttrs.name, { props: eventAttrs.props })
+  }
+
+  function logDebugEventMsg (eventAttrs) {
+    console.warn(
+      `Ignoring Event: "${eventAttrs.name}"`,
+      eventAttrs,
+    )
+  }
+
+  function keydownHandler (e) {
+    if (e.key !== 'Enter') return
+    if (e.target.nodeName.toLowerCase() === 'input') {
+      switch (e.target.type.toLowerCase()) {
+        case 'submit':
+        case 'button':
+        case 'reset':
+        case 'checkbox':
+        case 'radio':
+        case 'file':
+        case 'image':
+        case 'color':
+          break
+        default:
+          return
+      }
+    } else if (!keyboardWhiteList.includes(e.target.nodeName.toLowerCase())) {
+      return
+    }
+    handler(e)
+  }
+
+  document.addEventListener('mousedown', handler)
+  document.addEventListener('keydown', keydownHandler)
+</script>
+
+    
+<script nonce="bf06cf9e-1885-4daa-9fdb-f27c55442d27">
+  window.publishProps = JSON.parse(`{"isOwnerAnonymous":false,"isOwnedByTeam":false,"ownerInfo":{"name":"Marios%20Ioannou","path":"gMH0wL_0Sr69C7I7inO8MQ","avatarUrl":"https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FACg8ocJD6KuB6-0cr29cLoXm2VvqCeQWkq_hLrrL_NLaB9pHxJQPSQ%3Ds96-c","description":null},"isPublished":false,"createTime":1772706708128,"updateTime":1778072017476,"vcsSyncMode":"github","vcsProviderName":"GitHub","canEdit":false,"hardBreaks":true,"onlyOwnerCanEdit":false,"isCommentEnabled":true,"likedCount":0,"isNotificationEnabled":true,"notificationType":"never","hasEmail":false,"canWriteComment":false,"viewCount":242,"markdown":"---%0Aeip%3A%20XXXX%0Atitle%3A%20Blob%20Streaming%0Adescription%3A%20Introduces%20ahead-of-time%20blob%20propagation%20via%20ticket-based%20capacity%20reservation.%0Aauthor%3A%20Marios%20%20(%40mariosioannou-create)%2C%20Bharath%20(%40bharath-123)%2C%20Francesco%20D'Amato%20(%40fradamt)%2C%20Julian%20Ma%20(%40ma-julian)%2C%20Ra%C3%BAl%20Kripalani%20(%40raulk)%2C%20Bosul%20Mun%20(%40healthykim)%2C%20Csaba%20Kiraly%20(%40cskiraly)%2C%20%0Adiscussions-to%3A%20https%3A%2F%2Fethereum-magicians.org%2Ft%2Fplaceholder%2F0%0Astatus%3A%20Draft%0Atype%3A%20Standards%20Track%0Acategory%3A%20Core%0Acreated%3A%202026-05-06%0Arequires%3A%204844%2C%204788%2C%207002%2C%207594%2C%207732%2C%207918%0A---%0A%0A%23%23%20Abstract%0A%0AThis%20EIP%20enshrines%20two%20types%20of%20blobs%20into%20the%20protocol%2C%20namely%20Ahead-Of-Time%20(AOT)%20and%20Just-In-Time%20(JIT)%20blobs.%20In%20practice%20these%20exist%20today%20already.%20However%2C%20enshrining%20them%20in%20the%20way%20we%20do%2C%20has%20major%20benefits%20vis-a-vis%20performance%20and%20security%20guarantees.%20As%20the%20name%20suggests%2C%20AOT%20blobs%20are%20propagated%20*ahead%20of%20time*%20(pre-propagated)%20using%20a%20ticket-based%20propagation%20mechanism%20while%20current%20Just-In-Time%20(JIT)%20blobs%20are%20propagated%20*on%20the%20critical%20path*%20as%20today's%20blobs.%20Blob%20data%20for%20either%20blob%20type%20is%20propagated%20through%20the%20CL%20subnets.%0A%0A%0A%0A%23%23%20Motivation%0A%0AEthereum's%20current%20blob%20data%20availability%20design%2C%20introduced%20in%20%5BEIP-4844%5D(.%2Feip-4844.md)%20and%20extended%20with%20PeerDAS%20(%5BEIP-7594%5D(.%2Feip-7594.md))%2C%20hinges%20on%20blob%20data%20propagation%20on%20the%20critical%20path.%20While%20pre-propagation%20of%20blob%20data%20through%20the%20EL%20blobpool%20is%20possible%2C%20it%20comes%20with%20no%20upper%20bounds%20on%20the%20load%20being%20handled%20and%20as%20such%20can%20lead%20to%20inconsistent%20local%20node%20views%20-%20which%20in%20turn%20translates%20to%20vulnerability%20to%20DOS%20attacks%20especially%20if%20pre-propagation%20is%20coupled%20with%20data-availability%20sampling%20(DAS).%20%0A%0ATicket%20based%2C%20ahead-of-time%20propagation%20provides%20a%20way%20to%20overcome%20a%20number%20of%20issues%20associated%20with%20pre-propagation%20through%20the%20blobpool.%20Thus%2C%20it%20provides%20a%20reliable%20and%20secure%20way%20of%20combining%20DAS%20with%20pre-propagation.%20This%20in%20turn%20allows%20significantly%20higher%20blob%20throughput%20without%20increasing%20the%20block%20propagation%20window%20i.e%20extending%20the%20critical%20path%20-%20which%20comes%20with%20its%20own%20drawbacks%20e.g%20through%20the%20free%20option%20problem.%0A%0AThis%20ticket%20based%20mechanism%20is%20based%20on%20the%20principle%20that%20holding%20a%20ticket%20is%20a%20prerequisit%20for%20the%20network%20to%20propagate%20one's%20blob%20data.%20Tickets%20are%20acquired%20through%20a%20dedicated%20contract%20and%20as%20a%20result%2C%20there%20is%20at%20any%20time%20a%20globally%20agreed%20upon%20bounded%20set%20of%20eligible%20blob%20senders.%20%20Holding%20a%20ticket%20gives%20the%20user%20the%20right%20to%20propagate%20blob%20data%20using%20the%20consensus%20layer%20gossip%20subnets%2C%20effectively%20moving%20pre-propagation%20from%20the%20EL%20blobpool%20to%20the%20CL%20-%20utilizing%20the%20existing%20network%20infrastructure.%20Further%2C%20since%20all%20users%20pay%20*in%20advance*%20for%20the%20network%20resources%20consumed%2C%20by%20acquiring%20the%20corresponding%20ticket%2C%20the%20cost%20for%20honest%20and%20dishonest%20usage%20is%20equal.%20This%20ensures%20DOS%20resistance%20and%20establishes%20a%20common%20set%20of%20blobs%20seen%20by%20nodes%20in%20each%20slot.%20In%20addition%2C%20the%20system%20allows%20flexible%20timing%20for%20data%20propagation%20within%20a%20bounded%20time%20window%20which%20reduces%20congestion%20and%20enables%20higher%20overall%20throughput.%0A%0AJIT%20blobs%20are%20retained%20for%20use%20cases%20that%20require%20last-moment%20data%20commitment%2C%20such%20as%20L2%20sequencers%20that%20finalize%20batch%20contents%20close%20to%20the%20inclusion%20deadline.%20The%20two%20channels%20share%20a%20unified%20fee%20mechanism%20so%20that%20total%20blob%20demand%20is%20accurately%20reflected%20in%20pricing.%0A%0AA%20single%20blob%20base%20fee%20governs%20both%20AOT%20and%20JIT%20blobs%2C%20updated%20via%20the%20existing%20%60fake_exponential%60%20mechanism%20but%20driven%20by%20the%20combined%20demand%20from%20JIT%20usage%20and%20AOT%20ticket%20sales.%20Today's%20%60excess_blob_gas%60%20and%20%60blob_gas_used%60%20header%20fields%20are%20removed%2C%20with%20fee%20state%20moving%20entirely%20into%20the%20ticket%20contract.%20Separate%20per-block%20capacity%20limits%20(B1%20for%20JIT%2C%20B2%20total)%20allow%20flexible%20allocation%20between%20the%20two%20blob%20types%20while%20reserving%20minimum%20capacity%20(%20R%20)%20for%20JIT%20blobs.%0A%0A%23%23%20Specification%0A%0AThe%20key%20words%20%22MUST%22%2C%20%22MUST%20NOT%22%2C%20%22REQUIRED%22%2C%20%22SHALL%22%2C%20%22SHALL%20NOT%22%2C%20%22SHOULD%22%2C%20%22SHOULD%20NOT%22%2C%20%22RECOMMENDED%22%2C%20%22NOT%20RECOMMENDED%22%2C%20%22MAY%22%2C%20and%20%22OPTIONAL%22%20in%20this%20document%20are%20to%20be%20interpreted%20as%20described%20in%20%5BRFC%202119%5D(https%3A%2F%2Fwww.rfc-editor.org%2Frfc%2Frfc2119)%20and%20%5BRFC%208174%5D(https%3A%2F%2Fwww.rfc-editor.org%2Frfc%2Frfc8174).%0A%0A%23%23%23%20Parameters%0A%0A%7C%20Constant%20%7C%20Value%20%7C%20Description%20%7C%0A%7C%20-%20%7C%20-%20%7C%20-%20%7C%0A%7C%20%60TICKET_CONTRACT_ADDRESS%60%20%7C%20%60TBD%60%20%7C%20System%20contract%20address%20for%20blob%20ticket%20operations%20%7C%0A%7C%20%60ZERO_ADDRESS%60%20%7C%20%600x0000000000000000000000000000000000000000%60%20%7C%20Zero%20address%20used%20to%20%22burn%22%20ticket%20payments%20%7C%0A%7C%20%60SYSTEM_ADDRESS%60%20%7C%20%600xfffffffffffffffffffffffffffffffffffffffe%60%20%7C%20Address%20used%20for%20system%20calls%20%7C%0A%7C%20%60MAX_JIT_BLOBS_PER_BLOCK%60%20%7C%20%60TBD%60%20%7C%20Maximum%20JIT%20blobs%20per%20block%20(B1)%20%7C%0A%7C%20%60MAX_TOTAL_BLOBS_PER_BLOCK%60%20%7C%20%60TBD%60%20%7C%20Maximum%20total%20blobs%20per%20block%20(B2)%20%7C%0A%7C%20%60JIT_RESERVED%60%20%7C%20%60TBD%60%20%7C%20Minimum%20reserved%20capacity%20for%20JIT%20blobs%20(R)%20%7C%0A%7C%20%60MAX_AOT_BLOBS_PER_BLOCK%60%20%7C%20%60MAX_TOTAL_BLOBS_PER_BLOCK%20-%20JIT_RESERVED%60%20%7C%20Derived%20AOT%20blob%20cap%20%7C%0A%7C%20%60TICKET_LOOKAHEAD%60%20%7C%20%60TBD%60%20%7C%20Number%20of%20slots%20between%20ticket%20purchase%20and%20target%20slot%20%7C%0A%7C%20%60GAS_PER_BLOB%60%20%7C%20%60131072%60%20%7C%20Gas%20per%20blob%20(2**17)%2C%20same%20as%20%5BEIP-4844%5D(.%2Feip-4844.md)%20%7C%0A%7C%20%60MIN_BLOB_BASE_FEE%60%20%7C%20%601%60%20%7C%20Minimum%20blob%20base%20fee%20%7C%0A%7C%20%60BLOB_BASE_FEE_UPDATE_FRACTION%60%20%7C%20%60TBD%60%20%7C%20Denominator%20for%20%60fake_exponential%60%20update%20%7C%0A%7C%20%60TARGET_BLOB_GAS%60%20%7C%20%60TBD%60%20%7C%20Target%20total%20blob%20gas%20per%20block%20for%20fee%20update%20%7C%0A%7C%20%60MAX_TOTAL_BLOB_GAS%60%20%7C%20%60MAX_TOTAL_BLOBS_PER_BLOCK%20*%20GAS_PER_BLOB%60%20%7C%20Maximum%20total%20blob%20gas%20per%20block%20%7C%0A%7C%20%60BLOB_BASE_COST%60%20%7C%20%608192%60%20%7C%20Reserve%20price%20parameter%20from%20%5BEIP-7918%5D(.%2Feip-7918.md)%20(2**13)%20%7C%0A%7C%20%60AOT_PROPAGATION_WINDOW_SLOTS%60%20%7C%20%601%60%20%7C%20Window%20(in%20slots)%20for%20accepting%20AOT%20data%20column%20gossip%20%7C%0A%7C%20%60TICKET_RING_BUFFER_SIZE%60%20%7C%20%60TBD%60%20%7C%20Ring%20buffer%20capacity%20for%20ticket%20storage%20%7C%0A%0A%23%23%23%20Helpers%0A%0AThe%20%60fake_exponential%60%20function%20is%20identical%20to%20the%20one%20defined%20in%20%5BEIP-4844%5D(.%2Feip-4844.md)%3A%0A%0A%60%60%60python%0Adef%20fake_exponential(factor%3A%20int%2C%20numerator%3A%20int%2C%20denominator%3A%20int)%20-%3E%20int%3A%0A%20%20%20%20i%20%3D%201%0A%20%20%20%20output%20%3D%200%0A%20%20%20%20numerator_accum%20%3D%20factor%20*%20denominator%0A%20%20%20%20while%20numerator_accum%20%3E%200%3A%0A%20%20%20%20%20%20%20%20output%20%2B%3D%20numerator_accum%0A%20%20%20%20%20%20%20%20numerator_accum%20%3D%20(numerator_accum%20*%20numerator)%20%2F%2F%20(denominator%20*%20i)%0A%20%20%20%20%20%20%20%20i%20%2B%3D%201%0A%20%20%20%20return%20output%20%2F%2F%20denominator%0A%60%60%60%0A%0A%23%23%23%20Blob%20Transaction%20Classification%0A%0ABlob%20transactions%20(Type%203%2C%20as%20defined%20in%20%5BEIP-4844%5D(.%2Feip-4844.md))%20are%20classified%20into%20two%20categories%20based%20on%20their%20%60max_fee_per_blob_gas%60%20field%3A%0A%0A-%20**JIT**%3A%20%60max_fee_per_blob_gas%20%3E%3D%20%20blob_base_fee%60%20(where%20%60blob_base_fee%60%20is%20the%20current%20blob%20base%20fee).%20The%20transaction%20pays%20the%20blob%20base%20fee%20at%20inclusion.%20The%20transaction's%20blob%20data%20is%20propagated%20at%20block%20time.%0A-%20**AOT**%3A%20%60max_fee_per_blob_gas%20%3D%3D%200%60.%20The%20transaction%20does%20not%20pay%20any%20blob%20fee%20at%20inclusion.%20It%20MUST%20be%20backed%20by%20a%20valid%20ticket.%20The%20blob%20data%20is%20propagated%20ahead%20of%20time%20via%20the%20consensus%20layer.%0A%0A%3C!--A%20blob%20transaction%20with%20%60max_fee_per_blob_gas%60%20between%20%601%60%20and%20%60blob_base_fee%20-%201%60%20(inclusive)%20is%20considered%20AOT.%20This%20allows%20the%20user%20to%20set%20a%20base%20fee%20they%20are%20willing%20to%20pay%20for%20the%20blob%20to%20be%20JIT%20(and%20otherwise%20be%20AOT).%20Users%20not%20interested%20in%20JIT%20blobs%20can%20set%20%60max_fee_per_blob_gas%20%3D%3D%200%60.--%3E%0A%0AA%20blob%20transaction%20with%20%60max_fee_per_blob_gas%60%20between%20%601%60%20and%20%60blob_base_fee%20-%201%60%20(inclusive)%20is%20invalid%20and%20MUST%20be%20rejected.%20A%20blob%20transaction%20MUST%20be%20entirely%20JIT%20or%20entirely%20AOT.%20The%20signed%20%60max_fee_per_blob_gas%20%3D%3D%200%60%20for%20AOT%20transactions%20prevents%20reclassification%20by%20the%20builder%3A%20the%20execution%20layer%20rejects%20any%20transaction%20with%20%60max_fee_per_blob_gas%60%20below%20the%20current%20blob%20base%20fee%20as%20a%20JIT%20transaction%2C%20so%20an%20AOT%20transaction%20cannot%20be%20included%20as%20JIT.%0A%0A%3E%20**Note**%3A%20Whether%20AOT%20blob%20transactions%20reuse%20Type%203%20with%20%60max_fee_per_blob_gas%20%3D%3D%200%60%20or%20use%20a%20new%20transaction%20type%20without%20the%20blob%20fee%20field%20is%20a%20deferred%20design%20decision.%20Both%20approaches%20are%20mechanically%20equivalent.%0A%0A%23%23%23%20Block%20Header%20Changes%0A%0AThe%20following%20fields%2C%20introduced%20in%20%5BEIP-4844%5D(.%2Feip-4844.md)%2C%20are%20**deprecated**%20from%20the%20block%20header%3A%0A%0A-%20%60excess_blob_gas%60%0A-%20%60blob_gas_used%60%0A%0AThe%20blob%20base%20fee%20state%20is%20maintained%20entirely%20within%20the%20ticket%20contract.%20Clients%20read%20the%20blob%20base%20fee%20from%20the%20contract%20at%20the%20start%20of%20each%20block%20and%20cache%20it%20for%20the%20duration%20of%20block%20processing.%0A%0A%23%23%23%20Block%20Validation%0A%0ABlock%20validation%20MUST%20enforce%20the%20following%20rules%20for%20blob%20transactions%3A%0A%0A%60%60%60python%0Adef%20validate_blob_transactions(block%3A%20Block%2C%20bf_aot%3A%20int)%3A%0A%20%20%20%20jit_blob_count%20%3D%200%0A%20%20%20%20aot_blob_count%20%3D%200%0A%0A%20%20%20%20for%20tx%20in%20block.transactions%3A%0A%20%20%20%20%20%20%20%20if%20not%20is_blob_tx(tx)%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20continue%0A%0A%20%20%20%20%20%20%20%20n_blobs%20%3D%20len(tx.blob_versioned_hashes)%0A%0A%20%20%20%20%20%20%20%20if%20tx.max_fee_per_blob_gas%20%3E%200%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%20JIT%20blob%20transaction%0A%20%20%20%20%20%20%20%20%20%20%20%20assert%20tx.max_fee_per_blob_gas%20%3E%3D%20blob_base_fee%2C%20%22JIT%20blob%20fee%20too%20low%22%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%20Deduct%20and%20burn%20blob%20fee%3A%20n_blobs%20*%20GAS_PER_BLOB%20*%20bf_aot%0A%20%20%20%20%20%20%20%20%20%20%20%20blob_fee%20%3D%20n_blobs%20*%20GAS_PER_BLOB%20*%20blob_base_feebf_aot%0A%20%20%20%20%20%20%20%20%20%20%20%20assert%20tx.sender.balance%20%3E%3D%20blob_fee%0A%20%20%20%20%20%20%20%20%20%20%20%20tx.sender.balance%20-%3D%20blob_fee%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%20blob_fee%20is%20burned%20(not%20transferred%20to%20coinbase)%0A%20%20%20%20%20%20%20%20%20%20%20%20jit_blob_count%20%2B%3D%20n_blobs%0A%20%20%20%20%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%20AOT%20blob%20transaction%0A%20%20%20%20%20%20%20%20%20%20%20%20%23%20No%20blob%20fee%20charged%20(already%20paid%20at%20ticket%20purchase)%0A%20%20%20%20%20%20%20%20%20%20%20%20aot_blob_count%20%2B%3D%20n_blobs%0A%0A%20%20%20%20%23%20Capacity%20checks%0A%20%20%20%20assert%20jit_blob_count%20%3C%3D%20MAX_JIT_BLOBS_PER_BLOCK%0A%20%20%20%20%0A%60%60%60%0A%0AWhere%20%60blob_base_fee%60%20is%20the%20blob%20base%20fee%20read%20from%20the%20ticket%20contract%20at%20the%20start%20of%20the%20block.%0A%0A%23%23%23%20EL%20Mempool%20Changes%0A%0ABlob%20sidecars%20(the%20blob%20data%20alongside%20its%20KZG%20commitment%20and%20proof)%20are%20no%20longer%20propagated%20in%20the%20execution%20layer%20mempool.%20The%20EL%20mempool%20carries%20only%20blob%20transaction%20bodies%20(without%20blob%20data).%0A%0APropagation%20of%20any%20blob%20transaction%20in%20the%20EL%20mempool%20MUST%20be%20gated%20on%20ticket%20ownership.%20For%20each%20address%2C%20the%20mempool%20tracks%20a%20**blob%20allowance**%3A%20the%20sum%20of%20%60blob_count%60%20across%20all%20active%20tickets%20(i.e.%2C%20tickets%20whose%20derived%20%60target_slot%60%20has%20not%20yet%20passed)%20owned%20by%20that%20address%20minus%20the%20sum%20of%20blob%20transactions%20corresponding%20to%20that%20address%20present%20in%20the%20mempool.%20A%20blob%20transaction%20is%20eligible%20for%20propagation%20only%20if%20that%20sender%20has%20a%20sufficient%20blob%20allowance.%0A%60%60%60%0Ablob_allowance(S)%20%3D%20total_tickets(S)%20-%20pending_blobs(S)%20%0A%60%60%60%0AWhere%20%60pending_blobs(S)%60%20is%20the%20total%20blob%20count%20across%20all%20blob%20transactions%20from%20%60S%60%20already%20in%20the%20mempool%2C%20and%20%60total_tickets(S)%60%20is%20the%20sum%20of%20%60blob_count%60%20across%20all%20active%20tickets%20with%20%60owner%20%3D%3D%20S%60.%20A%20mempool%20node%20SHOULD%20accept%20and%20relay%20a%20blob%20transaction%20from%20sender%20%60S%60%20only%20if%20it%20has%20sufficient%20blob%20allowance%3A%0A%60%60%60%0Ablob_allowance(S)%20%3E%20len(tx.blob_versioned_hashes)%20%0A%60%60%60%0A%0AThis%20gating%20applies%20regardless%20of%20whether%20the%20blob%20transaction%20is%20JIT%20or%20AOT%20(i.e.%2C%20regardless%20of%20%60max_fee_per_blob_gas%60).%20Without%20a%20ticket%2C%20an%20address%20has%20zero%20blob%20allowance%20and%20its%20blob%20transactions%20cannot%20propagate%20through%20the%20public%20mempool.%20JIT%20blob%20transactions%20without%20a%20ticket%20are%20delivered%20directly%20to%20the%20builder%20out%20of%20protocol.%0A%0A%23%23%23%23%20Replacements%0AReplacement%20of%20blob%20transactions%20with%20a%20valid%20ticket%20is%20possible%20but%20can%20be%20carried%20out%20only%20a%20limited%20number%20of%20times%20since%2C%20unlike%20regular%20txs%2C%20it%20might%20never%20get%20on%20chain%20if%20the%20corresponding%20data%20has%20not%20propagated.%20The%20user%20has%20the%20choice%20of%20either%20sending%20a%20replacement%20transaction%20with%20the%20same%20versioned%20hashes%20or%20also%20changing%20the%20versioned%20hashes%20-%20and%20thus%20the%20blob%20content.%20In%20the%20later%20case%2C%20for%20the%20transaction%20to%20be%20valid%20the%20corresponding%20blob%20data%20would%20have%20to%20be%20sent%20-%20potentially%20using%20another%20ticket.%0A%0A%23%23%23%20Opcode%20Changes%0A%0A%7C%20Opcode%20%7C%20Byte%20%7C%20Change%20%7C%0A%7C%20-%20%7C%20-%20%7C%20-%20%7C%0A%7C%20%60BLOBHASH%60%20%7C%20%600x49%60%20%7C%20No%20change.%20Per-transaction%20indexing%20works%20for%20both%20JIT%20and%20AOT.%20%7C%0A%7C%20%60BLOBBASEFEE%60%20%7C%20%600x4A%60%20%7C%20Returns%20%0Acached%20from%20the%20ticket%20contract%20at%20block%20start.%20%7C%0A%0AThe%20%60BLOBBASEFEE%60%20opcode%20continues%20to%20return%20the%20blob%20base%20fee%2C%20but%20the%20source%20changes%20from%20a%20header%20field%20computation%20to%20a%20contract%20state%20read%20cached%20at%20the%20beginning%20of%20block%20processing.%0A%0A%23%23%23%20System%20Call%20Ordering%0A%0ABlock%20processing%20follows%20this%20order%3A%0A%0A1.%20**Start%20of%20block**%3A%20The%20client%20reads%20%60blob_base_fee%60%20from%20the%20ticket%20contract%20and%20caches%20it.%20Existing%20system%20calls%20execute%20(beacon%20root%20contract%20per%20%5BEIP-4788%5D(.%2Feip-4788.md)%2C%20block%20hash%20history%20contract%20per%20%5BEIP-2935%5D(.%2Feip-2935.md)).%0A2.%20**Transaction%20processing**%3A%20JIT%20blob%20transactions%20are%20validated%20and%20charged%20the%20blob%20fee.%20AOT%20blob%20transactions%20are%20validated%20without%20blob%20fee%20charges.%20Ticket%20purchases%20are%20processed%20as%20normal%20transactions%20to%20the%20ticket%20contract.%0A3.%20**End%20of%20block**%3A%20The%20ticket%20contract%20system%20call%20executes%20with%20%60jit_blob_gas_used%60%20as%20input%2C%20updating%20the%20excess%20accumulator%20and%20blob%20base%20fee%20for%20the%20next%20block.%20Other%20end-of-block%20system%20calls%20follow%20(withdrawal%20request%20contract%20per%20%5BEIP-7002%5D(.%2Feip-7002.md)%2C%20consolidation%20request%20contract%20per%20%5BEIP-7251%5D(.%2Feip-7251.md)).%0A%0A%23%23%23%20Ticket%20Contract%20v1%0A%0AThe%20ticket%20contract%20is%20a%20system%20contract%20deployed%20at%20%60TICKET_CONTRACT_ADDRESS%60%20via%20the%20synthetic-sender%20technique%20(same%20deployment%20method%20as%20%5BEIP-4788%5D(.%2Feip-4788.md)%20and%20%5BEIP-7002%5D(.%2Feip-7002.md)).%0A%0A%23%23%23%23%20Storage%20Layout%0A%0A%7C%20Slot%20%7C%20Name%20%7C%20Description%20%7C%0A%7C%20-%20%7C%20-%20%7C%20-%20%7C%0A%7C%200%20%7C%20%60EXCESS_BLOB_GAS_SLOT%60%20%7C%20Running%20excess%20blob%20gas%20accumulator%20%7C%0A%7C%201%20%7C%20%60CACHED_FEE_SLOT%60%20%7C%20Cached%20%60blob_base_fee%60%20for%20current%20block%20%7C%0A%7C%202%20%7C%20%60TICKET_COUNT_SLOT%60%20%7C%20Per-block%20ticket%20counter%20(reset%20each%20block)%20%7C%0A%7C%203%20%7C%20%60NEXT_TICKET_ID_SLOT%60%20%7C%20Monotonically%20increasing%20ticket%20ID%20%7C%0A%7C%204%20%7C%20%60TICKET_RING_BUFFER_OFFSET%60%20%7C%20Start%20of%20ring%20buffer%20storage%20%7C%0A%0AEach%20ticket%20occupies%20multiple%20storage%20slots%20within%20the%20ring%20buffer%3A%0A%0A%7C%20Offset%20%7C%20Field%20%7C%20Size%20%7C%0A%7C%20-%20%7C%20-%20%7C%20-%20%7C%0A%7C%200%20%7C%20%60ticket_id%60%20%7C%20%60uint64%60%20%7C%0A%7C%201%20%7C%20%60selling_block_timestamp%60%20%7C%20%60uint256%60%20%7C%0A%7C%202%20%7C%20%60owner%60%20(address%2C%2020%20bytes)%20%2B%2B%20%60blob_count%60%20(uint8)%20%2B%2B%20%60padding%60%20%7C%20%60bytes32%60%20%7C%0A%7C%203%20%7C%20%60bls_pubkey%60%20(bytes%200-31)%20%7C%20%60bytes32%60%20%7C%0A%7C%204%20%7C%20%60bls_pubkey%60%20(bytes%2032-47)%20%2B%2B%20%60padding%60%20%7C%20%60bytes32%60%20%7C%0A%7C%205%20%7C%20%60blob_base_fee_paid%60%20%7C%20%60uint256%60%20%7C%0A%0A%0ASlots%20per%20ticket%3A%206.%20Ring%20buffer%20size%3A%20%60TICKET_RING_BUFFER_SIZE%60%20tickets.%20Tickets%20expire%20naturally%20via%20ring%20buffer%20rotation.%0A%0A%23%23%23%23%20Target%20slot%0AThe%20parameter%20%60target_slot%60%20determines%20slot%20during%20which%20the%20ticket%20is%20valid%20and%20can%20be%20used%20to%20propagate%20a%20blob%20and%20send%20an%20associated%20blob%20tx%20to%20the%20mempool.%20The%20contract%20does%20not%20store%20target%20slots%20per%20se%2C%20rather%20the%20target%20slot%20for%20a%20ticket%20is%20derived%20externally%20through%3A%0A%0A%60%60%60python%0Atarget_slot%20%3D%20slot(selling_block_timestamp)%20%2B%20TICKET_LOOKAHEAD%0A%60%60%60%0Awhere%20%60TICKET_LOOKAHEAD%60%20is%20a%20parameter%2C%20measured%20in%20slots%20and%20can%20be%20set%20to%20a%20value%20e.g%20%241%24%20epoch.%0A%23%23%23%23%20Code%20Paths%0A%0AThe%20contract%20has%20three%20code%20paths%2C%20following%20the%20pattern%20established%20by%20%5BEIP-7002%5D(.%2Feip-7002.md)%3A%0A%0A%23%23%23%23%23%201.%20Buy%20Tickets%20(User%20Call%20with%20Value)%0A%0AIf%20the%20call%20has%20nonzero%20%60msg.value%60%20and%20calldata%20encoding%20%60(blob_count%2C%20bls_pubkey)%60%3A%0A%0A%60%60%60python%0Adef%20buy_tickets(blob_count%3A%20uint8%2C%20bls_pubkey%3A%20bytes48)%3A%0A%20%20%20%20fee%20%3D%20get_fee()%0A%20%20%20%20total_cost%20%3D%20blob_count%20*%20GAS_PER_BLOB%20*%20fee%20%0A%20%20%20%20require(msg.value%20%3E%3D%20total_cost%2C%20%22Insufficient%20payment%22)%0A%0A%20%20%20%20%23%20Record%20ticket%20in%20ring%20buffer%0A%20%20%20%20ticket_id%20%3D%20sload(NEXT_TICKET_ID_SLOT)%0A%20%20%20%20slot_index%20%3D%20ticket_id%20%25%20TICKET_RING_BUFFER_SIZE%0A%20%20%20%20base%20%3D%20TICKET_RING_BUFFER_OFFSET%20%2B%20slot_index%20*%206%0A%0A%20%20%20%20sstore(base%20%2B%200%2C%20ticket_id)%0A%20%20%20%20sstore(base%20%2B%201%2C%20block.timestamp)%0A%20%20%20%20sstore(base%20%2B%202%2C%20msg.sender%20%2B%2B%20blob_count)%0A%20%20%20%20sstore(base%20%2B%203%2C%20bls_pubkey%5B0%3A32%5D)%0A%20%20%20%20sstore(base%20%2B%204%2C%20bls_pubkey%5B32%3A48%5D)%0A%20%20%20%20sstore(base%20%2B%205%2C%20fee)%0A%20%20%20%20%0A%0A%20%20%20%20%23%20Increment%20counters%0A%20%20%20%20sstore(NEXT_TICKET_ID_SLOT%2C%20ticket_id%20%2B%201)%0A%20%20%20%20count%20%3D%20sload(TICKET_COUNT_SLOT)%0A%20%20%20%20sstore(TICKET_COUNT_SLOT%2C%20count%20%2B%20blob_count)%0A%0A%20%20%20%20%23%20Burn%20payment%20(value%20stays%20in%20contract%20or%20sent%20to%20a%20burn%20address)%0A%20%20%20%20transfer(to%3DZERO_ADDRESS%2C%20value%3Dmsg.value)%0A%60%60%60%0A%0AAll%20payments%20are%20burned.%20No%20refunds%20are%20issued.%20This%20is%20the%20primary%20defense%20against%20capacity%20griefing.%0A%0A%23%23%23%23%23%202.%20Fee%20Getter%20(Zero-Value%20Call%20with%20Empty%20Calldata)%0A%0AWhen%20called%20with%20zero%20value%20and%20empty%20calldata%2C%20the%20contract%20returns%20the%20current%20blob%20base%20fee%3A%0A%0A%60%60%60python%0Adef%20get_fee()%20-%3E%20int%3A%0A%20%20%20%20return%20sload(CACHED_FEE_SLOT)%0A%60%60%60%0A%0A%23%23%23%23%23%203.%20System%20Call%20(End%20of%20Block)%0A%0ACalled%20as%20%60SYSTEM_ADDRESS%60%20with%20%60jit_blob_gas_used%60%20(uint256)%20as%20calldata%20at%20the%20end%20of%20each%20block%3A%0A%0A%60%60%60python%0Adef%20system_call(jit_blob_gas_used%3A%20uint256)%3A%0A%20%20%20%20require(msg.sender%20%3D%3D%20SYSTEM_ADDRESS)%0A%0A%20%20%20%20%23%20Compute%20total%20blob%20gas%20for%20this%20block%0A%20%20%20%20aot_blob_gas_sold%20%3D%20sload(TICKET_COUNT_SLOT)%20*%20GAS_PER_BLOB%0A%20%20%20%20total_blob_gas%20%3D%20jit_blob_gas_used%20%2B%20aot_blob_gas_sold%0A%0A%20%20%20%20%23%20Update%20excess%20accumulator%20(with%20EIP-7918%20reserve%20price%20logic)%0A%20%20%20%20old_excess%20%3D%20sload(EXCESS_BLOB_GAS_SLOT)%0A%20%20%20%20old_fee%20%3D%20sload(CACHED_FEE_SLOT)%0A%0A%20%20%20%20if%20old_excess%20%2B%20total_blob_gas%20%3C%20TARGET_BLOB_GAS%3A%0A%20%20%20%20%20%20%20%20new_excess%20%3D%200%0A%20%20%20%20elif%20BLOB_BASE_COST%20*%20block.basefee%20%3E%20GAS_PER_BLOB%20*%20old_fee%3A%0A%20%20%20%20%20%20%20%20%23%20Below%20reserve%20price%3A%20do%20not%20subtract%20full%20target%2C%20only%20proportional%0A%20%20%20%20%20%20%20%20new_excess%20%3D%20old_excess%20%2B%20total_blob_gas%20*%20(MAX_TOTAL_BLOB_GAS%20-%20TARGET_BLOB_GAS)%20%2F%2F%20MAX_TOTAL_BLOB_GAS%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20new_excess%20%3D%20old_excess%20%2B%20total_blob_gas%20-%20TARGET_BLOB_GAS%0A%20%20%20%20sstore(EXCESS_BLOB_GAS_SLOT%2C%20new_excess)%0A%0A%20%20%20%20%23%20Compute%20new%20blob%20base%20fee%0A%20%20%20%20new_fee%20%3D%20fake_exponential(%0A%20%20%20%20%20%20%20%20MIN_BLOB_BASE_FEE%2C%0A%20%20%20%20%20%20%20%20new_excess%2C%0A%20%20%20%20%20%20%20%20BLOB_BASE_FEE_UPDATE_FRACTION%0A%20%20%20%20)%0A%0A%20%20%20%20sstore(CACHED_FEE_SLOT%2C%20new_fee)%0A%0A%20%20%20%20%23%20Reset%20per-block%20ticket%20counter%0A%20%20%20%20sstore(TICKET_COUNT_SLOT%2C%200)%0A%60%60%60%0A%3D%3D%3D%3DIn%20the%20above%20design%20tickets%20are%20being%20evicted%20from%20the%20buffer%20once%20sufficiently%20many%20new%20ones%20are%20bought.%20This%20means%20that%20a%20ticket%20can%20remain%20in%20the%20buffer%20beyond%20its%20validity%20window.%20Now%20this%20is%20per-se%20not%20a%20disaster%20but%20it%20can%20create%20ambiguity%20unless%20all%20consumers%20always%20recompute%20validity%20from%20selling_block_timestamp%20and%20completely%20ignore%20whether%20the%20ticket%20is%20still%20present%20in%20the%20ring.%20We%20would%20need%20to%20ensure%20ticket_ring_buffer_size%3E%3Dticket_lookahead%20*max_aot_blobs_per_block%20though.%0AAlternative%20version%20of%20ring-buffer%20from%20here%3A%3D%3D%3D%3D%0A%23%23%23%20Ticket%20Contract%20v2%0A%0AThe%20ticket%20contract%20is%20a%20system%20contract%20deployed%20at%20%60TICKET_CONTRACT_ADDRESS%60%20via%20the%20synthetic-sender%20technique%20(same%20deployment%20method%20as%20%5BEIP-4788%5D(.%2Feip-4788.md)%20and%20%5BEIP-7002%5D(.%2Feip-7002.md)).%0A%0A%23%23%23%23%20Storage%20Layout%0A%0A%7C%20Slot%20%7C%20Name%20%7C%20Description%20%7C%0A%7C%20-%20%7C%20-%20%7C%20-%20%7C%0A%7C%200%20%7C%20%60EXCESS_BLOB_GAS_SLOT%60%20%7C%20Running%20excess%20blob%20gas%20accumulator%20%7C%0A%7C%201%20%7C%20%60CACHED_FEE_SLOT%60%20%7C%20Cached%20%60blob_base_fee%60%20for%20current%20block%20%7C%0A%7C%202%20%7C%20%60TICKET_COUNT_SLOT%60%20%7C%20Per-block%20ticket%20counter%20(reset%20each%20block)%20%7C%0A%7C%203%20%7C%20%60NEXT_TICKET_ID_SLOT%60%20%7C%20Monotonically%20increasing%20ticket%20ID%20%7C%0A%7C%204%20%7C%20%60TICKET_RING_BUFFER_OFFSET%60%20%7C%20Start%20of%20per-bucket%20metadata%20storage%20%7C%0A%7C%205%20%7C%20%60TICKET_DATA_OFFSET%60%20%7C%20Start%20of%20ticket%20data%20storage%20%7C%0A%0AThe%20ring%20buffer%20is%20organized%20as%20a%20ring%20of%20per-slot%20buckets%20of%20length%3A%0A%0A%60%60%60python%0ATICKET_RING_BUFFER_SIZE%20%3D%20TICKET_LOOKAHEAD%0A%60%60%60%0A%0AIn%20slot%20%60s%60%2C%20all%20tickets%20purchased%20are%20for%20target%20slot%3A%0A%0A%60%60%60python%0Atarget_slot%20%3D%20s%20%2B%20TICKET_LOOKAHEAD%0A%60%60%60%0A%0ASince%20the%20ring%20length%20is%20exactly%20%60TICKET_LOOKAHEAD%60%2C%20tickets%20purchased%20in%20slot%20%60s%60%20are%20always%20written%20into%20bucket%3A%0A%0A%60%60%60python%0Abucket_index%20%3D%20s%20%25%20TICKET_RING_BUFFER_SIZE%0A%60%60%60%0A%0AThis%20bucket%20is%20exactly%20the%20one%20that%20becomes%20reusable%20once%20slot%20%60s%60%20is%20reached.%20To%20avoid%20clearing%20the%20bucket%20on%20every%20purchase%20within%20the%20same%20slot%2C%20the%20contract%20tracks%20the%20last%20slot%20for%20which%20the%20current-slot%20bucket%20was%20cleared.%20Each%20bucket%20occupies%202%20metadata%20slots%3A%0A%0A%7C%20Offset%20%7C%20Field%20%7C%20Size%20%7C%0A%7C%20-%20%7C%20-%20%7C%20-%20%7C%0A%7C%200%20%7C%20%60bucket_blob_count%60%20%7C%20%60uint256%60%20%7C%0A%7C%201%20%7C%20%60bucket_entry_count%60%20%7C%20%60uint256%60%20%7C%0A%7C%202%20%7C%20%60bucket_current_slot%60%20%7C%20%60uint256%60%20%7C%20%0A%0AThere%20are%20%60TICKET_RING_BUFFER_SIZE%60%20many%20buckets.%20Each%20bucket%20tracks%20both%20the%20total%20reserved%20AOT%20blob%20capacity%20%60bucket_blob_count%60%20(%3C%20%60MAX_AOT_BLOBS_PER_BLOCK%60)%2C%20the%20number%20of%20ticket%20records%20stored%20for%20that%20slot%20%60bucket_entry_count%60%20and%20the%20slot%20for%20which%20the%20tickets%20have%20been%20sold%20for%60bucket_current_slot%60.%20Each%20ticket%20occupies%205%20storage%20slots%3A%0A%0A%7C%20Offset%20%7C%20Field%20%7C%20Size%20%7C%0A%7C%20-%20%7C%20-%20%7C%20-%20%7C%0A%7C%200%20%7C%20%60ticket_id%60%20%7C%20%60uint64%60%20%7C%0A%7C%201%20%7C%20%60selling_block_timestamp%60%20%7C%20%60uint256%60%20%7C%0A%7C%202%20%7C%20%60owner%60%20(address%2C%2020%20bytes)%20%2B%2B%20%60blob_count%60%20(uint8)%20%2B%2B%20%60padding%60%20%7C%20%60bytes32%60%20%7C%0A%7C%203%20%7C%20%60bls_pubkey%60%20(bytes%200-31)%20%7C%20%60bytes32%60%20%7C%0A%7C%204%20%7C%20%60bls_pubkey%60%20(bytes%2032-47)%20%2B%2B%20%60padding%60%20%7C%20%60bytes32%60%20%7C%0A%0A%0A%0AThe%20storage%20base%20for%20bucket%20%60j%60%20is%20derived%20directly%20as%3A%0A%0A%60%60%60python%0Abucket_base%20%3D%20TICKET_DATA_OFFSET%20%2B%20j%20*%20MAX_AOT_BLOBS_PER_BLOCK%20*%205%0A%60%60%60%0A%0A%0A%23%23%23%23%20Target%20slot%0A%0AThe%20parameter%20%60target_slot%60%20determines%20the%20slot%20during%20which%20the%20ticket%20is%20valid%20and%20can%20be%20used%20to%20propagate%20a%20blob.%20The%20target%20slot%20for%20a%20ticket%20is%20derived%20as%3A%0A%0A%60%60%60python%0Atarget_slot%20%3D%20slot(selling_block_timestamp)%20%2B%20TICKET_LOOKAHEAD%0A%60%60%60%0A%0Awhere%20%60TICKET_LOOKAHEAD%60%20is%20a%20parameter%2C%20measured%20in%20slots%20and%20can%20be%20set%20to%20a%20value%20e.g.%20%601%60%20epoch.%20A%20ticket%20is%20valid%20only%20during%20that%20exact%20%60target_slot%60.%0A%0A%23%23%23%23%20Code%20Paths%0A%0AThe%20contract%20has%20three%20code%20paths%2C%20following%20the%20pattern%20established%20by%20%5BEIP-7002%5D(.%2Feip-7002.md)%3A%0A%0A%23%23%23%23%23%201.%20Buy%20Tickets%20(User%20Call%20with%20Value)%0A%0AIf%20the%20call%20has%20nonzero%20%60msg.value%60%20and%20calldata%20encoding%20%60(blob_count%2C%20bls_pubkey)%60%3A%0A%0A%60%60%60python%0Adef%20buy_tickets(blob_count%3A%20uint8%2C%20bls_pubkey%3A%20bytes48)%3A%0A%20%20%20%20fee%20%3D%20get_fee()%0A%20%20%20%20total_cost%20%3D%20blob_count%20*%20GAS_PER_BLOB%20*%20fee%0A%20%20%20%20require(msg.value%20%3E%3D%20total_cost%2C%20%22Insufficient%20payment%22)%0A%0A%20%20%20%20current_slot%20%3D%20slot(block.timestamp)%0A%20%20%20%20bucket_index%20%3D%20current_slot%20%25%20TICKET_RING_BUFFER_SIZE%0A%20%20%20%20meta_base%20%3D%20TICKET_RING_BUFFER_OFFSET%20%2B%20bucket_index%20*%203%0A%20%20%20%20%0A%20%20%20%20bucket_blob_count%20%3D%20sload(meta_base%20%2B%200)%0A%20%20%20%20bucket_entry_count%20%3D%20sload(meta_base%20%2B%201)%0A%20%20%20%20bucket_current_slot%20%3D%20sload(meta_base%20%2B%202)%0A%0A%20%20%20%20if%20bucket_current_slot%20!%3D%20current_slot%3A%0A%20%20%20%20%20%20%20%20sstore(meta_base%20%2B%200%2C%200)%20%20%23%20bucket_blob_count%20set%20to%20zero%0A%20%20%20%20%20%20%20%20sstore(meta_base%20%2B%201%2C%200)%20%20%23%20bucket_entry_count%20set%20to%20zero%0A%20%20%20%20%20%20%20%20sstore(meta_base%20%2B%202%2C%20current_slot)%20%20%23%20bucket_current_slot%20set%20to%20current_slot%0A%0A%20%20%20%20require(bucket_blob_count%20%2B%20blob_count%20%3C%3D%20MAX_AOT_BLOBS_PER_BLOCK%2C%20%22AOT%20capacity%20exceeded%22)%20%23%20restrict%20the%20number%20of%20AOT%20blobs%20in%20a%20slot.%0A%20%20%20%20%0A%20%20%20%20%23%20Append%20ticket%20record%20to%20bucket%0A%20%20%20%20ticket_id%20%3D%20sload(NEXT_TICKET_ID_SLOT)%0A%20%20%20%20bucket_base%20%3D%20TICKET_DATA_OFFSET%20%2B%20bucket_index%20*%20MAX_AOT_BLOBS_PER_BLOCK%20*%205%0A%20%20%20%20base%20%3D%20bucket_base%20%2B%20bucket_entry_count%20*%205%0A%0A%20%20%20%20sstore(base%20%2B%200%2C%20ticket_id)%0A%20%20%20%20sstore(base%20%2B%201%2C%20block.timestamp)%0A%20%20%20%20sstore(base%20%2B%202%2C%20msg.sender%20%2B%2B%20blob_count)%0A%20%20%20%20sstore(base%20%2B%203%2C%20bls_pubkey%5B0%3A32%5D)%0A%20%20%20%20sstore(base%20%2B%204%2C%20bls_pubkey%5B32%3A48%5D)%0A%20%20%20%20%0A%0A%20%20%20%20%23%20Increment%20counters%0A%20%20%20%20sstore(meta_base%20%2B%200%2C%20bucket_blob_count%20%2B%20blob_count)%0A%20%20%20%20sstore(meta_base%20%2B%201%2C%20bucket_entry_count%20%2B%201)%0A%20%20%20%20sstore(NEXT_TICKET_ID_SLOT%2C%20ticket_id%20%2B%201)%0A%0A%20%20%20%20count%20%3D%20sload(TICKET_COUNT_SLOT)%0A%20%20%20%20sstore(TICKET_COUNT_SLOT%2C%20count%20%2B%20blob_count)%0A%0A%20%20%20%20%23%20Burn%20payment%20(value%20stays%20in%20contract%20or%20sent%20to%20a%20burn%20address)%0A%20%20%20%20transfer(to%3DZERO_ADDRESS%2C%20value%3Dmsg.value)%0A%60%60%60%0A%0AAll%20payments%20are%20burned.%20No%20refunds%20are%20issued.%20This%20is%20the%20primary%20defense%20against%20capacity%20griefing.%0A%0A%23%23%23%23%23%202.%20Fee%20Getter%20(Zero-Value%20Call%20with%20Empty%20Calldata)%0A%0AWhen%20called%20with%20zero%20value%20and%20empty%20calldata%2C%20the%20contract%20returns%20the%20current%20blob%20base%20fee%3A%0A%0A%60%60%60python%0Adef%20get_fee()%20-%3E%20int%3A%0A%20%20%20%20return%20sload(CACHED_FEE_SLOT)%0A%60%60%60%0A%0A%23%23%23%23%23%203.%20System%20Call%20(End%20of%20Block)%0A%0ACalled%20as%20%60SYSTEM_ADDRESS%60%20with%20%60jit_blob_gas_used%60%20(uint256)%20as%20calldata%20at%20the%20end%20of%20each%20block%3A%0A%0A%60%60%60python%0Adef%20system_call(jit_blob_gas_used%3A%20uint256)%3A%0A%20%20%20%20require(msg.sender%20%3D%3D%20SYSTEM_ADDRESS)%0A%0A%20%20%20%20%23%20Compute%20total%20blob%20gas%20for%20this%20block%0A%20%20%20%20aot_blob_gas_sold%20%3D%20sload(TICKET_COUNT_SLOT)%20*%20GAS_PER_BLOB%0A%20%20%20%20total_blob_gas%20%3D%20jit_blob_gas_used%20%2B%20aot_blob_gas_sold%0A%0A%20%20%20%20%23%20Update%20excess%20accumulator%20(with%20EIP-7918%20reserve%20price%20logic)%0A%20%20%20%20old_excess%20%3D%20sload(EXCESS_BLOB_GAS_SLOT)%0A%20%20%20%20old_fee%20%3D%20sload(CACHED_FEE_SLOT)%0A%0A%20%20%20%20if%20old_excess%20%2B%20total_blob_gas%20%3C%20TARGET_BLOB_GAS%3A%0A%20%20%20%20%20%20%20%20new_excess%20%3D%200%0A%20%20%20%20elif%20BLOB_BASE_COST%20*%20block.basefee%20%3E%20GAS_PER_BLOB%20*%20old_fee%3A%0A%20%20%20%20%20%20%20%20%23%20Below%20reserve%20price%3A%20do%20not%20subtract%20full%20target%2C%20only%20proportional%0A%20%20%20%20%20%20%20%20new_excess%20%3D%20old_excess%20%2B%20total_blob_gas%20*%20(MAX_TOTAL_BLOB_GAS%20-%20TARGET_BLOB_GAS)%20%2F%2F%20MAX_TOTAL_BLOB_GAS%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20new_excess%20%3D%20old_excess%20%2B%20total_blob_gas%20-%20TARGET_BLOB_GAS%0A%0A%20%20%20%20sstore(EXCESS_BLOB_GAS_SLOT%2C%20new_excess)%0A%0A%20%20%20%20%23%20Compute%20new%20blob%20base%20fee%0A%20%20%20%20new_fee%20%3D%20fake_exponential(%0A%20%20%20%20%20%20%20%20MIN_BLOB_BASE_FEE%2C%0A%20%20%20%20%20%20%20%20new_excess%2C%0A%20%20%20%20%20%20%20%20BLOB_BASE_FEE_UPDATE_FRACTION%0A%20%20%20%20)%0A%0A%20%20%20%20sstore(CACHED_FEE_SLOT%2C%20new_fee)%0A%0A%20%20%20%20%23%20Reset%20per-block%20ticket%20counter%0A%20%20%20%20sstore(TICKET_COUNT_SLOT%2C%200)%0A%60%60%60%0A%0A%23%23%23%23%20Ticket%20expiry%20semantics%0A%0ATicket%20expiry%20is%20tied%20directly%20to%20slot%20progression.%0A%0AA%20ticket%20sold%20in%20slot%20%60s%60%20is%20valid%20only%20in%20slot%3A%0A%0A%60%60%60python%0Aslot(selling_block_timestamp)%20%2B%20TICKET_LOOKAHEAD%0A%60%60%60%0A%0ABecause%20the%20ring%20buffer%20length%20is%20exactly%20%60TICKET_LOOKAHEAD%60%2C%20the%20bucket%20used%20for%20purchases%20in%20slot%20%60s%60%20is%20reused%20only%20when%20slot%20%60s%20%2B%20TICKET_LOOKAHEAD%60%20arrives.%20The%20bucket%20is%20cleared%20once%20on%20the%20first%20purchase%20in%20slot%20%60s%60%2C%20so%20earlier%20tickets%20from%20the%20previous%20cycle%20are%20removed%20without%20erasing%20purchases%20already%20made%20in%20the%20current%20slot.%20The%20bucket%20metadata%20separately%20tracks%20reserved%20blob%20capacity%20(%60bucket_blob_count%60)%20and%20stored%20ticket%20records%20(%60bucket_entry_count%60)%2C%20which%20avoids%20holes%20in%20the%20ticket%20storage%20layout%20when%20a%20single%20purchase%20reserves%20multiple%20blobs.%0A%0A%3D%3D%3D%3DAlternative%20version%20of%20ring-buffer%20until%20here%3D%3D%3D%3D%0A%0A%23%23%23%23%20Fee%20Mechanism%0A%0AA%20single%20blob%20base%20fee%20%60base_fee%60%20governs%20both%20JIT%20and%20AOT%20blobs%3A%0A%0A%7C%20Blob%20type%20%7C%20When%20paid%20%7C%20Amount%20%7C%20Destination%20%7C%0A%7C%20-%20%7C%20-%20%7C%20-%20%7C%20-%20%7C%0A%7C%20JIT%20%7C%20At%20transaction%20inclusion%20%7C%20%60blob_count%20*%20GAS_PER_BLOB%20*%20base_fee%60%20%7C%20Burned%20%7C%0A%7C%20AOT%20base%20fee%20%7C%20At%20ticket%20purchase%20%7C%20%60blob_count%20*%20GAS_PER_BLOB%20*%20base_fee%60%20%7C%20Burned%20%7C%0A%7C%20AOT%20at%20inclusion%20%7C%20N%2FA%20%7C%20Nothing%20%7C%20N%2FA%20%7C%0A%0ABoth%20JIT%20blob%20gas%20usage%20and%20AOT%20ticket%20sales%20feed%20into%20the%20excess%20accumulator%20via%20the%20end-of-block%20system%20call.%20The%20fee%20responds%20to%20total%20blob%20demand%20across%20both%20channels.%0A%0AThe%20%5BEIP-7918%5D(.%2Feip-7918.md)%20reserve%20price%20mechanism%20is%20implemented%20inside%20the%20ticket%20contract's%20excess%20accumulator%20update.%20When%20%60BLOB_BASE_COST%20*%20base_fee_per_gas%20%3E%20GAS_PER_BLOB%20*%20current_blob_base_fee%60%20(i.e.%2C%20the%20blob%20fee%20is%20below%20the%20reserve%20price)%2C%20the%20accumulator%20subtracts%20less%20than%20the%20full%20%60TARGET_BLOB_GAS%60%2C%20keeping%20excess%20elevated%20and%20preventing%20the%20fee%20from%20falling%20further.%0A%0A%0A%23%23%23%20Consensus%20Layer%20Changes%0A%0AThe%20following%20consensus%20layer%20changes%20are%20described%20at%20a%20high%20level.%20The%20full%20specification%20is%20provided%20in%20the%20companion%20consensus%20layer%20specification.%0A%0A%23%23%23%23%20Execution%20Payload%20Modifications%0A%0AUnder%20%5BEIP-7732%5D(.%2Feip-7732.md)%20(ePBS)%2C%20the%20%60ExecutionPayloadBid%60%20is%20modified%3A%0A%0A-%20The%20existing%20%60blob_kzg_commitments%60%20field%20is%20replaced%20with%3A%0A%20%20-%20%60jit_blob_kzg_commitments%60%3A%20List%20of%20KZG%20commitments%20for%20JIT%20blobs%20(included%20in%20the%20bid%2C%20needed%20for%20critical-path%20data%20column%20propagation%20before%20payload%20reveal).%0A%20%20-%20%60aot_blob_kzg_commitments_root%60%3A%20The%20%60hash_tree_root%60%20of%20the%20AOT%20KZG%20commitments%20list%20(cryptographic%20binding%20in%20the%20bid%3B%20full%20list%20provided%20in%20the%20envelope%20since%20AOT%20data%20is%20already%20pre-propagated).%0A%0AThe%20%60ExecutionPayloadEnvelope%60%20is%20extended%20with%3A%0A%0A-%20%60aot_blob_kzg_commitments%60%3A%20Full%20list%20of%20AOT%20KZG%20commitments.%0A%0AValidation%20requires%3A%20%60hash_tree_root(envelope.aot_blob_kzg_commitments)%20%3D%3D%20bid.aot_blob_kzg_commitments_root%60.%0A%0A%23%23%23%23%20P2P%20Gossip%0A%0ANew%20gossip%20subnets%20%60aot_data_column_sidecar_%7Bsubnet_id%7D%60%20are%20introduced%20for%20AOT%20blob%20data%20propagation.%20A%20new%20container%20%60AotDataColumnSidecar%60%20carries%20the%20column%20data%2C%20KZG%20proofs%2C%20commitments%2C%20target%20slot%2C%20ticket%20ID%2C%20and%20BLS%20signature.%0A%0AValidation%20rules%20for%20AOT%20gossip%20subnets%20include%3A%0A%0A-%20The%20target%20slot%20MUST%20be%20within%20%60%5Bcurrent_slot%2C%20current_slot%20%2B%20AOT_PROPAGATION_WINDOW_SLOTS%5D%60.%0A-%20The%20ticket%20ID%20MUST%20correspond%20to%20a%20valid%20ticket%20(obtained%20via%20the%20engine%20API).%0A-%20The%20BLS%20signature%20MUST%20be%20valid%20for%20the%20ticket's%20registered%20public%20key%20over%20the%20commitments%20and%20ticket%20ID.%0A-%20KZG%20proof%20verification%20MUST%20pass.%0A-%20The%20sidecar%20MUST%20be%20on%20the%20correct%20subnet.%0A-%20Only%20the%20first%20valid%20sidecar%20per%20%60(ticket_id%2C%20column_index)%60%20is%20accepted.%0A%0AJIT%20data%20columns%20continue%20to%20propagate%20on%20the%20existing%20%60data_column_sidecar_%7Bsubnet_id%7D%60%20subnets%20at%20block%20time%2C%20validated%20against%20the%20%60jit_blob_kzg_commitments%60%20from%20the%20%60ExecutionPayloadBid%60.%20Both%20JIT%20and%20AOT%20use%20a%20shared%20custody%20model%20(same%20column%20indices).%0A%0A%23%23%23%23%20Data%20Availability%0A%0AThe%20%60is_data_available%60%20check%20is%20extended%20to%20verify%20availability%20of%20both%20JIT%20and%20AOT%20data%20columns.%20A%20single%20unified%20boolean%20is%20used%20for%20PTC%20attestation.%0A%0A%23%23%23%20Engine%20API%20Changes%0A%0AThe%20following%20engine%20API%20changes%20are%20described%20at%20a%20high%20level.%20The%20full%20specification%20is%20provided%20in%20the%20companion%20engine%20API%20specification.%0A%0A%23%23%23%23%20%60engine_forkchoiceUpdatedV5%60%0A%0AThe%20response%20is%20extended%20with%20an%20%60activeTickets%60%20field%3A%20an%20array%20of%20%60TicketInfoV1%60%20objects%20containing%20%60ticketId%60%2C%20%60sellingBlockTimestamp%60%2C%20%60owner%60%20(address)%2C%20%60blsPubkey%60%2C%20and%20%60blobCount%60.%20The%20CL%20uses%20the%20BLS%20pubkey%20to%20gate%20AOT%20gossip%20validation%3B%20the%20EL%20uses%20the%20owner%20address%20to%20gate%20blob%20transaction%20propagation%20in%20the%20mempool.%20Returned%20on%20every%20%60forkchoiceUpdated%60%20call%20when%20%60payloadStatus%60%20is%20%60VALID%60%3B%20%60null%60%20when%20syncing%20or%20pre-fork.%0A%0A%23%23%23%23%20%60PayloadAttributesV5%60%0A%0AExtended%20with%20%60availableAotBlobCommitments%60%3A%20an%20array%20of%20KZG%20commitments%20for%20which%20the%20CL%20has%20pre-propagated%20data%20available.%20The%20builder%20SHOULD%20only%20include%20AOT%20blob%20transactions%20whose%20commitments%20appear%20in%20this%20list.%0A%0A%23%23%23%23%20%60engine_newPayloadV6%60%0A%0AAccepts%20two%20separate%20versioned%20hash%20lists%3A%20%60expectedJitBlobVersionedHashes%60%20and%20%60expectedAotBlobVersionedHashes%60.%20The%20EL%20validates%20both%20against%20the%20blob%20transactions%20in%20the%20payload.%0A%0A%23%23%23%23%20%60engine_getPayloadV7%60%0A%0AThe%20%60blobsBundle%60%20contains%20JIT%20blob%20data%20only.%20A%20new%20%60aotBlobInfo%60%20field%20provides%20an%20array%20of%20%60AotBlobInfoV1%60%20objects%20(versioned%20hash%2C%20KZG%20commitment%2C%20ticket%20ID)%20so%20the%20CL%20can%20match%20AOT%20blobs%20against%20its%20pre-propagated%20data%20cache.%0A%0A%23%23%23%23%20%60engine_getBlobsV3%60%0A%0ANo%20structural%20change.%20Queries%20for%20AOT%20versioned%20hashes%20return%20%60null%60%20from%20%60getBlobsV3%60%20since%20the%20EL%20does%20not%20hold%20AOT%20blob%20data.%0A%0A%23%23%20Rationale%0A%0A%23%23%23%20Unified%20fee%20mechanism%0A%0AA%20single%20blob%20base%20fee%20for%20both%20JIT%20and%20AOT%20channels%20ensures%20that%20total%20demand%20is%20accurately%20reflected%20in%20pricing.%20If%20JIT%20and%20AOT%20had%20separate%20fees%2C%20demand%20could%20shift%20between%20channels%20to%20exploit%20price%20differences%2C%20creating%20an%20inefficient%20two-tier%20market.%20By%20combining%20%60jit_blob_gas_used%60%20and%20%60aot_blob_gas_sold%60%20as%20inputs%20to%20the%20same%20excess%20accumulator%2C%20the%20fee%20mechanism%20treats%20all%20blob%20demand%20symmetrically.%0A%0A%23%23%23%20Fee%20state%20in%20a%20system%20contract%0A%0AMoving%20the%20blob%20base%20fee%20from%20header%20fields%20(%60excess_blob_gas%60%2C%20%60blob_gas_used%60)%20into%20a%20system%20contract%20simplifies%20the%20fee%20update%20logic.%20The%20ticket%20contract%20naturally%20needs%20to%20compute%20the%20fee%20for%20ticket%20purchases%2C%20and%20co-locating%20the%20fee%20state%20avoids%20duplication.%20The%20%60BLOBBASEFEE%60%20opcode%20reads%20from%20a%20cached%20value%20set%20at%20block%20start%2C%20preserving%20identical%20EVM%20semantics%20for%20existing%20contracts.%0A%0A%23%23%23%20Non-refundable%20tickets%0A%0ATicket%20fees%20are%20burned%20at%20purchase%20time%20with%20no%20refund%20mechanism.%20This%20is%20the%20primary%20defense%20against%20capacity%20griefing%3A%20an%20attacker%20who%20buys%20tickets%20to%20reserve%20capacity%20but%20never%20propagates%20data%20still%20pays%20the%20full%20blob%20base%20fee.%20The%20cost%20of%20griefing%20thus%20scales%20with%20the%20cost%20of%20legitimate%20usage%2C%20making%20sustained%20attacks%20economically%20prohibitive.%0A%0A%0A%0A%23%23%23%20Separate%20JIT%20and%20AOT%20capacity%20limits%0A%0AThree%20capacity%20parameters%20(B1%2C%20B2%2C%20R)%20provide%20flexibility%3A%0A%0A-%20%60MAX_JIT_BLOBS_PER_BLOCK%60%20(B1)%20caps%20JIT%20blobs%20to%20bound%20critical-path%20propagation%20latency.%0A-%20%60MAX_TOTAL_BLOBS_PER_BLOCK%60%20(B2)%20caps%20total%20blobs%20for%20overall%20data%20availability.%0A-%20%60JIT_RESERVED%60%20(%20R%20)%20ensures%20minimum%20JIT%20capacity%20even%20when%20AOT%20demand%20is%20high%2C%20preventing%20AOT%20from%20fully%20crowding%20out%20JIT%20usage.%0A%0AThe%20AOT%20cap%20%60B2%20-%20R%60%20can%20then%20be%20derived.%0A%0A%23%23%23%20BLS%20key%20commitment%20in%20tickets%0A%0ATickets%20commit%20to%20a%20BLS%20public%20key%20rather%20than%20directly%20to%20KZG%20commitments.%20This%20allows%20the%20ticket%20holder%20to%20defer%20data%20preparation%20until%20after%20purchase%2C%20while%20still%20preventing%20unauthorized%20use%20of%20the%20ticket.%20The%20BLS%20signature%20over%20%60(kzg_commitment%2C%20ticket_id)%60%20binds%20specific%20data%20to%20a%20specific%20ticket%20at%20propagation%20time.%0A%0A%23%23%23%20Ring%20buffer%20storage%0A%0ARing%20buffer%20storage%20for%20tickets%20follows%20the%20pattern%20established%20by%20%5BEIP-4788%5D(.%2Feip-4788.md)%20and%20%5BEIP-2935%5D(.%2Feip-2935.md).%20Tickets%20expire%20naturally%20as%20the%20ring%20buffer%20rotates%2C%20eliminating%20the%20need%20for%20explicit%20cleanup.%20The%20buffer%20size%20is%20set%20to%20accommodate%20the%20maximum%20number%20of%20concurrent%20active%20tickets%3A%20%60TICKET_LOOKAHEAD%20*%20MAX_AOT_BLOBS_PER_BLOCK%60.%0A%0A%23%23%23%20No%20target%20slot%20in%20contract%20storage%0A%0AThe%20ticket%20contract%20records%20the%20selling%20block's%20timestamp%20but%20not%20the%20target%20slot.%20The%20target%20slot%20%60slot(selling_block_timestamp)%20%2B%20TICKET_LOOKAHEAD%60%20is%20derived%20externally%20by%20the%20CL%20and%20EL%20mempool.%20This%20keeps%20the%20contract%20simpler%20and%20avoids%20coupling%20it%20to%20slot%20timing%2C%20which%20is%20a%20CL%20concept.%0A%0A%23%23%23%20Capacity%20parameter%20communication%0A%0AThe%20capacity%20parameters%20%60MAX_JIT_BLOBS_PER_BLOCK%60%2C%20%60MAX_TOTAL_BLOBS_PER_BLOCK%60%2C%20and%20%60JIT_RESERVED%60%20follow%20the%20pattern%20established%20by%20%5BEIP-7742%5D(.%2Feip-7742.md)%2C%20where%20blob%20count%20limits%20are%20communicated%20from%20the%20CL%20to%20the%20EL%20via%20the%20engine%20API%20rather%20than%20being%20hardcoded%20in%20the%20EL.%20This%20allows%20the%20CL%20to%20adjust%20parameters%20without%20EL%20client%20updates.%0A%0A%23%23%23%20Censorship%20resistance%0A%0AThis%20EIP%20does%20not%20include%20mechanisms%20for%20mandatory%20inclusion%20of%20AOT%20blob%20transactions.%20While%20ticket%20transactions%20can%20be%20included%20in%20FOCIL%20ILs%2C%20a%20builder%20can%20still%20censor%20by%20observing%20that%20AOT%20data%20is%20available%20yet%20choosing%20not%20to%20include%20the%20corresponding%20transaction.%20Addressing%20this%20requires%20forced%20inclusion%20lists%20(e.g.%2C%20%5BEIP-7805%5D(.%2Feip-7805.md))%20and%20PTC%20availability%20voting%2C%20which%20are%20left%20to%20future%20work%20to%20avoid%20coupling%20this%20proposal%20to%20those%20designs.%0A%0A%23%23%20Backwards%20Compatibility%0A%0AThis%20EIP%20introduces%20several%20breaking%20changes%3A%0A%0A-%20**Block%20header%20format**%3A%20The%20removal%20of%20%60excess_blob_gas%60%20and%20%60blob_gas_used%60%20fields%20changes%20the%20block%20header%20RLP%20encoding.%20All%20EL%20clients%20MUST%20be%20updated.%0A-%20**Blob%20fee%20computation**%3A%20Contracts%20and%20tooling%20that%20compute%20the%20blob%20base%20fee%20from%20header%20fields%20MUST%20be%20updated%20to%20read%20from%20the%20ticket%20contract%20or%20use%20the%20%60BLOBBASEFEE%60%20opcode.%0A-%20**Blob%20transaction%20processing**%3A%20The%20split%20into%20JIT%20and%20AOT%20classification%20changes%20how%20blob%20transactions%20are%20validated.%20Existing%20blob%20transactions%20with%20%60max_fee_per_blob_gas%20%3E%200%60%20continue%20to%20work%20as%20JIT%20blobs.%0A-%20**EL%20mempool**%3A%20The%20removal%20of%20blob%20sidecars%20from%20the%20EL%20mempool%20changes%20how%20blob%20data%20is%20submitted.%20Blob%20data%20MUST%20be%20sent%20directly%20to%20builders%20(JIT)%20or%20propagated%20via%20the%20CL%20(AOT).%0A%0AExisting%20contracts%20that%20use%20%60BLOBHASH%60%20(0x49)%20or%20%60BLOBBASEFEE%60%20(0x4A)%20continue%20to%20function%20without%20modification.%20The%20opcodes'%20semantics%20are%20preserved.%0A%0A%23%23%20Security%20Considerations%0A%0A%23%23%23%20Capacity%20griefing%20via%20ticket%20purchase%0A%0AAn%20attacker%20could%20purchase%20AOT%20tickets%20without%20ever%20propagating%20the%20corresponding%20blob%20data.%20The%20non-refundable%20ticket%20fee%20is%20the%20primary%20mitigation%3A%20the%20cost%20of%20griefing%20equals%20the%20cost%20of%20legitimate%20usage.%20Additionally%2C%20since%20builders%20choose%20which%20AOT%20blob%20transactions%20to%20include%2C%20unfulfilled%20tickets%20(those%20without%20available%20data)%20are%20simply%20not%20included%2C%20and%20the%20capacity%20reverts%20to%20availability%20for%20JIT%20blobs%20up%20to%20the%20total%20cap%20B2.%20In%20the%20future%20we%20might%20want%20to%20introduce%20a%20deposit%20which%20gets%20returned%20uppon%20using%20a%20ticket%20thus%20having%20a%20cost%20of%20griefing%20that%20is%20greater%20than%20the%20cost%20of%20legitimate%20cost.%0A%0A%23%23%23%20Fee%20manipulation%0A%0ABecause%20both%20JIT%20usage%20and%20AOT%20ticket%20sales%20drive%20the%20fee%20update%2C%20an%20attacker%20could%20attempt%20to%20manipulate%20the%20blob%20base%20fee%20by%20purchasing%20tickets%20(inflating%20the%20fee)%20or%20withholding%20JIT%20transactions%20(deflating%20it).%20The%20combined%20demand%20signal%20makes%20this%20more%20expensive%20than%20manipulating%20either%20channel%20alone.%20The%20%60fake_exponential%60%20update%20function%2C%20inherited%20from%20%5BEIP-4844%5D(.%2Feip-4844.md)%2C%20provides%20the%20same%20manipulation%20resistance%20properties%20as%20the%20current%20blob%20fee%20mechanism.%0A%0A%23%23%23%20Builder%20centralization%0A%0AJIT%20blob%20transactions%20are%20sent%20directly%20to%20builders%20rather%20than%20propagated%20through%20the%20public%20mempool.%20This%20increases%20builders'%20role%20as%20gatekeepers%20for%20JIT%20blob%20inclusion.%20However%2C%20this%20reflects%20the%20existing%20trajectory%20under%20%5BEIP-7732%5D(.%2Feip-7732.md)%20(ePBS)%20and%20is%20mitigated%20by%20the%20AOT%20channel.%20In%20the%20future%20we%20might%20want%20to%20add%20%20censorship-resistance%20mechanism%20to%20AOT%20blobs%20making%20these%20even%20less%20reliable%20on%20builder%20cooperation.%0A%0A%23%23%23%20AOT%20gossip%20validation%0A%0AAOT%20data%20column%20sidecars%20require%20ticket-gated%20and%20BLS%20signature%20validation%20on%20the%20CL%20gossip%20layer.%20Invalid%20sidecars%20MUST%20be%20rejected%20to%20prevent%20amplification%20attacks.%20The%20validation%20cost%20(BLS%20signature%20verification%20plus%20KZG%20proof%20verification)%20is%20bounded%20by%20the%20maximum%20number%20of%20active%20tickets%20and%20the%20propagation%20window.%20Rate%20limiting%20by%20%60(ticket_id%2C%20column_index)%60%20prevents%20replay.%0A%0A%23%23%23%20Ticket%20front-running%0A%0AA%20ticket%20purchase%20reveals%20the%20buyer's%20intent%20to%20use%20blob%20capacity%20at%20a%20future%20slot.%20Front-runners%20could%20observe%20pending%20ticket%20purchases%20and%20buy%20tickets%20first%2C%20increasing%20the%20fee.%20This%20risk%20is%20comparable%20to%20existing%20mempool%20front-running%20of%20any%20fee-paying%20transaction%20and%20is%20mitigated%20by%20the%20same%20techniques%20(private%20transaction%20submission%2C%20MEV-protection%20services).%0A%0A%23%23%23%20Reorg%20handling%0A%0AOn%20a%20chain%20reorganization%2C%20ticket%20state%20may%20change%3A%20tickets%20from%20reorged%20blocks%20are%20invalid%2C%20and%20the%20blob%20base%20fee%20may%20differ%20on%20the%20new%20chain.%20The%20engine%20API's%20%60forkchoiceUpdated%60%20response%20provides%20the%20updated%20ticket%20set%2C%20and%20CL%20nodes%20MUST%20refresh%20their%20ticket%20cache%20on%20reorgs.%20AOT%20data%20already%20propagated%20for%20tickets%20that%20become%20invalid%20is%20harmlessly%20ignored.%0A%0A%23%23%20Copyright%0A%0ACopyright%20and%20related%20rights%20waived%20via%20%5BCC0%5D(..%2FLICENSE.md).%0A","viewMode":"publish","unreadState":["comment"],"isOwner":false,"isSignIn":false,"isLiked":false,"isBookmarked":false,"publishType":"view","commentCount":56,"isNotesRecommendationsEnabled":true,"lastChangeUserInfo":{"name":"Bharath%20Vedartham","path":"bchain","avatarUrl":"https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F21315653%3Fs%3D96"}}`);
+  window.owner = "80c1f4c0-bff4-4abe-bd0b-b23b8a73bc31";
+  (function () {
+    const decodeStringProps = (props) => {
+      for (const key in props) {
+        if (typeof props[key] === 'string') {
+          props[key] = decodeURIComponent(props[key])
+        } else if (typeof props[key] === 'object') {
+          decodeStringProps(props[key])
+        }
+      }
+    }
+    decodeStringProps(window.publishProps)
+  })()
+</script>
+
+
+    <script src="https://tally.so/widgets/embed.js"></script>
+
+    
+</head>
+
+<body class="ui-pretty-page" style="display:none;">
+    <div id="toasts-container" class="toasts-container z-[2000]"></div>
+    <div id="publish-page">---
+eip: XXXX
+title: Blob Streaming
+description: Introduces ahead-of-time blob propagation via ticket-based capacity reservation.
+author: Marios  (@mariosioannou-create), Bharath (@bharath-123), Francesco D&#39;Amato (@fradamt), Julian Ma (@ma-julian), Raúl Kripalani (@raulk), Bosul Mun (@healthykim), Csaba Kiraly (@cskiraly), 
+discussions-to: https://ethereum-magicians.org/t/placeholder/0
+status: Draft
+type: Standards Track
+category: Core
+created: 2026-05-06
+requires: 4844, 4788, 7002, 7594, 7732, 7918
+---
+
+## Abstract
+
+This EIP enshrines two types of blobs into the protocol, namely Ahead-Of-Time (AOT) and Just-In-Time (JIT) blobs. In practice these exist today already. However, enshrining them in the way we do, has major benefits vis-a-vis performance and security guarantees. As the name suggests, AOT blobs are propagated *ahead of time* (pre-propagated) using a ticket-based propagation mechanism while current Just-In-Time (JIT) blobs are propagated *on the critical path* as today&#39;s blobs. Blob data for either blob type is propagated through the CL subnets.
+
+
+
+## Motivation
+
+Ethereum&#39;s current blob data availability design, introduced in [EIP-4844](./eip-4844.md) and extended with PeerDAS ([EIP-7594](./eip-7594.md)), hinges on blob data propagation on the critical path. While pre-propagation of blob data through the EL blobpool is possible, it comes with no upper bounds on the load being handled and as such can lead to inconsistent local node views - which in turn translates to vulnerability to DOS attacks especially if pre-propagation is coupled with data-availability sampling (DAS). 
+
+Ticket based, ahead-of-time propagation provides a way to overcome a number of issues associated with pre-propagation through the blobpool. Thus, it provides a reliable and secure way of combining DAS with pre-propagation. This in turn allows significantly higher blob throughput without increasing the block propagation window i.e extending the critical path - which comes with its own drawbacks e.g through the free option problem.
+
+This ticket based mechanism is based on the principle that holding a ticket is a prerequisit for the network to propagate one&#39;s blob data. Tickets are acquired through a dedicated contract and as a result, there is at any time a globally agreed upon bounded set of eligible blob senders.  Holding a ticket gives the user the right to propagate blob data using the consensus layer gossip subnets, effectively moving pre-propagation from the EL blobpool to the CL - utilizing the existing network infrastructure. Further, since all users pay *in advance* for the network resources consumed, by acquiring the corresponding ticket, the cost for honest and dishonest usage is equal. This ensures DOS resistance and establishes a common set of blobs seen by nodes in each slot. In addition, the system allows flexible timing for data propagation within a bounded time window which reduces congestion and enables higher overall throughput.
+
+JIT blobs are retained for use cases that require last-moment data commitment, such as L2 sequencers that finalize batch contents close to the inclusion deadline. The two channels share a unified fee mechanism so that total blob demand is accurately reflected in pricing.
+
+A single blob base fee governs both AOT and JIT blobs, updated via the existing `fake_exponential` mechanism but driven by the combined demand from JIT usage and AOT ticket sales. Today&#39;s `excess_blob_gas` and `blob_gas_used` header fields are removed, with fee state moving entirely into the ticket contract. Separate per-block capacity limits (B1 for JIT, B2 total) allow flexible allocation between the two blob types while reserving minimum capacity ( R ) for JIT blobs.
+
+## Specification
+
+The key words &#34;MUST&#34;, &#34;MUST NOT&#34;, &#34;REQUIRED&#34;, &#34;SHALL&#34;, &#34;SHALL NOT&#34;, &#34;SHOULD&#34;, &#34;SHOULD NOT&#34;, &#34;RECOMMENDED&#34;, &#34;NOT RECOMMENDED&#34;, &#34;MAY&#34;, and &#34;OPTIONAL&#34; in this document are to be interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) and [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174).
+
+### Parameters
+
+| Constant | Value | Description |
+| - | - | - |
+| `TICKET_CONTRACT_ADDRESS` | `TBD` | System contract address for blob ticket operations |
+| `ZERO_ADDRESS` | `0x0000000000000000000000000000000000000000` | Zero address used to &#34;burn&#34; ticket payments |
+| `SYSTEM_ADDRESS` | `0xfffffffffffffffffffffffffffffffffffffffe` | Address used for system calls |
+| `MAX_JIT_BLOBS_PER_BLOCK` | `TBD` | Maximum JIT blobs per block (B1) |
+| `MAX_TOTAL_BLOBS_PER_BLOCK` | `TBD` | Maximum total blobs per block (B2) |
+| `JIT_RESERVED` | `TBD` | Minimum reserved capacity for JIT blobs (R) |
+| `MAX_AOT_BLOBS_PER_BLOCK` | `MAX_TOTAL_BLOBS_PER_BLOCK - JIT_RESERVED` | Derived AOT blob cap |
+| `TICKET_LOOKAHEAD` | `TBD` | Number of slots between ticket purchase and target slot |
+| `GAS_PER_BLOB` | `131072` | Gas per blob (2**17), same as [EIP-4844](./eip-4844.md) |
+| `MIN_BLOB_BASE_FEE` | `1` | Minimum blob base fee |
+| `BLOB_BASE_FEE_UPDATE_FRACTION` | `TBD` | Denominator for `fake_exponential` update |
+| `TARGET_BLOB_GAS` | `TBD` | Target total blob gas per block for fee update |
+| `MAX_TOTAL_BLOB_GAS` | `MAX_TOTAL_BLOBS_PER_BLOCK * GAS_PER_BLOB` | Maximum total blob gas per block |
+| `BLOB_BASE_COST` | `8192` | Reserve price parameter from [EIP-7918](./eip-7918.md) (2**13) |
+| `AOT_PROPAGATION_WINDOW_SLOTS` | `1` | Window (in slots) for accepting AOT data column gossip |
+| `TICKET_RING_BUFFER_SIZE` | `TBD` | Ring buffer capacity for ticket storage |
+
+### Helpers
+
+The `fake_exponential` function is identical to the one defined in [EIP-4844](./eip-4844.md):
+
+```python
+def fake_exponential(factor: int, numerator: int, denominator: int) -&gt; int:
+    i = 1
+    output = 0
+    numerator_accum = factor * denominator
+    while numerator_accum &gt; 0:
+        output += numerator_accum
+        numerator_accum = (numerator_accum * numerator) // (denominator * i)
+        i += 1
+    return output // denominator
+```
+
+### Blob Transaction Classification
+
+Blob transactions (Type 3, as defined in [EIP-4844](./eip-4844.md)) are classified into two categories based on their `max_fee_per_blob_gas` field:
+
+- **JIT**: `max_fee_per_blob_gas &gt;=  blob_base_fee` (where `blob_base_fee` is the current blob base fee). The transaction pays the blob base fee at inclusion. The transaction&#39;s blob data is propagated at block time.
+- **AOT**: `max_fee_per_blob_gas == 0`. The transaction does not pay any blob fee at inclusion. It MUST be backed by a valid ticket. The blob data is propagated ahead of time via the consensus layer.
+
+&lt;!--A blob transaction with `max_fee_per_blob_gas` between `1` and `blob_base_fee - 1` (inclusive) is considered AOT. This allows the user to set a base fee they are willing to pay for the blob to be JIT (and otherwise be AOT). Users not interested in JIT blobs can set `max_fee_per_blob_gas == 0`.--&gt;
+
+A blob transaction with `max_fee_per_blob_gas` between `1` and `blob_base_fee - 1` (inclusive) is invalid and MUST be rejected. A blob transaction MUST be entirely JIT or entirely AOT. The signed `max_fee_per_blob_gas == 0` for AOT transactions prevents reclassification by the builder: the execution layer rejects any transaction with `max_fee_per_blob_gas` below the current blob base fee as a JIT transaction, so an AOT transaction cannot be included as JIT.
+
+&gt; **Note**: Whether AOT blob transactions reuse Type 3 with `max_fee_per_blob_gas == 0` or use a new transaction type without the blob fee field is a deferred design decision. Both approaches are mechanically equivalent.
+
+### Block Header Changes
+
+The following fields, introduced in [EIP-4844](./eip-4844.md), are **deprecated** from the block header:
+
+- `excess_blob_gas`
+- `blob_gas_used`
+
+The blob base fee state is maintained entirely within the ticket contract. Clients read the blob base fee from the contract at the start of each block and cache it for the duration of block processing.
+
+### Block Validation
+
+Block validation MUST enforce the following rules for blob transactions:
+
+```python
+def validate_blob_transactions(block: Block, bf_aot: int):
+    jit_blob_count = 0
+    aot_blob_count = 0
+
+    for tx in block.transactions:
+        if not is_blob_tx(tx):
+            continue
+
+        n_blobs = len(tx.blob_versioned_hashes)
+
+        if tx.max_fee_per_blob_gas &gt; 0:
+            # JIT blob transaction
+            assert tx.max_fee_per_blob_gas &gt;= blob_base_fee, &#34;JIT blob fee too low&#34;
+            # Deduct and burn blob fee: n_blobs * GAS_PER_BLOB * bf_aot
+            blob_fee = n_blobs * GAS_PER_BLOB * blob_base_feebf_aot
+            assert tx.sender.balance &gt;= blob_fee
+            tx.sender.balance -= blob_fee
+            # blob_fee is burned (not transferred to coinbase)
+            jit_blob_count += n_blobs
+        else:
+            # AOT blob transaction
+            # No blob fee charged (already paid at ticket purchase)
+            aot_blob_count += n_blobs
+
+    # Capacity checks
+    assert jit_blob_count &lt;= MAX_JIT_BLOBS_PER_BLOCK
+    
+```
+
+Where `blob_base_fee` is the blob base fee read from the ticket contract at the start of the block.
+
+### EL Mempool Changes
+
+Blob sidecars (the blob data alongside its KZG commitment and proof) are no longer propagated in the execution layer mempool. The EL mempool carries only blob transaction bodies (without blob data).
+
+Propagation of any blob transaction in the EL mempool MUST be gated on ticket ownership. For each address, the mempool tracks a **blob allowance**: the sum of `blob_count` across all active tickets (i.e., tickets whose derived `target_slot` has not yet passed) owned by that address minus the sum of blob transactions corresponding to that address present in the mempool. A blob transaction is eligible for propagation only if that sender has a sufficient blob allowance.
+```
+blob_allowance(S) = total_tickets(S) - pending_blobs(S) 
+```
+Where `pending_blobs(S)` is the total blob count across all blob transactions from `S` already in the mempool, and `total_tickets(S)` is the sum of `blob_count` across all active tickets with `owner == S`. A mempool node SHOULD accept and relay a blob transaction from sender `S` only if it has sufficient blob allowance:
+```
+blob_allowance(S) &gt; len(tx.blob_versioned_hashes) 
+```
+
+This gating applies regardless of whether the blob transaction is JIT or AOT (i.e., regardless of `max_fee_per_blob_gas`). Without a ticket, an address has zero blob allowance and its blob transactions cannot propagate through the public mempool. JIT blob transactions without a ticket are delivered directly to the builder out of protocol.
+
+#### Replacements
+Replacement of blob transactions with a valid ticket is possible but can be carried out only a limited number of times since, unlike regular txs, it might never get on chain if the corresponding data has not propagated. The user has the choice of either sending a replacement transaction with the same versioned hashes or also changing the versioned hashes - and thus the blob content. In the later case, for the transaction to be valid the corresponding blob data would have to be sent - potentially using another ticket.
+
+### Opcode Changes
+
+| Opcode | Byte | Change |
+| - | - | - |
+| `BLOBHASH` | `0x49` | No change. Per-transaction indexing works for both JIT and AOT. |
+| `BLOBBASEFEE` | `0x4A` | Returns 
+cached from the ticket contract at block start. |
+
+The `BLOBBASEFEE` opcode continues to return the blob base fee, but the source changes from a header field computation to a contract state read cached at the beginning of block processing.
+
+### System Call Ordering
+
+Block processing follows this order:
+
+1. **Start of block**: The client reads `blob_base_fee` from the ticket contract and caches it. Existing system calls execute (beacon root contract per [EIP-4788](./eip-4788.md), block hash history contract per [EIP-2935](./eip-2935.md)).
+2. **Transaction processing**: JIT blob transactions are validated and charged the blob fee. AOT blob transactions are validated without blob fee charges. Ticket purchases are processed as normal transactions to the ticket contract.
+3. **End of block**: The ticket contract system call executes with `jit_blob_gas_used` as input, updating the excess accumulator and blob base fee for the next block. Other end-of-block system calls follow (withdrawal request contract per [EIP-7002](./eip-7002.md), consolidation request contract per [EIP-7251](./eip-7251.md)).
+
+### Ticket Contract v1
+
+The ticket contract is a system contract deployed at `TICKET_CONTRACT_ADDRESS` via the synthetic-sender technique (same deployment method as [EIP-4788](./eip-4788.md) and [EIP-7002](./eip-7002.md)).
+
+#### Storage Layout
+
+| Slot | Name | Description |
+| - | - | - |
+| 0 | `EXCESS_BLOB_GAS_SLOT` | Running excess blob gas accumulator |
+| 1 | `CACHED_FEE_SLOT` | Cached `blob_base_fee` for current block |
+| 2 | `TICKET_COUNT_SLOT` | Per-block ticket counter (reset each block) |
+| 3 | `NEXT_TICKET_ID_SLOT` | Monotonically increasing ticket ID |
+| 4 | `TICKET_RING_BUFFER_OFFSET` | Start of ring buffer storage |
+
+Each ticket occupies multiple storage slots within the ring buffer:
+
+| Offset | Field | Size |
+| - | - | - |
+| 0 | `ticket_id` | `uint64` |
+| 1 | `selling_block_timestamp` | `uint256` |
+| 2 | `owner` (address, 20 bytes) ++ `blob_count` (uint8) ++ `padding` | `bytes32` |
+| 3 | `bls_pubkey` (bytes 0-31) | `bytes32` |
+| 4 | `bls_pubkey` (bytes 32-47) ++ `padding` | `bytes32` |
+| 5 | `blob_base_fee_paid` | `uint256` |
+
+
+Slots per ticket: 6. Ring buffer size: `TICKET_RING_BUFFER_SIZE` tickets. Tickets expire naturally via ring buffer rotation.
+
+#### Target slot
+The parameter `target_slot` determines slot during which the ticket is valid and can be used to propagate a blob and send an associated blob tx to the mempool. The contract does not store target slots per se, rather the target slot for a ticket is derived externally through:
+
+```python
+target_slot = slot(selling_block_timestamp) + TICKET_LOOKAHEAD
+```
+where `TICKET_LOOKAHEAD` is a parameter, measured in slots and can be set to a value e.g $1$ epoch.
+#### Code Paths
+
+The contract has three code paths, following the pattern established by [EIP-7002](./eip-7002.md):
+
+##### 1. Buy Tickets (User Call with Value)
+
+If the call has nonzero `msg.value` and calldata encoding `(blob_count, bls_pubkey)`:
+
+```python
+def buy_tickets(blob_count: uint8, bls_pubkey: bytes48):
+    fee = get_fee()
+    total_cost = blob_count * GAS_PER_BLOB * fee 
+    require(msg.value &gt;= total_cost, &#34;Insufficient payment&#34;)
+
+    # Record ticket in ring buffer
+    ticket_id = sload(NEXT_TICKET_ID_SLOT)
+    slot_index = ticket_id % TICKET_RING_BUFFER_SIZE
+    base = TICKET_RING_BUFFER_OFFSET + slot_index * 6
+
+    sstore(base + 0, ticket_id)
+    sstore(base + 1, block.timestamp)
+    sstore(base + 2, msg.sender ++ blob_count)
+    sstore(base + 3, bls_pubkey[0:32])
+    sstore(base + 4, bls_pubkey[32:48])
+    sstore(base + 5, fee)
+    
+
+    # Increment counters
+    sstore(NEXT_TICKET_ID_SLOT, ticket_id + 1)
+    count = sload(TICKET_COUNT_SLOT)
+    sstore(TICKET_COUNT_SLOT, count + blob_count)
+
+    # Burn payment (value stays in contract or sent to a burn address)
+    transfer(to=ZERO_ADDRESS, value=msg.value)
+```
+
+All payments are burned. No refunds are issued. This is the primary defense against capacity griefing.
+
+##### 2. Fee Getter (Zero-Value Call with Empty Calldata)
+
+When called with zero value and empty calldata, the contract returns the current blob base fee:
+
+```python
+def get_fee() -&gt; int:
+    return sload(CACHED_FEE_SLOT)
+```
+
+##### 3. System Call (End of Block)
+
+Called as `SYSTEM_ADDRESS` with `jit_blob_gas_used` (uint256) as calldata at the end of each block:
+
+```python
+def system_call(jit_blob_gas_used: uint256):
+    require(msg.sender == SYSTEM_ADDRESS)
+
+    # Compute total blob gas for this block
+    aot_blob_gas_sold = sload(TICKET_COUNT_SLOT) * GAS_PER_BLOB
+    total_blob_gas = jit_blob_gas_used + aot_blob_gas_sold
+
+    # Update excess accumulator (with EIP-7918 reserve price logic)
+    old_excess = sload(EXCESS_BLOB_GAS_SLOT)
+    old_fee = sload(CACHED_FEE_SLOT)
+
+    if old_excess + total_blob_gas &lt; TARGET_BLOB_GAS:
+        new_excess = 0
+    elif BLOB_BASE_COST * block.basefee &gt; GAS_PER_BLOB * old_fee:
+        # Below reserve price: do not subtract full target, only proportional
+        new_excess = old_excess + total_blob_gas * (MAX_TOTAL_BLOB_GAS - TARGET_BLOB_GAS) // MAX_TOTAL_BLOB_GAS
+    else:
+        new_excess = old_excess + total_blob_gas - TARGET_BLOB_GAS
+    sstore(EXCESS_BLOB_GAS_SLOT, new_excess)
+
+    # Compute new blob base fee
+    new_fee = fake_exponential(
+        MIN_BLOB_BASE_FEE,
+        new_excess,
+        BLOB_BASE_FEE_UPDATE_FRACTION
+    )
+
+    sstore(CACHED_FEE_SLOT, new_fee)
+
+    # Reset per-block ticket counter
+    sstore(TICKET_COUNT_SLOT, 0)
+```
+====In the above design tickets are being evicted from the buffer once sufficiently many new ones are bought. This means that a ticket can remain in the buffer beyond its validity window. Now this is per-se not a disaster but it can create ambiguity unless all consumers always recompute validity from selling_block_timestamp and completely ignore whether the ticket is still present in the ring. We would need to ensure ticket_ring_buffer_size&gt;=ticket_lookahead *max_aot_blobs_per_block though.
+Alternative version of ring-buffer from here:====
+### Ticket Contract v2
+
+The ticket contract is a system contract deployed at `TICKET_CONTRACT_ADDRESS` via the synthetic-sender technique (same deployment method as [EIP-4788](./eip-4788.md) and [EIP-7002](./eip-7002.md)).
+
+#### Storage Layout
+
+| Slot | Name | Description |
+| - | - | - |
+| 0 | `EXCESS_BLOB_GAS_SLOT` | Running excess blob gas accumulator |
+| 1 | `CACHED_FEE_SLOT` | Cached `blob_base_fee` for current block |
+| 2 | `TICKET_COUNT_SLOT` | Per-block ticket counter (reset each block) |
+| 3 | `NEXT_TICKET_ID_SLOT` | Monotonically increasing ticket ID |
+| 4 | `TICKET_RING_BUFFER_OFFSET` | Start of per-bucket metadata storage |
+| 5 | `TICKET_DATA_OFFSET` | Start of ticket data storage |
+
+The ring buffer is organized as a ring of per-slot buckets of length:
+
+```python
+TICKET_RING_BUFFER_SIZE = TICKET_LOOKAHEAD
+```
+
+In slot `s`, all tickets purchased are for target slot:
+
+```python
+target_slot = s + TICKET_LOOKAHEAD
+```
+
+Since the ring length is exactly `TICKET_LOOKAHEAD`, tickets purchased in slot `s` are always written into bucket:
+
+```python
+bucket_index = s % TICKET_RING_BUFFER_SIZE
+```
+
+This bucket is exactly the one that becomes reusable once slot `s` is reached. To avoid clearing the bucket on every purchase within the same slot, the contract tracks the last slot for which the current-slot bucket was cleared. Each bucket occupies 2 metadata slots:
+
+| Offset | Field | Size |
+| - | - | - |
+| 0 | `bucket_blob_count` | `uint256` |
+| 1 | `bucket_entry_count` | `uint256` |
+| 2 | `bucket_current_slot` | `uint256` | 
+
+There are `TICKET_RING_BUFFER_SIZE` many buckets. Each bucket tracks both the total reserved AOT blob capacity `bucket_blob_count` (&lt; `MAX_AOT_BLOBS_PER_BLOCK`), the number of ticket records stored for that slot `bucket_entry_count` and the slot for which the tickets have been sold for`bucket_current_slot`. Each ticket occupies 5 storage slots:
+
+| Offset | Field | Size |
+| - | - | - |
+| 0 | `ticket_id` | `uint64` |
+| 1 | `selling_block_timestamp` | `uint256` |
+| 2 | `owner` (address, 20 bytes) ++ `blob_count` (uint8) ++ `padding` | `bytes32` |
+| 3 | `bls_pubkey` (bytes 0-31) | `bytes32` |
+| 4 | `bls_pubkey` (bytes 32-47) ++ `padding` | `bytes32` |
+
+
+
+The storage base for bucket `j` is derived directly as:
+
+```python
+bucket_base = TICKET_DATA_OFFSET + j * MAX_AOT_BLOBS_PER_BLOCK * 5
+```
+
+
+#### Target slot
+
+The parameter `target_slot` determines the slot during which the ticket is valid and can be used to propagate a blob. The target slot for a ticket is derived as:
+
+```python
+target_slot = slot(selling_block_timestamp) + TICKET_LOOKAHEAD
+```
+
+where `TICKET_LOOKAHEAD` is a parameter, measured in slots and can be set to a value e.g. `1` epoch. A ticket is valid only during that exact `target_slot`.
+
+#### Code Paths
+
+The contract has three code paths, following the pattern established by [EIP-7002](./eip-7002.md):
+
+##### 1. Buy Tickets (User Call with Value)
+
+If the call has nonzero `msg.value` and calldata encoding `(blob_count, bls_pubkey)`:
+
+```python
+def buy_tickets(blob_count: uint8, bls_pubkey: bytes48):
+    fee = get_fee()
+    total_cost = blob_count * GAS_PER_BLOB * fee
+    require(msg.value &gt;= total_cost, &#34;Insufficient payment&#34;)
+
+    current_slot = slot(block.timestamp)
+    bucket_index = current_slot % TICKET_RING_BUFFER_SIZE
+    meta_base = TICKET_RING_BUFFER_OFFSET + bucket_index * 3
+    
+    bucket_blob_count = sload(meta_base + 0)
+    bucket_entry_count = sload(meta_base + 1)
+    bucket_current_slot = sload(meta_base + 2)
+
+    if bucket_current_slot != current_slot:
+        sstore(meta_base + 0, 0)  # bucket_blob_count set to zero
+        sstore(meta_base + 1, 0)  # bucket_entry_count set to zero
+        sstore(meta_base + 2, current_slot)  # bucket_current_slot set to current_slot
+
+    require(bucket_blob_count + blob_count &lt;= MAX_AOT_BLOBS_PER_BLOCK, &#34;AOT capacity exceeded&#34;) # restrict the number of AOT blobs in a slot.
+    
+    # Append ticket record to bucket
+    ticket_id = sload(NEXT_TICKET_ID_SLOT)
+    bucket_base = TICKET_DATA_OFFSET + bucket_index * MAX_AOT_BLOBS_PER_BLOCK * 5
+    base = bucket_base + bucket_entry_count * 5
+
+    sstore(base + 0, ticket_id)
+    sstore(base + 1, block.timestamp)
+    sstore(base + 2, msg.sender ++ blob_count)
+    sstore(base + 3, bls_pubkey[0:32])
+    sstore(base + 4, bls_pubkey[32:48])
+    
+
+    # Increment counters
+    sstore(meta_base + 0, bucket_blob_count + blob_count)
+    sstore(meta_base + 1, bucket_entry_count + 1)
+    sstore(NEXT_TICKET_ID_SLOT, ticket_id + 1)
+
+    count = sload(TICKET_COUNT_SLOT)
+    sstore(TICKET_COUNT_SLOT, count + blob_count)
+
+    # Burn payment (value stays in contract or sent to a burn address)
+    transfer(to=ZERO_ADDRESS, value=msg.value)
+```
+
+All payments are burned. No refunds are issued. This is the primary defense against capacity griefing.
+
+##### 2. Fee Getter (Zero-Value Call with Empty Calldata)
+
+When called with zero value and empty calldata, the contract returns the current blob base fee:
+
+```python
+def get_fee() -&gt; int:
+    return sload(CACHED_FEE_SLOT)
+```
+
+##### 3. System Call (End of Block)
+
+Called as `SYSTEM_ADDRESS` with `jit_blob_gas_used` (uint256) as calldata at the end of each block:
+
+```python
+def system_call(jit_blob_gas_used: uint256):
+    require(msg.sender == SYSTEM_ADDRESS)
+
+    # Compute total blob gas for this block
+    aot_blob_gas_sold = sload(TICKET_COUNT_SLOT) * GAS_PER_BLOB
+    total_blob_gas = jit_blob_gas_used + aot_blob_gas_sold
+
+    # Update excess accumulator (with EIP-7918 reserve price logic)
+    old_excess = sload(EXCESS_BLOB_GAS_SLOT)
+    old_fee = sload(CACHED_FEE_SLOT)
+
+    if old_excess + total_blob_gas &lt; TARGET_BLOB_GAS:
+        new_excess = 0
+    elif BLOB_BASE_COST * block.basefee &gt; GAS_PER_BLOB * old_fee:
+        # Below reserve price: do not subtract full target, only proportional
+        new_excess = old_excess + total_blob_gas * (MAX_TOTAL_BLOB_GAS - TARGET_BLOB_GAS) // MAX_TOTAL_BLOB_GAS
+    else:
+        new_excess = old_excess + total_blob_gas - TARGET_BLOB_GAS
+
+    sstore(EXCESS_BLOB_GAS_SLOT, new_excess)
+
+    # Compute new blob base fee
+    new_fee = fake_exponential(
+        MIN_BLOB_BASE_FEE,
+        new_excess,
+        BLOB_BASE_FEE_UPDATE_FRACTION
+    )
+
+    sstore(CACHED_FEE_SLOT, new_fee)
+
+    # Reset per-block ticket counter
+    sstore(TICKET_COUNT_SLOT, 0)
+```
+
+#### Ticket expiry semantics
+
+Ticket expiry is tied directly to slot progression.
+
+A ticket sold in slot `s` is valid only in slot:
+
+```python
+slot(selling_block_timestamp) + TICKET_LOOKAHEAD
+```
+
+Because the ring buffer length is exactly `TICKET_LOOKAHEAD`, the bucket used for purchases in slot `s` is reused only when slot `s + TICKET_LOOKAHEAD` arrives. The bucket is cleared once on the first purchase in slot `s`, so earlier tickets from the previous cycle are removed without erasing purchases already made in the current slot. The bucket metadata separately tracks reserved blob capacity (`bucket_blob_count`) and stored ticket records (`bucket_entry_count`), which avoids holes in the ticket storage layout when a single purchase reserves multiple blobs.
+
+====Alternative version of ring-buffer until here====
+
+#### Fee Mechanism
+
+A single blob base fee `base_fee` governs both JIT and AOT blobs:
+
+| Blob type | When paid | Amount | Destination |
+| - | - | - | - |
+| JIT | At transaction inclusion | `blob_count * GAS_PER_BLOB * base_fee` | Burned |
+| AOT base fee | At ticket purchase | `blob_count * GAS_PER_BLOB * base_fee` | Burned |
+| AOT at inclusion | N/A | Nothing | N/A |
+
+Both JIT blob gas usage and AOT ticket sales feed into the excess accumulator via the end-of-block system call. The fee responds to total blob demand across both channels.
+
+The [EIP-7918](./eip-7918.md) reserve price mechanism is implemented inside the ticket contract&#39;s excess accumulator update. When `BLOB_BASE_COST * base_fee_per_gas &gt; GAS_PER_BLOB * current_blob_base_fee` (i.e., the blob fee is below the reserve price), the accumulator subtracts less than the full `TARGET_BLOB_GAS`, keeping excess elevated and preventing the fee from falling further.
+
+
+### Consensus Layer Changes
+
+The following consensus layer changes are described at a high level. The full specification is provided in the companion consensus layer specification.
+
+#### Execution Payload Modifications
+
+Under [EIP-7732](./eip-7732.md) (ePBS), the `ExecutionPayloadBid` is modified:
+
+- The existing `blob_kzg_commitments` field is replaced with:
+  - `jit_blob_kzg_commitments`: List of KZG commitments for JIT blobs (included in the bid, needed for critical-path data column propagation before payload reveal).
+  - `aot_blob_kzg_commitments_root`: The `hash_tree_root` of the AOT KZG commitments list (cryptographic binding in the bid; full list provided in the envelope since AOT data is already pre-propagated).
+
+The `ExecutionPayloadEnvelope` is extended with:
+
+- `aot_blob_kzg_commitments`: Full list of AOT KZG commitments.
+
+Validation requires: `hash_tree_root(envelope.aot_blob_kzg_commitments) == bid.aot_blob_kzg_commitments_root`.
+
+#### P2P Gossip
+
+New gossip subnets `aot_data_column_sidecar_{subnet_id}` are introduced for AOT blob data propagation. A new container `AotDataColumnSidecar` carries the column data, KZG proofs, commitments, target slot, ticket ID, and BLS signature.
+
+Validation rules for AOT gossip subnets include:
+
+- The target slot MUST be within `[current_slot, current_slot + AOT_PROPAGATION_WINDOW_SLOTS]`.
+- The ticket ID MUST correspond to a valid ticket (obtained via the engine API).
+- The BLS signature MUST be valid for the ticket&#39;s registered public key over the commitments and ticket ID.
+- KZG proof verification MUST pass.
+- The sidecar MUST be on the correct subnet.
+- Only the first valid sidecar per `(ticket_id, column_index)` is accepted.
+
+JIT data columns continue to propagate on the existing `data_column_sidecar_{subnet_id}` subnets at block time, validated against the `jit_blob_kzg_commitments` from the `ExecutionPayloadBid`. Both JIT and AOT use a shared custody model (same column indices).
+
+#### Data Availability
+
+The `is_data_available` check is extended to verify availability of both JIT and AOT data columns. A single unified boolean is used for PTC attestation.
+
+### Engine API Changes
+
+The following engine API changes are described at a high level. The full specification is provided in the companion engine API specification.
+
+#### `engine_forkchoiceUpdatedV5`
+
+The response is extended with an `activeTickets` field: an array of `TicketInfoV1` objects containing `ticketId`, `sellingBlockTimestamp`, `owner` (address), `blsPubkey`, and `blobCount`. The CL uses the BLS pubkey to gate AOT gossip validation; the EL uses the owner address to gate blob transaction propagation in the mempool. Returned on every `forkchoiceUpdated` call when `payloadStatus` is `VALID`; `null` when syncing or pre-fork.
+
+#### `PayloadAttributesV5`
+
+Extended with `availableAotBlobCommitments`: an array of KZG commitments for which the CL has pre-propagated data available. The builder SHOULD only include AOT blob transactions whose commitments appear in this list.
+
+#### `engine_newPayloadV6`
+
+Accepts two separate versioned hash lists: `expectedJitBlobVersionedHashes` and `expectedAotBlobVersionedHashes`. The EL validates both against the blob transactions in the payload.
+
+#### `engine_getPayloadV7`
+
+The `blobsBundle` contains JIT blob data only. A new `aotBlobInfo` field provides an array of `AotBlobInfoV1` objects (versioned hash, KZG commitment, ticket ID) so the CL can match AOT blobs against its pre-propagated data cache.
+
+#### `engine_getBlobsV3`
+
+No structural change. Queries for AOT versioned hashes return `null` from `getBlobsV3` since the EL does not hold AOT blob data.
+
+## Rationale
+
+### Unified fee mechanism
+
+A single blob base fee for both JIT and AOT channels ensures that total demand is accurately reflected in pricing. If JIT and AOT had separate fees, demand could shift between channels to exploit price differences, creating an inefficient two-tier market. By combining `jit_blob_gas_used` and `aot_blob_gas_sold` as inputs to the same excess accumulator, the fee mechanism treats all blob demand symmetrically.
+
+### Fee state in a system contract
+
+Moving the blob base fee from header fields (`excess_blob_gas`, `blob_gas_used`) into a system contract simplifies the fee update logic. The ticket contract naturally needs to compute the fee for ticket purchases, and co-locating the fee state avoids duplication. The `BLOBBASEFEE` opcode reads from a cached value set at block start, preserving identical EVM semantics for existing contracts.
+
+### Non-refundable tickets
+
+Ticket fees are burned at purchase time with no refund mechanism. This is the primary defense against capacity griefing: an attacker who buys tickets to reserve capacity but never propagates data still pays the full blob base fee. The cost of griefing thus scales with the cost of legitimate usage, making sustained attacks economically prohibitive.
+
+
+
+### Separate JIT and AOT capacity limits
+
+Three capacity parameters (B1, B2, R) provide flexibility:
+
+- `MAX_JIT_BLOBS_PER_BLOCK` (B1) caps JIT blobs to bound critical-path propagation latency.
+- `MAX_TOTAL_BLOBS_PER_BLOCK` (B2) caps total blobs for overall data availability.
+- `JIT_RESERVED` ( R ) ensures minimum JIT capacity even when AOT demand is high, preventing AOT from fully crowding out JIT usage.
+
+The AOT cap `B2 - R` can then be derived.
+
+### BLS key commitment in tickets
+
+Tickets commit to a BLS public key rather than directly to KZG commitments. This allows the ticket holder to defer data preparation until after purchase, while still preventing unauthorized use of the ticket. The BLS signature over `(kzg_commitment, ticket_id)` binds specific data to a specific ticket at propagation time.
+
+### Ring buffer storage
+
+Ring buffer storage for tickets follows the pattern established by [EIP-4788](./eip-4788.md) and [EIP-2935](./eip-2935.md). Tickets expire naturally as the ring buffer rotates, eliminating the need for explicit cleanup. The buffer size is set to accommodate the maximum number of concurrent active tickets: `TICKET_LOOKAHEAD * MAX_AOT_BLOBS_PER_BLOCK`.
+
+### No target slot in contract storage
+
+The ticket contract records the selling block&#39;s timestamp but not the target slot. The target slot `slot(selling_block_timestamp) + TICKET_LOOKAHEAD` is derived externally by the CL and EL mempool. This keeps the contract simpler and avoids coupling it to slot timing, which is a CL concept.
+
+### Capacity parameter communication
+
+The capacity parameters `MAX_JIT_BLOBS_PER_BLOCK`, `MAX_TOTAL_BLOBS_PER_BLOCK`, and `JIT_RESERVED` follow the pattern established by [EIP-7742](./eip-7742.md), where blob count limits are communicated from the CL to the EL via the engine API rather than being hardcoded in the EL. This allows the CL to adjust parameters without EL client updates.
+
+### Censorship resistance
+
+This EIP does not include mechanisms for mandatory inclusion of AOT blob transactions. While ticket transactions can be included in FOCIL ILs, a builder can still censor by observing that AOT data is available yet choosing not to include the corresponding transaction. Addressing this requires forced inclusion lists (e.g., [EIP-7805](./eip-7805.md)) and PTC availability voting, which are left to future work to avoid coupling this proposal to those designs.
+
+## Backwards Compatibility
+
+This EIP introduces several breaking changes:
+
+- **Block header format**: The removal of `excess_blob_gas` and `blob_gas_used` fields changes the block header RLP encoding. All EL clients MUST be updated.
+- **Blob fee computation**: Contracts and tooling that compute the blob base fee from header fields MUST be updated to read from the ticket contract or use the `BLOBBASEFEE` opcode.
+- **Blob transaction processing**: The split into JIT and AOT classification changes how blob transactions are validated. Existing blob transactions with `max_fee_per_blob_gas &gt; 0` continue to work as JIT blobs.
+- **EL mempool**: The removal of blob sidecars from the EL mempool changes how blob data is submitted. Blob data MUST be sent directly to builders (JIT) or propagated via the CL (AOT).
+
+Existing contracts that use `BLOBHASH` (0x49) or `BLOBBASEFEE` (0x4A) continue to function without modification. The opcodes&#39; semantics are preserved.
+
+## Security Considerations
+
+### Capacity griefing via ticket purchase
+
+An attacker could purchase AOT tickets without ever propagating the corresponding blob data. The non-refundable ticket fee is the primary mitigation: the cost of griefing equals the cost of legitimate usage. Additionally, since builders choose which AOT blob transactions to include, unfulfilled tickets (those without available data) are simply not included, and the capacity reverts to availability for JIT blobs up to the total cap B2. In the future we might want to introduce a deposit which gets returned uppon using a ticket thus having a cost of griefing that is greater than the cost of legitimate cost.
+
+### Fee manipulation
+
+Because both JIT usage and AOT ticket sales drive the fee update, an attacker could attempt to manipulate the blob base fee by purchasing tickets (inflating the fee) or withholding JIT transactions (deflating it). The combined demand signal makes this more expensive than manipulating either channel alone. The `fake_exponential` update function, inherited from [EIP-4844](./eip-4844.md), provides the same manipulation resistance properties as the current blob fee mechanism.
+
+### Builder centralization
+
+JIT blob transactions are sent directly to builders rather than propagated through the public mempool. This increases builders&#39; role as gatekeepers for JIT blob inclusion. However, this reflects the existing trajectory under [EIP-7732](./eip-7732.md) (ePBS) and is mitigated by the AOT channel. In the future we might want to add  censorship-resistance mechanism to AOT blobs making these even less reliable on builder cooperation.
+
+### AOT gossip validation
+
+AOT data column sidecars require ticket-gated and BLS signature validation on the CL gossip layer. Invalid sidecars MUST be rejected to prevent amplification attacks. The validation cost (BLS signature verification plus KZG proof verification) is bounded by the maximum number of active tickets and the propagation window. Rate limiting by `(ticket_id, column_index)` prevents replay.
+
+### Ticket front-running
+
+A ticket purchase reveals the buyer&#39;s intent to use blob capacity at a future slot. Front-runners could observe pending ticket purchases and buy tickets first, increasing the fee. This risk is comparable to existing mempool front-running of any fee-paying transaction and is mitigated by the same techniques (private transaction submission, MEV-protection services).
+
+### Reorg handling
+
+On a chain reorganization, ticket state may change: tickets from reorged blocks are invalid, and the blob base fee may differ on the new chain. The engine API&#39;s `forkchoiceUpdated` response provides the updated ticket set, and CL nodes MUST refresh their ticket cache on reorgs. AOT data already propagated for tickets that become invalid is harmlessly ignored.
+
+## Copyright
+
+Copyright and related rights waived via [CC0](../LICENSE.md).
+</div>
+    <!-- signin modal -->
+
+<div class="modal fade signin-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 10px; right: 20px; position: absolute;"><span aria-hidden="true">&times;</span></button>
+            
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+<h3 class="!mt-[30px] md:!mt-[52px]">Sign in</h3>
+
+<form data-toggle="validator" role="form" class="form-horizontal" method="post" enctype="application/x-www-form-urlencoded" id="signin-form">
+    <div class="hmd-dn"><input type="hidden" name="_csrf" value="U4egI00R-duD-ZIih-aAzLl2hkEsBDgy6elc"></div>
+    <div class="hmd-dn"><input type="hidden" name="create_team" value="false"></div>
+    <div class="hmd-dn"><input type="hidden" name="create_paid_team" value="false"></div>
+    
+    <div class="form-group  ">
+        <label for="email" class="control-label">Email</label>
+        <label for="inputEmail" class="control-label pull-right errors">
+            
+        </label>
+        <span class="help-block control-label with-errors pull-right" style="margin-top: 14px"></span>
+        <div class="input-block">
+            
+                <input type="email" class="form-control" name="email" placeholder="Your email" required autocomplete="email" id="inputEmail">
+            
+            <span class="error-sign"></span>
+        </div>
+    </div>
+    <div class="form-group ">
+        <label for="password" class="control-label">Password</label>
+        <label for="inputPassword" class="control-label pull-right errors">
+            
+        </label>
+        <span class="help-block control-label with-errors pull-right" style="margin-top: 14px"></span>
+        <div class="input-block">
+            <input type="password" class="form-control" name="password" placeholder="Your password" required autocomplete="current-password" maxlength="128">
+            <span class="error-sign"></span>
+            
+                <span class="control-label pull-right !text-normal !leading-normal !font-normal !mt-1.5"><a href="https://hackmd.io/settings/forgotPassword" style="text-decoration: underline;">Forgot password</a></span>
+            
+        </div>
+    </div>
+    <div
+        id="hmd-captcha"
+        data-provider=""
+        data-captcha-data=""
+        class="flex justify-center"
+        style="display: none;"
+    ></div>
+</form>
+
+
+    <div class="last-login-submit-container relative">
+        <input type="submit" data-login-method="email" class="neo-btn neo-btn-primary w-full !justify-center !py-[11px] !text-lg !leading-lg !mx-0" value="Sign in" form="signin-form" formaction="https://hackmd.io/login">
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="!space-y-4">
+    
+        
+            <div class="relative isolate">
+                <span class="bg-background-default text-body leading-normal text-text-subtle px-1.5">or</span>
+                <span class="z-[-1] h-[1px] w-full flex absolute translate-y-[-9.5px] border border-solid border-border-default " aria-hidden="true"></span>
+            </div>
+        
+
+        
+
+
+
+
+
+
+
+
+<div class="oauth-sign-container !space-y-1.5 !m-0">
+    
+    <a href="https://hackmd.io/auth/google" data-login-method="google" class="neo-btn neo-btn-tertiary w-full items-center !py-[7px] !px-[9px] hocus:no-underline">
+        <img src="/social/google.svg" width="28">
+        <span class="flex-1 text-center">
+            Sign in via Google
+        </span>
+    </a>
+    
+
+    <!-- A 1:1 clone of the exact dark button gsi provides. Just in case if Google is not happy with the custom button
+    
+    <a href="https://hackmd.io/auth/google" class="neo-btn neo-btn-tertiary w-full items-center !py-[7px] !px-[9px] hocus:no-underline !bg-[#131314] !border-[#8E918F] hocus:!bg-[#131314] hocus:!border-[#8E918F] !text-[#E3E3E3] font-['Roboto_Medium'] isolate group/google-button overflow-hidden relative">
+        <div aria-hidden="true" class="absolute top-0 left-0 z-[-1] bg-white/[.08] tw-hide w-full h-full group-hover/google-button:flex group-focus/google-button:flex"></div>
+        <img src="/social/google.svg" width="28">
+        <span class="flex-1 text-center">
+            Sign in via Google
+        </span>
+    </a>
+    
+    -->
+
+    
+    <a href="https://hackmd.io/auth/facebook" data-login-method="facebook" class="neo-btn neo-btn-tertiary w-full items-center !py-[7px] !px-[9px] hocus:no-underline">
+        <img src="/social/facebook.svg" width="28">
+        <span class="flex-1 text-center">
+            Sign in via Facebook
+        </span>
+    </a>
+    
+
+    
+    <a href="https://hackmd.io/auth/twitter" data-login-method="twitter" class="neo-btn neo-btn-tertiary w-full items-center !py-[7px] !px-[9px] hocus:no-underline">
+        <img src="/social/x.svg" width="28">
+        <span class="flex-1 text-center">
+            Sign in via X(Twitter)
+        </span>
+    </a>
+    
+
+    
+    <a href="https://hackmd.io/auth/github" data-login-method="github" class="neo-btn neo-btn-tertiary w-full items-center !py-[7px] !px-[9px] hocus:no-underline">
+        <img src="/social/github.svg" width="28">
+        <span class="flex-1 text-center">
+            Sign in via GitHub
+        </span>
+    </a>
+    
+    
+    <a href="https://hackmd.io/auth/dropbox" data-login-method="dropbox" class="neo-btn neo-btn-tertiary w-full items-center !py-[7px] !px-[9px] hocus:no-underline">
+        <img src="/social/dropbox.svg" width="28">
+        <span class="flex-1 text-center">
+            Sign in via Dropbox
+        </span>
+    </a>
+    
+    
+    
+      <a href="#" data-login-method="web3" class="neo-btn neo-btn-tertiary w-full items-center !py-[7px] !px-[9px] hocus:no-underline btn-web3">
+          <img src="https://hackmd.io/images/wallet.svg" width="28">
+          <span class="sign-in-wallet-text flex-1 text-center">
+              Sign in with Wallet
+          </span>
+
+          <div class="inline-flex items-center justify-between flex-1 hidden web3-wallet-info">
+              <span>
+                   Wallet
+                   (
+                    <span class="web3-wallet-address"></span>
+                   )
+              </span>
+
+              <i class="fa fa-arrow-right" aria-hidden="true"></i>
+          </div>
+      </a>
+
+      <small class="web3-wallet-info hidden text-left hocus:text-white underline hocus:underline block pt-2 ui-disconnect-connected-wallets text-gray-600 cursor-pointer">
+          Connect another wallet
+      </small>
+    
+
+    <button type="button" class="ui-continue-with-different neo-btn neo-btn-ghost w-full items-center !py-[7px] !px-[9px] hidden">
+        Continue with a different method
+    </button>
+</div>
+<script nonce="bf06cf9e-1885-4daa-9fdb-f27c55442d27">
+const displayCount = 4
+;(() => {
+    const container = document.querySelector('.oauth-sign-container')
+    if (!container) return
+    const buttons = Array.from(container.querySelectorAll(':is(a, button).neo-btn.neo-btn-tertiary'))
+    const continueWithDifferent = container.querySelector('.ui-continue-with-different')
+    if (!continueWithDifferent) return
+    if (buttons.length <= displayCount) return
+
+    continueWithDifferent.classList.remove('hidden')
+    for (let i = displayCount; i < buttons.length; i++) {
+        buttons[i].classList.add('hidden')
+    }
+
+    continueWithDifferent.addEventListener('click', () => {
+        continueWithDifferent.classList.add('hidden')
+        const currentButtons = Array.from(container.querySelectorAll(':is(a, button).neo-btn.neo-btn-tertiary'))
+        for (const button of currentButtons) {
+            button.classList.remove('hidden')
+        }
+    })
+})()
+</script>
+
+    
+
+    
+        <div>
+            <p class="!m-0 text-body leading-normal">New to HackMD? <a href="https://hackmd.io/join" class="!text-text-primary hocus:!text-link-text-hover plausible-event-name=LoginModalSignUp">Sign up</a></p>
+        </div>
+    
+</div>
+
+
+
+
+
+    <p class="!text-sm !leading-sm !text-text-subtle">By signing in, you agree to our <a class="!text-text-subtle hocus:!text-text-default" href="https://hackmd.io/s/terms" target="_blank">terms of service</a>.</p>
+
+
+        </div>
+    </div>
+</div>
+
+    
+    <script src="https://www.googletagmanager.com/gtag/js?id=G-NGVZMM6DR6"></script>
+    <script nonce="bf06cf9e-1885-4daa-9fdb-f27c55442d27">
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        let userid = (document.cookie.match('(^|; )userid=([^;]*)')||0)[2];
+        gtag('config', 'G-NGVZMM6DR6', {'user_id': userid});
+        
+    </script>
+
+
+    
+<script src="https://browser.sentry-cdn.com/5.15.5/bundle.min.js" crossorigin="anonymous"></script>
+<script nonce="bf06cf9e-1885-4daa-9fdb-f27c55442d27">
+  Sentry.init({ dsn: 'https://73410f1915d84abc8b2dd1f1aabd1c82@sentry.hackmd.dev/4', environment: 'production', integrations: function (intrus) { return intrus.filter(function (itr) { return itr.name !== 'TryCatch' }) } });
+  const sentryUserId = document.cookie
+    .split('; ')
+    .map(cookie => cookie.split('='))
+    .reduce((acc, [k, v]) => k === 'userid' ? v : acc, '');
+  Sentry.setUser(sentryUserId ? { id: sentryUserId } : null);
+</script>
+
+
+    
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KLW9Z3"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+
+
+    <script src="https://hackmd.io/api/i18n.js"></script>
+     <script src="https://assets.hackmd.io/build/font-vendor.da2ff914b6696699c15e.js" defer="defer"></script><script src="https://assets.hackmd.io/build/common-vendor.d6e5c1bdd49586874403.js" defer="defer"></script><script src="https://assets.hackmd.io/build/pretty-vendor.950210cf11a0f5dfba4b.js" defer="defer"></script><script src="https://assets.hackmd.io/build/pretty-common.dbca79efbc63d9e96ef6.js" defer="defer"></script><script src="https://assets.hackmd.io/build/pretty.8a5d7bda80c0444ab4c9.js" defer="defer"></script>
+
+    
+
+</body>
+</html>

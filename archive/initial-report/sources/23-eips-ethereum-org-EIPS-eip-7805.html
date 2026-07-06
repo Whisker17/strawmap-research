@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    
+      <title>EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)</title>
+      <meta property="og:title" content="EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)" />
+    
+    <meta name="description" content="Allow a committee of validators to force-include a set of transactions in every block" />
+    <meta property="og:description" content="Allow a committee of validators to force-include a set of transactions in every block" />
+    <meta name="twitter:description" content="Allow a committee of validators to force-include a set of transactions in every block" />
+  
+  <meta name="generator" content="Jekyll" />
+  <meta property="og:locale" content="en_US" />
+  <link rel="canonical" href="https://eips.ethereum.org/EIPS/eip-7805" />
+  <meta property="og:url" content="https://eips.ethereum.org/EIPS/eip-7805" />
+  <meta property="og:site_name" content="Ethereum Improvement Proposals" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:site" content="@" />
+  <script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": "https://eips.ethereum.org",
+      "name": "Ethereum Improvement Proposals",
+      "description": "Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.",
+      "@context": "https://schema.org"
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://eips.ethereum.org/feed.xml" title="Ethereum Improvement Proposals" /><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/override.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    });
+  </script>
+  <script type="text/javascript">
+    window.MathJax = {
+      loader: {
+        load: ['input/tex-base', 'output/chtml']
+      },
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true,
+        processEnvironments: false,
+        processRefs: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js" integrity="sha384-/1zmJ1mBdfKIOnwPxpdG6yaRrxP6qu3eVYm0cz2nOx+AcL4d3AqEFrwcqGZVVroG" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/citation-js/0.6.7/citation.min.js" integrity="sha512-N+LDFMa9owHXGS+CyMrBvuxq2QuGl3fiB/7cys3aUEL7K6P1soHGqsS0sjHXZpwNd9Kz0m3R4IPy1HYRi6ROEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+    addEventListener('DOMContentLoaded', async () => {
+      const Cite = window.require('citation-js');
+      const citationElements = document.querySelectorAll('.language-csl-json');
+      for (let citationElement of citationElements) {
+        try {
+          const citation = await Cite.async(citationElement);
+          const template = document.createElement('template');
+          template.innerHTML = citation.format('bibliography', {
+            format: 'html',
+            template: 'apa',
+            lang: 'en-US'
+          });
+          if (citationElement.parentElement && citationElement.parentElement.matches('pre')) {
+            citationElement.parentElement.replaceWith(template.content);
+          } else {
+            citationElement.replaceWith(template.content);
+          }
+        } catch (e) {
+          console.error("unable to render citation", e);
+        }
+      }
+    });
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Ethereum Improvement Proposals</a><nav class="site-nav d-flex">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger row p-2"><a class="page-link col" href="/all">All</a><a class="page-link col" href="/core">Core</a><a class="page-link col" href="/networking">Networking</a><a class="page-link col" href="/interface">Interface</a><a class="page-link col" href="/erc">ERC</a><a class="page-link col" href="/meta">Meta</a><a class="page-link col" href="/informational">Informational</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="bi-megaphone-fill" fill="currentColor" viewBox="0 0 16 16">
+    <title>Alert</title>
+    <path d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0v-11zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25.222 25.222 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56V3.224zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009a68.14 68.14 0 0 1 .496.008 64 64 0 0 1 1.51.048zm1.39 1.081c.285.021.569.047.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a65.81 65.81 0 0 1 1.692.064c.327.017.65.037.966.06z"/>
+  </symbol>
+  <symbol id="bi-code" fill="currentColor" viewBox="0 0 16 16">
+    <title>Source</title>
+    <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/>
+  </symbol>
+  <svg id="bi-chat" fill="currentColor" viewBox="0 0 16 16">
+    <title>Discuss</title>
+    <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+  </svg>
+</svg>
+
+<div class="home">
+  
+  
+  
+ 
+  <span class="h5">
+    
+    
+    
+      <span class="badge text-light bg-warning" data-bs-toggle="tooltip" data-bs-title="This EIP is not yet recommended for general use or implementation, as it is subject to normative (breaking) changes.">⚠️ Draft</span>
+    
+    
+    
+       
+    
+      <a class="badge text-light bg-primary" data-bs-toggle="tooltip" data-bs-title="Improvements requiring a consensus fork, as well as changes that are not necessarily consensus critical but may be relevant to “core dev” discussions." href="../core">Standards Track: Core</a>
+    
+  </span>
+  <h1 class="page-heading">
+    EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)
+    <a href="https://ethereum-magicians.org/t/eip-7805-committee-based-fork-choice-enforced-inclusion-lists-focil/21578" class="no-underline">
+      <svg role="img" aria-label="Discuss" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-chat"/>
+      </svg>
+    </a>
+    <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7805.md" class="no-underline">
+      <svg role="img" aria-label="Source" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-code"/>
+      </svg>
+    </a>
+  </h1>
+  <h3>Allow a committee of validators to force-include a set of transactions in every block</h3>
+  <table class="table table-borderless preamble">
+    <tbody>
+      <tr>
+        <th scope="row">Authors</th>
+        <td>Thomas Thiery (@soispoke)&nbsp;&lt;<a href="mailto:thomas.thiery@ethereum.org">thomas.thiery@ethereum.org</a>&gt;, Francesco D'Amato&nbsp;&lt;<a href="mailto:francesco.damato@ethereum.org">francesco.damato@ethereum.org</a>&gt;, Julian Ma&nbsp;&lt;<a href="mailto:julian.ma@ethereum.org">julian.ma@ethereum.org</a>&gt;, Barnabé Monnot&nbsp;&lt;<a href="mailto:barnabe.monnot@ethereum.org">barnabe.monnot@ethereum.org</a>&gt;, Terence Tsao&nbsp;&lt;<a href="mailto:ttsao@offchainlabs.com">ttsao@offchainlabs.com</a>&gt;, Jacob Kaufmann&nbsp;&lt;<a href="mailto:jacob.kaufmann@ethereum.org">jacob.kaufmann@ethereum.org</a>&gt;, Jihoon Song&nbsp;&lt;<a href="mailto:jihoon.song@ethereum.org">jihoon.song@ethereum.org</a>&gt;</td>
+      </tr>
+      
+        <tr>
+          <th scope="row">Created</th>
+          <td>2024-11-01</td>
+        </tr>
+      
+      
+             
+      
+        <tr>
+          <th scope="row">Discussion Link</th>
+          <td><a href="https://ethereum-magicians.org/t/eip-7805-committee-based-fork-choice-enforced-inclusion-lists-focil/21578" target="_blank" rel="noopener">https://ethereum-magicians.org/t/eip-7805-committee-based-fork-choice-enforced-inclusion-lists-focil/21578</a></td>
+        </tr>
+      
+      
+    </tbody>
+  </table>
+  <br/>
+
+  
+
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#motivation">Motivation</a>
+    <ul>
+      <li><a href="#high-level-overview">High-level Overview</a></li>
+      <li><a href="#roles-and-participants">Roles And Participants</a></li>
+    </ul>
+  </li>
+  <li><a href="#specification">Specification</a>
+    <ul>
+      <li><a href="#execution-layer">Execution Layer</a></li>
+      <li><a href="#consensus-layer">Consensus Layer</a></li>
+    </ul>
+  </li>
+  <li><a href="#rationale">Rationale</a>
+    <ul>
+      <li><a href="#core-properties">Core Properties</a></li>
+    </ul>
+  </li>
+  <li><a href="#backwards-compatibility">Backwards Compatibility</a></li>
+  <li><a href="#security-considerations">Security Considerations</a>
+    <ul>
+      <li><a href="#consensus-liveness">Consensus Liveness</a></li>
+      <li><a href="#il-equivocation">IL Equivocation</a></li>
+      <li><a href="#payload-construction">Payload Construction</a></li>
+    </ul>
+  </li>
+  <li><a href="#copyright">Copyright</a></li>
+</ul>
+
+  </div>
+
+  <h2 id="abstract">
+      
+      
+        <a href="#abstract" class="anchor-link"></a> Abstract
+      
+      
+    </h2>
+
+<p>FOCIL implements a robust mechanism to preserve Ethereum’s censorship resistance properties by guaranteeing timely transaction inclusion.</p>
+
+<p>FOCIL (<strong>Fo</strong>rk-<strong>c</strong>hoice enforced <strong>I</strong>nclusion <strong>L</strong>ists) is built in a few simple steps:</p>
+
+<ul>
+  <li>In each slot, a set of validators is selected as inclusion list (IL) committee members. Each member builds and gossips one IL according to their subjective view of the mempool.</li>
+  <li>The proposer and all attesters of the next slot monitor, store and forward available ILs.</li>
+  <li>The proposer (or the builder if the block is not built locally by the proposer) includes transactions from all collected ILs in its block. The proposer then broadcasts the block including IL transactions to the rest of the network.</li>
+  <li>Attesters only vote for the proposer’s block if it includes transactions from all stored ILs.</li>
+</ul>
+  
+    <h2 id="motivation">
+      
+      
+        <a href="#motivation" class="anchor-link"></a> Motivation
+      
+      
+    </h2>
+
+<p>In an effort to shield the Ethereum validator set from centralizing forces, the right to build blocks has been auctioned off to specialized entities known as <em>builders</em>. This has led to a few sophisticated builders dominating block production, leading to a deterioration of the network’s censorship resistance properties. To address this issue, research has focused on improving Ethereum’s transaction inclusion guarantees by enabling validators to impose constraints on builders. This is achieved by force-including transactions in blocks via ILs.</p>
+  
+    <h3 id="high-level-overview">
+      
+      
+        <a href="#high-level-overview" class="anchor-link"></a> High-level Overview
+      
+      
+    </h3>
+
+<p>FOCIL is a committee-based, fork-choice enforced inclusion list (IL) design that improves upon previous IL mechanisms and block co-creation proposals. It addresses issues related to bribing/extortion attacks, IL equivocation, account abstraction (AA), and transaction invalidation.</p>
+
+<p><img src="/assets/eip-7805/diagram_FOCIL.png" alt="FOCIL diagram" /></p>
+  
+    <h3 id="roles-and-participants">
+      
+      
+        <a href="#roles-and-participants" class="anchor-link"></a> Roles And Participants
+      
+      
+    </h3>
+
+<p>This section outlines the workflow of FOCIL, detailing the roles and responsibilities of various participants: IL committee members, validators, builders, proposers and attesters.</p>
+  
+    <h4 id="il-committee-members">
+      
+      
+        <a href="#il-committee-members" class="anchor-link"></a> IL Committee Members
+      
+      
+    </h4>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">Slot N</code>, <code class="language-plaintext highlighter-rouge">t=0 to 8s</code></strong>:
+IL committee members construct their ILs by including transactions pending in the public mempool, and broadcast them over the P2P network after processing the block for <code class="language-plaintext highlighter-rouge">slot N</code> and confirming it as the head. If no block is received by <code class="language-plaintext highlighter-rouge">t=7s</code>, they should run <code class="language-plaintext highlighter-rouge">get_head</code> and build and release their ILs based on the node’s local head.</li>
+</ul>
+
+<p>IL committee members may follow different strategies for constructing their ILs as discussed in <a href="#il-building">IL Building</a>.</p>
+  
+    <h4 id="validators">
+      
+      
+        <a href="#validators" class="anchor-link"></a> Validators
+      
+      
+    </h4>
+
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">Slot N</code>, <code class="language-plaintext highlighter-rouge">t=0s to 9s</code></strong>: Validators receive ILs from the P2P network and store (1) all new ILs that pass the CL P2P validation rules, and (2) any evidence of IL equivocation by committee members (i.e., if multiple ILs are received from the same committee member).</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">Slot N</code>, <code class="language-plaintext highlighter-rouge">t=9s</code> to <code class="language-plaintext highlighter-rouge">Slot N+1</code>, <code class="language-plaintext highlighter-rouge">t=4s</code></strong>: After the view freeze deadline at <code class="language-plaintext highlighter-rouge">t=9s</code>, validators:</p>
+    <ol>
+      <li>Do not store new ILs received after the deadline.</li>
+      <li>Continue forwarding ILs to peers following the CL P2P validation rules.</li>
+      <li>Record any evidence of IL equivocation that occurs after the view freeze deadline.</li>
+    </ol>
+  </li>
+</ul>
+
+<p>After the attestation deadline of <strong><code class="language-plaintext highlighter-rouge">Slot N+1</code>, <code class="language-plaintext highlighter-rouge">t=4s</code></strong>, validators ignore any new ILs related to the previous slot’s IL committee, and stop recording equivocation evidence for the previous slot’s ILs.</p>
+  
+    <h4 id="builder">
+      
+      
+        <a href="#builder" class="anchor-link"></a> Builder
+      
+      
+    </h4>
+
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">Slot N</code>, <code class="language-plaintext highlighter-rouge">t=0s to 11s</code></strong>: The builder (i.e., a proposer doing local block building or an external builder) receives ILs from the P2P network, forwarding and caching those that pass the CL P2P validation rules. Optionally, an RPC endpoint can be added to allow the builder to request missing ILs from its peers (e.g., by committee index at <code class="language-plaintext highlighter-rouge">t=10s</code>).</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">Slot N</code>, <code class="language-plaintext highlighter-rouge">t=11s</code></strong>:
+The builder freezes its view of ILs and asks the EL to update its execution payload by adding transactions from its view (the exact timings will be defined after running some tests/benchmarks).</p>
+  </li>
+</ul>
+  
+    <h4 id="proposer">
+      
+      
+        <a href="#proposer" class="anchor-link"></a> Proposer
+      
+      
+    </h4>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">Slot N+1</code>, <code class="language-plaintext highlighter-rouge">t=0s</code></strong>:
+The proposer broadcasts its block with the up-to-date execution payload satisfying IL transactions over the P2P network.</li>
+</ul>
+  
+    <h4 id="attesters">
+      
+      
+        <a href="#attesters" class="anchor-link"></a> Attesters
+      
+      
+    </h4>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">Slot N+1</code>, <code class="language-plaintext highlighter-rouge">t=4s</code></strong>:
+Attesters monitor the P2P network for the proposer’s block. Upon detecting it, they verify whether all transactions from their stored ILs are included in the proposer’s execution payload, except for ILs whose sender has equivocated. Based on their frozen view of the ILs from <code class="language-plaintext highlighter-rouge">t=9s</code> in the previous slot, attesters check if the execution payload satisfies IL conditions. This is done either by confirming that all transactions are present or by determining if any missing transactions are invalid when appended to the end of the payload. In such cases, attesters use the EL to perform nonce and balance checks to validate the missing transactions and check whether there is enough space in the block to include the transaction(s).</li>
+</ul>
+  
+    <h4 id="cl-p2p-validation-rules">
+      
+      
+        <a href="#cl-p2p-validation-rules" class="anchor-link"></a> CL P2P Validation Rules
+      
+      
+    </h4>
+
+<p>When validators receive ILs from the P2P network, they perform a series of validation checks before forwarding or caching them. These rules protect against Denial-of-Service attacks by (1) limiting ILs’ byte size and (2) restricting IL proposals to a small committee of IL committee members, thereby tightly bounding bandwidth, the main resource consumed by the propagation of ILs. Consumption of other relevant resources, such as verification time, is minimal because the only nontrivial check performed on IL propagation is signature verification. At this stage, there is no EL verification of the transactions within ILs. This means that ILs are allowed to contain any transactions—valid or invalid—since validators do not perform EL-side validity checks. This design choice is intended to avoid additional computational overhead.</p>
+
+<ol>
+  <li>The slot of the IL matches the current or previous slot.</li>
+  <li>The root of the IL committee referenced in the IL matches the expected IL committee root for its slot.</li>
+  <li>Received two or fewer ILs from this IL committee member (see IL equivocation section below).</li>
+  <li>The IL is correctly signed by the validator.</li>
+  <li>The validator is part of the IL committee.</li>
+  <li>The size of a IL does not exceed the maximum size allowed (e.g., <code class="language-plaintext highlighter-rouge">MAX_BYTES_PER_INCLUSION_LIST = 8 KiB</code>).</li>
+</ol>
+  
+    <h2 id="specification">
+      
+      
+        <a href="#specification" class="anchor-link"></a> Specification
+      
+      
+    </h2>
+  
+    <h3 id="execution-layer">
+      
+      
+        <a href="#execution-layer" class="anchor-link"></a> Execution Layer
+      
+      
+    </h3>
+
+<p>On the execution layer, an additional check is introduced for new payloads. After all of the transactions in the payload have been executed, we check whether any transaction from ILs, that is not already present in the payload, could be validly included (i.e. nonce and balance checks pass). If that is the case for any transaction, then an error is returned to the CL. Although the block is valid, the CL will not attest to it.</p>
+
+<p>Let <code class="language-plaintext highlighter-rouge">B</code> denote the current block.
+Let <code class="language-plaintext highlighter-rouge">S</code> denote the execution state following the execution of the last transaction in <code class="language-plaintext highlighter-rouge">B</code>.
+Let <code class="language-plaintext highlighter-rouge">gas_left</code> be the gas remaining after execution of B.</p>
+
+<p>For each transaction <code class="language-plaintext highlighter-rouge">T</code> in ILs, perform the following:</p>
+
+<ol>
+  <li>
+    <p>Check whether <code class="language-plaintext highlighter-rouge">T</code> is present in <code class="language-plaintext highlighter-rouge">B</code>. If <code class="language-plaintext highlighter-rouge">T</code> is present, then jump to the next transaction, else continue with next step.</p>
+  </li>
+  <li>
+    <p>Check whether <code class="language-plaintext highlighter-rouge">B</code> has enough remaining gas to execute <code class="language-plaintext highlighter-rouge">T</code>. If <code class="language-plaintext highlighter-rouge">T.gas</code> &gt; <code class="language-plaintext highlighter-rouge">gas_left</code>, then jump to the next transaction, else continue with next step.</p>
+  </li>
+  <li>
+    <p>Validate <code class="language-plaintext highlighter-rouge">T</code> against <code class="language-plaintext highlighter-rouge">S</code> by checking the nonce and balance of <code class="language-plaintext highlighter-rouge">T.origin</code>.</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p>If <code class="language-plaintext highlighter-rouge">T</code> is invalid, then continue to the next transaction.</p>
+  </li>
+  <li>
+    <p>If <code class="language-plaintext highlighter-rouge">T</code> is valid, terminate process and return an <code class="language-plaintext highlighter-rouge">INCLUSION_LIST_UNSATISFIED</code> status.</p>
+  </li>
+</ul>
+  
+    <h4 id="engine-api-changes">
+      
+      
+        <a href="#engine-api-changes" class="anchor-link"></a> Engine API Changes
+      
+      
+    </h4>
+
+<p>We make the following changes to the engine API:</p>
+
+<ul>
+  <li>Add <code class="language-plaintext highlighter-rouge">engine_getInclusionListV1</code> endpoint to retrieve an IL from the <code class="language-plaintext highlighter-rouge">ExecutionEngine</code>.</li>
+  <li>Modify <code class="language-plaintext highlighter-rouge">engine_forkchoiceUpdated</code> endpoint to update a payload with the IL that should be used to build the block. <code class="language-plaintext highlighter-rouge">payloadAttributes</code> is extended to include the IL.</li>
+  <li>Modify <code class="language-plaintext highlighter-rouge">engine_newPayload</code> endpoint to include a parameter for transactions in ILs determined by the IL committee member. If the IL is not satisfied an <code class="language-plaintext highlighter-rouge">INCLUSION_LIST_UNSATISFIED</code> status must be returned.</li>
+</ul>
+  
+    <h4 id="il-building">
+      
+      
+        <a href="#il-building" class="anchor-link"></a> IL Building
+      
+      
+    </h4>
+
+<p>The rules for building ILs are left to the discretion of implementers. For instance, they may select transactions from the public mempool in various ways such as at random, by priority fee, or based on how long they have been pending. The IL has a maximum size of <code class="language-plaintext highlighter-rouge">MAX_BYTES_PER_INCLUSION_LIST = 8 KiB</code> for all of the RLP encoded transactions.</p>
+  
+    <h3 id="consensus-layer">
+      
+      
+        <a href="#consensus-layer" class="anchor-link"></a> Consensus Layer
+      
+      
+    </h3>
+
+<p>The full consensus changes can be found in the following GitHub repository. They are split between:</p>
+
+<ul>
+  <li><a href="https://github.com/ethereum/consensus-specs/blob/e678deb772fe83edd1ea54cb6d2c1e4b1e45cec6/specs/_features/eip7805/beacon-chain.md">Beacon Chain</a> changes.</li>
+  <li><a href="https://github.com/ethereum/consensus-specs/blob/e678deb772fe83edd1ea54cb6d2c1e4b1e45cec6/specs/_features/eip7805/fork-choice.md">Fork choice</a> changes.</li>
+  <li><a href="https://github.com/ethereum/consensus-specs/blob/e678deb772fe83edd1ea54cb6d2c1e4b1e45cec6/specs/_features/eip7805/p2p-interface.md">P2P</a> changes.</li>
+  <li><a href="https://github.com/ethereum/consensus-specs/blob/e678deb772fe83edd1ea54cb6d2c1e4b1e45cec6/specs/_features/eip7805/validator.md">Honest validator guide</a> changes.</li>
+</ul>
+  
+    <h4 id="beacon-chain-changes">
+      
+      
+        <a href="#beacon-chain-changes" class="anchor-link"></a> Beacon chain changes
+      
+      
+    </h4>
+  
+    <h5 id="preset">
+      
+      
+        <a href="#preset" class="anchor-link"></a> Preset
+      
+      
+    </h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DOMAIN_IL_COMMITTEE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">DomainType('0x0C000000')</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IL_COMMITTEE_SIZE</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uint64(2**4)</code> (=16)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MAX_BYTES_PER_INCLUSION_LIST</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uint64(2**13)</code> (=8192)</td>
+    </tr>
+  </tbody>
+</table>
+  
+    <h5 id="new-containers">
+      
+      
+        <a href="#new-containers" class="anchor-link"></a> New containers
+      
+      
+    </h5>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">InclusionList</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">slot</span><span class="p">:</span> <span class="n">Slot</span>
+    <span class="n">validator_index</span><span class="p">:</span> <span class="n">ValidatorIndex</span>
+    <span class="n">inclusion_list_committee_root</span><span class="p">:</span> <span class="n">Root</span>
+    <span class="n">transactions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Transaction</span><span class="p">,</span> <span class="n">MAX_TRANSACTIONS_PER_PAYLOAD</span><span class="p">]</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SignedInclusionList</span><span class="p">(</span><span class="n">Container</span><span class="p">):</span>
+    <span class="n">message</span><span class="p">:</span> <span class="n">InclusionList</span>
+    <span class="n">signature</span><span class="p">:</span> <span class="n">BLSSignature</span>
+</code></pre></div></div>
+  
+    <h4 id="fork-choice-changes">
+      
+      
+        <a href="#fork-choice-changes" class="anchor-link"></a> Fork choice changes
+      
+      
+    </h4>
+
+<ul>
+  <li>Store ILs observed over gossip before the view freeze deadline.</li>
+  <li>If more than one IL is observed from the same IL committee member, mark the committee member as an equivocator and ignore any further ILs from them.</li>
+  <li>The beacon block from the current slot is only attested to if it satisfies IL conditions, based on all stored ILs from non equivocators.</li>
+</ul>
+  
+    <h4 id="p2p-changes">
+      
+      
+        <a href="#p2p-changes" class="anchor-link"></a> P2P changes
+      
+      
+    </h4>
+
+<ul>
+  <li>A new global topic for broadcasting <code class="language-plaintext highlighter-rouge">SignedInclusionList</code> objects.</li>
+  <li>A new RPC topic for request <code class="language-plaintext highlighter-rouge">SignedInclusionList</code> based on IL committee index.</li>
+</ul>
+  
+    <h2 id="rationale">
+      
+      
+        <a href="#rationale" class="anchor-link"></a> Rationale
+      
+      
+    </h2>
+  
+    <h3 id="core-properties">
+      
+      
+        <a href="#core-properties" class="anchor-link"></a> Core Properties
+      
+      
+    </h3>
+
+<ul>
+  <li>Committee-based: FOCIL relies on a committee of multiple validators, rather than a single proposer, to construct and broadcast ILs. This approach significantly reduces the surface for bribery and extortion attacks and strengthens censorship resistance.</li>
+  <li>Fork-choice enforced: FOCIL incorporates the force-inclusion mechanism into the fork-choice rule, an integral component of the consensus process, thereby preventing any actor from bypassing the system. Attesters vote only for blocks that include transactions from a set of ILs provided by the IL committee and that satisfy the IL constraints. Any block failing to meet these criteria will not be voted on by the attesters, and therefore cannot be canonical.</li>
+  <li>Same-slot: With FOCIL running in parallel with the block building process for <code class="language-plaintext highlighter-rouge">slot N+1</code> during <code class="language-plaintext highlighter-rouge">slot N</code>, the constraints imposed on <code class="language-plaintext highlighter-rouge">block B</code> for <code class="language-plaintext highlighter-rouge">slot N+1</code> can include transactions submitted during <code class="language-plaintext highlighter-rouge">slot N</code>. This represents a strict improvement over forward IL designs like <a href="/EIPS/eip-7547">EIP-7547</a>, where the forward property introduced a 1-slot delay.</li>
+  <li>Conditional inclusion: FOCIL adopts conditional inclusion, accepting blocks that may lack some transactions from ILs if they cannot append the transactions to the end of the block or if they are full.</li>
+  <li>Anywhere-in-block: FOCIL is unopinionated about the placement of transactions from ILs within a block. This reduces incentives for sophisticated actors to use side channels to bypass the mechanism. Combined with conditional inclusion, this flexibility makes the emergence of off-protocol markets less attractive.</li>
+  <li>No incentive mechanism: FOCIL does not provide explicit rewards for IL committee members participating in the mechanism. We believe that the added complexity of implementing a transaction fee system for FOCIL is not justified. Instead, we rely on altruistic behavior, as FOCIL requires only a <code class="language-plaintext highlighter-rouge">1-out-of-N</code> honesty assumption from IL committee members for the mechanism to work as intended.</li>
+</ul>
+  
+    <h2 id="backwards-compatibility">
+      
+      
+        <a href="#backwards-compatibility" class="anchor-link"></a> Backwards Compatibility
+      
+      
+    </h2>
+
+<p>This EIP introduces backward incompatible changes to the block validation rule set on the consensus layer and must be accompanied by a hard fork. These changes do not break anything related to current user activity and experience.</p>
+  
+    <h2 id="security-considerations">
+      
+      
+        <a href="#security-considerations" class="anchor-link"></a> Security Considerations
+      
+      
+    </h2>
+  
+    <h3 id="consensus-liveness">
+      
+      
+        <a href="#consensus-liveness" class="anchor-link"></a> Consensus Liveness
+      
+      
+    </h3>
+
+<p>The builder of <code class="language-plaintext highlighter-rouge">slot N+1</code> cannot construct a canonical block without first receiving the ILs broadcast during <code class="language-plaintext highlighter-rouge">slot N</code>. This means that the builder (including cases in which the proposer locally builds its block) must be well-connected to the IL committee members to ensure timely access to these inclusion lists. Additionally, there must be sufficient time between the view freeze deadline (<code class="language-plaintext highlighter-rouge">t=9s</code> of <code class="language-plaintext highlighter-rouge">slot N</code>) and the moment the proposer must broadcast <code class="language-plaintext highlighter-rouge">block B</code> to the rest of the network. This buffer allows the builder to gather all available ILs and update the execution payload of <code class="language-plaintext highlighter-rouge">block B</code> accordingly.</p>
+  
+    <h3 id="il-equivocation">
+      
+      
+        <a href="#il-equivocation" class="anchor-link"></a> IL Equivocation
+      
+      
+    </h3>
+
+<p>To mitigate IL equivocation, FOCIL introduces a new P2P network rule that allows forwarding up to two ILs per IL committee member. If the proposer or attesters detect two different ILs sent by the same IL committee member, they should ignore all ILs from that member. In the worst case, the bandwidth of the IL gossip subnet can at most double.</p>
+  
+    <h3 id="payload-construction">
+      
+      
+        <a href="#payload-construction" class="anchor-link"></a> Payload Construction
+      
+      
+    </h3>
+
+<p>The builder, responsible for constructing the execution payload, must ensure that the IL is satisfied. A naive way to do so would be to build an initial payload in whatever way the builder desires, then execute the following algorithm:</p>
+
+<ol>
+  <li>Sequentially check validity of any yet-to-be-included IL tx against the post-state. If none is found, payload building is over.</li>
+  <li>If one is found, append it to the end of the payload and update the post-state. Go back to step 1.</li>
+</ol>
+
+<p>The issue with this simple approach is that, given a set of <code class="language-plaintext highlighter-rouge">n</code> IL transactions, one might end up needing to do <code class="language-plaintext highlighter-rouge">n + (n-1) + (n-2) + ...</code> validity checks, so <code class="language-plaintext highlighter-rouge">O(n^2)</code>. For example, the <code class="language-plaintext highlighter-rouge">n</code>th tx might be valid while all others are not, but its execution sends balance to the sender of the <code class="language-plaintext highlighter-rouge">(n-1)</code>th tx, making it valid, and in turn, the <code class="language-plaintext highlighter-rouge">(n-1)</code>th sends balance to the sender of the <code class="language-plaintext highlighter-rouge">(n-2)</code>th tx, etc.</p>
+
+<p>To efficiently ensure that all valid IL txs have been included in the payload, builders can adopt a simple strategy: prior to building the payload, they store the <code class="language-plaintext highlighter-rouge">nonce</code> and <code class="language-plaintext highlighter-rouge">balance</code> of all Externally Owned Accounts (EOAs) involved in IL transactions. As they construct the payload, builders track these EOAs, maintaining and updating each EOA’s <code class="language-plaintext highlighter-rouge">nonce</code> and <code class="language-plaintext highlighter-rouge">balance</code> whenever changes occur—specifically, when the <code class="language-plaintext highlighter-rouge">nonce</code> increments (indicating that a transaction from that EOA has been executed) or when the <code class="language-plaintext highlighter-rouge">balance</code> changes without a <code class="language-plaintext highlighter-rouge">nonce</code> increment (e.g., after an Account Abstraction (AA) transaction has interacted with that EOA).</p>
+
+<p>This tracking allows builders to verify IL transaction validity in real-time, enabling them to add transactions sequentially until all remaining transactions are either invalid because the nonce or balance of the associated EOA does not change or cannot be included due to insufficient gas. This approach minimizes overhead by keeping track only of the state changes that are relevant to the validity of IL txs.</p>
+  
+    <h2 id="copyright">
+      
+      
+        <a href="#copyright" class="anchor-link"></a> Copyright
+      
+      
+    </h2>
+
+<p>Copyright and related rights waived via <a href="/LICENSE">CC0</a>.</p>
+
+  <h2>Citation</h2>
+  <p>Please cite this document as:</p>
+  
+  <p>Thomas Thiery (@soispoke)&nbsp;&lt;<a href="mailto:thomas.thiery@ethereum.org">thomas.thiery@ethereum.org</a>&gt;, Francesco D'Amato&nbsp;&lt;<a href="mailto:francesco.damato@ethereum.org">francesco.damato@ethereum.org</a>&gt;, Julian Ma&nbsp;&lt;<a href="mailto:julian.ma@ethereum.org">julian.ma@ethereum.org</a>&gt;, Barnabé Monnot&nbsp;&lt;<a href="mailto:barnabe.monnot@ethereum.org">barnabe.monnot@ethereum.org</a>&gt;, Terence Tsao&nbsp;&lt;<a href="mailto:ttsao@offchainlabs.com">ttsao@offchainlabs.com</a>&gt;, Jacob Kaufmann&nbsp;&lt;<a href="mailto:jacob.kaufmann@ethereum.org">jacob.kaufmann@ethereum.org</a>&gt;, Jihoon Song&nbsp;&lt;<a href="mailto:jihoon.song@ethereum.org">jihoon.song@ethereum.org</a>&gt;, "EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL) [DRAFT]," <em>Ethereum Improvement Proposals</em>, no. 7805, November 2024. Available: https://eips.ethereum.org/EIPS/eip-7805.</p>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "TechArticle",
+    "headline": "EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL) [DRAFT]",
+    "name": "EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL) [DRAFT]",
+    "author": "Thomas Thiery (@soispoke) <thomas.thiery@ethereum.org>, Francesco D'Amato <francesco.damato@ethereum.org>, Julian Ma <julian.ma@ethereum.org>, Barnabé Monnot <barnabe.monnot@ethereum.org>, Terence Tsao <ttsao@offchainlabs.com>, Jacob Kaufmann <jacob.kaufmann@ethereum.org>, Jihoon Song <jihoon.song@ethereum.org>",
+    "dateCreated": "2024-11-01",
+    "datePublished": "2024-11-01",
+    
+    "discussionUrl": "https://ethereum-magicians.org/t/eip-7805-committee-based-fork-choice-enforced-inclusion-lists-focil/21578",
+    
+    "inLanguage": "en-US",
+    "license": "#copyright",
+    "copyrightYear": "2024"
+  }
+</script>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ethereum Improvement Proposals</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ethereum Improvement Proposals</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ethereum/EIPs"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ethereum/EIPs</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+HTTP/1.1 200 Connection established
+
+HTTP/2 200 
+server: nginx
+date: Sun, 05 Jul 2026 16:47:41 GMT
+content-type: text/html; charset=utf-8
+vary: Accept-Encoding
+x-frame-options: allow-from https://notes.ethereum.org
+x-xss-protection: 0
+x-content-type-options: nosniff
+x-permitted-cross-domain-policies: none
+referrer-policy: strict-origin-when-cross-origin
+access-control-allow-origin: https://notes.ethereum.org
+access-control-allow-methods: GET, POST, OPTIONS, DELETE
+access-control-allow-headers: Content-Type, Authorization, X-Requested-With
+x-discourse-route: topics/show
+last-modified: Mon, 22 Jun 2026 09:52:08 GMT
+vary: Accept
+cross-origin-opener-policy: same-origin-allow-popups
+cache-control: no-cache, no-store
+content-security-policy: upgrade-insecure-requests; base-uri 'self'; object-src 'none'; script-src 'nonce-kYgbOw5GUaKj2swaVLeuLdzot' 'strict-dynamic'; frame-ancestors 'self'; manifest-src 'self'
+x-discourse-cached: skip
+x-request-id: da8c4fdb-2491-480b-9215-f7c4f58cbffd
+x-runtime: 0.143939
+x-discourse-trackview: 1
+strict-transport-security: max-age=63072000
+alt-svc: h3=":443"; ma=86400
+

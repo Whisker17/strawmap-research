@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="dev" data-themeable="true">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="csrf-token" content="h8jxZCfR-Fl0CbvoTc7zqsd8Lrj18rK3oN2E">
+    
+    
+    <meta name="description" content="# All You Need to Know About One-Round Finality  *TL;DR: Finalizing in one voting round is possible.">
+    
+    <title>All You Need to Know About One-Round Finality - HackMD</title>
+    <link rel="icon" type="image/png" href="https://notes.ethereum.org/favicon.png">
+	<link rel="apple-touch-icon" href="https://notes.ethereum.org/apple-touch-icon.png">
+	<!--  meta value for server side given sign in boolean -->
+    <meta name="signin" content="false">
+
+    
+<script nonce="1df3d979-7ea6-4761-9440-610d36983c7c">
+  window.domain = 'notes.ethereum.org'
+  window.urlpath = ''
+  window.debug = false || window.localStorage.getItem('HMD_DEBUG_FLAG') === 'true'
+  window.version = '1.3.0'
+  window.brand = 'HackMD'
+
+  
+  window.NOTE_ID = 'MnaMkrTOT0Cu2_oTcGRgvQ'
+  
+
+  window.GOOGLE_DRIVE_API_KEY = ''
+  window.GOOGLE_DRIVE_CLIENT_ID = ''
+  window.DROPBOX_APP_KEY = ''
+  window.PLANTUML_SERVER = 'https://www.plantuml.com/plantuml'
+
+  window.ASSET_URL = 'https://notes.ethereum.org'
+
+  window.USER_CAN_DELETE_ACCOUNT = false
+  window.USER_DELETE_ACCOUNT_VIA_EMAIL = true
+  window.PAYMENT_ENABLED = 
+  window.GITHUB_SYNC_ENABLED = true
+  window.GITLAB_SYNC_ENABLED = false
+  window.GITLAB_SYNC_BASE_URL = ''
+  window.VCS_SYNC_MODE = 'github'
+  window.VCS_PROVIDER_NAME = 'GitHub'
+  window.FREE_TEAM_NUM = 20
+  window.FREE_TEAM_MEMBER_NUM = 3
+  window.FREE_PUBLIC_TEAM_NUM = 10
+
+  
+  window.EE_SITE_ENABLE = true
+  window.EE_SITE_NAME = ''
+  window.EE_SITE_LINK = ''
+  window.EESITE_INFO = {"contact":"sysadmin@ethereum.org","usePrimaryOauthLoginButton":false}
+  window.ENTERPRISE_DISCOVERY_ENABLE = false
+  window.ENTERPRISE_DISCOVERY_TEAM = true
+  window.ENTERPRISE_DISCOVERY_NOTE = true
+  window.ENTERPRISE_DISCOVERY_VIEW_PERMISSION = 'guest'
+  
+  window.ALLOW_ANONYMOUS = false
+  window.ALLOW_ANONYMOUS_EDIT = true
+  window.PUBLIC_OVERVIEW = false
+  window.INTERNAL_PUBLIC_OVERVIEW = false
+  window.API_MANAGEMENT_UI_ENABLE = true
+  window.PUBLISH_ENABLE = true
+
+  
+
+  
+  window.SHOW_HOT_NOTES = false
+  
+
+  
+  window.HOT_NOTES_TIME_TYPE = 'week'
+  
+
+  
+  window.SHOW_OVERVIEW = false
+  
+
+  
+  window.MENTIONS = {}
+  
+
+  
+  window.MENTION_ANCHORS = []
+  
+
+  
+  window.COMMENT_ANCHORS = []
+  
+
+  
+  window.IS_OWNER = false
+  
+
+  
+  window.IS_TEAM_ADMIN = false
+  
+
+  
+  window.IS_INVITEE_ADMIN = false
+  
+
+  
+  window.USER_PROFILE = '%7B%22name%22%3A%22Guest%20Nguyen%22%7D'
+  
+
+  
+  window.VERSION_TIME = '1781689815435'
+  
+
+  
+  window.canEdit = true
+  
+
+  
+  window.canWriteComment = false
+  
+
+  
+  window.canHideComment = false
+  
+
+  window.TRASH_NOTE_DELETE_AFTER_FREE = 3
+  window.TRASH_NOTE_DELETE_AFTER_PAID = 30
+
+  
+    window.ENABLED_PREVIEW_FEATURE = {}
+  
+
+  
+    window.ACTIVE_PREVIEW_FEATURE = []
+  
+
+  
+    window.IS_OWNER_UPGRADED = true
+  
+
+  
+  
+    window.YAML_METADATA_ENABLED = true
+  
+
+  
+    window.NOTE_CAPACITY_LIMIT = 50
+  
+
+  
+    window.DOCUMENT_MAX_LENGTH = 100000
+  
+
+  
+    window.COMMENT_ENABLED = true
+  
+
+  window.SUGGEST_EDIT_ENABLED = false
+  
+    window.SUGGEST_EDIT_ENABLED = false
+  
+
+  
+    window.NOTE_FEATURES = {"emoji-reply":"signed_in_users"}
+  
+
+  
+    window.REALTIME_CLIENT_WITH_CREDENTIALS = false
+  
+
+  
+    window.COMMENT_ENABLED = true
+  
+
+  
+    window.DEBUG_DISCONNECT_SOCKET_WHEN_OFFLINE = false
+  
+
+  
+
+  
+
+  
+
+  
+    window.CUSTOM_STYLE_ENABLED = "true"
+  
+
+  
+    window.USE_NEW_LOGO = false
+  
+
+  
+    window.TEXT_SELECTION_CHANGED = false
+  
+
+  
+    window.CAN_VIEW_HISTORY_AT_REVISION = false
+  
+
+  
+    window.FOLDER_TRANSPORTATION = {"version":"v2","strategy":"shadow-traffic","canaryThreshold":"0"}
+  
+</script>
+
+
+    
+
+    
+
+
+
+
+
+
+    <meta name="robots" content="noindex, nofollow">
+
+
+
+    <meta name="twitter:image:src" content="https://notes.ethereum.org/images/media/HackMD-neo-og.jpg">
+    <meta name="twitter:image:alt" content="All You Need to Know About One-Round Finality - HackMD">
+
+
+<meta name="twitter:site" content="@hackmdio" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="All You Need to Know About One-Round Finality - HackMD" />
+
+
+    <meta name="twitter:description" content="# All You Need to Know About One-Round Finality  *TL;DR: Finalizing in one voting round is possible." />
+
+
+
+    <meta property="og:image" content="https://notes.ethereum.org/images/media/HackMD-neo-og.jpg">
+    <meta property="og:image:alt" content="All You Need to Know About One-Round Finality - HackMD">
+
+
+<meta property="og:site_name" content="HackMD" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="All You Need to Know About One-Round Finality - HackMD" />
+
+
+    <meta property="og:description" content="# All You Need to Know About One-Round Finality  *TL;DR: Finalizing in one voting round is possible." />
+
+
+
+
+     <link href="https://notes.ethereum.org/build/font-vendor.ea8218d7d4f468b2c430.css" rel="stylesheet"><link href="https://notes.ethereum.org/build/common-vendor.0a08ae20e14fefe857eb.css" rel="stylesheet"><link href="https://notes.ethereum.org/build/pretty-vendor.db0e7b64c54d0a77290f.css" rel="stylesheet"><link href="https://notes.ethereum.org/build/pretty.443c8ff57fecedc14859.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js" integrity="sha256-3Jy/GbSLrg0o9y5Z5n1uw0qxZECH7C6OQpVBgNFYa0g=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js" integrity="sha256-g6iAfvZp+nDQ2TdTR/VVKJf3bGro4ub5fvWSWVRi2NE=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js" integrity="sha256-8E4Is26QH0bD52WoQpcB+R/tcWQtpzlCojrybUd7Mxo=" crossorigin="anonymous"></script>
+<![endif]-->
+
+    <script defer data-domain="hackmd.io" src="https://plausible.io/js/script.js"></script>
+<script nonce="1df3d979-7ea6-4761-9440-610d36983c7c">
+  window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments); }
+  const keyboardWhiteList = ['a', 'span', 'button']
+
+  function getTaggedEventAttributes (e) {
+    const eventAttrs = { name: null, props: {} }
+    if (!e || !e.classList) return eventAttrs
+    const psEvent = /plausible-event-(.+)(=|--)(.+)/
+    for (const className of [...e.classList]) {
+      const [, key, , val] = className.match(psEvent) || []
+      if (!key || !val) continue
+      const value = val.replace(/\+/g, ' ')
+      switch (key.toLowerCase()) {
+        case 'name':
+          eventAttrs.name = value
+          break
+        default:
+          eventAttrs.props[key] = value
+          break
+      }
+    }
+    return eventAttrs
+  }
+
+  function isLocal () {
+    return /^localhost$|^127(\.[0-9]+){0,2}\.[0-9]+$|^\[::1?\]$/.test(location.hostname) || location.protocol === 'file:'
+  }
+
+  function isAutomation () {
+    return Boolean(window._phantom || window.__nightmare || window.navigator.webdriver || window.Cypress)
+  }
+
+  function shouldIgnore () {
+    return isLocal() ||
+      isAutomation() ||
+      window.localStorage.getItem('plausible_ignore') === 'true'
+  }
+
+  function handler (e) {
+    if (!window.plausible) return
+    if (!e.target || !('className' in e.target)) return
+    const ele = e.target
+
+    const eventAttrs = getTaggedEventAttributes(ele)
+    if (!eventAttrs.name) return
+    if (ele?.href) eventAttrs.props.url = ele.href
+
+    if (shouldIgnore()) {
+      if (window.debug) logDebugEventMsg(eventAttrs)
+      return
+    }
+    window.plausible(eventAttrs.name, { props: eventAttrs.props })
+  }
+
+  function logDebugEventMsg (eventAttrs) {
+    console.warn(
+      `Ignoring Event: "${eventAttrs.name}"`,
+      eventAttrs,
+    )
+  }
+
+  function keydownHandler (e) {
+    if (e.key !== 'Enter') return
+    if (e.target.nodeName.toLowerCase() === 'input') {
+      switch (e.target.type.toLowerCase()) {
+        case 'submit':
+        case 'button':
+        case 'reset':
+        case 'checkbox':
+        case 'radio':
+        case 'file':
+        case 'image':
+        case 'color':
+          break
+        default:
+          return
+      }
+    } else if (!keyboardWhiteList.includes(e.target.nodeName.toLowerCase())) {
+      return
+    }
+    handler(e)
+  }
+
+  document.addEventListener('mousedown', handler)
+  document.addEventListener('keydown', keydownHandler)
+</script>
+
+    
+<script nonce="1df3d979-7ea6-4761-9440-610d36983c7c">
+  window.publishProps = JSON.parse(`{"isOwnerAnonymous":false,"isOwnedByTeam":false,"ownerInfo":{"name":"Yann%20Vonlanthen","path":"yannvon","avatarUrl":"https%3A%2F%2Fwww.gravatar.com%2Favatar%2F5bad18eba959b062a816b035d3f9dfb3%3Fs%3D96","description":null},"isPublished":false,"createTime":1773785167262,"updateTime":1781689815435,"vcsSyncMode":"github","vcsProviderName":"GitHub","canEdit":true,"hardBreaks":true,"onlyOwnerCanEdit":false,"isCommentEnabled":true,"likedCount":0,"isNotificationEnabled":true,"notificationType":"never","hasEmail":false,"canWriteComment":false,"viewCount":486,"markdown":"%23%20All%20You%20Need%20to%20Know%20About%20One-Round%20Finality%0A%0A*TL%3BDR%3A%20Finalizing%20in%20one%20voting%20round%20is%20possible.%20This%20write-up%20gives%20an%20overview%20of%20the%20progress%20over%20the%20last%20two%20decades%3B%20explains%20why%20it%20might%20be%20particularly%20beneficial%20to%20Ethereum%2C%20and%20which%20challenges%20we%20are%20currently%20working%20on.*%0A%0AEthereum%20currently%20takes%20about%20**16%20minutes**%20to%20finalize%20a%20block%3A%20two%20epochs%20of%2032%20slots%20at%2012%20seconds%20each%20(%E2%89%8812.8%20min)%2C%20plus%20half%20an%20epoch%20of%20waiting%20time%20in%20expectation%20(%E2%89%883.2%20min).%20That's%2016%20minutes%20before%20bridges%20can%20safely%20relay%20a%20transaction%2C%2016%20minutes%20before%20an%20L2%20can%20consider%20an%20L1%20anchor%20settled%2C%20and%2016%20minutes%20of%20uncertainty%20for%20high-value%20transfers.%20Cutting%20this%20time%20is%20one%20of%20the%20most%20impactful%20improvements%20we%20can%20make%20to%20Ethereum's%20user%20experience%20and%20ecosystem.%0A%0ARecently%2C%20a%20wave%20of%20new%20protocols%20have%20shown%20that%20it's%20possible%20to%20finalize%20in%20a%20*single%20voting%20round*%3A%20%5BAlpenglow%5D(https%3A%2F%2Fdrive.google.com%2Ffile%2Fd%2F1Rlr3PdHsBmPahOInP6-Pl0bMzdayltdV%2Fview%3Fpli%3D1)%20%26%20its%20academic%20twin%20%5BKudzu%5D(https%3A%2F%2Farxiv.org%2Fabs%2F2505.08771)%2C%20%5BHydrangea%5D(https%3A%2F%2Feprint.iacr.org%2F2025%2F1112)%2C%20and%20%5BMinimmit%5D(https%3A%2F%2Farxiv.org%2Fabs%2F2508.10862)%2C%20to%20name%20a%20few.%0A%0AIn%20this%20post%2C%20we%20explain%20the%20core%20trick%20behind%20all%20of%20these%20protocols%2C%20trace%20how%20the%20idea%20evolved%20over%20the%20years%2C%20and%20discuss%20why%20Ethereum%20is%20uniquely%20positioned%20to%20benefit%20from%20it.%0A%0A%0A%23%23%20Why%20Two%20Rounds%3F%0A%0AMost%20BFT%20consensus%20protocols%20work%20with%20%5Btwo%20voting%20rounds%5D(https%3A%2F%2Fdecentralizedthoughts.github.io%2F2025-11-22-three-round-BFT%2F).%20Depending%20on%20the%20protocol%2C%20the%20first%20round%20is%20called%20*prepare*%2C%20*justify*%2C%20or%20*notarize*%2C%20and%20the%20second%20*commit*%20or%20*finalize*.%20We'll%20use%20*notarize*%20and%20*finalize*%20throughout.%0A%0A%3C!--%20Diagram%3A%20PROPOSE%20%E2%86%92%20NOTARIZE%20%E2%86%92%20FINALIZE%2C%20showing%20the%20standard%20two-round%20pipeline%20--%3E%0A!%5B%5D(https%3A%2F%2Fnotes.ethereum.org%2F_uploads%2FryxrGuhuw-x.png)%0A%0AWhy%20two%20rounds%3F%20Intuitively%2C%20the%20first%20round%20establishes%20that%20enough%20validators%20have%20*seen*%20the%20block%20(a%20lock)%2C%20and%20the%20second%20round%20establishes%20that%20enough%20validators%20*know%20that%20everyone%20has%20seen%20it*%20(a%20commit).%20This%20two-step%20dance%20is%20what%20makes%20it%20safe%20for%20validators%20to%20act%20on%20a%20decision%2C%20even%20if%20the%20network%20hiccups%20or%20the%20leader%20turns%20out%20to%20be%20malicious.%0A%0AIf%20someone%20tells%20you%20their%20protocol%20can%20finalize%20in%20one%20round%2C%20you%20are%20right%20to%20be%20sceptical.%20Most%20protocols%20today%20require%20%5Btwo%20voting%20rounds%5D(https%3A%2F%2Fdecentralizedthoughts.github.io%2F2023-04-01-hotstuff-2%2F).%5B%5Ebounds%5D%20%0A%0A%0A%5B%5Ebounds%5D%3A%20In%20the%20standard%20model%20with%20fault%20tolerance%20of%20%24n%20%3D%203f%20%2B%201%24%2C%20this%20is%20not%20possible%20in%20the%20presence%20of%20an%20adversary.%20The%20exact%20lower%20bounds%20on%20the%20resilience%20required%20for%20one-round%20finality%20have%20been%20established%20by%20%5BMartin%20and%20Alvisi%20(2006)%5D(https%3A%2F%2Fwww.cs.cornell.edu%2Florenzo%2Fpapers%2Ffab.pdf)%2C%20%5BDutta%2C%20Guerraoui%20and%20Vukolic%20(2005)%5D(https%3A%2F%2Flpdwww.epfl.ch%2Fupload%2Fdocuments%2Fpublications%2F567931850DGV-feb-05.pdf)%2C%20%5BAbraham%20et%20al.%20(2021)%5D(https%3A%2F%2Feprint.iacr.org%2F2021%2F1138.pdf)%2C%20and%20%5BKuznetsov%20et%20al.%20(2021)%5D(https%3A%2F%2Fdl.acm.org%2Fdoi%2Fpdf%2F10.1145%2F3465084.3467924).%0A%0A%0ABut%20here's%20the%20key%20observation%3A%20we%20design%20distributed%20systems%20to%20tolerate%20up%20to%20%24f%24%20malicious%20validators.%20In%20Ethereum's%20case%2C%20safety%20is%20guaranteed%20as%20long%20as%20fewer%20than%20%24f%20%3D%2033%5C%25%24%20of%20validators%20are%20malicious.%20And%20if%20safety%20*is*%20violated%20(e.g.%2C%20a%20conflicting%20block%20is%20finalized)%2C%20the%20protocol%20guarantees%20that%20at%20least%20%2433%5C%25%24%20of%20stake%20can%20be%20identified%20and%20%5Bslashed%5D(https%3A%2F%2Feth2book.info%2Fcapella%2Fpart2%2Fincentives%2Fslashing%2F)%20---%20a%20property%20known%20as%20%5Baccountable%20safety%5D(https%3A%2F%2Farxiv.org%2Fabs%2F1710.09437).%20%5B%5Eaccountable%5D%20This%20economic%20deterrent%20is%20a%20cornerstone%20of%20Ethereum's%20security%20model.%0A%0A%5B%5Eaccountable%5D%3A%20Other%20seminal%20work%20in%20this%20area%20include%20%5BPolygraph%5D(https%3A%2F%2Feprint.iacr.org%2F2019%2F587.pdf)%2C%20%5BBFT%20protocol%20forensics%5D(https%3A%2F%2Fdl.acm.org%2Fdoi%2Fpdf%2F10.1145%2F3460120.3484566)%2C%20and%20the%20%5Bavailability-accountability%20dilemma%5D(https%3A%2F%2Farxiv.org%2Fpdf%2F2105.06075).%0A%0AMost%20of%20the%20time%20though%2C%20validators%20%5Bare%20online%20and%20behaving%20well%5D(https%3A%2F%2Fbeaconcha.in%2Fcharts%2Fparticipation_rate).%20We%20can%20expect%20to%20receive%20far%20more%20votes%20than%20just%20the%20%24n%20-%20f%20%3D%2067%5C%25%24%20minimum.%20In%20practice%2C%20the%20beacon%20chain%20typically%20sees%20attestations%20from%20**more%20than%2095%25**%20of%20all%20validators%20in%20each%20epoch!%0A%0AThis%20gap%20between%20the%20*worst%20case*%20we%20design%20for%20and%20the%20*common%20case*%20we%20observe%20is%20exactly%20what%20fast%20consensus%20exploits.%0A%0A%0A%23%23%20Three%20Ways%20to%20Finalize%20in%20One%20Round%0A%0AFast%20protocols%20can%20provide%20full%20economic%20finality%20guarantees%20in%20a%20single%20voting%20round.%20There%20are%20three%20ways%20%5B%5Eoptions%5D%20to%20achieve%20this%3A%0A%0A%5B%5Eoptions%5D%3A%20Here%20we%20consider%20only%20the%20standard%20BFT%20model.%20Different%20fault%20models%20(e.g.%2C%20%5Bcorrupt-but-alive%5D(https%3A%2F%2Farxiv.org%2Fpdf%2F1904.10067))%20expand%20the%20number%20of%20possible%20trade-offs.%0A%0A%3C!--%20TODO%20%5Bdiagram%20suggestion%5D%3A%20A%202x2-style%20diagram%20or%20table%20showing%20the%20three%20options%3A%0A%20%20Option%201%3A%20f%3D33%25%2C%20need%20100%25%20votes%20(same%20security%2C%20very%20optimistic)%0A%20%20Option%202%3A%20f%3C20%25%2C%20need%2067%25%20votes%20(weaker%20adversary%2C%20always%20works)%0A%20%20Option%203%3A%20f%3D30%25%2C%20need%2095%25%20votes%20(slightly%20weaker%20adversary%2C%20realistic%20optimism)%0AWith%20the%20axes%20being%20%22adversary%20tolerance%22%20vs%20%22vote%20threshold%20needed%22%20--%3E%0A%0A1.%20**Same%20security%2C%20very%20optimistic.**%20We%20keep%20%24f%20%3D%2033%5C%25%24%20tolerance%2C%20but%20finalize%20in%20one%20round%20only%20when%20*all*%20%24100%5C%25%24%20of%20votes%20arrive.%20If%20we%20only%20get%20%2467%5C%25%24%2C%20we%20fall%20back%20to%20two%20rounds%2C%20as%20usual.%20%0A2.%20**Weaker%20adversary%2C%20always%20fast.**%20We%20lower%20our%20tolerance%20to%20%24f%20%3C%2020%5C%25%24%2C%20in%20which%20case%20we%20can%20always%20finalize%20in%20one%20round.%0A3.%20**Somewhere%20in%20between.**%20We%20pick%20a%20trade-off%20between%20safety%2C%20liveness%20and%20fast-path.%20For%20example%2C%20we%20can%20tolerate%20a%20slightly%20weaker%20adversary%20(e.g.%2C%20%24f%20%3D%2030%5C%25%24)%2C%20and%20in%20return%20finalize%20in%20one%20round%20under%20realistic%20conditions%20(e.g.%2C%20when%20%2495%5C%25%24%20of%20votes%20arrive).%20When%20fewer%20votes%20arrive%2C%20we%20fall%20back%20to%20two%20rounds%2C%20or%20try%20to%20finalize%20again%20next%20round.%0A%0A%0AOption%20(3)%20is%20an%20interesting%20option%20for%20Ethereum%3A%20most%20of%20the%20time%20a%20majority%20of%20validators%20participate%2C%20and%20if%20they%20don't%2C%20we%20might%20have%20a%20good%20reason%20to%20be%20cautious%20and%20not%20finalize.%20Therefore%20in%20this%20write-up%20we%20will%20focus%20on%20(3).%0A%0A%0A%0A%0A%23%23%20The%20Core%20Idea%0A%0ASo%20how%20does%20it%20work%3F%0A%0AThe%20idea%20is%20surprisingly%20simple%3A%20every%20validator%20votes%20for%20the%20block%20it%20received.%20If%20*enough*%20votes%20for%20the%20same%20block%20arrive%20(the%20*optimistic%20condition*)%2C%20you%20finalize%20immediately.%20If%20not%2C%20fall%20back%20to%20the%20standard%20two-round%20protocol.%0A%0A!%5B%5D(https%3A%2F%2Fnotes.ethereum.org%2F_uploads%2FrJrXd3uwZl.png)%0A%0AThe%20threshold%20for%20%22enough%22%20is%20controlled%20by%20a%20parameter%20%24p%24%3A%20the%20number%20of%20votes%20that%20can%20be%20*missing*%20and%20still%20allow%20the%20fast%20path%20to%20work.%20The%20fast%20path%20triggers%20when%20%24n%20-%20p%24%20votes%20are%20collected%20for%20the%20same%20block.%0A%0AIn%20pseudocode%3A%0A%0A%60%60%60%0A%2F%2F%20fast%20path%0Aif%20n%20-%20p%20votes%20are%20received%20for%20B%3A%0A%20%20%20%20finalize%20B%0A%0A%2F%2F%20slow%20path%20(fallback)%0Aif%20n%20-%20f%20votes%20are%20received%3A%0A%20%20%20%20let%20B%20%3D%20block%20with%20the%20most%20votes%0A%20%20%20%20run%20standard%20consensus%20on%20B%0A%20%20%20%20finalize%20the%20result%0A%60%60%60%0A%0AThis%20dual-path%20approach%20was%20introduced%20by%20%5BKursawe%20(2002)%5D(https%3A%2F%2Fieeexplore.ieee.org%2Fabstract%2Fdocument%2F1180196)%2C%20%5BDutta%2C%20Guerraoui%20and%20Vukolic%20(2005)%5D(https%3A%2F%2Flpdwww.epfl.ch%2Fupload%2Fdocuments%2Fpublications%2F567931850DGV-feb-05.pdf)%2C%20%5BMartin%20and%20Alvisi%20(2006)%5D(https%3A%2F%2Fwww.cs.cornell.edu%2Florenzo%2Fpapers%2Ffab.pdf)%20and%20%5BSong%20and%20van%20Renesse%20(2008)%5D(https%3A%2F%2Fresearch.cs.cornell.edu%2Fprojects%2FQuicksilver%2Fpublic_pdfs%2F52180438.pdf).%20Every%20recent%20protocol%20builds%20on%20the%20same%20foundation%3B%20the%20improvements%20are%20in%20the%20details.%5B%5Esync%5D%0A%0A%5B%5Esync%5D%3A%20This%20write-up%20focuses%20on%20partially%20synchronous%20protocols.%20There%20exist%20cousins%20in%20the%20synchronous%20model%20too%2C%20such%20as%20%5BThunderella%5D(https%3A%2F%2Feprint.iacr.org%2F2017%2F913.pdf)%20and%20%5BOptSync%5D(https%3A%2F%2Feprint.iacr.org%2F2020%2F458.pdf).%20%0A%0A%23%23%20Why%20Is%20This%20Safe%3F%0A%0AThis%20is%20the%20crucial%20question.%20If%20one%20validator%20fast-finalizes%20a%20green%20block%2C%20but%20others%20didn't%20see%20enough%20green%20votes%20and%20fell%20back%20to%20slow%20consensus%2C%20could%20they%20finalize%20a%20*different*%20block%3F%0A%0ALet's%20walk%20through%20a%20concrete%20example%20with%20%24n%20%3D%204%24%20validators%2C%20%24f%20%3D%201%24%2C%20and%20%24p%20%3D%200%24%20(meaning%20we%20need%20all%20%24n%20-%20p%20%3D%204%24%20votes%20to%20fast-finalize).%0A%0A%23%23%23%20The%20happy%20case%0A%0AThe%20proposer%20sends%20the%20green%20block%20to%20everyone.%20All%20four%20validators%20vote%20green.%20One%20validator%20collects%20all%204%20green%20votes%20and%20fast-finalizes.%0A%0A!%5B%5D(https%3A%2F%2Fnotes.ethereum.org%2F_uploads%2FryxG4d3_wZg.png)%0A%3C!--%20Diagram%3A%20green%20block%20proposed%20%E2%86%92%204%20green%20votes%20%E2%86%92%20checkmark%20at%20fast%20path%20--%3E%0A%0ABut%20what%20about%20the%20other%20validators%3F%20Before%20running%20the%20fallback%2C%20every%20honest%20validator%20receives%20at%20least%203%20votes.%20Out%20of%20these%2C%20at%20most%20one%20can%20be%20malicious.%20Thus%20every%20honest%20validator%20will%20observe%20a%20majority%20of%20green%20votes.%20When%20they%20enter%20the%20fallback%2C%20they%20all%20propose%20the%20green%20block.%20Since%20all%20honest%20validators%20propose%20the%20same%20value%2C%20green%20is%20decided.%0A%0A!%5B%5D(https%3A%2F%2Fnotes.ethereum.org%2F_uploads%2FHJg5Vunuwbe.png)%0A%3C!--%20Diagram%3A%20green%20block%20proposed%2C%20one%20red%20vote%20(malicious)%2C%20but%20green%20still%20wins%20in%20fallback%20%E2%86%92%20checkmark%20--%3E%0A%0AThe%20key%20insight%3A%20if%20*any*%20validator%20sees%20%24n%20-%20p%24%20votes%20for%20green%20(fast-finalizing%20it)%2C%20then%20*every*%20honest%20validator%20must%20have%20seen%20a%20majority%20of%20green%20votes.%20This%20means%20the%20fallback%20can%20never%20contradict%20the%20fast%20path.%20Safety%20is%20preserved.%0A%0AIn%20PBFT-like%20protocols%2C%20for%20example%2C%20the%20fallback%20would%20consist%20of%20a%20*view%20change*%3A%20a%20rotation%20to%20the%20next%20pre-determined%20leader.%20Each%20validator%20broadcasts%20a%20view-change%20message%20containing%20its%20latest%20vote%2C%20and%20the%20protocol%20requires%20the%20new%20leader%20to%20propose%20whichever%20block%20accumulated%20the%20most%20votes%20across%20those%20messages.%20Since%20every%20honest%20validator%20has%20seen%20a%20majority%20of%20green%20votes%2C%20the%20new%20leader%20is%20forced%20to%20propose%20green%20---%20fast-finalized%20and%20slow-finalized%20values%20are%20guaranteed%20to%20agree.%0A%0A%3C!--%20More%20generally%2C%20in%20PBFT-like%20protocols%2C%20the%20view%20change%20mechanism%20can%20enforce%20this%3A%20the%20next%20leader%20must%20propose%20the%20block%20with%20the%20most%20votes%2C%20backed%20by%20the%20view%20change%20messages%20it%20received.--%3E%0A%0A%23%23%20How%20the%20Idea%20Evolved%0A%0AThe%20basic%20idea%20has%20been%20refined%20over%20two%20decades.%20Here%20we%20highlight%20one%20key%20contribution%20per%20line%20of%20work.%0A%0A%3C!--%20TODO%20%5Bdiagram%20suggestion%5D%3A%20A%20timeline%20visualization%20showing%3A%0A2002%20Kursawe%20%E2%86%92%202004%20Vukolic%20%E2%86%92%202006%20FaB%20Paxos%20%E2%86%92%20...%20%E2%86%92%202021%20SBFT%20%E2%86%92%20...%20%E2%86%92%202025%20Kudzu%2FAlpenglow%2FHydrangea%2FMinimmit%0Awith%20the%20key%20contribution%20of%20each%20labeled%20--%3E%0A%0A%23%23%23%20Parametrization%3A%20%5BFaB%20Paxos%5D(https%3A%2F%2Fwww.cs.cornell.edu%2Florenzo%2Fpapers%2FMartin06Fast.pdf)%20and%20%5BDGV%5D(https%3A%2F%2Finfoscience.epfl.ch%2Fserver%2Fapi%2Fcore%2Fbitstreams%2F19ce5930-31af-4489-9551-d5d014b8c1f1%2Fcontent)%0A%0A%5BMartin%20and%20Alvisi%5D(https%3A%2F%2Fwww.cs.cornell.edu%2Florenzo%2Fpapers%2FMartin06Fast.pdf)%20established%20the%20parametrization%20still%20commonly%20used%20today.%20They%20show%3A%0A%0A-%20If%20%24n%20%5Cgeq%205f%20%2B%201%24%20(so%20%24f%20%3C%2020%5C%25%24)%2C%20we%20can%20safely%20fast-finalize%20with%20just%20%24n%20-%20f%24%20votes%2C%20no%20extra%20threshold%20needed.%0A-%20More%20generally%2C%20with%20the%20parameter%20%24p%24%3A%20as%20long%20as%20%24n%20%5Cgeq%203f%20%2B%202p%20%2B%201%24%2C%20we%20can%20fast-finalize%20after%20%24n%20-%20p%24%20votes.%0A%0AThis%20gives%20system%20designers%20a%20tunable%20knob%3A%20trade%20adversary%20tolerance%20for%20a%20more%20achievable%20vote%20threshold.%20%0A%0AIn%20addition%2C%20%5BDutta%2C%20Guerraoui%20and%20Vukolic%5D(https%3A%2F%2Flpdwww.epfl.ch%2Fupload%2Fdocuments%2Fpublications%2F567931850DGV-feb-05.pdf)%20provide%20a%20more%20general%20parametrization%20in%20the%20Paxos%20model%20and%20notice%20that%20resilience%20can%20actually%20be%20improved%2C%20as%20we%20will%20see%20in%20the%20next%20section.%0A%0A%0A%23%23%23%20Better%20Resilience%3A%20%5BKuznetsov%2C%20Tonkikh%2C%20and%20Zhang%5D(https%3A%2F%2Fdl.acm.org%2Fdoi%2Fpdf%2F10.1145%2F3465084.3467924)%20and%20%5BAbraham%20et%20al.%5D(https%3A%2F%2Farxiv.org%2Fpdf%2F2102.07240)%0A%0ACan%20we%20do%20even%20better%20than%20FaB%2C%20that%20fast%20finalizes%20a%20block%20after%20seeing%204%20out%20of%204%20votes%3F%20Can%20we%20fast%20finalize%20after%20just%203%20out%20of%204%20votes%3F%0A%0A!%5B%5D(https%3A%2F%2Fnotes.ethereum.org%2F_uploads%2FBklrHd2uw-l.png)%0A%3C!--%20Diagram%3A%20green%20block%2C%20only%203%20green%20votes%2C%20checkmark%20at%20fast%20path%20--%3E%0A%0AAt%20first%20glance%2C%20no.%20A%20node%20might%20see%203%20green%20votes%20and%20fast%20finalize%20the%20green%20block.%20If%20the%20proposer%20is%20malicious%20and%20sends%20different%20blocks%20to%20different%20validators%2C%20a%20node%20might%20see%201%20green%20and%202%20red%20votes%20in%20the%20same%20execution%2C%20and%20would%20naively%20propose%20the%20majority%20color%20to%20the%20fallback.%20The%20fallback%20might%20decide%20red%2C%20leading%20to%20a%20safety%20violation%3A%0A%0A!%5B%5D(https%3A%2F%2Fnotes.ethereum.org%2F_uploads%2FrJb3Bd3uvZe.png)%0A%3C!--%20Diagram%3A%20red%20block%2C%20red%20votes%20dominating%2C%20X%20mark%20(safety%20violation)%20--%3E%0A%0AThe%20fix%20is%20elegant%3A%20**equivocation%20detection**.%20If%20a%20validator%20sees%20votes%20for%20*both*%20a%20valid%20red%20and%20a%20valid%20green%20block%2C%20that's%20irrefutable%20evidence%20the%20proposer%20is%20Byzantine.%20The%20validator%20can%20wait%20for%20one%20more%20vote%20to%20break%20the%20tie%2C%20and%20then%20act%20correctly%3A%0A%0A!%5B%5D(https%3A%2F%2Fnotes.ethereum.org%2F_uploads%2FrJVUd3uvbg.png)%0A%3C!--%20Diagram%3A%20mixed%20red%2Fgreen%2C%20dashed%20diamond%20(detected%20equivocation)%2C%20then%20correct%20resolution%20%E2%86%92%20checkmark%20--%3E%0A%0AThis%20yields%20a%20tighter%20lower%20bound%3A%20we%20can%20fast-finalize%20after%20%24n%20-%20p%24%20votes%2C%20as%20long%20as%20%24n%20%5Cgeq%203f%20%2B%202p%20-%201%24.%5B%5Ebound%5D%0A%0A%5B%5Ebound%5D%3A%20This%20requires%20%24p%20%5Cgeq%201%24%2C%20to%20not%20go%20against%20the%20BFT%20lowerbound.%20In%20other%20words%2C%20we%20get%20a%20better%20fast%20path%20%22for%20free%22.%0A%0A%3C!--%20%5B%5Econcurrent%5D%3A%20%5BDutta%2C%20Guerraoui%20and%20Vukolic%20(2005)%5D(https%3A%2F%2Finfoscience.epfl.ch%2Fserver%2Fapi%2Fcore%2Fbitstreams%2F19ce5930-31af-4489-9551-d5d014b8c1f1%2Fcontent)%20have%20established%20similar%20bounds.!--%3E%0A%0A%0A%23%23%23%20Linear%20Complexity%3A%20%5BSBFT%5D(https%3A%2F%2Farxiv.org%2Fabs%2F1804.01626)%0A%0AOver%20the%20years%2C%20many%20protocols%20added%20a%20fast%20path%20(%5BZyzzyva%5D(https%3A%2F%2Fdl.acm.org%2Fdoi%2Fpdf%2F10.1145%2F1658357.1658358)%2C%20%5BAliph%5D(https%3A%2F%2Fdl.acm.org%2Fdoi%2Fpdf%2F10.1145%2F1755913.1755950)%2C%20%5BZelma%5D(https%3A%2F%2Farxiv.org%2Fpdf%2F1801.10022)%2C%20among%20others).%0A%0A%5BSBFT%5D(https%3A%2F%2Farxiv.org%2Fabs%2F1804.01626)%20showed%20how%20to%20achieve%20the%20fast%20path%20with%20**linear%20message%20complexity**%2C%20by%20using%20signature%20aggregation%20at%20the%20leader.%20Approaches%20like%20these%20are%20essential%20for%20large%20validator%20sets%20like%20Ethereum's.%20%0A%0A%0A%23%23%23%20Simplex%20Integration%3A%20%5BBanyan%5D(https%3A%2F%2Farxiv.org%2Fabs%2F2312.05869)%2C%20%5BKudzu%5D(https%3A%2F%2Farxiv.org%2Fabs%2F2505.08771)%2C%20and%20%5BAlpenglow%5D(https%3A%2F%2Fwww.anza.xyz%2Falpenglow-1-1)%0A%0AThe%20%5BInternet%20Computer%20Consensus%5D(https%3A%2F%2Feprint.iacr.org%2F2021%2F632)%20and%20%5BSimplex%5D(https%3A%2F%2Feprint.iacr.org%2F2023%2F463)%20protocol%20family%20introduce%20the%20idea%20that%20every%20node%20exits%20each%20view%20with%20a%20certificate%2C%20which%20makes%20the%20protocol%20simpler%20and%20easier%20to%20reason%20about.%0A%0A%5BBanyan%5D(https%3A%2F%2Feprint.iacr.org%2F2024%2F1227)%20renewed%20general%20interest%20in%20one-round%20finality%20by%20showing%20that%20a%20fast%20path%20is%20possible%20for%20the%20ICC%20protocol%20in%20the%20%243f%20%2B%202p%20-%20%201%24%20model%2C%20and%20showed%20practical%20benefits.%20%0A%0A%5BKudzu%5D(https%3A%2F%2Farxiv.org%2Fabs%2F2505.08771)%2C%20based%20on%20Simplex%2C%20achieves%20a%20simpler%20protocol%20with%20improved%20message%20complexity%2C%20and%20is%20the%20first%20protocol%20to%20combine%20one-round%20finality%20with%20erasure-coded%20broadcast%20%5B%5Ekudzu%5D%2C%20critical%20for%20both%20latency%20and%20throughput.%0A%0A%5B%5Ekudzu%5D%3A%20Kudzu%20inherts%20its%20propagation%20mechanism%20from%20%5BDispersedSimplex%5D(https%3A%2F%2Feprint.iacr.org%2F2023%2F1916.pdf)%2C%20which%20itself%20builds%20on%20a%20long%20line%20of%20work%20on%20%5Berasure%20coded%20broadcast%5D(https%3A%2F%2Fdecentralizedthoughts.github.io%2F2024-08-08-vid%2F)%2C%20popularized%20by%20%5BTurbine%5D(https%3A%2F%2Fsolana.com%2Fnews%2Fturbine---solana-s-block-propagation-protocol-solves-the-scalability-trilemma).%0A%0A%5BAlpenglow%5D(https%3A%2F%2Fwww.anza.xyz%2Falpenglow-1-1)%20uses%20a%20similar%20voting%20scheme%20but%20extends%20erasure-coded%20dissemination%20to%20PoS%2C%20and%20decouples%20it%20from%20voting.%20The%20added%20latency%20is%20compensated%20by%20leveraging%20the%20gained%20equivocation%20detection%20(assuming%20granular%20synchrony)%20to%20tolerate%20%2420%5C%25%24%20crash%20faults%20on%20top%20of%2020%5C%25%20Byzantine%20faults.%0A%0A%0A%23%23%23%20Crash%20Faults%3A%20%5BHydrangea%5D(https%3A%2F%2Feprint.iacr.org%2F2025%2F1112)%0A%0AReal%20networks%20don't%20just%20have%20malicious%20nodes%2C%20they%20have%20nodes%20that%20crash%2C%20lose%20connectivity%2C%20or%20fall%20behind.%20%5BHydrangea%5D(https%3A%2F%2Feprint.iacr.org%2F2025%2F1112)%20extends%20the%20model%20to%20include%20crash%20faults.%20When%20the%20number%20of%20nodes%20is%20larger%20than%20%243f%2B2k%2Bc%2B1%24%2C%20the%20fast%20path%20tolerates%20%24p%3D(c%2Bk)%2F2%24%20faults%2C%20and%20the%20slow%20path%20can%20handle%20both%20%24f%24%20byzantine%20and%20%24c%24%20crashed%20nodes.%20%0A%0A%3C!--%20in%20the%20slow%20path%20examines%20crash%20fault%20tolerance%20in%20more%20detail%2C%20presenting%20a%20model%20that%20tolerates%20crash%20faults%20under%20partial%20synchrony%20alongside%20the%20fast%20path.%20--%3E%0A%0A%23%23%23%20No%20Slow%20Path%20at%20All%3A%20%5BMinimmit%5D(https%3A%2F%2Farxiv.org%2Fabs%2F2508.10862)%0A%0A%5BMinimmit%5D(https%3A%2F%2Farxiv.org%2Fabs%2F2508.10862)%2C%20another%20Simplex%20based%20protocol%2C%20takes%20option%20(2)%20to%20its%20logical%20conclusion%3A%20if%20we%20accept%20%24f%20%3C%2020%5C%25%24%2C%20we%20can%20*always*%20finalize%20in%20one%20round%20and%20don't%20need%20a%20slow%20path%20at%20all.%0A%0AWithout%20a%20slow%20path%2C%20the%20notarization%20quorum%20only%20has%20to%20intersect%20with%20the%20fast%20finalization%20quorum%20of%20%24n%20-%20f%24.%20This%20means%20notarization%20only%20requires%20%242f%20%2B%201%24%20votes%20(compared%20to%20%243f%20%2B%201%24%20in%20Kudzu).%20The%20result%20is%20faster%20block%20production%2C%20at%20the%20cost%20of%20potentially%20slower%20finalization%20when%20the%20optimistic%20conditions%20aren't%20met.%0A%0A%0A%23%23%23%20Sharding%3A%20%5BConsensus%20on%20Demand%5D(https%3A%2F%2Farxiv.org%2Fpdf%2F2202.03756)%20and%20%5BMangrove%5D(https%3A%2F%2Farxiv.org%2Fpdf%2F2509.06616)%0A%0A%0AGoing%20back%20to%20the%20dual-path%20design%20from%20the%20%5BCore%20Idea%5D(%23the-core-idea)%20section%2C%20it%20was%20noted%20that%20the%20fallback%20can%20be%20executed%20%5Bon%20Demand%5D(https%3A%2F%2Farxiv.org%2Fpdf%2F2202.03756)%2C%20i.e.%2C%20only%20when%20it's%20needed%2C%20instead%20of%20always%20incurring%20its%20cost.%0A%0A%5BMangrove%5D(https%3A%2F%2Farxiv.org%2Fpdf%2F2509.06616)%20extends%20this%20idea%20to%20provide%20one-round%20finality%20in%20a%20fully%20sharded%20(horizontally%20scalable)%20system%2C%20and%20shows%20that%20the%20fast%20path%20can%20even%20work%20for%20cross-shard%20transactions.%20%0A%0A%3C!--The%20fast%20path%20can%20even%20work%20for%20cross-shard%20transactions%20in%20sharded%20systems%2C%20where%20a%20fallback%20is%20only%20applied%20when%20needed%20(or%20%5Bon%20Demand%5D(https%3A%2F%2Farxiv.org%2Fpdf%2F2202.03756)).%20--%3E%0A%0A%0A%23%23%20Why%20Ethereum%20Is%20Uniquely%20Positioned%0A%0A%23%23%23%20Voting%20Rounds%20Dominate%20Latency%0A%0AEthereum%20has%20the%20%5Blargest%20validator%20set%20(and%20node%20count)%5D(https%3A%2F%2Fdl.acm.org%2Fdoi%2Fepdf%2F10.1145%2F3771572)%20of%20any%20blockchain.%20Even%20with%20vote%20propagation%20parallelized%20across%2064%20subnets%2C%20a%20voting%20round%20currently%20takes%20more%20than%20**6%20minutes**.%20We%20expect%20that%20this%20number%20can%20be%20considerably%20improved%20through%20novel%20networking%20primitives.%0A%0AIn%20most%20other%20systems%2C%20block%20propagation%20takes%20comparable%20time%20to%20voting%2C%20so%20saving%20one%20voting%20round%20yields%20roughly%20a%20%2433%5C%25%24%20improvement.%20In%20Ethereum%2C%20voting%20dominates%2C%20so%20saving%20a%20round%20could%20yield%20up%20to%20a%20**40%25%20speedup**%20in%20finalization%20time%20(in%20expectation%20finalization%20moves%20from%202.5%20to%201.5%20voting%20rounds).%0A%0A%3C!--%20TODO%20%5Bdiagram%20suggestion%5D%3A%20A%20bar%20chart%20comparing%20time%20breakdown%3A%0A%20%20Current%3A%20%5Bblock%20propagation%20%7C%20voting%20round%201%20%7C%20voting%20round%202%5D%20%3D%20~13%20min%0A%20%20With%20fast%20path%3A%20%5Bblock%20propagation%20%7C%20single%20voting%20round%5D%20%3D%20~7%20min%20%0A%20%20%20%20with%20supernode%20fast%20path%3A%20TODO%20--%3E%0A%0A!%5B%5D(https%3A%2F%2Fnotes.ethereum.org%2F_uploads%2FrJ9nNBRdZx.png)%0A%0ASupernodes%20can%20often%20collect%20attestations%20faster%20than%20regular%20nodes.%20With%20one-round%20finality%2C%20supernodes%20can%20potentially%20spread%20an%20certificate%20of%20finality%20even%20before%20the%20voting%20round%20is%20over.%20%0AIn%20other%20words%2C%20it%20allows%20for%20optimistic%20networking%20designs.%0A%0A!%5B%5D(https%3A%2F%2Fnotes.ethereum.org%2F_uploads%2FS1vwAWLc-e.png)%0A%0A%0A%0A%23%23%23%20High%20Participation%20Rates%0A%0AEthereum%20slots%20have%20a%20fixed%20duration%2C%20in%20part%20to%20give%20even%20remote%20validators%20the%20chance%20to%20send%20a%20vote%20in%20time.%20This%20means%20that%20Ethereum%20already%20consistently%20captures%20**%5Bmore%20than%2095%25%20of%20attestations%5D(https%3A%2F%2Flab.ethpandaops.io%2Fethereum%2Fconsensus%2Foverview)**%20per%20epoch.%0A%0AThis%20is%20exactly%20the%20regime%20where%20the%20fast%20path%20shines%3A%20option%20(3)%20from%20above%20works%20when%20most%20validators%20participate%2C%20and%20Ethereum%20already%20satisfies%20this%20condition%20in%20practice.%0A%0A%0A%23%23%23%20Sequential%20Voting%20Maximizes%20the%20Benefit%0A%0ASome%20protocols%20run%20the%20fast%20and%20slow%20paths%20simultaneously%2C%20waiting%20for%20whichever%20completes%20first.%20In%20geo-decentralized%20settings%20the%20fast%20path%20typically%20wins%2C%20but%20if%20many%20nodes%20are%20co-located%2C%20two%20voting%20rounds%20among%20a%20smaller%20validator%20set%20(e.g.%2C%20%2460%5C%25%24)%20can%20be%20faster%20than%20one%20round%20among%20a%20larger%20set%20(e.g.%2C%20%2480%5C%25%24).%0A%0AEthereum's%20design%2C%20with%20fixed-duration%20slots%2C%20means%20voting%20rounds%20happen%20sequentially%20rather%20than%20concurrently.%20This%20makes%20saving%20an%20entire%20round%20more%20valuable.%0A%0A%23%23%23%20Finalization%20Thresholds%0A%0AEthereum's%20current%20finality%20threshold%20is%20%2467%5C%25%24%2C%20meaning%20%2433%5C%25%24%20of%20validators%20can%20block%20finalization.%20Raising%20this%20threshold%20(e.g.%2C%20to%20%2480%5C%25%24%20or%20%2483%5C%25%24)%20can%20actually%20be%20desirable%20as%20Vitalik%20pointed%20out%20%5Bhere%5D(https%3A%2F%2Fx.com%2FVitalikButerin%2Fstatus%2F1993439679081857433)%20and%20%5Bhere%5D(https%3A%2F%2Fx.com%2FVitalikButerin%2Fstatus%2F2029994081582207235).%0A%0ATo%20recap%3A%20Firstly%2C%20a%20%2417%24--%2420%5C%25%24%20minority%20could%20halt%20finality%20in%20response%20to%20a%20critical%20bug%20or%20a%20controversial%20fork.%20Secondly%2C%20a%20minority%20could%20also%20halt%20finality%20in%20case%20of%20censorship%2C%20causing%20a%20period%20of%20non-finality%2C%20in%20which%20two%20chains%20are%20competing.%20%0AIn%20other%20words%2C%20raising%20the%20finality%20threshold%20can%20make%20finality%20stronger!%20It%20does%20come%20at%20some%20drawbacks%2C%20which%20we%20are%20trying%20to%20overcome%20in%20our%20newest%20work%2C%20which%20we%20will%20share%20soon.%0A%0ASo%20to%20recap%2C%20we%20are%20considering%20a%20higher%20finalization%20threshold.%20This%20is%20really%20interesting%2C%20because%20a%20higher%20finalization%20threshold%20also%20*improves*%20the%20trade-off%20for%20one-round%20finality!%20The%20result%20is%20better%20economic%20safety%2C%20a%20more%20achievable%20fast%20path%2C%20and%20a%20cleaner%20protocol.%20We%20are%20actively%20exploring%20this%20direction%2C%20more%20to%20come%20soon.%0A%0A%3C!--%20TODO%3A%20expand%20on%20how%20the%20veto%20power%20%2F%20high%20threshold%20argument%20works%20in%20detail%20%3F%20--%3E%0A%0A%0A%23%23%20What's%20Next%3F%0A%0AWith%20these%20principles%20in%20mind%2C%20we%20have%20been%20working%20on%20new%20flavors%20of%20one-round%20finality%20specifically%20tailored%20for%20Ethereum%20---%20one%20piece%20of%20a%20broader%20effort%2C%20alongside%20other%20consensus%20and%20networking%20improvements%2C%20as%20well%20as%20validator%20consolidation%2C%20to%20dramatically%20cut%20Ethereum's%20finality%20time.%0A%0AIntegrating%20one-round%20finality%20into%20a%20finality%20gadget%20%E2%80%94%20one%20that%20also%20handles%20fork-choice%20interaction%20and%20the%20ebb-and-flow%20construction%20required%20by%20Ethereum%20(TODO%3A%20as%20outlined%20in%20Luca's%20post)%20%E2%80%94%20is%20an%20active%20area%20of%20research%2C%20and%20the%20right%20design%20choices%20here%20are%20still%20being%20worked%20out.%0A%0AThe%20design%20space%20is%20rich.%20Here%20is%20a%20preview%20of%20what%20we%20have%20been%20working%20on%3A%0A%0A-%20**Economic%20security%20trade-off.**%20Do%20we%20need%20to%20give%20up%20any%20economic%20security%20for%20a%20faster%20finality%3F%20We%20have%20been%20working%20on%20a%20new%20parametrization%20that%20improves%20the%20trade-off%20%E2%80%94%20stay%20tuned.%0A-%20**Raising%20the%20finality%20threshold.**%20What%20happens%20when%20the%20threshold%20goes%20to%20%2480%5C%25%24%20or%20above%3F%20Can%20we%20provide%20some%20safety%20during%20periods%20of%20non-finality%3F%20We%20have%20a%20paper%20in%20the%20works%20on%20this%20too.%0A-%20**Ebb-and-flow%20interaction.**%20How%20can%20a%20one-round%20finality%20gadget%20best%20be%20combined%20with%20an%20available%20chain%3F%0A-%20**The%20path%20to%20deployment.**%20What%20are%20the%20right%20intermediate%20steps%20to%20bring%20fast%20finality%20to%20Ethereum%2C%20and%20in%20which%20order%3F%20We'll%20have%20more%20to%20say%20on%20this%20soon.%0A%0A**Watch%20out%20for%20what's%20ahead%20---%20and%20let's%20ship%20Fast%20Finality%20for%20Ethereum!**%0A%0A%0A%0A---%0A%0A*Thank%20you%20to%20Luca%20Zanolini%2C%20Roberto%20Saltini%2C%20Ben%20Edgington%2C%20and%20Francesco%20D'Amato%20from%20the%20EF%20Consensus%20Team%2C%20as%20well%20as%20Ittai%20Abraham%2C%20Kartik%20Nayak%2C%20Alejandro%20Ranchal-Pedrosa%2C%20and%20Roger%20Wattenhofer%20for%20their%20valuable%20comments%20and%20feedback.*%0A","viewMode":"publish","isOwner":false,"isSignIn":false,"isLiked":false,"isBookmarked":false,"publishType":"view","commentCount":0,"isNotesRecommendationsEnabled":true,"recommendedNotes":[],"lastChangeUserInfo":{"name":"Yann%20Vonlanthen","path":"yannvon","avatarUrl":"https%3A%2F%2Fwww.gravatar.com%2Favatar%2F5bad18eba959b062a816b035d3f9dfb3%3Fs%3D96"}}`);
+  (function () {
+    const decodeStringProps = (props) => {
+      for (const key in props) {
+        if (typeof props[key] === 'string') {
+          props[key] = decodeURIComponent(props[key])
+        } else if (typeof props[key] === 'object') {
+          decodeStringProps(props[key])
+        }
+      }
+    }
+    decodeStringProps(window.publishProps)
+  })()
+</script>
+
+    <script src="https://tally.so/widgets/embed.js"></script>
+
+    
+</head>
+
+<body style="display:none;">
+    <div id="toasts-container" class="toasts-container z-[2000]"></div>
+    <div id="publish-page"># All You Need to Know About One-Round Finality
+
+*TL;DR: Finalizing in one voting round is possible. This write-up gives an overview of the progress over the last two decades; explains why it might be particularly beneficial to Ethereum, and which challenges we are currently working on.*
+
+Ethereum currently takes about **16 minutes** to finalize a block: two epochs of 32 slots at 12 seconds each (≈12.8 min), plus half an epoch of waiting time in expectation (≈3.2 min). That&#39;s 16 minutes before bridges can safely relay a transaction, 16 minutes before an L2 can consider an L1 anchor settled, and 16 minutes of uncertainty for high-value transfers. Cutting this time is one of the most impactful improvements we can make to Ethereum&#39;s user experience and ecosystem.
+
+Recently, a wave of new protocols have shown that it&#39;s possible to finalize in a *single voting round*: [Alpenglow](https://drive.google.com/file/d/1Rlr3PdHsBmPahOInP6-Pl0bMzdayltdV/view?pli=1) &amp; its academic twin [Kudzu](https://arxiv.org/abs/2505.08771), [Hydrangea](https://eprint.iacr.org/2025/1112), and [Minimmit](https://arxiv.org/abs/2508.10862), to name a few.
+
+In this post, we explain the core trick behind all of these protocols, trace how the idea evolved over the years, and discuss why Ethereum is uniquely positioned to benefit from it.
+
+
+## Why Two Rounds?
+
+Most BFT consensus protocols work with [two voting rounds](https://decentralizedthoughts.github.io/2025-11-22-three-round-BFT/). Depending on the protocol, the first round is called *prepare*, *justify*, or *notarize*, and the second *commit* or *finalize*. We&#39;ll use *notarize* and *finalize* throughout.
+
+&lt;!-- Diagram: PROPOSE → NOTARIZE → FINALIZE, showing the standard two-round pipeline --&gt;
+![](https://notes.ethereum.org/_uploads/ryxrGuhuw-x.png)
+
+Why two rounds? Intuitively, the first round establishes that enough validators have *seen* the block (a lock), and the second round establishes that enough validators *know that everyone has seen it* (a commit). This two-step dance is what makes it safe for validators to act on a decision, even if the network hiccups or the leader turns out to be malicious.
+
+If someone tells you their protocol can finalize in one round, you are right to be sceptical. Most protocols today require [two voting rounds](https://decentralizedthoughts.github.io/2023-04-01-hotstuff-2/).[^bounds] 
+
+
+[^bounds]: In the standard model with fault tolerance of $n = 3f + 1$, this is not possible in the presence of an adversary. The exact lower bounds on the resilience required for one-round finality have been established by [Martin and Alvisi (2006)](https://www.cs.cornell.edu/lorenzo/papers/fab.pdf), [Dutta, Guerraoui and Vukolic (2005)](https://lpdwww.epfl.ch/upload/documents/publications/567931850DGV-feb-05.pdf), [Abraham et al. (2021)](https://eprint.iacr.org/2021/1138.pdf), and [Kuznetsov et al. (2021)](https://dl.acm.org/doi/pdf/10.1145/3465084.3467924).
+
+
+But here&#39;s the key observation: we design distributed systems to tolerate up to $f$ malicious validators. In Ethereum&#39;s case, safety is guaranteed as long as fewer than $f = 33\%$ of validators are malicious. And if safety *is* violated (e.g., a conflicting block is finalized), the protocol guarantees that at least $33\%$ of stake can be identified and [slashed](https://eth2book.info/capella/part2/incentives/slashing/) --- a property known as [accountable safety](https://arxiv.org/abs/1710.09437). [^accountable] This economic deterrent is a cornerstone of Ethereum&#39;s security model.
+
+[^accountable]: Other seminal work in this area include [Polygraph](https://eprint.iacr.org/2019/587.pdf), [BFT protocol forensics](https://dl.acm.org/doi/pdf/10.1145/3460120.3484566), and the [availability-accountability dilemma](https://arxiv.org/pdf/2105.06075).
+
+Most of the time though, validators [are online and behaving well](https://beaconcha.in/charts/participation_rate). We can expect to receive far more votes than just the $n - f = 67\%$ minimum. In practice, the beacon chain typically sees attestations from **more than 95%** of all validators in each epoch!
+
+This gap between the *worst case* we design for and the *common case* we observe is exactly what fast consensus exploits.
+
+
+## Three Ways to Finalize in One Round
+
+Fast protocols can provide full economic finality guarantees in a single voting round. There are three ways [^options] to achieve this:
+
+[^options]: Here we consider only the standard BFT model. Different fault models (e.g., [corrupt-but-alive](https://arxiv.org/pdf/1904.10067)) expand the number of possible trade-offs.
+
+&lt;!-- TODO [diagram suggestion]: A 2x2-style diagram or table showing the three options:
+  Option 1: f=33%, need 100% votes (same security, very optimistic)
+  Option 2: f&lt;20%, need 67% votes (weaker adversary, always works)
+  Option 3: f=30%, need 95% votes (slightly weaker adversary, realistic optimism)
+With the axes being &#34;adversary tolerance&#34; vs &#34;vote threshold needed&#34; --&gt;
+
+1. **Same security, very optimistic.** We keep $f = 33\%$ tolerance, but finalize in one round only when *all* $100\%$ of votes arrive. If we only get $67\%$, we fall back to two rounds, as usual. 
+2. **Weaker adversary, always fast.** We lower our tolerance to $f &lt; 20\%$, in which case we can always finalize in one round.
+3. **Somewhere in between.** We pick a trade-off between safety, liveness and fast-path. For example, we can tolerate a slightly weaker adversary (e.g., $f = 30\%$), and in return finalize in one round under realistic conditions (e.g., when $95\%$ of votes arrive). When fewer votes arrive, we fall back to two rounds, or try to finalize again next round.
+
+
+Option (3) is an interesting option for Ethereum: most of the time a majority of validators participate, and if they don&#39;t, we might have a good reason to be cautious and not finalize. Therefore in this write-up we will focus on (3).
+
+
+
+
+## The Core Idea
+
+So how does it work?
+
+The idea is surprisingly simple: every validator votes for the block it received. If *enough* votes for the same block arrive (the *optimistic condition*), you finalize immediately. If not, fall back to the standard two-round protocol.
+
+![](https://notes.ethereum.org/_uploads/rJrXd3uwZl.png)
+
+The threshold for &#34;enough&#34; is controlled by a parameter $p$: the number of votes that can be *missing* and still allow the fast path to work. The fast path triggers when $n - p$ votes are collected for the same block.
+
+In pseudocode:
+
+```
+// fast path
+if n - p votes are received for B:
+    finalize B
+
+// slow path (fallback)
+if n - f votes are received:
+    let B = block with the most votes
+    run standard consensus on B
+    finalize the result
+```
+
+This dual-path approach was introduced by [Kursawe (2002)](https://ieeexplore.ieee.org/abstract/document/1180196), [Dutta, Guerraoui and Vukolic (2005)](https://lpdwww.epfl.ch/upload/documents/publications/567931850DGV-feb-05.pdf), [Martin and Alvisi (2006)](https://www.cs.cornell.edu/lorenzo/papers/fab.pdf) and [Song and van Renesse (2008)](https://research.cs.cornell.edu/projects/Quicksilver/public_pdfs/52180438.pdf). Every recent protocol builds on the same foundation; the improvements are in the details.[^sync]
+
+[^sync]: This write-up focuses on partially synchronous protocols. There exist cousins in the synchronous model too, such as [Thunderella](https://eprint.iacr.org/2017/913.pdf) and [OptSync](https://eprint.iacr.org/2020/458.pdf). 
+
+## Why Is This Safe?
+
+This is the crucial question. If one validator fast-finalizes a green block, but others didn&#39;t see enough green votes and fell back to slow consensus, could they finalize a *different* block?
+
+Let&#39;s walk through a concrete example with $n = 4$ validators, $f = 1$, and $p = 0$ (meaning we need all $n - p = 4$ votes to fast-finalize).
+
+### The happy case
+
+The proposer sends the green block to everyone. All four validators vote green. One validator collects all 4 green votes and fast-finalizes.
+
+![](https://notes.ethereum.org/_uploads/ryxG4d3_wZg.png)
+&lt;!-- Diagram: green block proposed → 4 green votes → checkmark at fast path --&gt;
+
+But what about the other validators? Before running the fallback, every honest validator receives at least 3 votes. Out of these, at most one can be malicious. Thus every honest validator will observe a majority of green votes. When they enter the fallback, they all propose the green block. Since all honest validators propose the same value, green is decided.
+
+![](https://notes.ethereum.org/_uploads/HJg5Vunuwbe.png)
+&lt;!-- Diagram: green block proposed, one red vote (malicious), but green still wins in fallback → checkmark --&gt;
+
+The key insight: if *any* validator sees $n - p$ votes for green (fast-finalizing it), then *every* honest validator must have seen a majority of green votes. This means the fallback can never contradict the fast path. Safety is preserved.
+
+In PBFT-like protocols, for example, the fallback would consist of a *view change*: a rotation to the next pre-determined leader. Each validator broadcasts a view-change message containing its latest vote, and the protocol requires the new leader to propose whichever block accumulated the most votes across those messages. Since every honest validator has seen a majority of green votes, the new leader is forced to propose green --- fast-finalized and slow-finalized values are guaranteed to agree.
+
+&lt;!-- More generally, in PBFT-like protocols, the view change mechanism can enforce this: the next leader must propose the block with the most votes, backed by the view change messages it received.--&gt;
+
+## How the Idea Evolved
+
+The basic idea has been refined over two decades. Here we highlight one key contribution per line of work.
+
+&lt;!-- TODO [diagram suggestion]: A timeline visualization showing:
+2002 Kursawe → 2004 Vukolic → 2006 FaB Paxos → ... → 2021 SBFT → ... → 2025 Kudzu/Alpenglow/Hydrangea/Minimmit
+with the key contribution of each labeled --&gt;
+
+### Parametrization: [FaB Paxos](https://www.cs.cornell.edu/lorenzo/papers/Martin06Fast.pdf) and [DGV](https://infoscience.epfl.ch/server/api/core/bitstreams/19ce5930-31af-4489-9551-d5d014b8c1f1/content)
+
+[Martin and Alvisi](https://www.cs.cornell.edu/lorenzo/papers/Martin06Fast.pdf) established the parametrization still commonly used today. They show:
+
+- If $n \geq 5f + 1$ (so $f &lt; 20\%$), we can safely fast-finalize with just $n - f$ votes, no extra threshold needed.
+- More generally, with the parameter $p$: as long as $n \geq 3f + 2p + 1$, we can fast-finalize after $n - p$ votes.
+
+This gives system designers a tunable knob: trade adversary tolerance for a more achievable vote threshold. 
+
+In addition, [Dutta, Guerraoui and Vukolic](https://lpdwww.epfl.ch/upload/documents/publications/567931850DGV-feb-05.pdf) provide a more general parametrization in the Paxos model and notice that resilience can actually be improved, as we will see in the next section.
+
+
+### Better Resilience: [Kuznetsov, Tonkikh, and Zhang](https://dl.acm.org/doi/pdf/10.1145/3465084.3467924) and [Abraham et al.](https://arxiv.org/pdf/2102.07240)
+
+Can we do even better than FaB, that fast finalizes a block after seeing 4 out of 4 votes? Can we fast finalize after just 3 out of 4 votes?
+
+![](https://notes.ethereum.org/_uploads/BklrHd2uw-l.png)
+&lt;!-- Diagram: green block, only 3 green votes, checkmark at fast path --&gt;
+
+At first glance, no. A node might see 3 green votes and fast finalize the green block. If the proposer is malicious and sends different blocks to different validators, a node might see 1 green and 2 red votes in the same execution, and would naively propose the majority color to the fallback. The fallback might decide red, leading to a safety violation:
+
+![](https://notes.ethereum.org/_uploads/rJb3Bd3uvZe.png)
+&lt;!-- Diagram: red block, red votes dominating, X mark (safety violation) --&gt;
+
+The fix is elegant: **equivocation detection**. If a validator sees votes for *both* a valid red and a valid green block, that&#39;s irrefutable evidence the proposer is Byzantine. The validator can wait for one more vote to break the tie, and then act correctly:
+
+![](https://notes.ethereum.org/_uploads/rJVUd3uvbg.png)
+&lt;!-- Diagram: mixed red/green, dashed diamond (detected equivocation), then correct resolution → checkmark --&gt;
+
+This yields a tighter lower bound: we can fast-finalize after $n - p$ votes, as long as $n \geq 3f + 2p - 1$.[^bound]
+
+[^bound]: This requires $p \geq 1$, to not go against the BFT lowerbound. In other words, we get a better fast path &#34;for free&#34;.
+
+&lt;!-- [^concurrent]: [Dutta, Guerraoui and Vukolic (2005)](https://infoscience.epfl.ch/server/api/core/bitstreams/19ce5930-31af-4489-9551-d5d014b8c1f1/content) have established similar bounds.!--&gt;
+
+
+### Linear Complexity: [SBFT](https://arxiv.org/abs/1804.01626)
+
+Over the years, many protocols added a fast path ([Zyzzyva](https://dl.acm.org/doi/pdf/10.1145/1658357.1658358), [Aliph](https://dl.acm.org/doi/pdf/10.1145/1755913.1755950), [Zelma](https://arxiv.org/pdf/1801.10022), among others).
+
+[SBFT](https://arxiv.org/abs/1804.01626) showed how to achieve the fast path with **linear message complexity**, by using signature aggregation at the leader. Approaches like these are essential for large validator sets like Ethereum&#39;s. 
+
+
+### Simplex Integration: [Banyan](https://arxiv.org/abs/2312.05869), [Kudzu](https://arxiv.org/abs/2505.08771), and [Alpenglow](https://www.anza.xyz/alpenglow-1-1)
+
+The [Internet Computer Consensus](https://eprint.iacr.org/2021/632) and [Simplex](https://eprint.iacr.org/2023/463) protocol family introduce the idea that every node exits each view with a certificate, which makes the protocol simpler and easier to reason about.
+
+[Banyan](https://eprint.iacr.org/2024/1227) renewed general interest in one-round finality by showing that a fast path is possible for the ICC protocol in the $3f + 2p -  1$ model, and showed practical benefits. 
+
+[Kudzu](https://arxiv.org/abs/2505.08771), based on Simplex, achieves a simpler protocol with improved message complexity, and is the first protocol to combine one-round finality with erasure-coded broadcast [^kudzu], critical for both latency and throughput.
+
+[^kudzu]: Kudzu inherts its propagation mechanism from [DispersedSimplex](https://eprint.iacr.org/2023/1916.pdf), which itself builds on a long line of work on [erasure coded broadcast](https://decentralizedthoughts.github.io/2024-08-08-vid/), popularized by [Turbine](https://solana.com/news/turbine---solana-s-block-propagation-protocol-solves-the-scalability-trilemma).
+
+[Alpenglow](https://www.anza.xyz/alpenglow-1-1) uses a similar voting scheme but extends erasure-coded dissemination to PoS, and decouples it from voting. The added latency is compensated by leveraging the gained equivocation detection (assuming granular synchrony) to tolerate $20\%$ crash faults on top of 20\% Byzantine faults.
+
+
+### Crash Faults: [Hydrangea](https://eprint.iacr.org/2025/1112)
+
+Real networks don&#39;t just have malicious nodes, they have nodes that crash, lose connectivity, or fall behind. [Hydrangea](https://eprint.iacr.org/2025/1112) extends the model to include crash faults. When the number of nodes is larger than $3f+2k+c+1$, the fast path tolerates $p=(c+k)/2$ faults, and the slow path can handle both $f$ byzantine and $c$ crashed nodes. 
+
+&lt;!-- in the slow path examines crash fault tolerance in more detail, presenting a model that tolerates crash faults under partial synchrony alongside the fast path. --&gt;
+
+### No Slow Path at All: [Minimmit](https://arxiv.org/abs/2508.10862)
+
+[Minimmit](https://arxiv.org/abs/2508.10862), another Simplex based protocol, takes option (2) to its logical conclusion: if we accept $f &lt; 20\%$, we can *always* finalize in one round and don&#39;t need a slow path at all.
+
+Without a slow path, the notarization quorum only has to intersect with the fast finalization quorum of $n - f$. This means notarization only requires $2f + 1$ votes (compared to $3f + 1$ in Kudzu). The result is faster block production, at the cost of potentially slower finalization when the optimistic conditions aren&#39;t met.
+
+
+### Sharding: [Consensus on Demand](https://arxiv.org/pdf/2202.03756) and [Mangrove](https://arxiv.org/pdf/2509.06616)
+
+
+Going back to the dual-path design from the [Core Idea](#the-core-idea) section, it was noted that the fallback can be executed [on Demand](https://arxiv.org/pdf/2202.03756), i.e., only when it&#39;s needed, instead of always incurring its cost.
+
+[Mangrove](https://arxiv.org/pdf/2509.06616) extends this idea to provide one-round finality in a fully sharded (horizontally scalable) system, and shows that the fast path can even work for cross-shard transactions. 
+
+&lt;!--The fast path can even work for cross-shard transactions in sharded systems, where a fallback is only applied when needed (or [on Demand](https://arxiv.org/pdf/2202.03756)). --&gt;
+
+
+## Why Ethereum Is Uniquely Positioned
+
+### Voting Rounds Dominate Latency
+
+Ethereum has the [largest validator set (and node count)](https://dl.acm.org/doi/epdf/10.1145/3771572) of any blockchain. Even with vote propagation parallelized across 64 subnets, a voting round currently takes more than **6 minutes**. We expect that this number can be considerably improved through novel networking primitives.
+
+In most other systems, block propagation takes comparable time to voting, so saving one voting round yields roughly a $33\%$ improvement. In Ethereum, voting dominates, so saving a round could yield up to a **40% speedup** in finalization time (in expectation finalization moves from 2.5 to 1.5 voting rounds).
+
+&lt;!-- TODO [diagram suggestion]: A bar chart comparing time breakdown:
+  Current: [block propagation | voting round 1 | voting round 2] = ~13 min
+  With fast path: [block propagation | single voting round] = ~7 min 
+    with supernode fast path: TODO --&gt;
+
+![](https://notes.ethereum.org/_uploads/rJ9nNBRdZx.png)
+
+Supernodes can often collect attestations faster than regular nodes. With one-round finality, supernodes can potentially spread an certificate of finality even before the voting round is over. 
+In other words, it allows for optimistic networking designs.
+
+![](https://notes.ethereum.org/_uploads/S1vwAWLc-e.png)
+
+
+
+### High Participation Rates
+
+Ethereum slots have a fixed duration, in part to give even remote validators the chance to send a vote in time. This means that Ethereum already consistently captures **[more than 95% of attestations](https://lab.ethpandaops.io/ethereum/consensus/overview)** per epoch.
+
+This is exactly the regime where the fast path shines: option (3) from above works when most validators participate, and Ethereum already satisfies this condition in practice.
+
+
+### Sequential Voting Maximizes the Benefit
+
+Some protocols run the fast and slow paths simultaneously, waiting for whichever completes first. In geo-decentralized settings the fast path typically wins, but if many nodes are co-located, two voting rounds among a smaller validator set (e.g., $60\%$) can be faster than one round among a larger set (e.g., $80\%$).
+
+Ethereum&#39;s design, with fixed-duration slots, means voting rounds happen sequentially rather than concurrently. This makes saving an entire round more valuable.
+
+### Finalization Thresholds
+
+Ethereum&#39;s current finality threshold is $67\%$, meaning $33\%$ of validators can block finalization. Raising this threshold (e.g., to $80\%$ or $83\%$) can actually be desirable as Vitalik pointed out [here](https://x.com/VitalikButerin/status/1993439679081857433) and [here](https://x.com/VitalikButerin/status/2029994081582207235).
+
+To recap: Firstly, a $17$--$20\%$ minority could halt finality in response to a critical bug or a controversial fork. Secondly, a minority could also halt finality in case of censorship, causing a period of non-finality, in which two chains are competing. 
+In other words, raising the finality threshold can make finality stronger! It does come at some drawbacks, which we are trying to overcome in our newest work, which we will share soon.
+
+So to recap, we are considering a higher finalization threshold. This is really interesting, because a higher finalization threshold also *improves* the trade-off for one-round finality! The result is better economic safety, a more achievable fast path, and a cleaner protocol. We are actively exploring this direction, more to come soon.
+
+&lt;!-- TODO: expand on how the veto power / high threshold argument works in detail ? --&gt;
+
+
+## What&#39;s Next?
+
+With these principles in mind, we have been working on new flavors of one-round finality specifically tailored for Ethereum --- one piece of a broader effort, alongside other consensus and networking improvements, as well as validator consolidation, to dramatically cut Ethereum&#39;s finality time.
+
+Integrating one-round finality into a finality gadget — one that also handles fork-choice interaction and the ebb-and-flow construction required by Ethereum (TODO: as outlined in Luca&#39;s post) — is an active area of research, and the right design choices here are still being worked out.
+
+The design space is rich. Here is a preview of what we have been working on:
+
+- **Economic security trade-off.** Do we need to give up any economic security for a faster finality? We have been working on a new parametrization that improves the trade-off — stay tuned.
+- **Raising the finality threshold.** What happens when the threshold goes to $80\%$ or above? Can we provide some safety during periods of non-finality? We have a paper in the works on this too.
+- **Ebb-and-flow interaction.** How can a one-round finality gadget best be combined with an available chain?
+- **The path to deployment.** What are the right intermediate steps to bring fast finality to Ethereum, and in which order? We&#39;ll have more to say on this soon.
+
+**Watch out for what&#39;s ahead --- and let&#39;s ship Fast Finality for Ethereum!**
+
+
+
+---
+
+*Thank you to Luca Zanolini, Roberto Saltini, Ben Edgington, and Francesco D&#39;Amato from the EF Consensus Team, as well as Ittai Abraham, Kartik Nayak, Alejandro Ranchal-Pedrosa, and Roger Wattenhofer for their valuable comments and feedback.*
+</div>
+    <!-- signin modal -->
+
+<div class="modal fade signin-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 10px; right: 20px; position: absolute;"><span aria-hidden="true">&times;</span></button>
+            
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+<h3>Sign in</h3>
+
+
+
+
+
+
+
+
+
+    <a href="https://notes.ethereum.org/auth/saml" class="neo-btn neo-btn-primary !py-3.5 !mx-auto btn-large">
+        Sign in via SAML
+    </a>
+
+
+
+
+
+
+    
+        <p class="separator">or</p>
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="social-buttons-container">
+    
+    
+    
+    
+    <a href="https://notes.ethereum.org/auth/github" class="btn btn-lg btn-block btn-social btn-github">
+        <i class="fa fa-github"></i> Sign in via GitHub
+    </a>
+    
+    
+    
+</div>
+
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+    
+
+    
+
+    
+
+
+    <script src="https://notes.ethereum.org/api/i18n.js"></script>
+     <script src="https://notes.ethereum.org/build/font-vendor.eaa8dd82d4e056021b8c.js" defer="defer"></script><script src="https://notes.ethereum.org/build/common-vendor.04da453a2a68f624f4d4.js" defer="defer"></script><script src="https://notes.ethereum.org/build/pretty-vendor.bf5977ba6d2a3251f6ef.js" defer="defer"></script><script src="https://notes.ethereum.org/build/pretty-common.097de477930a604f54de.js" defer="defer"></script><script src="https://notes.ethereum.org/build/pretty.307ba4cc6edebd3c2f03.js" defer="defer"></script>
+
+    
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+HTTP/1.1 200 Connection established
+
+HTTP/2 200 
+server: nginx
+date: Sun, 05 Jul 2026 16:48:41 GMT
+content-type: text/html; charset=utf-8
+vary: Accept-Encoding
+x-frame-options: SAMEORIGIN
+x-xss-protection: 0
+x-content-type-options: nosniff
+x-permitted-cross-domain-policies: none
+referrer-policy: strict-origin-when-cross-origin
+x-discourse-route: topics/show
+x-discourse-crawler-view: true
+last-modified: Mon, 28 Apr 2025 16:52:56 GMT
+vary: Accept
+cross-origin-opener-policy: same-origin-allow-popups
+cache-control: no-cache, no-store
+content-security-policy: upgrade-insecure-requests; base-uri 'self'; object-src 'none'; script-src 'nonce-yqzX5UvdvAMXfV1zBjzoJmQbK' 'strict-dynamic'; frame-ancestors 'self' https://ethereum-magicians-test.vercel.app https://warpcast.com; manifest-src 'self'
+x-discourse-cached: skip
+x-request-id: 42f918bb-001c-4f41-999c-56fe9e556561
+x-runtime: 0.165883
+x-discourse-trackview: 1
+strict-transport-security: max-age=63072000
+alt-svc: h3=":443"; ma=86400
+

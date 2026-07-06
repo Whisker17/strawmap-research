@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Why Ethereum Needs a Dynamically Available Protocol - Consensus - Ethereum Research</title>
+    <meta name="description" content="Author: Luca Zanolini 
+Huge thanks to Ben, Francesco, Joachim, Justin, Mikhail, Roberto, Thomas, Vitalik, and Yann for their feedback. 
+We are working on a proposal for the next consensus protocol for Ethereum. A central&amp;hellip;">
+    <meta name="generator" content="Discourse 3.5.2 - https://github.com/discourse/discourse version cc8d3f6f74bb618b3594ddc8fabcfd7663f63723">
+<link rel="icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/b/b5d7a1aa2f70490e3de763bef97271864784994f_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/3/3483ad4ffed2ab2b130f3e81fdb188ea2c478643_2_180x180.png">
+<meta name="theme-color" media="all" content="#fff">
+
+<meta name="color-scheme" content="light">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://ethresear.ch/t/why-ethereum-needs-a-dynamically-available-protocol/24418" />
+
+<link rel="search" type="application/opensearchdescription+xml" href="https://ethresear.ch/opensearch.xml" title="Ethereum Research Search">
+
+    <link href="/stylesheets/color_definitions_light-default_-1_2_d93422173e6af31573562c9ff4e20afcb8a5ec7d.css?__ws=ethresear.ch" media="all" rel="stylesheet" class="light-scheme"/>
+
+<link href="/stylesheets/common_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common"  />
+
+  <link href="/stylesheets/desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop"  />
+
+
+
+    <link href="/stylesheets/checklist_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="checklist"  />
+    <link href="/stylesheets/discourse-details_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-details"  />
+    <link href="/stylesheets/discourse-graphviz_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-graphviz"  />
+    <link href="/stylesheets/discourse-lazy-videos_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+    <link href="/stylesheets/discourse-local-dates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+    <link href="/stylesheets/discourse-math_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-math"  />
+    <link href="/stylesheets/discourse-narrative-bot_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+    <link href="/stylesheets/discourse-presence_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-presence"  />
+    <link href="/stylesheets/discourse-solved_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-solved"  />
+    <link href="/stylesheets/discourse-templates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-templates"  />
+    <link href="/stylesheets/discourse-topic-voting_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+    <link href="/stylesheets/docker_manager_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="docker_manager"  />
+    <link href="/stylesheets/footnote_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="footnote"  />
+    <link href="/stylesheets/poll_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll"  />
+    <link href="/stylesheets/discourse-topic-voting_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting_desktop"  />
+    <link href="/stylesheets/poll_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="/stylesheets/common_theme_4_9581ecb7d67f268461f04d3d4e1b015ea2ad1983.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="4" data-theme-name="easy footer"/>
+    <link href="/stylesheets/desktop_theme_2_6e0603c5f6be3f943ee4806f79959c7a96ab67f5.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop_theme" data-theme-id="2" data-theme-name="default"/>
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;Why Ethereum Needs a Dynamically Available Protocol&#39;" href="https://ethresear.ch/t/why-ethereum-needs-a-dynamically-available-protocol/24418.rss" />
+    <meta property="og:site_name" content="Ethereum Research" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://ethresear.ch/uploads/default/optimized/3X/7/e/7eefa69d2473c8bfe02859664d62000fb07eedeb_2_1024x489.png" />
+<meta property="og:image" content="https://ethresear.ch/uploads/default/optimized/3X/7/e/7eefa69d2473c8bfe02859664d62000fb07eedeb_2_1024x489.png" />
+<meta property="og:url" content="https://ethresear.ch/t/why-ethereum-needs-a-dynamically-available-protocol/24418" />
+<meta name="twitter:url" content="https://ethresear.ch/t/why-ethereum-needs-a-dynamically-available-protocol/24418" />
+<meta property="og:title" content="Why Ethereum Needs a Dynamically Available Protocol" />
+<meta name="twitter:title" content="Why Ethereum Needs a Dynamically Available Protocol" />
+<meta property="og:description" content="Author: Luca Zanolini  Huge thanks to Ben, Francesco, Joachim, Justin, Mikhail, Roberto, Thomas, Vitalik, and Yann for their feedback.  We are working on a proposal for the next consensus protocol for Ethereum. A central piece of the new design is a two-layer architecture: a fast available chain — the heartbeat — produced by a small randomly-sampled committee, and a separate finality mechanism that trails behind, finalizing blocks the heartbeat has already produced — crucially, with the two laye..." />
+<meta name="twitter:description" content="Author: Luca Zanolini  Huge thanks to Ben, Francesco, Joachim, Justin, Mikhail, Roberto, Thomas, Vitalik, and Yann for their feedback.  We are working on a proposal for the next consensus protocol for Ethereum. A central piece of the new design is a two-layer architecture: a fast available chain — the heartbeat — produced by a small randomly-sampled committee, and a separate finality mechanism that trails behind, finalizing blocks the heartbeat has already produced — crucially, with the two laye..." />
+<meta property="og:article:section" content="Consensus" />
+<meta property="og:article:section:color" content="A8497A" />
+<meta name="twitter:label1" value="Reading time" />
+<meta name="twitter:data1" value="7 mins 🕑" />
+<meta name="twitter:label2" value="Likes" />
+<meta name="twitter:data2" value="15 ❤" />
+<meta property="article:published_time" content="2026-03-17T13:56:33+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+    
+  </head>
+  <body class="crawler ">
+    
+    <header>
+  <a href="/">Ethereum Research</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/why-ethereum-needs-a-dynamically-available-protocol/24418">Why Ethereum Needs a Dynamically Available Protocol</a>
+    </h1>
+
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/consensus/29" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #A8497A'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>Consensus</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </span>
+      </div>
+
+  </div>
+
+  
+
+    <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+      <meta itemprop='headline' content='Why Ethereum Needs a Dynamically Available Protocol'>
+      <link itemprop='url' href='https://ethresear.ch/t/why-ethereum-needs-a-dynamically-available-protocol/24418'>
+      <meta itemprop='datePublished' content='2026-03-17T13:56:33Z'>
+        <meta itemprop='articleSection' content='Consensus'>
+      <meta itemprop='keywords' content=''>
+      <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop='name' content='Ethereum Foundation'>
+          <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+            <meta itemprop='url' content='https://ethresear.ch/uploads/default/original/2X/8/84d109b2d8dd6bc4fe5255cd44fc429e5649da32.png'>
+          </div>
+      </div>
+
+
+          <div id='post_1'  class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/luca_zanolini'><span itemprop='name'>luca_zanolini</span></a>
+                
+              </span>
+
+                <link itemprop="mainEntityOfPage" href="https://ethresear.ch/t/why-ethereum-needs-a-dynamically-available-protocol/24418">
+
+                <link itemprop="image" href="https://ethresear.ch/uploads/default/original/3X/7/e/7eefa69d2473c8bfe02859664d62000fb07eedeb.png">
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2026-03-17T13:56:33Z' class='post-time'>
+                    March 17, 2026,  1:56pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-03-18T00:47:10Z'>
+              <span itemprop='position'>1</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p><em>Author: <a href="https://x.com/luca_zanolini" rel="noopener nofollow ugc">Luca Zanolini</a></em></p>
+<p><em>Huge thanks to <a href="https://x.com/benjaminion_xyz" rel="noopener nofollow ugc">Ben</a>, <a href="https://x.com/fradamt" rel="noopener nofollow ugc">Francesco</a>, <a href="https://x.com/jneu_net" rel="noopener nofollow ugc">Joachim</a>, <a href="https://x.com/drakefjustin" rel="noopener nofollow ugc">Justin</a>, <a href="https://x.com/mkalinin2" rel="noopener nofollow ugc">Mikhail</a>, <a href="https://x.com/robsaltini" rel="noopener nofollow ugc">Roberto</a>, <a href="https://x.com/tcoratger" rel="noopener nofollow ugc">Thomas</a>, <a href="https://x.com/vitalikbuterin" rel="noopener nofollow ugc">Vitalik</a>, and <a href="https://x.com/yannvon" rel="noopener nofollow ugc">Yann</a> for their feedback.</em></p>
+<p>We are working on a proposal for the next consensus protocol for Ethereum. A central piece of the new design is a two-layer architecture: a fast available chain — the <em>heartbeat</em> — produced by a small randomly-sampled committee, and a separate finality mechanism that trails behind, finalizing blocks the heartbeat has already produced — crucially, with the two layers fully <strong>decoupled</strong>, unlike the current <a href="https://arxiv.org/abs/2003.03052" rel="noopener nofollow ugc">Gasper</a> design where LMD-GHOST and Casper FFG interact in ways that have <a href="https://arxiv.org/abs/2110.10086" rel="noopener nofollow ugc">proven difficult to reason about</a>. Vitalik outlined this direction in a recent <a href="https://ethresear.ch/t/lmd-ghost-with-256-validators-and-a-fast-following-finality-gadget/22856">post</a>.</p>
+<p>This post focuses on the first layer — the heartbeat — and on a property we believe should be a strict requirement for it: <strong>dynamic availability</strong>.</p>
+<h2><a name="p-59055-why-dynamic-availability-matters-1" class="anchor" href="#p-59055-why-dynamic-availability-matters-1"></a>Why dynamic availability matters</h2>
+<p>Ethereum has never gone offline<sup class="footnote-ref"><a href="#footnote-59055-1" id="footnote-ref-59055-1">[1]</a></sup>. Through <a href="https://ethereum.org/en/roadmap/merge/" rel="noopener nofollow ugc">the Merge</a>, through client bugs, through cloud provider outages — the chain has <strong>kept producing blocks</strong>. This is not an accident. It is a consequence of how the protocol handles fluctuating participation, and it is a property the next consensus design should strengthen, not compromise.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/7/e/7eefa69d2473c8bfe02859664d62000fb07eedeb.png" data-download-href="https://ethresear.ch/uploads/default/7eefa69d2473c8bfe02859664d62000fb07eedeb" title=""><img src="https://ethresear.ch/uploads/default/optimized/3X/7/e/7eefa69d2473c8bfe02859664d62000fb07eedeb_2_690x329.png" alt="" data-base62-sha1="i6VBS0h1BYsEj18XIxVnV0UoM2L" role="presentation" width="690" height="329" srcset="https://ethresear.ch/uploads/default/optimized/3X/7/e/7eefa69d2473c8bfe02859664d62000fb07eedeb_2_690x329.png, https://ethresear.ch/uploads/default/optimized/3X/7/e/7eefa69d2473c8bfe02859664d62000fb07eedeb_2_1035x493.png 1.5x, https://ethresear.ch/uploads/default/original/3X/7/e/7eefa69d2473c8bfe02859664d62000fb07eedeb.png 2x" data-dominant-color="579354"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename"></span><span class="informations">1306×624 50.8 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div><br>
+Figure 1. <em>History of daily block proposals on the Ethereum Beacon Chain (<a href="https://beaconcha.in/charts/blocks" rel="noopener nofollow ugc">source</a>). Green represents slots in which a block was proposed, orange represents missed slots, grey represents orphaned blocks. The lowest recorded proposal rate was ~90% during the <a href="https://medium.com/offchainlabs/post-mortem-report-ethereum-mainnet-finality-05-11-2023-95e271dfd8b2" rel="noopener nofollow ugc">May 2023 consensus client incident</a>. The rate has never approached zero.</em></p>
+<p><strong>Dynamic availability</strong> is the formalization of this property: a protocol is dynamically available if it remains safe and live as long as a majority of the <em>currently awake</em><sup class="footnote-ref"><a href="#footnote-59055-2" id="footnote-ref-59055-2">[2]</a></sup> stake is honest. Not a majority of all registered validators — a majority of the awake ones. The chain keeps going regardless of how many validators are asleep, as long as the ones that are awake are mostly honest.</p>
+<p>Why should this be a strict requirement?</p>
+<p><strong>Resilience and self-recovery.</strong> When validators go offline — due to a consensus client bug, a cloud provider outage, or a regional network disruption — a dynamically available protocol continues producing blocks. In the common case, recovery is straightforward: the affected operators fix the bug, the data center comes back online, and participation returns to normal. <em>The chain never stopped, so there is nothing to restart</em>. If participation does not recover — if a large fraction of validators remains offline indefinitely — Ethereum has a fallback: the <a href="https://eth2book.info/latest/part2/incentives/inactivity/" rel="noopener nofollow ugc">inactivity leak</a>, a mechanism that gradually penalizes inactive validators, reducing their effective stake until the finality gadget can resume operation, without out-of-band coordination. There is a class of chains — typically optimized for throughput — that implicitly rely on a responsive social layer for recovery from extreme events: the chain halts, a small group of stakeholders gets on a call to coordinate, and validators restart in unison. When decentralization is not the primary constraint, this approach is efficient. It is <strong>not</strong> compatible with Ethereum’s design philosophy.</p>
+<p>These are not hypothetical scenarios. In May 2023, bugs in the Prysm and Teku consensus clients (together running over 50% of validators) caused Ethereum’s <a href="https://www.coindesk.com/tech/2023/05/17/ethereums-loss-of-finality-what-happened" rel="noopener nofollow ugc">first mainnet inactivity leak</a>. In November 2020, a consensus bug in Geth <a href="https://www.coindesk.com/tech/2020/11/11/ethereums-unannounced-hard-fork-was-trying-to-prevent-the-very-disruption-it-caused" rel="noopener nofollow ugc">caused a small portion of the network to split off</a>, disrupting services that relied on affected nodes, including Infura, MetaMask, MakerDAO, and Uniswap. When a majority client forks, dynamic availability ensures both forks continue to operate. Individual operators can identify and switch to the correct fork well before network-wide convergence.</p>
+<p><strong>Censorship resistance.</strong> If an adversary with majority stake begins censoring, the honest minority needs to mount a response. A dynamically available chain allows them to begin building an alternative fork, even with a small number of validators, and grow it as others recognize the situation and join.</p>
+<p><strong>Application-layer continuity.</strong> DeFi protocols, rollups, and bridges all depend on a functioning L1. A halted base layer freezes composable DeFi simultaneously (liquidations cannot execute, oracle prices become stale, positions accumulate unmanageable risk), stalls rollup operations (batch posting, fraud proofs, validity proofs), and forces bridges into ambiguous states. This is not theoretical: during Solana’s <a href="https://blockworks.co/news/solana-price-dips-outage-restart" rel="noopener nofollow ugc">February 2024 halt</a>, the chain stopped producing blocks for five hours — DeFi protocols were completely inoperable, positions could not be adjusted, and risk accumulated with no mechanism to manage it. By contrast, during Ethereum’s May 2023 finality disruption, blocks kept being produced and <a href="https://medium.com/offchainlabs/post-mortem-report-ethereum-mainnet-finality-05-11-2023-95e271dfd8b2" rel="noopener nofollow ugc">transactions continued to process normally</a> — the application layer was largely unaffected because the available chain never stopped. Final settlement still requires the finality layer, but operational continuity depends on the heartbeat continuing to produce blocks.</p>
+<p>There is a <a href="https://ethresear.ch/t/lmd-ghost-with-256-validators-and-a-fast-following-finality-gadget/22856/6">unifying principle</a> behind these points:</p>
+<blockquote>
+<p>it’s better to give people as much information about the future state of the chain as possible.</p>
+</blockquote>
+<p>This is the same principle that makes shorter finality times preferable to longer ones, and finality preferable to purely probabilistic confirmation. When finality is interrupted, a dynamically available chain provides partial but useful information about the likely future state. A halted chain provides none.</p>
+<h2><a name="p-59055-the-world-bft-assumes-is-not-the-world-ethereum-lives-in-2" class="anchor" href="#p-59055-the-world-bft-assumes-is-not-the-world-ethereum-lives-in-2"></a>The world BFT assumes is not the world Ethereum lives in</h2>
+<p>Most consensus protocols you’ve heard of — <a href="https://css.csail.mit.edu/6.824/2014/papers/castro-practicalbft.pdf" rel="noopener nofollow ugc">PBFT</a>, <a href="https://arxiv.org/abs/1807.04938" rel="noopener nofollow ugc">Tendermint</a>, <a href="https://arxiv.org/abs/1803.05069" rel="noopener nofollow ugc">HotStuff</a> — assume a fixed set of validators that are reliably awake. Under that model, safety is provable, but liveness typically fails if too many validators go offline (often around <span class="math">\ge \frac{1}{3}</span>). That tradeoff is unavoidable.</p>
+<p>Ethereum has <a href="https://www.ethernets.io/?synced=all" rel="noopener nofollow ugc">thousands of independently operated nodes</a>, and even well-incentivized operators go offline: upgrades, cloud and ISP incidents, hardware failures, misconfigurations, ordinary human error. Designing a protocol that needs “near-perfect participation” for liveness is designing for a world that doesn’t exist.</p>
+<p>The <a href="https://eprint.iacr.org/2016/918" rel="noopener nofollow ugc">sleepy model</a> takes (some aspects of) the real world seriously: honest validators can be awake or asleep, and that can change over time. In this setting, a protocol is <em>dynamically available</em> if it remains safe and live as long as a majority of the <em>currently awake</em> stake is honest. Sleeping validators are not counted against <em>any</em> fault budget — neither Byzantine nor crash. This matters in practice: real-world outages have <a href="https://eprint.iacr.org/2023/1211.pdf" rel="noopener nofollow ugc">pushed participation down to around 33%</a> (Figure 10), a level that would exceed the fault tolerance of any protocol that accounts for offline validators as faulty.</p>
+<p>Put differently:</p>
+<blockquote>
+<p>Ethereum should keep producing a coherent chain as long as most of the stake that is actually awake is honest.</p>
+</blockquote>
+<h2><a name="p-59055-you-cannot-avoid-the-two-layer-split-3" class="anchor" href="#p-59055-you-cannot-avoid-the-two-layer-split-3"></a>You cannot avoid the two-layer split</h2>
+<p>One might ask: why not build a single protocol that is both dynamically available and provides finality? Put differently: why do we need a trailing finality mechanism on top? The answer is that this is impossible.</p>
+<p>The <a href="https://arxiv.org/abs/2009.04987" rel="noopener nofollow ugc">availability-finality dilemma</a> — a blockchain-specific form of the CAP theorem — proves that no single protocol can guarantee both:</p>
+<ul>
+<li><strong>Liveness under dynamic participation</strong>: the chain continues to grow even as the set of awake validators fluctuates.</li>
+<li><strong>Safety under network partitions</strong>: once a transaction is confirmed, it cannot be reverted even if the network temporarily splits.</li>
+</ul>
+<p>In other terms, dynamically available protocols must assume synchrony.</p>
+<p>BFT protocols achieve partition safety but halt when participation drops. Longest-chain protocols, e.g., Bitcoin’s consensus protocol, achieve dynamic availability but offer only probabilistic confirmation — and must assume synchrony to do so. <a href="https://decentralizedthoughts.github.io/2020-11-01-ebb-and-flow-protocols-a-resolution-of-the-availability-finality-dilemma/" rel="noopener nofollow ugc">No protocol can do both at once</a>. This is a fundamental limitation.</p>
+<p>The architectural implication is direct: any protocol that aims to never halt <em>and</em> to provide irreversible finality must have a dynamically available component. The heartbeat layer is not an optimization — it is a structural necessity imposed by the impossibility result.</p>
+<h2><a name="p-59055-from-property-to-protocol-4" class="anchor" href="#p-59055-from-property-to-protocol-4"></a>From property to protocol</h2>
+<p>Saying the heartbeat must be dynamically available still leaves open what protocol to use. The requirement rules out off-the-shelf BFT (which halts under dynamic participation), but it also rules out naive adaptations of LMD-GHOST. While Gasper functions well in practice under varying participation levels, LMD-GHOST cannot be <em>proven</em> dynamically available: Neu, Tas, and Tse <a href="https://arxiv.org/abs/2009.04987" rel="noopener nofollow ugc">demonstrated</a> adversarial strategies that violate safety and liveness of LMD-GHOST in the synchronous model, and subsequent patches <a href="https://ethresear.ch/t/balancing-attack-lmd-edition/11853">have not closed the gap</a>. A protocol is dynamically available by definition only if it satisfies both safety and liveness in the sleepy model — the existence of these attacks means LMD-GHOST does not meet this bar.</p>
+<p><a href="https://eprint.iacr.org/2022/1171" rel="noopener nofollow ugc">Goldfish</a> was designed to close this gap. It is a propose-and-vote protocol — structurally closer to BFT than to longest chain — that achieves dynamic availability with:</p>
+<ul>
+<li><strong>Constant expected confirmation latency</strong>: the time to confirm does not grow with the target security level. This is the key separation from longest-chain protocols.</li>
+<li><strong>Reorg resilience</strong>: blocks proposed by honest proposers are guaranteed to remain in the canonical chain. This property, absent in LMD-GHOST, eliminates a class of <a href="https://arxiv.org/abs/2110.10086" rel="noopener nofollow ugc">attacks</a> that have plagued Ethereum’s current fork-choice rule.</li>
+<li><strong>Subsampling</strong>: the protocol can run with a randomly selected committee of ~256 validators per slot, keeping per-slot communication <span class="math">O(1)</span> relative to the total validator set.</li>
+<li><strong>Composability</strong>: Goldfish can serve as the available-chain component in an <a href="https://arxiv.org/abs/2009.04987" rel="noopener nofollow ugc">ebb-and-flow</a> protocol, pairing with a finality gadget.</li>
+</ul>
+<h2><a name="p-59055-what-this-buys-in-practice-slot-times-5" class="anchor" href="#p-59055-what-this-buys-in-practice-slot-times-5"></a>What this buys in practice: slot times</h2>
+<p>The current Ethereum slot structure requires aggregating ~30,000 attestations per slot. If Ethereum moves to single-slot epochs, this number rises by default to the full active validator set — currently around one million. Any future reduction of the 32 ETH deposit minimum would push it even higher. Because these numbers far exceed what a single subnet can propagate, attestations pass through multiple aggregation rounds before reaching the global network. As <a href="https://ethresear.ch/t/lmd-ghost-with-256-validators-and-a-fast-following-finality-gadget/22856">Vitalik observes</a>:</p>
+<p><span class="math">\text{aggregation time} \approx \log_C(\text{validator count})</span></p>
+<p>where <span class="math">C</span> is the per-subnet capacity (hundreds to low thousands of signatures), and the aggregation time is measured in network rounds, each taking roughly <span class="math">\Delta</span><sup class="footnote-ref"><a href="#footnote-59055-3" id="footnote-ref-59055-3">[3]</a></sup>. With the full validator set on the critical path, each slot requires between <span class="math">3\Delta</span> and <span class="math">4\Delta</span>.</p>
+<p>A dynamically available protocol with ~256 subsampled validators fits within a single subnet broadcast. No aggregation rounds are needed. This removes the aggregation overhead entirely, leaving only the time for block propagation and committee voting on the critical path.<sup class="footnote-ref"><a href="#footnote-59055-4" id="footnote-ref-59055-4">[4]</a></sup></p>
+<p>Finality still involves the full validator set, but it proceeds <em>in parallel</em> with the dynamically available component, off the critical path. The two layers do not compete for the same latency budget.</p>
+<h2><a name="p-59055-a-near-term-benefit-post-quantum-readiness-and-post-quantum-heartbeat-6" class="anchor" href="#p-59055-a-near-term-benefit-post-quantum-readiness-and-post-quantum-heartbeat-6"></a>A near-term benefit: post-quantum readiness and post-quantum heartbeat</h2>
+<p>The transition to post-quantum cryptography is an <a href="https://strawmap.org" rel="noopener nofollow ugc">ongoing concern</a> for <a href="https://ethereum.org/roadmap/future-proofing/" rel="noopener nofollow ugc">Ethereum</a>. A major obstacle is signature aggregation: Ethereum currently relies on BLS signatures, which can be efficiently and easily aggregated, but no post-quantum signature scheme offers comparable aggregation properties at practical sizes.</p>
+<p>A dynamically available heartbeat with a small subsampled committee sidesteps this problem. With ~256 validators per slot, signatures do not need to be aggregated at all — they can be naively concatenated. Post-quantum signature sizes vary by scheme; with a scheme <a href="https://ethresear.ch/t/lmd-ghost-with-256-validators-and-a-fast-following-finality-gadget/22856">at ~3 KB per signature, 256 signatures amount to ~768 KB</a>. <a href="https://github.com/leanEthereum/leanMultisig" rel="noopener nofollow ugc">leanMultisig</a> — a minimal zkVM targeting XMSS signature aggregation and recursion — can compress this further: early benchmarks show aggregation of over a thousand signatures with proof sizes in the 300–500 KB range, approaching the cost of naive concatenation. These results currently rely on a conjectured security assumption; provably secure parameters are in progress.</p>
+<p>This means a <strong>post-quantum heartbeat</strong> — a dynamically available protocol running with post-quantum signatures — could be deployed significantly sooner than a full post-quantum decoupled protocol, which would additionally require post-quantum signature aggregation for the finality layer’s full validator set. The heartbeat-finality decoupling makes this incremental deployment path possible: upgrade the heartbeat to post-quantum first, address finality-layer signatures separately as post-quantum aggregation techniques mature.</p>
+<p>Without this decoupling, post-quantum migration becomes an all-or-nothing problem: you cannot upgrade Ethereum’s signatures until you have a PQ aggregation scheme that scales to the full validator set — <a href="https://ethresear.ch/t/post-quantum-signature-aggregation-a-folding-approach/23639">an active area of research</a>. The two-layer architecture turns this into two independent problems, one of which (~256 concatenated signatures) is solvable <a href="https://eprint.iacr.org/2025/055.pdf" rel="noopener nofollow ugc">with existing schemes today</a>.</p>
+<h2><a name="p-59055-what-we-are-building-7" class="anchor" href="#p-59055-what-we-are-building-7"></a>What we are building</h2>
+<p>The target architecture:</p>
+<ol>
+<li><strong>Heartbeat</strong>: a dynamically available protocol (Goldfish/<a href="https://arxiv.org/abs/2302.11326" rel="noopener nofollow ugc">RLMD-GHOST</a> family) with ~256 randomly sampled validators per slot — small enough to operate with concatenated post-quantum signatures, enabling a post-quantum heartbeat as an early deployment milestone.</li>
+<li><strong>Trailing finality gadget</strong>: a separate mechanism using the full active validator set, finalizing the heartbeat’s chain head.</li>
+</ol>
+<p>The two layers are fully decoupled. This yields fast slots, flexibility in choosing the finality mechanism, a clean separation during inactivity leaks, and reduced complexity relative to <a href="https://arxiv.org/abs/2003.03052" rel="noopener nofollow ugc">Gasper</a>.</p>
+<p>A detailed treatment of the finality layer will follow in a subsequent post.</p>
+<hr class="footnotes-sep">
+
+<ol class="footnotes-list">
+<li id="footnote-59055-1" class="footnote-item"><p>We refer to block production, not finality. Finality <a href="https://beaconcha.in/charts/network_liveness" rel="noopener nofollow ugc">has been temporarily disrupted</a> — most notably during the <a href="https://medium.com/offchainlabs/post-mortem-report-ethereum-mainnet-finality-05-11-2023-95e271dfd8b2" rel="noopener nofollow ugc">May 2023 consensus clients incident</a> — but the chain never stopped producing blocks. The <a href="https://beaconcha.in/charts/blocks" rel="noopener nofollow ugc">daily block proposal chart</a> shows that even during this incident, over 90% of slots received a proposed block. This was a joint consequence of client diversity (Lighthouse, Nimbus, and Lodestar were unaffected by the Prysm/Teku bug) and dynamic availability (the protocol kept producing blocks with the validators that remained awake, rather than halting because total participation fell below an absolute threshold). <a href="#footnote-ref-59055-1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="footnote-59055-2" class="footnote-item"><p>We use “awake” in the sense of the <a href="https://eprint.iacr.org/2016/918" rel="noopener nofollow ugc">sleepy model</a>: a validator is awake if it is actively participating in the protocol, and asleep otherwise. This is a protocol-level notion, distinct from network connectivity. <a href="#footnote-ref-59055-2" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="footnote-59055-3" class="footnote-item"><p><span class="math">\Delta</span> denotes the assumed upper bound on network message delivery time between any two honest validators. <a href="#footnote-ref-59055-3" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="footnote-59055-4" class="footnote-item"><p>The precise slot structure depends on the protocol. Goldfish, for example, uses <span class="math">3\Delta</span> slots (proposal, vote buffering, voting) or <span class="math">4\Delta</span> if <em>fast confirmations</em> are implemented. <a href="#footnote-ref-59055-4" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="9" />
+              <span class='post-likes'>9 Likes</span>
+            </div>
+
+          </div>
+          <div id='post_2' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/maxper'><span itemprop='name'>maxper</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-03-19T12:50:52Z' class='post-time'>
+                    March 19, 2026, 12:50pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-03-19T12:50:52Z'>
+              <span itemprop='position'>2</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>This two layer architecture is neat.</p>
+<p>However the properties expected for the heartbeat layer are unclear to me and I don’t understand why dynamic availability is the targeted condition for such protocol to be live and safe: if the heartbeat is expected to just produce an ever growing chain (subject to reordering before being finalized by the upper layer), then there are protocols working even in asynchrony and without assumptions on the proportion of faults. A simple example is to apply a function to the currently received blocks to produce a speculative order.</p>
+<p>Depending on the function applied, the protocol can even add more guarantee to the speculative order, for instance that a prefix stabilizes over time. I believe this give people as much information about the future state of the chain as possible, even in the worst conditions ever.</p>
+<p>We named this problem <em>eventual state machine replication</em> and details can be found in our paper “<em>Kuznetsov, Perion &amp; Tucci-Piergiovanni. (2025). Wait-free Replicated Data Types and Fair Reconciliation”</em>.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="2" />
+              <span class='post-likes'>2 Likes</span>
+            </div>
+
+          </div>
+          <div id='post_3' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/latifkasuli'><span itemprop='name'>latifkasuli</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-03-20T00:01:31Z' class='post-time'>
+                    March 20, 2026, 12:01am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-03-20T00:01:31Z'>
+              <span itemprop='position'>3</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>The PQ section is the most compelling near-term argument in the post. If the heartbeat runs with ~256 validators and concatenated PQ signatures, then at ~3 KB/signature the data is only ~768 KB, so the heartbeat itself no longer looks like a recursive aggregation transport problem.</p>
+<p>The more interesting open question is whether the <strong>finality layer</strong> inherits a PQ transport bottleneck. A quick back-of-the-envelope model suggests maybe not: under a Path A / self-contained-recursion assumption, with ~350 KiB proof objects, 1M validators, a 48s finality budget, and a simple two-layer topology (1024 local aggregates → 32 regional aggregators → root), peak per-node ingress stays in the single-digit Mbps range even after deducting illustrative prover latencies. In one representative configuration I get 6.6 Mbps peak ingress (9.8 Mbps with 50% retry overhead).</p>
+<p>If that rough envelope is directionally right, then transport may not be the finality-side bottleneck either; proving cost and vote-accounting / bitfield structure may dominate instead.</p>
+<p>Looking forward to the follow-up on the finality layer, because that seems like the place where the real PQ systems question now lives.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_4' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/luca_zanolini'><span itemprop='name'>luca_zanolini</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-03-20T02:02:34Z' class='post-time'>
+                    March 20, 2026,  2:02am
+                  </time>
+                  <meta itemprop='dateModified' content='2026-03-20T02:02:34Z'>
+              <span itemprop='position'>4</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <blockquote>
+<p>subject to reordering before being finalized by the upper layer</p>
+</blockquote>
+<p>We do not want that. If synchrony holds, the chain output by the heartbeat is reorg-resilient: honest proposals do not get reorged. This is a concrete security property, it means MEV extraction through reordering of honestly proposed blocks is not possible at the heartbeat layer, which is a strictly stronger guarantee than “a prefix stabilizes over time.” In our case, under synchrony, the prefix does not need to stabilise over time: it is always stable.</p>
+<p>I understand you might say “true, but under asynchrony you lose safety guarantees on the heartbeat”, but that is precisely why we have a two-layer approach: at most you lose an unfinalized suffix. The finalized prefix remains safe under all network conditions. The difference is that under synchrony (which is the common case) you get the best of all worlds: dynamic availability, reorg resilience, fast confirmation, and optimal fault tolerance for synchronous protocols. You only lose something during network partitions or asynchronous periods, and even then the damage is bounded to the unfinalized suffix. (And even here, we have a solution for that, in case of short periods of asynchrony. You can have a look at the RLMD-GHOST paper, but we will talk about this more in future posts.)</p>
+<p>With the approach you describe, you appear to get weaker guarantees under synchrony (no reorg resilience, no fast confirmation with constant latency) in exchange for graceful degradation under asynchrony. But correct me if I’m wrong, I haven’t had the time to review the paper you mentioned.</p>
+<p>One requirement for us I believe is very important is that the heartbeat keeps producing blocks regardless of the participation rate, as long as a majority of the awake stake is honest. This cannot be achieved in asynchrony: a protocol cannot distinguish between low participation and a network partition, which is precisely why the availability-finality dilemma holds.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+          <div id='post_5' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/maxper'><span itemprop='name'>maxper</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2026-03-20T13:30:42Z' class='post-time'>
+                    March 20, 2026,  1:30pm
+                  </time>
+                  <meta itemprop='dateModified' content='2026-03-20T13:30:42Z'>
+              <span itemprop='position'>5</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>To sum up, a safety property of the heartbeat would be:</p>
+<aside class="quote no-group" data-username="luca_zanolini" data-post="4" data-topic="24418">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/luca_zanolini/48/10820_2.png" class="avatar"> luca_zanolini:</div>
+<blockquote>
+<p>honest proposals do not get reorged.</p>
+</blockquote>
+</aside>
+<p>after receiving a “fast confirmation”.</p>
+<p>A protocol can then be the classic approach of “one proposer per unit of synchronous time (slot) and the confirmed block for a given slot is the one getting a bigger quorum (votes from a majority) before the next slot”—hence the requirement of a majority of honest stake awake.</p>
+<p>That’s more clear, thanks!</p>
+<p>Safety would indeed be lost if the network conditions are bad, but is there a way to still keep the unfinalized suffix and not waste these blocks? This could be done by taking into account “old references” accessible from finalized blocks, like “weak edges” in DAG-Rider, at the expense of orphan blocks being potentially reorged.</p>
+<p>This raise a follow-up question: is there a plan for a “DAG-based” protocol? DAGs would bring a degree of parallelism for proposers.</p>
+<aside class="quote no-group" data-username="luca_zanolini" data-post="4" data-topic="24418">
+<div class="title">
+<div class="quote-controls"></div>
+<img alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/luca_zanolini/48/10820_2.png" class="avatar"> luca_zanolini:</div>
+<blockquote>
+<p>With the approach you describe, you appear to get weaker guarantees under synchrony (no reorg resilience, no fast confirmation with constant latency) in exchange for graceful degradation under asynchrony.</p>
+</blockquote>
+</aside>
+<p>If the network is synchronous then all the “conflicting blocks” are received within a round and are reorg resilient (the prefix is always stable) starting from the next round, without using a majority. However, this paper considered a crash fault model so the prefix may not be stable if a byzantine node equivocates (proposes two different blocks), even if the network is synchronous. Preventing equivocation would indeed require a honest majority. The algorithm from the paper is a sort of multiple proposer version, in crash, of the protocol I described higher.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="2" />
+              <span class='post-likes'>2 Likes</span>
+            </div>
+
+          </div>
+    </div>
+
+
+    
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/tos' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/privacy' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>

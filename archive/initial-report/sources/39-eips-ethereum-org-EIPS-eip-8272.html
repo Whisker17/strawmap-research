@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+    
+      <title>EIP-8272: Recent Roots for Frame Transactions</title>
+      <meta property="og:title" content="EIP-8272: Recent Roots for Frame Transactions" />
+    
+    <meta name="description" content="Frame transactions can declare verified recent roots" />
+    <meta property="og:description" content="Frame transactions can declare verified recent roots" />
+    <meta name="twitter:description" content="Frame transactions can declare verified recent roots" />
+  
+  <meta name="generator" content="Jekyll" />
+  <meta property="og:locale" content="en_US" />
+  <link rel="canonical" href="https://eips.ethereum.org/EIPS/eip-8272" />
+  <meta property="og:url" content="https://eips.ethereum.org/EIPS/eip-8272" />
+  <meta property="og:site_name" content="Ethereum Improvement Proposals" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://eips.ethereum.org/assets/images/eip-og-image.png" />
+  <meta name="twitter:site" content="@" />
+  <script type="application/ld+json">
+    {
+      "@type": "WebSite",
+      "url": "https://eips.ethereum.org",
+      "name": "Ethereum Improvement Proposals",
+      "description": "Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.",
+      "@context": "https://schema.org"
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://eips.ethereum.org/feed.xml" title="Ethereum Improvement Proposals" /><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/override.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    });
+  </script>
+  <script type="text/javascript">
+    window.MathJax = {
+      loader: {
+        load: ['input/tex-base', 'output/chtml']
+      },
+      tex: {
+        inlineMath: [['$', '$']],
+        displayMath: [['$$', '$$']],
+        processEscapes: true,
+        processEnvironments: false,
+        processRefs: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js" integrity="sha384-/1zmJ1mBdfKIOnwPxpdG6yaRrxP6qu3eVYm0cz2nOx+AcL4d3AqEFrwcqGZVVroG" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/citation-js/0.6.7/citation.min.js" integrity="sha512-N+LDFMa9owHXGS+CyMrBvuxq2QuGl3fiB/7cys3aUEL7K6P1soHGqsS0sjHXZpwNd9Kz0m3R4IPy1HYRi6ROEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+    addEventListener('DOMContentLoaded', async () => {
+      const Cite = window.require('citation-js');
+      const citationElements = document.querySelectorAll('.language-csl-json');
+      for (let citationElement of citationElements) {
+        try {
+          const citation = await Cite.async(citationElement);
+          const template = document.createElement('template');
+          template.innerHTML = citation.format('bibliography', {
+            format: 'html',
+            template: 'apa',
+            lang: 'en-US'
+          });
+          if (citationElement.parentElement && citationElement.parentElement.matches('pre')) {
+            citationElement.parentElement.replaceWith(template.content);
+          } else {
+            citationElement.replaceWith(template.content);
+          }
+        } catch (e) {
+          console.error("unable to render citation", e);
+        }
+      }
+    });
+  </script>
+</head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Ethereum Improvement Proposals</a><nav class="site-nav d-flex">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger row p-2"><a class="page-link col" href="/all">All</a><a class="page-link col" href="/core">Core</a><a class="page-link col" href="/networking">Networking</a><a class="page-link col" href="/interface">Interface</a><a class="page-link col" href="/erc">ERC</a><a class="page-link col" href="/meta">Meta</a><a class="page-link col" href="/informational">Informational</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="bi-megaphone-fill" fill="currentColor" viewBox="0 0 16 16">
+    <title>Alert</title>
+    <path d="M13 2.5a1.5 1.5 0 0 1 3 0v11a1.5 1.5 0 0 1-3 0v-11zm-1 .724c-2.067.95-4.539 1.481-7 1.656v6.237a25.222 25.222 0 0 1 1.088.085c2.053.204 4.038.668 5.912 1.56V3.224zm-8 7.841V4.934c-.68.027-1.399.043-2.008.053A2.02 2.02 0 0 0 0 7v2c0 1.106.896 1.996 1.994 2.009a68.14 68.14 0 0 1 .496.008 64 64 0 0 1 1.51.048zm1.39 1.081c.285.021.569.047.85.078l.253 1.69a1 1 0 0 1-.983 1.187h-.548a1 1 0 0 1-.916-.599l-1.314-2.48a65.81 65.81 0 0 1 1.692.064c.327.017.65.037.966.06z"/>
+  </symbol>
+  <symbol id="bi-code" fill="currentColor" viewBox="0 0 16 16">
+    <title>Source</title>
+    <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z"/>
+  </symbol>
+  <svg id="bi-chat" fill="currentColor" viewBox="0 0 16 16">
+    <title>Discuss</title>
+    <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+  </svg>
+</svg>
+
+<div class="home">
+  
+  
+  
+ 
+  <span class="h5">
+    
+    
+    
+      <span class="badge text-light bg-warning" data-bs-toggle="tooltip" data-bs-title="This EIP is not yet recommended for general use or implementation, as it is subject to normative (breaking) changes.">⚠️ Draft</span>
+    
+    
+    
+       
+    
+      <a class="badge text-light bg-primary" data-bs-toggle="tooltip" data-bs-title="Improvements requiring a consensus fork, as well as changes that are not necessarily consensus critical but may be relevant to “core dev” discussions." href="../core">Standards Track: Core</a>
+    
+  </span>
+  <h1 class="page-heading">
+    EIP-8272: Recent Roots for Frame Transactions
+    <a href="https://ethereum-magicians.org/t/eip-8272-recent-roots-for-frame-transactions/28621" class="no-underline">
+      <svg role="img" aria-label="Discuss" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-chat"/>
+      </svg>
+    </a>
+    <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-8272.md" class="no-underline">
+      <svg role="img" aria-label="Source" class="inline-svg" xmlns="https://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <use xlink:href="#bi-code"/>
+      </svg>
+    </a>
+  </h1>
+  <h3>Frame transactions can declare verified recent roots</h3>
+  <table class="table table-borderless preamble">
+    <tbody>
+      <tr>
+        <th scope="row">Authors</th>
+        <td>Thomas Thiery&nbsp;(<a href="https://github.com/soispoke">@soispoke</a>), Vitalik Buterin&nbsp;(<a href="https://github.com/vbuterin">@vbuterin</a>), Toni Wahrstätter&nbsp;(<a href="https://github.com/nerolation">@nerolation</a>)</td>
+      </tr>
+      
+        <tr>
+          <th scope="row">Created</th>
+          <td>2026-05-15</td>
+        </tr>
+      
+      
+             
+      
+        <tr>
+          <th scope="row">Discussion Link</th>
+          <td><a href="https://ethereum-magicians.org/t/eip-8272-recent-roots-for-frame-transactions/28621" target="_blank" rel="noopener">https://ethereum-magicians.org/t/eip-8272-recent-roots-for-frame-transactions/28621</a></td>
+        </tr>
+      
+      
+        <tr>
+          <th scope="row">Requires</th>
+          <td>
+
+  <a href="eip-7843">EIP-7843</a>, 
+
+  <a href="eip-8141">EIP-8141</a>
+
+</td>
+        </tr>
+      
+    </tbody>
+  </table>
+  <br/>
+
+  
+
+  <div class="toc">
+    <h2>Table of Contents</h2>
+    <ul>
+  <li><a href="#abstract">Abstract</a></li>
+  <li><a href="#motivation">Motivation</a></li>
+  <li><a href="#specification">Specification</a>
+    <ul>
+      <li><a href="#constants">Constants</a></li>
+      <li><a href="#current-slot">Current slot</a></li>
+      <li><a href="#root-sources">Root sources</a></li>
+      <li><a href="#entry-and-storage-keys">Entry and storage keys</a></li>
+      <li><a href="#recent-root-contract">Recent root contract</a></li>
+      <li><a href="#transaction-payload">Transaction payload</a></li>
+      <li><a href="#static-validity">Static validity</a></li>
+      <li><a href="#reference-validity">Reference validity</a></li>
+      <li><a href="#access-lists">Access lists</a></li>
+      <li><a href="#gas-accounting">Gas accounting</a></li>
+      <li><a href="#txparam-and-recentrootrefload">TXPARAM and RECENTROOTREFLOAD</a></li>
+      <li><a href="#public-mempool-handling">Public mempool handling</a></li>
+      <li><a href="#activation">Activation</a></li>
+    </ul>
+  </li>
+  <li><a href="#rationale">Rationale</a>
+    <ul>
+      <li><a href="#entry-binding">Entry binding</a></li>
+      <li><a href="#window-choice">Window choice</a></li>
+      <li><a href="#implicit-source-creation">Implicit source creation</a></li>
+      <li><a href="#bounded-validation-work">Bounded validation work</a></li>
+    </ul>
+  </li>
+  <li><a href="#backwards-compatibility">Backwards Compatibility</a></li>
+  <li><a href="#security-considerations">Security Considerations</a></li>
+  <li><a href="#copyright">Copyright</a></li>
+</ul>
+
+  </div>
+
+  <h2 id="abstract">
+      
+      
+        <a href="#abstract" class="anchor-link"></a> Abstract
+      
+      
+    </h2>
+
+<p>EIP-8141 frame transactions can reference recent roots without reading mutable storage during validation. A root source writes roots to a system contract, with each root keyed by <code class="language-plaintext highlighter-rouge">(source_id, slot)</code>, where <code class="language-plaintext highlighter-rouge">source_id</code> derives from the writer address and a salt. A frame transaction may declare recent root references of the form:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(source_id, slot, root)
+</code></pre></div></div>
+
+<p>Before frame execution, clients check each reference against the transaction pre-state. The check succeeds only if the named root is stored for the named source and slot, and the slot is still recent. Validation code can then read the verified reference through transaction introspection.</p>
+  
+    <h2 id="motivation">
+      
+      
+        <a href="#motivation" class="anchor-link"></a> Motivation
+      
+      
+    </h2>
+
+<p>EIP-8141 validation must not read arbitrary storage controlled by another account or application in the public mempool. Some validation rules still need to depend on recent application state, such as privacy tree roots, wallet authorization roots, or account validation roots.</p>
+
+<p>Recent root references let a transaction explicitly name recent roots in its signed transaction envelope. Each reference maps to one system-contract storage key and can be checked before validation code runs.</p>
+
+<p>Privacy applications, for example, keep a tree of commitments and prove spends against a recent tree root. With this EIP, the application writes roots by slot, and spend transactions reference one of those roots directly instead of reading the application’s changing tree state during validation.</p>
+  
+    <h2 id="specification">
+      
+      
+        <a href="#specification" class="anchor-link"></a> Specification
+      
+      
+    </h2>
+
+<p>The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “NOT RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in RFC 2119 and RFC 8174.</p>
+
+<p>This specification is a delta against EIP-8141. Terms not defined here, including <code class="language-plaintext highlighter-rouge">FrameTx</code>, <code class="language-plaintext highlighter-rouge">FRAME_TX_TYPE</code>, <code class="language-plaintext highlighter-rouge">VERIFY</code>, <code class="language-plaintext highlighter-rouge">EXPIRY_VERIFIER</code>, frame modes, and <code class="language-plaintext highlighter-rouge">TXPARAM</code>, have the meanings defined in EIP-8141.</p>
+  
+    <h3 id="constants">
+      
+      
+        <a href="#constants" class="anchor-link"></a> Constants
+      
+      
+    </h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th style="text-align: right">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">FORK_TIMESTAMP</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">TBD</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">TBD</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RECENT_ROOT_CODE</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">TBD</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RECENT_ROOT_LENGTH</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">8192</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RECENT_ROOT_USABLE_WINDOW</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">8191</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MAX_RECENT_ROOT_REFERENCES</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">16</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RECENT_ROOT_ENTRY_DOMAIN</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">keccak256("RECENT_ROOT_ENTRY")</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RECENT_ROOT_STORAGE_DOMAIN</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">keccak256("RECENT_ROOT_STORAGE")</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RECENT_ROOT_REFERENCE_ADDRESS_GAS</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">ACCESS_LIST_ADDRESS_COST</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RECENT_ROOT_REFERENCE_GAS</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">ACCESS_LIST_STORAGE_KEY_COST + 2 * KECCAK256_BASE_GAS + 7 * KECCAK256_WORD_GAS</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TXPARAM_RECENT_ROOT_REFERENCE_COUNT</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">0x0F</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RECENTROOTREFLOAD</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">0xB4</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RECENTROOTREFLOAD_GAS</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">3</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>All concatenations below use fixed-length encodings. Domains are 32 bytes. Addresses are 20 bytes. Slots and indices are unsigned 64-bit big-endian integers. Roots, salts, source identifiers, entry hashes, and storage keys are 32 bytes.</p>
+  
+    <h3 id="current-slot">
+      
+      
+        <a href="#current-slot" class="anchor-link"></a> Current slot
+      
+      
+    </h3>
+
+<p>For block validation, <code class="language-plaintext highlighter-rouge">current_slot</code> is the consensus slot of the beacon block that contains the execution payload being validated.</p>
+
+<p>Execution clients MUST obtain <code class="language-plaintext highlighter-rouge">current_slot</code> from the EIP-7843 <code class="language-plaintext highlighter-rouge">slotNumber</code> field. Clients MUST NOT derive <code class="language-plaintext highlighter-rouge">current_slot</code> from <code class="language-plaintext highlighter-rouge">block.timestamp</code> using a fixed slot duration.</p>
+
+<p>For transaction pool handling, <code class="language-plaintext highlighter-rouge">current_slot</code> is the node’s current slot at receipt, recheck, or eviction time. It is local policy, not block validity.</p>
+
+<p>References MUST target slots strictly before <code class="language-plaintext highlighter-rouge">current_slot</code>. A root written during slot <code class="language-plaintext highlighter-rouge">S</code> becomes referenceable beginning in slot <code class="language-plaintext highlighter-rouge">S + 1</code>.</p>
+  
+    <h3 id="root-sources">
+      
+      
+        <a href="#root-sources" class="anchor-link"></a> Root sources
+      
+      
+    </h3>
+
+<p>A root source is identified by:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>source_id = keccak256(source_address || salt)
+</code></pre></div></div>
+
+<p>where <code class="language-plaintext highlighter-rouge">source_address</code> is an address and <code class="language-plaintext highlighter-rouge">salt</code> is a <code class="language-plaintext highlighter-rouge">bytes32</code> value.</p>
+
+<p>The source address MAY be an externally owned account or a contract, and MAY use multiple root sources by using different salts. Applications using a root source are responsible for controlling who can write to it and how salts are allocated.</p>
+  
+    <h3 id="entry-and-storage-keys">
+      
+      
+        <a href="#entry-and-storage-keys" class="anchor-link"></a> Entry and storage keys
+      
+      
+    </h3>
+
+<p>The committed entry for <code class="language-plaintext highlighter-rouge">(source_id, slot, root)</code> is:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>entry_hash = keccak256(
+    RECENT_ROOT_ENTRY_DOMAIN ||
+    source_id ||
+    uint64_be(slot) ||
+    root
+)
+</code></pre></div></div>
+
+<p>The storage key for index <code class="language-plaintext highlighter-rouge">i</code> is:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>storage_key = keccak256(
+    RECENT_ROOT_STORAGE_DOMAIN ||
+    source_id ||
+    uint64_be(i)
+)
+</code></pre></div></div>
+
+<p>Each root source has a conceptual array:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>entries: bytes32[RECENT_ROOT_LENGTH]
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">entries[i]</code> is stored at <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS[storage_key]</code>. All entries are initially zero.</p>
+
+<p>Each root source uses at most <code class="language-plaintext highlighter-rouge">RECENT_ROOT_LENGTH</code> storage keys. The global storage footprint is <code class="language-plaintext highlighter-rouge">RECENT_ROOT_LENGTH</code> keys per written <code class="language-plaintext highlighter-rouge">source_id</code>.</p>
+  
+    <h3 id="recent-root-contract">
+      
+      
+        <a href="#recent-root-contract" class="anchor-link"></a> Recent root contract
+      
+      
+    </h3>
+
+<p>At activation, clients MUST create or update the account at <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS</code> as specified in <a href="#activation">Activation</a>.</p>
+
+<p>The contract accepts one write operation with 64 bytes of calldata:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>salt: bytes32
+root: bytes32
+</code></pre></div></div>
+
+<p>Bytes <code class="language-plaintext highlighter-rouge">0..31</code> are <code class="language-plaintext highlighter-rouge">salt</code>. Bytes <code class="language-plaintext highlighter-rouge">32..63</code> are <code class="language-plaintext highlighter-rouge">root</code>.</p>
+
+<p>Calls MUST revert unless calldata is exactly 64 bytes and call value is zero.</p>
+
+<p>In static context, the write MUST fail and storage MUST remain unchanged.</p>
+
+<p>The source address for a successful write is <code class="language-plaintext highlighter-rouge">msg.sender</code> of the call to <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS</code>.</p>
+
+<p>Only a direct call to <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS</code> can write recent-root storage. <code class="language-plaintext highlighter-rouge">DELEGATECALL</code> and <code class="language-plaintext highlighter-rouge">CALLCODE</code> MUST NOT write recent-root storage.</p>
+
+<p>When a successful call is made during slot <code class="language-plaintext highlighter-rouge">S</code>, the contract computes:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>source_address = msg.sender
+source_id = keccak256(source_address || salt)
+i = S mod RECENT_ROOT_LENGTH
+entry_hash = keccak256(
+    RECENT_ROOT_ENTRY_DOMAIN ||
+    source_id ||
+    uint64_be(S) ||
+    root
+)
+storage_key = keccak256(
+    RECENT_ROOT_STORAGE_DOMAIN ||
+    source_id ||
+    uint64_be(i)
+)
+</code></pre></div></div>
+
+<p>and sets:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>storage[storage_key] = entry_hash
+</code></pre></div></div>
+
+<p>The call follows normal EVM execution and gas accounting. A successful call returns zero bytes. The contract exposes no read operation.</p>
+
+<p>Each <code class="language-plaintext highlighter-rouge">(source_id, S)</code> has at most one referenceable root on the canonical chain. Multiple writes by the same source address and salt during slot <code class="language-plaintext highlighter-rouge">S</code> target the same storage key. If multiple writes are included, the final write in canonical block execution order overwrites earlier writes. Only that final root is referenceable beginning in slot <code class="language-plaintext highlighter-rouge">S + 1</code>.</p>
+  
+    <h3 id="transaction-payload">
+      
+      
+        <a href="#transaction-payload" class="anchor-link"></a> Transaction payload
+      
+      
+    </h3>
+
+<p>The pre-fork EIP-8141 frame-transaction payload has eight fields:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[chain_id, nonce, sender, frames,
+ max_priority_fee_per_gas, max_fee_per_gas,
+ max_fee_per_blob_gas, blob_versioned_hashes]
+</code></pre></div></div>
+
+<p>The post-fork frame-transaction payload becomes:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[chain_id, nonce, sender, frames,
+ max_priority_fee_per_gas, max_fee_per_gas,
+ max_fee_per_blob_gas, blob_versioned_hashes,
+ recent_root_references]
+</code></pre></div></div>
+
+<p>where:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>recent_root_references = [[source_id, slot, root], ...]
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">recent_root_references</code> MUST be an RLP list. Each item MUST be an RLP list of exactly three elements. <code class="language-plaintext highlighter-rouge">source_id</code> MUST be a byte string of length 32. <code class="language-plaintext highlighter-rouge">slot</code> MUST be a canonical RLP integer satisfying <code class="language-plaintext highlighter-rouge">slot &lt; 2**64</code>. <code class="language-plaintext highlighter-rouge">root</code> MUST be a byte string of length 32. Consensus treats <code class="language-plaintext highlighter-rouge">root</code> as opaque bytes; applications define what it commits to. The number of references MUST NOT exceed <code class="language-plaintext highlighter-rouge">MAX_RECENT_ROOT_REFERENCES</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">slot</code> field is a slot number, not a timestamp or block number.</p>
+
+<p>The frame layout and frame execution rules are otherwise unchanged. <code class="language-plaintext highlighter-rouge">recent_root_references</code> is a top-level transaction field and is included in <code class="language-plaintext highlighter-rouge">compute_sig_hash(tx)</code>.</p>
+
+<p>The post-fork signature hash follows EIP-8141 over the nine-field payload:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">compute_sig_hash</span><span class="p">(</span><span class="n">tx</span><span class="p">:</span> <span class="n">FrameTx</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Hash</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tx</span><span class="p">.</span><span class="n">frames</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">frame</span><span class="p">.</span><span class="n">mode</span> <span class="o">==</span> <span class="n">VERIFY</span> <span class="ow">and</span> <span class="n">frame</span><span class="p">.</span><span class="n">target</span> <span class="o">!=</span> <span class="n">EXPIRY_VERIFIER</span><span class="p">:</span>
+            <span class="n">tx</span><span class="p">.</span><span class="n">frames</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">data</span> <span class="o">=</span> <span class="n">Bytes</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">keccak</span><span class="p">(</span><span class="nb">bytes</span><span class="p">([</span><span class="n">FRAME_TX_TYPE</span><span class="p">])</span> <span class="o">+</span> <span class="n">rlp</span><span class="p">(</span><span class="n">tx</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>where <code class="language-plaintext highlighter-rouge">rlp(tx)</code> is the post-fork nine-field payload. <code class="language-plaintext highlighter-rouge">recent_root_references</code> is not elided by the VERIFY-frame data elision rule.</p>
+
+<p>Frame data, including VERIFY frame data, MUST NOT add, remove, or modify the transaction’s recent root reference set.</p>
+  
+    <h3 id="static-validity">
+      
+      
+        <a href="#static-validity" class="anchor-link"></a> Static validity
+      
+      
+    </h3>
+
+<p>Decoders MUST reject a post-fork frame transaction if any of the following is true:</p>
+
+<ul>
+  <li>the payload does not match the post-fork schema;</li>
+  <li><code class="language-plaintext highlighter-rouge">recent_root_references</code> is not an RLP list;</li>
+  <li><code class="language-plaintext highlighter-rouge">len(recent_root_references) &gt; MAX_RECENT_ROOT_REFERENCES</code>;</li>
+  <li>any reference is not an RLP list of exactly three elements;</li>
+  <li>any <code class="language-plaintext highlighter-rouge">source_id</code> is not a byte string of length 32;</li>
+  <li>any <code class="language-plaintext highlighter-rouge">slot</code> is not a canonical RLP integer or satisfies <code class="language-plaintext highlighter-rouge">slot &gt;= 2**64</code>;</li>
+  <li>any <code class="language-plaintext highlighter-rouge">root</code> is not a byte string of length 32.</li>
+</ul>
+  
+    <h3 id="reference-validity">
+      
+      
+        <a href="#reference-validity" class="anchor-link"></a> Reference validity
+      
+      
+    </h3>
+
+<p>Within block execution, recent root references are checked after the EIP-8141 nonce check and before frame execution, against the transaction pre-state. The transaction pre-state includes all prior transactions in the same block.</p>
+
+<p>Competing blocks at the same slot may have different recent-root state, and a reference is valid only in a block whose transaction pre-state contains the referenced entry. <code class="language-plaintext highlighter-rouge">current_slot</code> is the consensus slot of that block.</p>
+
+<p>A recent root reference <code class="language-plaintext highlighter-rouge">(source_id, slot, root)</code> is valid only if:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 &lt;= current_slot - slot &lt;= RECENT_ROOT_USABLE_WINDOW
+i = slot mod RECENT_ROOT_LENGTH
+entry_hash = keccak256(
+    RECENT_ROOT_ENTRY_DOMAIN ||
+    source_id ||
+    uint64_be(slot) ||
+    root
+)
+storage_key = keccak256(
+    RECENT_ROOT_STORAGE_DOMAIN ||
+    source_id ||
+    uint64_be(i)
+)
+RECENT_ROOT_ADDRESS[storage_key] == entry_hash
+</code></pre></div></div>
+
+<p>If any reference is invalid, the transaction is invalid and no frame is executed. A block containing such a transaction is invalid.</p>
+
+<p>Duplicate references are valid. They are checked, charged, and preserved independently. Accessed address and storage-key sets deduplicate normally.</p>
+
+<p>Each valid reference MUST add <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS</code> and its <code class="language-plaintext highlighter-rouge">storage_key</code> to the transaction’s accessed address and storage-key sets. This affects warm/cold gas accounting only.</p>
+  
+    <h3 id="access-lists">
+      
+      
+        <a href="#access-lists" class="anchor-link"></a> Access lists
+      
+      
+    </h3>
+
+<p>Recent root writes are ordinary writes to <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS[storage_key]</code>.</p>
+  
+    <h3 id="gas-accounting">
+      
+      
+        <a href="#gas-accounting" class="anchor-link"></a> Gas accounting
+      
+      
+    </h3>
+
+<p>For post-fork frame transactions, the EIP-8141 gas-limit formula is modified to include recent root references:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tx_gas_limit =
+    FRAME_TX_INTRINSIC_COST
+    + len(tx.frames) * FRAME_TX_PER_FRAME_COST
+    + calldata_cost(recent_root_calldata)
+    + recent_root_reference_intrinsic_gas
+    + sum(frame.gas_limit for all frames)
+</code></pre></div></div>
+
+<p>where:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>recent_root_reference_intrinsic_gas =
+    0
+        if len(recent_root_references) == 0
+    RECENT_ROOT_REFERENCE_ADDRESS_GAS
+        + len(recent_root_references) * RECENT_ROOT_REFERENCE_GAS
+        otherwise
+</code></pre></div></div>
+
+<p>and:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>recent_root_calldata = rlp(tx.frames) || rlp(recent_root_references)
+</code></pre></div></div>
+
+<p>The EIP-7623 calldata cost MUST be computed over <code class="language-plaintext highlighter-rouge">recent_root_calldata</code> as one byte string.</p>
+
+<p><code class="language-plaintext highlighter-rouge">RECENT_ROOT_REFERENCE_GAS</code> covers one declared storage key and the two Keccak computations used to derive <code class="language-plaintext highlighter-rouge">storage_key</code> and <code class="language-plaintext highlighter-rouge">entry_hash</code>.</p>
+  
+    <h3 id="txparam-and-recentrootrefload">
+      
+      
+        <a href="#txparam-and-recentrootrefload" class="anchor-link"></a> TXPARAM and RECENTROOTREFLOAD
+      
+      
+    </h3>
+
+<p>One new <code class="language-plaintext highlighter-rouge">TXPARAM</code> index and one new opcode are added:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th style="text-align: right">Value</th>
+      <th>Return value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TXPARAM_RECENT_ROOT_REFERENCE_COUNT</code></td>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">0x0D</code></td>
+      <td><code class="language-plaintext highlighter-rouge">len(recent_root_references)</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">TXPARAM(TXPARAM_RECENT_ROOT_REFERENCE_COUNT)</code> costs the standard <code class="language-plaintext highlighter-rouge">TXPARAM</code> gas.</p>
+
+<p><code class="language-plaintext highlighter-rouge">RECENTROOTREFLOAD</code> pops two stack items:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>field
+index
+</code></pre></div></div>
+
+<p>where <code class="language-plaintext highlighter-rouge">field</code> is the top stack item and <code class="language-plaintext highlighter-rouge">index</code> is the second stack item. It pushes one word from <code class="language-plaintext highlighter-rouge">recent_root_references[index]</code>:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right"><code class="language-plaintext highlighter-rouge">field</code></th>
+      <th>Return value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">0</code></td>
+      <td><code class="language-plaintext highlighter-rouge">source_id</code></td>
+    </tr>
+    <tr>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">1</code></td>
+      <td><code class="language-plaintext highlighter-rouge">slot</code>, as a zero-extended 256-bit integer</td>
+    </tr>
+    <tr>
+      <td style="text-align: right"><code class="language-plaintext highlighter-rouge">2</code></td>
+      <td><code class="language-plaintext highlighter-rouge">root</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">RECENTROOTREFLOAD</code> costs <code class="language-plaintext highlighter-rouge">RECENTROOTREFLOAD_GAS</code>. It MUST exceptional-halt if <code class="language-plaintext highlighter-rouge">index &gt;= len(recent_root_references)</code> or <code class="language-plaintext highlighter-rouge">field &gt; 2</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">RECENTROOTREFLOAD</code> reads only fields from the signed transaction envelope. It does not read recent root contract storage. It MAY be used in any frame mode, including VERIFY frames.</p>
+  
+    <h3 id="public-mempool-handling">
+      
+      
+        <a href="#public-mempool-handling" class="anchor-link"></a> Public mempool handling
+      
+      
+    </h3>
+
+<p>Recent root storage is not exposed to validation code through EVM execution. During public mempool validation, recent root state may affect a transaction only through pre-execution reference checks and declared roots exposed by introspection.</p>
+
+<p>Nodes SHOULD admit a transaction to the public mempool only if all declared recent root references are valid against the node’s current head.</p>
+
+<p>Nodes SHOULD NOT admit a transaction while any reference has <code class="language-plaintext highlighter-rouge">slot &gt;= current_slot</code>. Nodes MAY evict a transaction with any reference where <code class="language-plaintext highlighter-rouge">current_slot - slot &gt;= RECENT_ROOT_LENGTH</code>.</p>
+
+<p>Nodes SHOULD recheck pending transactions with recent root references when the head changes, when the node’s current slot advances, or after any reorg that may affect referenced entries.</p>
+  
+    <h3 id="activation">
+      
+      
+        <a href="#activation" class="anchor-link"></a> Activation
+      
+      
+    </h3>
+
+<p>This EIP MUST activate at or after EIP-8141.</p>
+
+<p>If <code class="language-plaintext highlighter-rouge">timestamp &lt; FORK_TIMESTAMP</code>, clients MUST apply the pre-fork EIP-8141 <code class="language-plaintext highlighter-rouge">FRAME_TX_TYPE</code> schema and MUST NOT apply recent root logic.</p>
+
+<p>If <code class="language-plaintext highlighter-rouge">timestamp &gt;= FORK_TIMESTAMP</code>, clients MUST apply the post-fork <code class="language-plaintext highlighter-rouge">FRAME_TX_TYPE</code> schema defined in this EIP.</p>
+
+<p>For every block <code class="language-plaintext highlighter-rouge">B</code> with <code class="language-plaintext highlighter-rouge">B.timestamp &gt;= FORK_TIMESTAMP</code> whose parent has <code class="language-plaintext highlighter-rouge">parent.timestamp &lt; FORK_TIMESTAMP</code>, clients MUST initialize <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS</code> against <code class="language-plaintext highlighter-rouge">B</code>’s parent state before executing any transaction in <code class="language-plaintext highlighter-rouge">B</code>.</p>
+
+<p>If <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS</code> does not exist, clients MUST create it with balance 0, nonce 1, code <code class="language-plaintext highlighter-rouge">RECENT_ROOT_CODE</code>, and empty storage.</p>
+
+<p>If <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS</code> already exists with empty code and empty storage, clients MUST set its code to <code class="language-plaintext highlighter-rouge">RECENT_ROOT_CODE</code>, set its nonce to <code class="language-plaintext highlighter-rouge">max(existing_nonce, 1)</code>, preserve its balance, and leave storage empty.</p>
+
+<p>The fork configuration MUST choose a <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS</code> with empty code and empty storage in the parent state of the first post-fork payload. If this condition is false at activation, the payload is invalid.</p>
+
+<p>For all other blocks, clients MUST NOT run this initialization. Clients MUST handle reorgs across the fork boundary by applying or undoing this transition according to the canonical chain.</p>
+
+<p>Pre-fork frame transactions and authorizations bound to the pre-fork canonical signature hash do not survive the boundary and MUST be evicted from mempools and regenerated.</p>
+  
+    <h2 id="rationale">
+      
+      
+        <a href="#rationale" class="anchor-link"></a> Rationale
+      
+      
+    </h2>
+
+<p>EIP-8141 validation needs inputs that are known before validation starts. General reads from storage controlled by another account or application are unsafe for the public mempool because one mutable cell can invalidate many pending transactions.</p>
+
+<p>Recent root references provide a narrow exception. The root is declared in the signed transaction envelope, checked by clients before validation code runs, and exposed to validation code only through introspection. Recent root references are intentionally narrow: each reference names one recent <code class="language-plaintext highlighter-rouge">bytes32</code> root and one system-contract storage key.</p>
+  
+    <h3 id="entry-binding">
+      
+      
+        <a href="#entry-binding" class="anchor-link"></a> Entry binding
+      
+      
+    </h3>
+
+<p>Each stored entry commits to the root source, slot, and root. This prevents an old root at the same array index, or a root from another root source, from satisfying a reference.</p>
+  
+    <h3 id="window-choice">
+      
+      
+        <a href="#window-choice" class="anchor-link"></a> Window choice
+      
+      
+    </h3>
+
+<p>References are limited to slots strictly before <code class="language-plaintext highlighter-rouge">current_slot</code>. During slot <code class="language-plaintext highlighter-rouge">S</code>, writes update index <code class="language-plaintext highlighter-rouge">S mod RECENT_ROOT_LENGTH</code>, but references to <code class="language-plaintext highlighter-rouge">S</code> are invalid and references old enough to share that index are expired. Current-slot writes therefore cannot invalidate currently valid references.</p>
+
+<p><code class="language-plaintext highlighter-rouge">RECENT_ROOT_LENGTH = 8192</code> gives <code class="language-plaintext highlighter-rouge">RECENT_ROOT_USABLE_WINDOW = 8191</code>, because the current slot is not referenceable.</p>
+  
+    <h3 id="implicit-source-creation">
+      
+      
+        <a href="#implicit-source-creation" class="anchor-link"></a> Implicit source creation
+      
+      
+    </h3>
+
+<p>No creation transaction is required. A root source is created implicitly when a source address first writes with a new <code class="language-plaintext highlighter-rouge">(source_address, salt)</code> pair. Each root source has a bounded rolling window. Aggregate storage grows linearly with the number of written root sources. State growth is paid incrementally by the writes that create storage entries.</p>
+  
+    <h3 id="bounded-validation-work">
+      
+      
+        <a href="#bounded-validation-work" class="anchor-link"></a> Bounded validation work
+      
+      
+    </h3>
+
+<p>For validation checks, each declared reference names exactly one storage key under <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">MAX_RECENT_ROOT_REFERENCES = 16</code> bounds pre-execution reference checks while covering the expected root set for privacy, wallet authorization, and historical state root use cases.</p>
+  
+    <h2 id="backwards-compatibility">
+      
+      
+        <a href="#backwards-compatibility" class="anchor-link"></a> Backwards Compatibility
+      
+      
+    </h2>
+
+<p>This EIP does not modify EIP-7702 or other transaction types. An EIP-7702-delegated EOA may be a source address; <code class="language-plaintext highlighter-rouge">source_id</code> is derived from <code class="language-plaintext highlighter-rouge">msg.sender</code> of the write call.</p>
+
+<p>References to slots before this EIP’s activation are not satisfiable because recent root storage is empty at activation.</p>
+  
+    <h2 id="security-considerations">
+      
+      
+        <a href="#security-considerations" class="anchor-link"></a> Security Considerations
+      
+      
+    </h2>
+
+<p>Consensus treats <code class="language-plaintext highlighter-rouge">root</code> as an opaque <code class="language-plaintext highlighter-rouge">bytes32</code>. Applications define what it commits to and MUST bind the expected <code class="language-plaintext highlighter-rouge">source_id</code>, slot window, and root in their validation logic. A privacy proof using root <code class="language-plaintext highlighter-rouge">R</code> should include <code class="language-plaintext highlighter-rouge">(source_id, slot, R)</code> or an application-specific commitment to those fields as a public input, and validation logic MUST check the same tuple through <code class="language-plaintext highlighter-rouge">RECENTROOTREFLOAD</code>.</p>
+
+<p>Each <code class="language-plaintext highlighter-rouge">(source_id, slot)</code> has one referenceable root on the canonical chain. The referenceable root is last-write-wins according to canonical execution order and is finalized with the containing block. An application that needs multiple roots from the same slot SHOULD write an aggregate commitment.</p>
+
+<p>This EIP does not guarantee inclusion of root writes. Applications that rely on timely root publication need their own publication path, redundant root sources, or an inclusion policy for write transactions.</p>
+
+<p>The same <code class="language-plaintext highlighter-rouge">(source_address, salt)</code> pair produces the same <code class="language-plaintext highlighter-rouge">source_id</code> on different chains, but each chain maintains independent recent root state. Proofs, bridge messages, and offchain attestations that carry recent root references MUST bind the intended chain domain outside the tuple.</p>
+
+<p>Recent roots create ordinary persistent storage under <code class="language-plaintext highlighter-rouge">RECENT_ROOT_ADDRESS</code>. Existing root sources overwrite at most <code class="language-plaintext highlighter-rouge">RECENT_ROOT_LENGTH</code> cells, while new root sources create additional cells. The natural pricing point for aggregate state growth is source creation, not recurring writes. Future versions MAY add a one-time source registration cost or first-write surcharge for each new <code class="language-plaintext highlighter-rouge">source_id</code>.</p>
+  
+    <h2 id="copyright">
+      
+      
+        <a href="#copyright" class="anchor-link"></a> Copyright
+      
+      
+    </h2>
+
+<p>Copyright and related rights waived via <a href="/LICENSE">CC0</a>.</p>
+
+  <h2>Citation</h2>
+  <p>Please cite this document as:</p>
+  
+  <p>Thomas Thiery&nbsp;(<a href="https://github.com/soispoke">@soispoke</a>), Vitalik Buterin&nbsp;(<a href="https://github.com/vbuterin">@vbuterin</a>), Toni Wahrstätter&nbsp;(<a href="https://github.com/nerolation">@nerolation</a>), "EIP-8272: Recent Roots for Frame Transactions [DRAFT]," <em>Ethereum Improvement Proposals</em>, no. 8272, May 2026. Available: https://eips.ethereum.org/EIPS/eip-8272.</p>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "TechArticle",
+    "headline": "EIP-8272: Recent Roots for Frame Transactions [DRAFT]",
+    "name": "EIP-8272: Recent Roots for Frame Transactions [DRAFT]",
+    "author": "Thomas Thiery (@soispoke), Vitalik Buterin (@vbuterin), Toni Wahrstätter (@nerolation)",
+    "dateCreated": "2026-05-15",
+    "datePublished": "2026-05-15",
+    
+    "discussionUrl": "https://ethereum-magicians.org/t/eip-8272-recent-roots-for-frame-transactions/28621",
+    
+    "inLanguage": "en-US",
+    "license": "#copyright",
+    "copyrightYear": "2026"
+  }
+</script>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Ethereum Improvement Proposals</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Ethereum Improvement Proposals</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ethereum/EIPs"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ethereum/EIPs</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Ethereum Improvement Proposals (EIPs) describe standards for the Ethereum platform, such as core protocol specifications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

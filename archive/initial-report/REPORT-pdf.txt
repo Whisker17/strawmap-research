@@ -1,0 +1,2675 @@
+Ethereum L1 Strawmap 研究报告
+面向 Mantle dev team
+研究日期：2026-07-06（Asia/Shanghai）
+研究对象：https://strawmap.org/ 与其 Google Drawing 导出、所有可访问超链
+接、EIP/Forkcast/ethresear.ch/GitHub/EF 公开资料。
+
+0. 结论摘要
+Strawmap 不是一份“官方承诺排期”，而是 EF Architecture 给 Ethereum L1 未
+来数年升级路线做的一张协调草图。它把升级放在三层里理解：共识层负责更快确认、
+更强抗审查、更轻/更后量子安全的验证者机制；数据层负责把 blob/DA 从 4844 时代
+推向 PeerDAS、blob streaming 和更大规模 DAS；执行层负责把 L1 从“每个节点
+重执行一切”的模式，逐步推向更高 gas、更清晰状态访问、更强证明、更规整交易/账
+户模型，以及未来可能的 native rollups 和 RISC-V/zkVM 路线。[S1][S2]
+对 Mantle 来说，核心信号不是“L2 被 L1 吞掉”，而是“L1 会越来越像高吞吐
+rollup settlement/DA/proof coordination layer”。最相关的变化是：blob 供给与
+定价、PeerDAS/后续 DA 扩容、L1 finality 缩短、native rollups/zkEVM 证明接
+口、状态访问与证明成本、交易/mempool 隐私。Mantle 的 EigenDA-first 与 SP1/
+ZK validity 方向仍然成立，但需要持续重估 Ethereum blob DA fallback、证明延
+迟、finality 语义和未来 native-rollup 兼容性。[S10][S31][S32][S45]
+最重要的阅读方式：Strawmap 右侧的 fast L1 、 gigagas L1 、 teragas L2 、
+post quantum L1 、 private L1 是 north stars，不是已验证指标或确定交付目
+标。当前更可靠的“近期 fork 状态”应以 EIP meta / Forkcast 语言表达：例如
+ePBS/EIP-7732 与 BALs/EIP-7928 scheduled for Glamsterdam，FOCIL/
+EIP-7805 declined for Glamsterdam but scheduled for Hegotá，Frame Tx/
+EIP-8141 considered for Hegotá。不要把 Strawmap 的年份、箭头和北极星数字
+写成确定承诺。[S1][S3][S4][S5]
+
+1. 如何读 Strawmap
+Strawmap 有三个横向层：
+• CL / Consensus Layer：slots、finality、roles、validator aggregation、
+post-quantum consensus。
+• DL / Data Layer：blob/DA throughput、sampling、blobpool、data
+pricing、payload availability。
+• EL / Execution Layer：gas limit、state、proofs、EVM hardening、
+transactions、mempool、native rollups。
+图中的箭头可以理解为两类关系：硬技术依赖，或者自然演进方向。报告中会把“明确
+依赖”和“推断依赖”分开写。[S1][S2]
+状态语言：
+• scheduled for X ：进入对应 meta EIP 的 scheduled bucket。
+• considered/proposed for X ：处于对应 fork 的考虑/提议范围，不能写成会
+进 fork。
+• research / offchain / concept ：有研究帖、repo 或路线图概念，但不是确
+定 protocol feature。
+• north star ：长期目标，主要用于协调方向，不是当前吞吐或交付承诺。[S3]
+[S4][S5]
+
+2. Layer 级别分析
+2.1 共识层：当前问题与路线动机
+共识层的瓶颈不是单一的“finality 慢”，而是一组被 12s slot、epoch finality、大验
+证者集合、PBS/relay、抗审查与未来 PQ 签名共同放大的限制。当前 L1 用户、
+bridge、交易所与 L2 都受慢 finality 影响；同时，验证者数量接近百万级时，全量
+attestation 聚合与单槽 finality 会在网络带宽、聚合轮次、签名大小上遇到上限。[S6]
+[S39][S45][S57][S58]
+因此 CL 路线分成三条线：
+• 延迟线：fast confirmation、quick slots、slot duration decreases、1-round
+finality。
+• 角色线：ePBS、FOCIL、attester/includer separation、distributed block
+building。
+
+• 安全/可持续线：validator set/issuance、lean consensus、PQ heartbeat、
+PQ pubkey registry、XMSS attestations、secret proposers。
+
+2.2 数据层：当前问题与路线动机
+L2 扩容的短中期瓶颈仍是 DA。EIP-4844 引入 blobs 后，blob gas 与 execution
+gas 分离，但当前 blob 供给、blobpool 传播、KZG 验证、fee floor 与低需求阶段的
+价格信号都还不是终局设计。PeerDAS 的目标是让节点不下载全部 blob 数据也能参与
+DA 安全；后续 sparse blobpool、cell-level deltas、blob streaming 则是在降低传
+播和 critical path 压力。[S10][S11][S13][S14][S15]
+因此 DL 路线从“更多 blobs”升级到“更高效、可抽样、可预传播、可定价的数据可
+用性”。 teragas L2 / 1 Gbyte/sec 是 north star：它表达的是通过 DAS 支撑
+数量级更高 L2 DA，而不是当前 spec 已经给出可执行参数。[S1][S10]
+
+2.3 执行层：当前问题与路线动机
+执行层的瓶颈更复杂：单纯提高 gas limit 会把执行、状态读写、block
+propagation、witness、state root computation、precompile 特例、mempool
+validation 和 node hardware 压力一起放大。因此 Strawmap 的 EL 路线不是“把
+gas limit 拉满”，而是先 repricing、BALs、state/proof plumbing、EVM
+hardening，再走 zkEVM/native rollup/mandatory proof 和可能的 RISC-V/
+LeanVM 路线。[S18][S19][S20][S24][S26][S27][S32][S43]
+对 Mantle 最关键的是：Ethereum L1 如果逐步把执行验证转向 proof-heavy 模式，
+rollup 证明、状态访问和 native-rollup 兼容性会变成 L2 架构设计的一部分，而不只
+是链下运营优化。[S31][S32][S33][S34]
+
+3. 路线图依赖关系
+flowchart LR
+A["EIP-4844 blobs"] --> B["PeerDAS / EIP-7594"]
+B --> C["BPO forks / blob capacity increments"]
+B --> D["Sparse blobpool / cell-level deltas"]
+D --> E["Blob streaming / ticketed AOT propagation"]
+E --> F["Teragas L2 north star"]
+G["ePBS / EIP-7732"] --> H["FOCIL / inclusion lists"]
+H --> I["Attester-includer separation"]
+J["Fast confirmation"] --> K["Quick slots"]
+
+K --> L["1-round / decoupled finality"]
+L --> M["Fast L1 north star"]
+N["BALs / EIP-7928"] --> O["Data/state repricing"]
+O --> P["Gas-limit increases"]
+P --> Q["Proof-heavy execution"]
+R["EVMification / EIP-8200"] --> Q
+Q --> S["Native rollups / EIP-8079"]
+Q --> T["Block-in-Blobs / EIP-8142"]
+T --> U["Gigagas L1 north star"]
+V["Frame tx / EIP-8141"] --> W["Keyed nonces + recent roots"]
+W --> X["Encrypted/privacy mempool"]
+X --> Y["Private L1 north star"]
+Z["PQ key registry"] --> ZA["PQ heartbeat / XMSS attestations"]
+ZA --> ZB["Post-quantum L1 north star"]
+明确依赖里，Fusaka/PeerDAS/BPO、Glamsterdam/ePBS/BALs、Hegotá/
+FOCIL 的状态最清晰。长程 I/J/K/L 主要是 Strawmap/PQ roadmap 里的规划链
+条，应以 milestone 或 research direction 表达。[S3][S4][S12][S46]
+
+3.1 Strawmap 标签覆盖表
+下表把 Google Drawing/PDF 中提取出的路线图标签映射到本报告中的分析位置。
+merged 表示它不是单独 EIP，而是并入相邻机制讨论； unresolved 表示没有找到
+足够明确的 canonical source，只保留为 Strawmap concept。
+Strawmap 标签
+
+覆盖方式
+
+主要来源
+
+fast L1 / finality in seconds / fast
+
+Fast confirmation / FCR 行
+
+[S1][S6]
+
+confirmation
+Slot duration decreases 与 Quick
+
+[S3][S5]
+
+slots 行
+
+[S7]
+
+SFI 行，作为 EIP-7723 process status
+
+[S5]
+
+ePBS / attester-proposer separation /
+
+ePBS 、 Attester-proposer / includer
+
+[S8][S56]
+
+distributed block building
+
+separation 、 Distributed block
+
+slot duration decreases / quick slots
+
+SFI
+
+building 行
+FOCIL
+
+FOCIL 行
+
+[S3][S4]
+[S9]
+
+decoupled consensus / 1-round finality
+
+Decoupled consensus / 1-round
+
+[S57][S44]
+
+finality 行
+
+[S45]
+
+Strawmap 标签
+
+覆盖方式
+
+主要来源
+
+1M attestations per slot
+
+1M attestations per slot 行
+
+[S39][S58]
+[S59]
+
+snail issuance
+
+Snail issuance 行；exact phrase
+
+[S48][S49]
+
+unresolved，按 issuance/validator-set
+policy 映射
+beacon & lean specs merge / tech debt
+
+Beacon & lean specs merge / tech
+
+[S7][S40]
+
+reset / specs quantum
+
+debt reset 与 PQ rows 合并覆盖
+
+[S41][S46]
+
+51% attack auto-recovery
+
+新增 51% attack auto-recovery 行
+
+[S50]
+
+post quantum heartbeat / post quantum
+
+对应 PQ rows
+
+[S38][S39]
+
+pubkey registry / PQ leanXMSS
+
+[S41]
+
+attestations
+VDF randomness / real-time CL proofs /
+
+对应 CL rows
+
+secret proposers
+
+[S51][S40]
+[S41][S52]
+[S53]
+
+teragas L2 / 1 Gbyte/sec / data availability
+
+DA increases / PeerDAS 与 north-star
+
+increases
+
+caveat
+
+sparse blobpool / cell-level deltas / local
+
+DL rows
+
+blob reconstruction / proofs of custody
+blob streaming / short-dated blob futures
+
+[S1][S10]
+
+[S10][S13]
+[S14]
+
+DL rows； short-dated blob futures 映
+
+[S15]
+
+射到 EIP-8256/ticketed reservation 而非金
+融 futures
+remove blob transaction type / leanVM /
+
+DL/EL rows； leanDA exact label
+
+[S31][S34]
+
+PQ leanDA sampling / leanDA block
+
+unresolved
+
+[S40][S41]
+
+sampling / partial binary tree
+data repricing / multidimensional pricing
+
+[S46]
+DL rows
+
+[S17][S18]
+[S21][S22]
+[S23]
+
+gigagas L1 / 1 Ggas/sec / gas limit
+
+EL rows and north-star caveat
+
+increases
+
+[S1][S18]
+[S19]
+
+ethp2p broadcast / ethp2p unification /
+
+ethp2p broadcast/unification 与新增
+
+sharded mempool
+
+Sharded mempool 行
+
+evm-asm canonical guest / state-asm /
+
+EL proving/ISA rows
+
+[S26][S43]
+
+Glamsterdam repricing / BALs
+
+EL rows
+
+[S20][S47]
+
+optional 2-of-3 proofs / mandatory 1-of-1
+
+Proof rows；数字短语按 Strawmap
+
+[S24][S32]
+
+proofs
+
+interpretation 处理，不作为 canonical term
+
+validity-only partial state / decentralized
+
+State rows
+
+[S25][S37]
+
+zkzkRISC-V frames
+
+state / endgame state / pureth purges
+EVMify long-tail precompiles
+
+[S33][S34]
+[S35]
+
+EIP-8200 row
+
+[S27]
+
+Strawmap 标签
+
+覆盖方式
+
+主要来源
+
+frame transactions / keyed nonces &
+
+Transaction/account rows
+
+[S28][S29]
+
+recent roots / ephemeral keys
+
+[S30][S42]
+
+native rollups
+
+Native rollups row
+
+[S31]
+
+long-dated gas futures
+
+Long-dated gas futures row; research
+
+[S54][S55]
+
+only, no canonical EIP
+PQ leanSPHINCS transactions
+
+新增 row；mapped to frame/PQ account-
+
+[S28][S42]
+
+auth track, exact Strawmap label not a
+
+[S46]
+
+canonical EIP
+privacy mempool / encrypted mempool /
+
+Privacy rows; lean privacy wormholes
+
+[S1][S36]
+
+private L1 / lean privacy wormholes
+
+unresolved and mapped to privacy/PQ/
+
+[S41][S42]
+
+leanVM research track
+
+4. 优化点明细
+4.1 共识层优化点
+优化点
+
+当前瓶颈
+
+原理/机制
+
+引入后的变化
+
+状态/依赖
+
+Fast
+
+Ethereum
+
+consensus-client 规则
+
+正常网络下可给出约
+
+client-side/
+
+confirmation /
+
+finality 对 UX、
+
+基于 attestation 条件
+
+13s 级
+
+offchain；不需要
+
+FCR
+
+bridge、交易所
+
+给出一槽级确认，失败时
+
+confirmation，但
+
+hard fork [S6]
+
+有约 15 min 级等
+
+回退到 finalized head
+
+安全性弱于 finality
+
+待压力
+Slot duration
+
+12s slot 是 L1
+
+缩短 slot，比如 12s ->
+
+inclusion 与
+
+EIP-7782 在相关讨论
+
+decreases
+
+inclusion
+
+6s，需要重新分配
+
+finality cadence 加
+
+中出现，但
+
+latency 的基础下
+
+proposal/attestation/
+
+快，但传播/验证压
+
+Glamsterdam meta
+
+限
+
+aggregation deadline
+
+力上升
+
+当前将其列为
+declined；需谨慎 [S3]
+[S5]
+
+Quick slots /
+
+CL 客户端到处硬
+
+先把 slot duration
+
+未来 slot reduction
+
+Draft；更像基础设施准
+
+EIP-8198
+
+编码 12s 假设
+
+runtime-
+
+从大改变成可配置路
+
+备 [S7]
+
+configurable，再
+
+径
+
+benchmark、逐步缩短
+SFI
+
+fork scope 容易
+
+EIP-7723 定义
+
+fork 治理语言更清
+
+process status，不是
+
+把“想研究”和
+
+Scheduled for
+
+晰
+
+协议功能 [S5]
+
+“准备进入
+
+Inclusion 等状态
+
+fork”混淆
+ePBS /
+
+PBS 依赖 relay/
+
+enshrine proposer-
+
+降低 relay 信任和
+
+Draft；scheduled for
+
+EIP-7732
+
+off-protocol
+
+builder separation，
+
+critical-path
+
+Glamsterdam；free-
+
+trust，执行
+
+用 commitment/PTC/
+
+payload 压力，改善
+
+option/复杂性仍是风险
+
+payload 在
+
+延迟执行验证
+
+builder/proposer
+
+[S3][S8]
+
+critical path
+
+角色分离
+
+优化点
+
+当前瓶颈
+
+原理/机制
+
+引入后的变化
+
+状态/依赖
+
+FOCIL /
+
+builder 集中使抗
+
+committee 生成
+
+提升 forced
+
+Draft；declined for
+
+EIP-7805
+
+审查弱化
+
+inclusion lists，fork
+
+inclusion 与
+
+Glamsterdam,
+
+choice 强制满足 IL
+
+censorship
+
+scheduled for
+
+resistance
+
+Hegotá [S3][S4][S9]
+
+Attester-
+
+inclusion 与
+
+把 inclusion tx 与
+
+更清晰的 inclusion
+
+Research；逻辑上在
+
+proposer /
+
+state execution
+
+state tx、includer 与
+
+fee 与抗审查路径
+
+PBS/FOCIL 之后
+
+includer
+
+混在一起，激励和
+
+proposer/builder 角色
+
+separation
+
+费用不清晰
+
+拆开
+
+Distributed
+
+builder/relay 集
+
+多方或分布式 builder/
+
+降低单点与 relay 依
+
+Research / PBS 相关
+
+block building
+
+中形成
+
+proposer 协作
+
+赖，但协调复杂度上
+
+[S8]
+
+chokepoint
+
+[S56]
+
+升
+
+Decoupled
+
+单槽 finality 与全
+
+heartbeat chain 与
+
+有机会在不让每个
+
+Research；依赖
+
+consensus / 1-
+
+量验证者投票/聚
+
+trailing finality
+
+slot 承担全量
+
+committee、
+
+round finality
+
+合存在 tradeoff
+
+gadget 解耦
+
+finality 成本的情况
+
+aggregation、
+
+下加快 finality
+
+networking [S57]
+[S44][S45]
+
+1M attestations
+
+大验证者集合下
+
+小 heartbeat
+
+让 fast path 更轻，
+
+Research；数字是压
+
+per slot
+
+naive 全量投票不
+
+committee + 后置
+
+同时保留更强
+
+力场景，不是 spec 参
+
+可扩展
+
+finality / aggregation
+
+finality
+
+数 [S39][S58][S59]
+
+验证者集合增长会
+
+exact phrase 未找到
+
+可能降低长期 CL
+
+unresolved label；按
+
+放大 CL 通信与聚
+
+canonical source；最
+
+scaling 压力，但经
+
+issuance/validator-
+
+合成本
+
+接近 Orbit SSF /
+
+济安全、solo
+
+set policy research
+
+issuance policy 对
+
+staking 与中心化权
+
+处理 [S48][S49]
+
+validator-set growth
+
+衡未定
+
+Snail issuance
+
+与 issuance curve 的
+讨论
+Beacon & lean
+
+beacon specs
+
+lean consensus/spec
+
+降低客户端/规格技
+
+offchain/spec
+
+specs merge /
+
+与 lean/PQ/证明
+
+tooling 与 runtime-
+
+术债，为 PQ/fast
+
+work；EIP-8198/
+
+tech debt reset
+
+方向复杂度累积
+
+configurable timing
+
+finality 做准备
+
+leanSpec 相关 [S7]
+[S40][S41]
+
+Post-quantum
+
+validator PQ
+
+先登记 PQ public
+
+降低迁移操作风险
+
+Research；不是
+
+pubkey registry
+
+migration 需要提
+
+keys，为 XMSS/哈希
+
+finalized design
+
+前生成/登记密
+
+签名迁移做 warmup
+
+[S38]
+
+钥，不能等激活时
+突击
+Post-quantum
+
+全量 PQ
+
+小 heartbeat
+
+让 PQ liveness
+
+Research；依赖
+
+heartbeat
+
+aggregation 太
+
+committee 可直接拼接
+
+fast path 更现实
+
+dynamic availability/
+
+重
+
+PQ signatures，
+
+leanMultisig [S39]
+
+finality 另走压缩/证明
+
+[S41]
+
+路径
+PQ leanXMSS
+
+BLS/ECDSA 长
+
+leanMultisig/leanVM
+
+提供 CL PQ
+
+Implementation/
+
+attestations
+
+期受量子威胁；
+
+用递归证明压缩 XMSS
+
+attestation 方向，
+
+research；repo
+
+XMSS stateful
+
+签名集合
+
+但 signer state
+
+benchmark 不是协议
+
+discipline 很重
+
+保证 [S41]
+
+且大签名
+
+优化点
+
+当前瓶颈
+
+原理/机制
+
+引入后的变化
+
+状态/依赖
+
+VDF
+
+committee/
+
+RANDAO+VDF 等历史
+
+提升 randomness
+
+历史研究，当前
+
+randomness
+
+proposer
+
+路线
+
+质量，但与新设计优
+
+Strawmap 中属长程概
+
+先级关系不明
+
+念 [S51]
+
+randomness 需
+要抗操纵
+Real-time CL
+
+consensus 验证
+
+ZK-verified
+
+未来可让 CL 验证更
+
+Aspirational
+
+proofs
+
+和 light-client/证
+
+consensus /
+
+轻、更可组合
+
+research [S40][S41]
+
+明仍不够实时
+
+leanVM / recursive
+proofs
+
+Secret
+
+proposer 身份提
+
+Whisk/SSLE 等秘密领
+
+提升 proposer
+
+Research；非近期承
+
+proposers
+
+前暴露可被 DoS
+
+导者选择
+
+privacy 和 DoS
+
+诺 [S52][S53]
+
+resistance
+51% attack
+
+严重多数攻击后，
+
+timeliness detectors
+
+目标是降低攻击后长
+
+Research；不是当前
+
+auto-recovery
+
+在线节点需要一致
+
+让客户端在同步假设下判
+
+期混乱与社会恢复负
+
+fork commitment
+
+判断哪个分叉/区
+
+断区块是否准时，并帮助
+
+担，但依赖网络延迟
+
+[S50]
+
+块是 timely 或应
+
+识别/恢复攻击后的
+
+假设和在线多数
+
+恢复的链
+
+canonical view
+
+4.2 数据层优化点
+优化点
+
+当前瓶颈
+
+原理/机制
+
+引入后的变化
+
+状态/依赖
+
+DA increases /
+
+blob 扩容如果要求
+
+PeerDAS 用 erasure
+
+增加 blob/DA
+
+EIP-7594 是核心
+
+PeerDAS
+
+节点全量下载，会
+
+coding、columns、
+
+capacity 同时不
+
+DA 升级；
+
+推高带宽/存储
+
+sampling 让节点下载一部
+
+线性增加节点负担
+
+Fusaka/Fulu 相
+
+分数据
+
+关 [S10]
+
+Blob target/max
+
+4844 后 blob
+
+EIP-7691 提升 target/
+
+先给 L2 DA 更多
+
+近中期容量
+
+bump
+
+supply 有短期供给
+
+max blobs
+
+headroom
+
+bump [S11]
+
+每次调 blob 参数
+
+EIP-7892 允许 blob-
+
+blob capacity 可
+
+PeerDAS/BPO
+
+都 full hard fork
+
+parameter-only forks
+
+更频繁调整
+
+扩容工具 [S12]
+
+约束
+BPO forks
+
+成本高
+Sparse blobpool /
+
+full-replication
+
+provider/sampler 角色分
+
+降低 blobpool 平
+
+Draft
+
+EIP-8070
+
+blobpool 占用 EL
+
+离，概率性 full fetch +
+
+均带宽，保留可用
+
+networking EIP
+
+带宽并影响
+
+custody-aligned
+
+性验证路径
+
+[S13]
+
+liveness
+
+sampling
+
+Cell-level deltas /
+
+节点已有大部分
+
+用 bitmap/request-
+
+降低 PeerDAS
+
+Draft；PeerDAS
+
+EIP-8136
+
+cells 时仍重复交换
+
+response 只交换未见 cells
+
+churn 与冗余带宽
+
+optimization
+
+整列/大量数据
+
+[S14]
+
+Local blob
+
+DAS 下并非所有节
+
+基于采样/cell/proof 重建所
+
+增强本地验证与恢
+
+与 PeerDAS/
+
+reconstruction
+
+点都有完整 blobs
+
+需 blob data
+
+复能力
+
+sparse blobpool
+相关 [S10][S13]
+
+Proofs of custody
+
+节点采样后需证明/
+
+custody sampling +
+
+使 DAS 安全不依
+
+PeerDAS/DAS
+
+约束自己 custody
+
+proofs / subnet
+
+赖全量下载
+
+family [S10]
+
+的数据
+
+responsibilities
+
+[S13]
+
+优化点
+
+当前瓶颈
+
+原理/机制
+
+引入后的变化
+
+状态/依赖
+
+Blob streaming /
+
+blob data
+
+ticket-based ahead-of-
+
+将部分 blob
+
+Draft/
+
+ticketed AOT
+
+propagation 仍在
+
+time blobs + JIT blobs
+
+propagation 移
+
+HackMD；
+
+critical path，
+
+出 critical path，
+
+EIP-8256
+
+naive EL pre-
+
+给 L2 sequencer
+
+closest match
+
+propagation 有
+
+更稳定提交窗口
+
+[S15]
+
+DoS 风险
+Short-dated blob
+
+L2 需要提前锁定/
+
+Strawmap 语境最接近
+
+更像容量预留/传
+
+概念/研究；谨慎
+
+futures
+
+平滑 blob
+
+EIP-8256 ticketed
+
+播设计，不是
+
+命名 [S15]
+
+capacity/cost
+
+reservation，而非金融
+
+derivatives
+
+futures
+
+market
+
+Remove blob
+
+未来 native-
+
+EIP-8079/native rollups
+
+简化 native
+
+Draft/native
+
+transaction type
+
+rollup/proof-
+
+不支持 blob tx，或将 DA
+
+rollup STF 与
+
+rollup 路线
+
+heavy 模式下，
+
+与 execution 接口重新组织
+
+execution/DA 边
+
+[S31]
+
+blob tx 与
+
+界
+
+execution
+semantics 可能需
+规整
+Data repricing
+
+blob/call/BAL
+
+EIP-8131/8279/8311 等
+
+避免扩容后被便宜
+
+Proposed/
+
+bytes 的真实资源
+
+给 byte-dense 资源加
+
+字节拖垮传播/状
+
+repricing
+
+成本不匹配
+
+floor
+
+态
+
+cluster [S18]
+[S21][S22]
+[S23]
+
+Multidimensional
+
+单一 gas 无法同时
+
+多资源维度统一 max_fee/
+
+用户预算更统一，
+
+Draft；结构性
+
+pricing / EIP-7999
+
+给 execution、
+
+reserve pricing
+
+资源定价更真实，
+
+fee market 改造
+
+data、state、
+
+但 builder
+
+[S17]
+
+blob 正确定价
+
+packing 更复杂
+
+PQ leanDA
+
+长期 DA 还要考虑
+
+Hash/PQ-friendly DA
+
+支撑 post-
+
+没有找到精确
+
+sampling / leanDA
+
+PQ commitment
+
+commitments + sampling
+
+quantum L2 DA
+
+canonical
+
+block sampling
+
+与更大规模
+
+north star
+
+label；按 lean/
+PQ DAS
+
+sampling
+
+research 处理
+[S40][S46]
+Partial binary tree
+
+state/proof/
+
+binary tree/hash-based
+
+减少 witness 并
+
+更接近 EL/
+
+witness 需要 PQ-
+
+state commitments
+
+避免 Verkle 曲线
+
+state；DL 图上
+
+长期 PQ 风险
+
+作为数据结构
+
+friendly 树结构
+
+hardening [S34]
+
+4.3 执行层优化点
+优化点
+
+当前瓶颈
+
+原理/机制
+
+引入后的变化
+
+状态/依赖
+
+BALs / EIP-7928
+
+state access
+
+block-level
+
+支持并行 disk
+
+Draft；scheduled for
+
+隐含在执行
+
+access lists 显
+
+reads、
+
+Glamsterdam [S3][S20]
+
+中，难以并行/
+
+式记录访问账户/
+
+validation、
+
+预取/验证
+
+slot 与结果
+
+state-root
+computation、
+healing
+
+优化点
+
+当前瓶颈
+
+原理/机制
+
+引入后的变化
+
+状态/依赖
+
+Glamsterdam
+
+EVM gas 成本
+
+作为 gas
+
+为更高 gas 与
+
+Meta/draft [S47]
+
+repricing / EIP-8007
+
+与实际瓶颈不
+
+repricing
+
+parallelism 清
+
+匹配
+
+directory 组织多
+
+理资源错价
+
+个 repricing
+EIPs
+Gas limit increases /
+
+block
+
+client default
+
+提供容量提升路
+
+Draft/非共识默认策略；不是直
+
+EIP-7938
+
+capacity 受
+
+voting schedule
+
+径，但 state
+
+接承诺 [S19]
+
+gas limit 与
+
+指数提升 gas
+
+growth/
+
+client
+
+limit
+
+propagation
+
+coordination
+
+风险高
+
+限制
+EIP-8131/8279/8311
+
+calldata、
+
+64/96 gas/byte
+
+先收紧最坏块大
+
+Proposed/analysis；不是已定
+
+repricing
+
+BAL bytes、
+
+等 floors + BAL
+
+小，再考虑
+
+参数 [S18][S21][S22][S23]
+
+byte-dense
+
+runtime
+
+450M gas 级
+
+cases 可绕过
+
+metering
+
+别分析目标
+
+floor
+ethp2p broadcast/
+
+generic p2p
+
+erasure-coded
+
+改善 blocks/
+
+Repo/spec research；
+
+unification
+
+对大对象传播
+
+broadcast、
+
+blobs/BAL/
+
+broadcast 已较具体，其它层仍
+
+低效；CL/EL
+
+object-specific
+
+PTC/IL 等传播
+
+研究 [S25]
+
+带宽缺少统一
+
+strategy、
+
+效率
+
+控制
+
+QUIC/ECH、
+slot-aware
+control
+
+Optional execution
+
+beacon
+
+CL 可选择使用
+
+降低每个
+
+Stagnant；作为 proof path
+
+proofs / EIP-8025
+
+nodes 依赖
+
+execution
+
+verifier 跑 EL
+
+concept [S24]
+
+EL re-
+
+proofs
+
+的必要性
+
+execution 验
+证 payload
+Mandatory proofs /
+
+gigagas L1
+
+zkEVM/real-
+
+execution
+
+Strawmap concept；具体由
+
+1-of-1 proofs
+
+下所有节点重
+
+time proofs 让
+
+validation 更
+
+EIP-8142/native rollups/
+
+执行不可持续
+
+验证转向 proof
+
+轻，但
+
+zkEVM stack 支撑 [S24][S32]
+
+verification
+
+proving/state
+availability 成
+关键瓶颈
+
+Block-in-Blobs /
+
+如果
+
+把 payload data
+
+proof-heavy
+
+Draft；依赖
+
+EIP-8142
+
+validators 不
+
+放入 blobs，并在
+
+execution 仍保
+
+4844/7594/7732/7892/7928
+
+再重执行，
+
+EL/CL 间绑定
+
+持 DA
+
+[S32]
+
+execution
+
+blob
+
+payload data
+
+commitments
+
+Draft；长期架构方向 [S31]
+
+availability 不
+能靠 reexecution 隐
+含保证
+Native rollups /
+
+rollups 仍依赖
+
+L1 暴露/验证
+
+rollups 更接近
+
+EIP-8079
+
+外部证明/桥接
+
+Ethereum STF
+
+继承 L1
+
+信任模型
+
+execution
+
+security 与同步
+
+primitive
+
+组合性
+
+优化点
+
+当前瓶颈
+
+原理/机制
+
+引入后的变化
+
+状态/依赖
+
+evm-asm canonical
+
+zkEVM guest
+
+Lean 4 verified
+
+提高 STF
+
+Prototype repo；非
+
+guest
+
+与 compiler
+
+macro-
+
+guest 可验证
+
+production guest [S26]
+
+trust/spec
+
+assembler over
+
+性，减少
+
+conformance
+
+RV64 guest
+
+compiler trust
+
+复杂
+state-asm /
+
+block
+
+verified state
+
+把 EVM
+
+Research/prototype；RISC-V
+
+zkzkRISC-V frames
+
+execution
+
+transition /
+
+execution 转成
+
+replacement 仍讨论 [S26]
+
+proving 与
+
+RISC-V zkVM
+
+更适合证明的底
+
+[S43]
+
+state/
+
+substrate
+
+层 ISA
+
+PQ/lean
+
+minimal hash-
+
+为 lean/PQ
+
+stack 需要小
+
+based zkVM +
+
+signatures/
+
+型 zkVM/
+
+leanSig/
+
+proofs 提供
+
+proof
+
+compiler path
+
+VM-native 路
+
+witness 成本
+高
+LeanVM
+
+substrate
+
+Research repo [S41]
+
+线
+
+EVMify long-tail
+
+precompiles
+
+在相同地址部署等
+
+降低共识特例与
+
+Draft；gas-sensitive
+
+precompiles /
+
+是 client/
+
+价 EVM
+
+zkEVM 特例，
+
+contracts 风险 [S27]
+
+EIP-8200
+
+zkEVM
+
+bytecode，停止
+
+但 gas/perf 可
+
+special cases
+
+native
+
+能变化
+
+precompile 处理
+Validity-only partial
+
+weak
+
+保留足够验证
+
+在降低存储的同
+
+state / VOPS
+
+statelessness
+
+pending tx 的部
+
+时保留
+
+可能破坏
+
+分状态
+
+mempool 验证
+
+public
+
+Research [S33]
+
+能力
+
+mempool
+validity/
+censorship
+resistance
+Hyper-scaling state /
+
+state 没有像
+
+tiered/new
+
+把 future state
+
+new state forms
+
+DAS/ZK 那样
+
+state classes、
+
+设计成更便宜但
+
+的单一 magic
+
+temporary/
+
+更受限的资源
+
+bullet
+
+UTXO-like
+
+Research [S34]
+
+storage
+Pureth purges /
+
+RPC/blocks/
+
+Pureth meta 关
+
+降低轻客户端/
+
+Stagnant meta；label 映射有
+
+EIP-7919
+
+receipts/tx
+
+注 verifiable
+
+RPC 信任，但
+
+不确定性 [S35]
+
+data 可验证性
+
+data access/
+
+不是直接 state-
+
+不足
+
+RPC
+
+growth fix
+
+correctness
+Decentralized/
+
+全状态存储、
+
+statelessness、
+
+节点负担下降，
+
+Research；Verkle vs binary
+
+endgame state
+
+old state、
+
+expiry、state
+
+但 RPC/
+
+trie 仍有分歧 [S33][S34]
+
+witness 仍中
+
+providers、new
+
+indexer/old-
+
+心化
+
+state forms
+
+state retrieval
+更重要
+
+Frame transactions /
+
+EOA/AA/PQ/
+
+transaction
+
+原生
+
+Draft；considered for
+
+EIP-8141
+
+key rotation/
+
+type 0x06 ，
+
+batching、gas
+
+Hegotá [S4][S28]
+
+gas
+
+frames for
+
+sponsorship、
+
+优化点
+
+当前瓶颈
+
+原理/机制
+
+引入后的变化
+
+sponsorship
+
+validation/
+
+key rotation、
+
+被现有 tx 格式
+
+payment/
+
+PQ-friendly
+
+限制
+
+execution
+
+auth
+
+Keyed nonces /
+
+shared
+
+(nonce_key,
+
+提高同 sender
+
+Draft/proposed for Hegotá
+
+EIP-8250
+
+sender/
+
+nonce_seq) 拆
+
+并发与
+
+[S4][S29]
+
+global nonce
+
+分 nonce
+
+privacy/
+
+串行化隐私协
+
+domains
+
+nullifier
+
+议和 relayers
+Recent roots /
+
+validation 需
+
+EIP-8272
+
+状态/依赖
+
+workflows
+frame tx 引用
+
+privacy
+
+Draft/proposed [S30]
+
+要引用近期
+
+(source_id,
+
+trees、auth
+
+roots，但直接
+
+slot, root) ，
+
+roots、wallet
+
+读 mutable
+
+预检查后暴露给
+
+roots 更易安全
+
+state 易失效/
+
+validation code
+
+绑定
+
+长期 ECDSA
+
+AA/smart
+
+降低长期 key
+
+Wallet/AA research；需
+
+public-key
+
+wallet 每笔交易/
+
+exposure，但
+
+private mempool 缓解 [S42]
+
+exposure 有
+
+短周期换 key，或
+
+pending
+
+PQ 风险
+
+hash-based
+
+mempool
+
+few-time
+
+window 仍暴露
+
+DoS
+Ephemeral keys
+
+signatures
+Announce tx with
+
+mempool
+
+tx
+
+支持更精细
+
+nonce / EIP-8077
+
+propagation
+
+announcements
+
+mempool/
+
+缺少 sender/
+
+带 source
+
+sharding/
+
+nonce hints
+
+address 和
+
+validation
+
+Draft networking [S37]
+
+nonce
+Sharded mempool
+
+单一公共
+
+目前没有单一
+
+可降低传播压力
+
+merged concept；见
+
+mempool 在
+
+canonical EIP；
+
+并让不同对象走
+
+EIP-8070/EIP-8077/EIP-8184
+
+blob/tx/
+
+最接近的是
+
+专门路径，但会
+
+[S13][S37][S36]
+
+nonce/
+
+sparse
+
+增加 mempool
+
+privacy 路线
+
+blobpool、
+
+policy 与 DoS
+
+下传播与验证
+
+announce-with-
+
+面
+
+压力上升
+
+nonce、
+encrypted/
+private
+mempool 的组合
+
+Encrypted / privacy
+
+public
+
+sealed tx/
+
+降低 front-
+
+Draft；depends on FOCIL
+
+mempool / EIP-8184
+
+mempool 暴
+
+bundle、
+
+running/
+
+[S36]
+
+露内容和排序
+
+commit-before-
+
+censorship/
+
+机会
+
+reveal、delayed
+
+order-flow 泄
+
+key release
+
+露，但引入
+reveal
+optionality/
+DoS/key trust
+
+Private L1 / shielded
+
+L1 原生隐私
+
+shielded
+
+隐私成为 L1 一
+
+North star / research [S1]
+
+transfers
+
+弱，应用层隐
+
+transfer、
+
+等能力，但 UX/
+
+[S36][S42]
+
+私依赖外部协
+
+privacy
+
+compliance/
+
+议
+
+mempool、PQ-
+
+ciphertext
+bloat 很难
+
+优化点
+
+当前瓶颈
+
+原理/机制
+
+引入后的变化
+
+状态/依赖
+
+safe note
+discovery
+PQ leanSPHINCS
+
+账户签名长期
+
+exact label 无
+
+可作为 post-
+
+Strawmap concept；mapped
+
+transactions
+
+需要 PQ-safe
+
+canonical EIP；
+
+quantum
+
+to frame/PQ AA track [S28]
+
+替代，且现有
+
+最接近 frame
+
+account-auth
+
+[S42][S46]
+
+EOA/tx
+
+transactions +
+
+path，但签名大
+
+envelope 不
+
+PQ account-
+
+小、
+
+适合大 PQ 公
+
+auth / hash-
+
+mempool、
+
+钥/签名
+
+based
+
+alias/key
+
+signature
+
+registry 仍未定
+
+research
+Lean privacy
+
+Strawmap 标
+
+暂按 leanVM +
+
+表示长期
+
+unresolved label；merged
+
+wormholes
+
+签指向 lean/
+
+encrypted/
+
+privacy
+
+into privacy/PQ research
+
+PQ/privacy
+
+privacy
+
+primitive /
+
+track [S36][S41][S42]
+
+交叉方向，但
+
+mempool +
+
+proof-system
+
+没有找到同名
+
+shielded-
+
+方向，不应写成
+
+canonical
+
+transfer
+
+确定功能
+
+source
+
+research 合并处
+理
+
+Long-dated gas
+
+L2/应用需要长
+
+研究中的 in-
+
+可做 treasury/
+
+Research；非 canonical EIP
+
+futures
+
+期 gas 成本确
+
+protocol gas
+
+user fee
+
+[S54][S55]
+
+定性
+
+futures/
+
+hedging，但机
+
+secondary
+
+制未定
+
+markets
+
+5. Mantle dev team 重点影响
+1. DA strategy 不应静态化。即使 Mantle 当前继续 EigenDA-first，Ethereum
+blobs/PeerDAS/BPO/streaming 会改变 Ethereum fallback DA 的成本、可用
+性和市场风险。Mantle 应持续维护三套模型：EigenDA-only、Ethereum blob
+fallback、mixed DA。[S10][S11][S12][S15]
+2. Blob pricing 会从“便宜 DA”走向更复杂的资源市场。EIP-7918/
+EIP-7999/8131/8279/8311 说明 Ethereum 正在处理 blob 与 execution/
+basefee 之间的价格信号失真。Mantle 若提供稳定 fee 产品，需要把 blob
+congestion 与 reserve pricing 纳入 treasury/ops 模型。[S16][S17][S18]
+[S21][S22]
+3. Faster L1 finality 会压缩 bridge 和 settlement UX 预期，但不会自动消除 L2
+proof/finality 延迟。Mantle 对用户说明 finality 时，需要区分 L1
+confirmation/finality、L2 validity proof finality、withdrawal finality。[S6]
+[S45]
+
+4. Native rollups 与 proof-heavy L1 会改变“Ethereum compatibility”的含义。
+未来兼容性可能不只是 EVM bytecode，还包括 proof interface、state/
+witness format、recent-root/auth-root/mempool rules。[S31][S32][S33]
+5. Execution/state 路线会影响 prover operations。VOPS、BALs、state
+forms、BiB、evm-asm/RISC-V 都指向同一个事实：证明成本和状态访问模式会
+成为 L2 性能边界。Mantle 的 SP1/prover roadmap 应持续关注 Ethereum L1
+对 witness、state root、payload DA 的标准化方向。[S20][S26][S32][S33]
+[S34]
+6. Mempool/privacy 预期会上升。若 L1 推进 FOCIL、LUCID、privacy
+mempool、shielded transfers，用户也会更关注 L2 sequencer ordering、fair
+ordering、private order flow。Mantle 应明确自己是否要 mirror L1 privacy/
+censorship-resistance features。[S9][S36][S37]
+
+6. 主要不确定性与风险
+• Strawmap 是 draft，不是 commitment。七个 forks 到 2029、六个月
+cadence、north star 数字都应写成协调假设。[S1]
+• EIP 状态变化快。报告中的 fork bucket 以 2026-07-06 抓取的 EIP meta/
+Forkcast 为准；后续需要复查。[S3][S4][S5]
+• FOCIL 状态容易误读。它不在 Glamsterdam scheduled list，而是 Hegotá
+scheduled；旧讨论仍可能把它作为 Glamsterdam 候选，需要注明时间差。[S3]
+[S4][S9]
+• 6s slots / EIP-7782 在不同页面/讨论中可能出现漂移；当前不应写成确定
+Glamsterdam feature。[S3][S5]
+• snail issuance 、 leanDA 、 short-dated blob futures 、 long-dated
+gas futures 、 lean privacy wormholes 等标签没有全部找到精确
+canonical source；报告中应标为 inferred/concept。
+• 数字 claim 要降级：1 Ggas/s、1 GB/s、10K TPS、10M TPS 是 north star；
+450M/600M gas、PeerDAS sampling fraction、bandwidth reduction 是
+proposal/model claim，不是交付承诺。[S1][S10][S18][S19]
+
+7. 建议给 Mantle 的行动清单
+1. 建立 DA cost sensitivity dashboard：current blobs、PeerDAS/BPOexpanded blobs、EigenDA-only、mixed fallback 四种情景。
+2. 把 “finality” 文档拆成三层：L1 confirmation/finality、L2 proof finality、
+bridge withdrawal finality。
+
+3. 对 native rollup readiness 做架构评估：是否需要兼容未来 EXECUTE /L1verified STF 类接口。
+4. 给 prover team 建立 Ethereum L1 proof/state watchlist：BALs、VOPS、
+BiB、EIP-8141/8272、evm-asm/RISC-V、state tree alternatives。
+5. 对 sequencing/mempool 做隐私与抗审查差距分析：FOCIL、encrypted
+mempool、sender/nonce leakage、private order flow。
+6. 在研究报告或内部分享中，避免把 Strawmap north stars 写成“EF 确认的交付目
+标”。
+
+Sources
+• [S1] Strawmap landing page and FAQ, https://strawmap.org/ , local
+HTTP 200 export, accessed 2026-07-06.
+• [S2] Strawmap Google Drawing export, https://docs.google.com/
+drawings/d/1GkcGfQv9kxgrYQMyu0BYGcZya0gIDG_wQ7GsFJEsdzY/
+export/png , accessed 2026-07-06.
+• [S3] EIP-7773 Hardfork Meta - Glamsterdam, https://
+eips.ethereum.org/EIPS/eip-7773 .
+• [S4] EIP-8081 Hardfork Meta - Hegotá, https://eips.ethereum.org/
+EIPS/eip-8081 .
+• [S5] EIP-7723 process/status definitions, https://eips.ethereum.org/
+EIPS/eip-7723 .
+• [S6] Fast Confirmation Rule, https://fastconfirm.it .
+• [S7] EIP-8198 Quick Slots,
+https://eips.ethereum.org/EIPS/eip-8198 .
+• [S8] EIP-7732 Enshrined Proposer-Builder Separation, https://
+eips.ethereum.org/EIPS/eip-7732 .
+• [S9] EIP-7805 FOCIL, https://eips.ethereum.org/EIPS/eip-7805 .
+• [S10] EIP-7594 PeerDAS, https://eips.ethereum.org/EIPS/eip-7594 .
+• [S11] EIP-7691 Blob throughput increase, https://eips.ethereum.org/
+EIPS/eip-7691 .
+• [S12] EIP-7892 Blob-parameter-only forks, https://
+eips.ethereum.org/EIPS/eip-7892 .
+• [S13] EIP-8070 Sparse Blobpool, https://eips.ethereum.org/EIPS/
+eip-8070 .
+• [S14] EIP-8136 Cell-Level Deltas, https://eip.tools/eip/8136 .
+• [S15] Blob streaming HackMD / EIP-Blob-streaming, https://
+hackmd.io/@gMH0wL_0Sr69C7I7inO8MQ/B125sCUtZx .
+
+• [S16] EIP-7918 Blob base fee bounded by execution cost, https://
+eips.ethereum.org/EIPS/eip-7918 .
+• [S17] EIP-7999 Unified multidimensional fee market, https://
+eips.ethereum.org/EIPS/eip-7999 .
+• [S18] Hegotá Repricings, https://misilva73.github.io/hegotarepricings/ .
+• [S19] EIP-7938 Exponential Gas Limit Increase, https://
+eips.ethereum.org/EIPS/eip-7938 .
+• [S20] EIP-7928 Block-Level Access Lists, https://eips.ethereum.org/
+EIPS/eip-7928 .
+• [S21] EIP-8131 transaction-content byte floor, https://
+raw.githubusercontent.com/ethereum/EIPs/master/EIPS/
+eip-8131.md .
+• [S22] EIP-8279 BAL byte floor, https://raw.githubusercontent.com/
+ethereum/EIPs/master/EIPS/eip-8279.md .
+• [S23] EIP-8311 calldata repricing, https://
+raw.githubusercontent.com/ethereum/EIPs/master/EIPS/
+eip-8311.md .
+• [S24] EIP-8025 Optional Execution Proofs,
+https://eips.ethereum.org/EIPS/eip-8025 .
+• [S25] ethp2p repo, HEAD
+741d8d9cf682ff93b7d8eb56e0377ba8eea83a7e , https://github.com/
+ethp2p/ethp2p .
+• [S26] Verified-zkEVM/evm-asm repo, HEAD
+864fbe8ced0dee1bf5d4371b72d025a5a9319f97 , https://github.com/
+Verified-zkEVM/evm-asm .
+• [S27] EIP-8200 EVMification, https://eips.ethereum.org/EIPS/
+eip-8200 .
+• [S28] EIP-8141 Frame Transaction, https://eips.ethereum.org/EIPS/
+eip-8141 .
+• [S29] EIP-8250 Keyed Nonces for Frame Transactions, https://
+eips.ethereum.org/EIPS/eip-8250 .
+• [S30] EIP-8272 Recent Roots for Frame Transactions, https://
+eips.ethereum.org/EIPS/eip-8272 .
+• [S31] EIP-8079 Native rollups, https://eips.ethereum.org/EIPS/
+eip-8079 .
+• [S32] EIP-8142 Block-in-Blobs, https://eips.ethereum.org/EIPS/
+eip-8142 .
+
+• [S33] VOPS research, https://ethresear.ch/t/a-pragmatic-pathtowards-validity-only-partial-statelessness-vops/22236 .
+• [S34] Hyper-scaling state research, https://ethresear.ch/t/hyperscaling-state-by-creating-new-forms-of-state/24052 .
+• [S35] EIP-7919 Pureth Meta, https://eips.ethereum.org/EIPS/
+eip-7919 .
+• [S36] EIP-8184 LUCID encrypted mempool, https://
+eips.ethereum.org/EIPS/eip-8184 .
+• [S37] EIP-8077 announce transactions with nonce, https://
+eips.ethereum.org/EIPS/eip-8077 .
+• [S38] PQ public-key registry research, https://ethresear.ch/t/
+exploring-the-design-space-for-a-post-quantum-public-keyregistry-for-ethereum-validators/25040 .
+• [S39] Dynamic availability / PQ heartbeat research, https://
+ethresear.ch/t/why-ethereum-needs-a-dynamically-availableprotocol/24418 .
+• [S40] Lean Ethereum EF post, https://blog.ethereum.org/
+2025/07/31/lean-ethereum .
+• [S41] leanEthereum/leanMultisig / leanVM repo, HEAD
+12e61512416548e743040aab4daf83c58a5c5476 , https://github.com/
+leanEthereum/leanMultisig .
+• [S42] Ephemeral keys and account abstraction research, https://
+ethresear.ch/t/achieving-quantum-safety-through-ephemeral-keypairs-and-account-abstraction/24273 .
+• [S43] RISC-V execution-layer proposal, https://ethereummagicians.org/t/long-term-l1-execution-layer-proposal-replacethe-evm-with-risc-v/23617 .
+• [S44] One-round finality note, https://notes.ethereum.org/@yannvon/
+S1wIxIDqbe .
+• [S45] ethereum.org single-slot finality page, https://ethereum.org/
+roadmap/single-slot-finality/ .
+• [S46] ethereum.org quantum-resistance roadmap, https://
+ethereum.org/roadmap/future-proofing/quantum-resistance/ .
+• [S47] EIP-8007 Glamsterdam Gas Repricings, https://
+eips.ethereum.org/EIPS/eip-8007 .
+• [S48] Orbit SSF validator-set management research, https://
+ethresear.ch/t/orbit-ssf-solo-staking-friendly-validator-setmanagement-for-ssf/19928 .
+
+• [S49] Practical endgame on issuance policy, https://ethresear.ch/t/
+practical-endgame-on-issuance-policy/20747 .
+• [S50] Timeliness detectors and 51% attack recovery, https://
+ethresear.ch/t/timeliness-detectors-and-51-attack-recovery-inblockchains/6925 .
+• [S51] Minimal VDF randomness beacon, https://ethresear.ch/t/
+minimal-vdf-randomness-beacon/3566 .
+• [S52] Whisk practical shuffle-based SSLE, https://ethresear.ch/t/
+whisk-a-practical-shuffle-based-ssle-protocol-for-ethereum/
+11763 .
+• [S53] Secret non-single leader election, https://ethresear.ch/t/
+secret-non-single-leader-election/11789 .
+• [S54] On in-protocol gas futures, https://ethresear.ch/t/on-inprotocol-gas-futures/23698 .
+• [S55] How to purchase Ethereum GAS in advance, https://
+ethresear.ch/t/how-to-purchase-ethereum-gas-in-advance/19069 .
+• [S56] Towards Attester-Includer Separation, https://ethresear.ch/t/
+towards-attester-includer-separation/21306/1 .
+• [S57] Unblocking faster finality with decoupled consensus, https://
+ethresear.ch/t/unblocking-faster-finality-with-decoupledconsensus/24527/1 .
+• [S58] Horn: collecting signatures for faster finality, https://
+ethresear.ch/t/horn-collecting-signatures-for-faster-finality/
+14219 .
+• [S59] LMD GHOST with 256 validators and a fast-following finality
+gadget, https://ethresear.ch/t/lmd-ghost-with-256-validatorsand-a-fast-following-finality-gadget/22856 .
+
+Methodology Appendix
+• First wave: 14 parallel research lanes covered Strawmap inventory, CL
+latency, CL/PQ scalability, DA throughput, DA economics, EL throughput,
+EL proving, EL state, EIP metadata, linked repos/docs, dependency
+graph, Mantle implications, PQ/privacy, skeptic audit.
+• Expansion waves: fork-meta reconciliation; execution/privacy interfaces;
+gas/pricing/EVM hardening crosswalk.
+
+• Local artifacts: strawmap.html , strawmap.svg , strawmap.pdf ,
+strawmap.png , strawmap-pdf.txt , strawmap-links-clean.txt ,
+sources-fetch-index.json .
+• Access gap: linked Google published doc returned HTTP 401/404 in this
+environment; it is not used as a report source.
+
+

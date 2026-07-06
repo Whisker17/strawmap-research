@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Towards Attester-Includer Separation - Proof-of-Stake - Ethereum Research</title>
+    <meta name="description" content="^Rare picture of an includer, chilling and effortlessly collecting rewards for improving Ethereum’s censorship resistance. 
+by Thomas Thiery - December 17th, 2024 
+Thanks to Julian Ma and Barnabé Monnot, Terence Tsao &amp;hellip;">
+    <meta name="generator" content="Discourse 3.5.2 - https://github.com/discourse/discourse version cc8d3f6f74bb618b3594ddc8fabcfd7663f63723">
+<link rel="icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/b/b5d7a1aa2f70490e3de763bef97271864784994f_2_32x32.png">
+<link rel="apple-touch-icon" type="image/png" href="https://ethresear.ch/uploads/default/optimized/2X/3/3483ad4ffed2ab2b130f3e81fdb188ea2c478643_2_180x180.png">
+<meta name="theme-color" media="all" content="#fff">
+
+<meta name="color-scheme" content="light">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<link rel="canonical" href="https://ethresear.ch/t/towards-attester-includer-separation/21306" />
+
+<link rel="search" type="application/opensearchdescription+xml" href="https://ethresear.ch/opensearch.xml" title="Ethereum Research Search">
+
+    <link href="/stylesheets/color_definitions_light-default_-1_2_d93422173e6af31573562c9ff4e20afcb8a5ec7d.css?__ws=ethresear.ch" media="all" rel="stylesheet" class="light-scheme"/>
+
+<link href="/stylesheets/common_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common"  />
+
+  <link href="/stylesheets/desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop"  />
+
+
+
+    <link href="/stylesheets/checklist_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="checklist"  />
+    <link href="/stylesheets/discourse-details_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-details"  />
+    <link href="/stylesheets/discourse-graphviz_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-graphviz"  />
+    <link href="/stylesheets/discourse-lazy-videos_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-lazy-videos"  />
+    <link href="/stylesheets/discourse-local-dates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-local-dates"  />
+    <link href="/stylesheets/discourse-math_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-math"  />
+    <link href="/stylesheets/discourse-narrative-bot_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-narrative-bot"  />
+    <link href="/stylesheets/discourse-presence_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-presence"  />
+    <link href="/stylesheets/discourse-solved_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-solved"  />
+    <link href="/stylesheets/discourse-templates_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-templates"  />
+    <link href="/stylesheets/discourse-topic-voting_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting"  />
+    <link href="/stylesheets/docker_manager_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="docker_manager"  />
+    <link href="/stylesheets/footnote_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="footnote"  />
+    <link href="/stylesheets/poll_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll"  />
+    <link href="/stylesheets/discourse-topic-voting_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="discourse-topic-voting_desktop"  />
+    <link href="/stylesheets/poll_desktop_287728e68a7428e43ffc34d87c3b083dfb34fefd.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="poll_desktop"  />
+
+  <link href="/stylesheets/common_theme_4_9581ecb7d67f268461f04d3d4e1b015ea2ad1983.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="common_theme" data-theme-id="4" data-theme-name="easy footer"/>
+    <link href="/stylesheets/desktop_theme_2_6e0603c5f6be3f943ee4806f79959c7a96ab67f5.css?__ws=ethresear.ch" media="all" rel="stylesheet" data-target="desktop_theme" data-theme-id="2" data-theme-name="default"/>
+
+    
+    
+        <link rel="alternate nofollow" type="application/rss+xml" title="RSS feed of &#39;Towards Attester-Includer Separation&#39;" href="https://ethresear.ch/t/towards-attester-includer-separation/21306.rss" />
+    <meta property="og:site_name" content="Ethereum Research" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:image" content="https://ethresear.ch/uploads/default/optimized/3X/4/2/42eec809c897c5cf696a014a8c53b46f35f78c02_2_1020x1024.jpeg" />
+<meta property="og:image" content="https://ethresear.ch/uploads/default/optimized/3X/4/2/42eec809c897c5cf696a014a8c53b46f35f78c02_2_1020x1024.jpeg" />
+<meta property="og:url" content="https://ethresear.ch/t/towards-attester-includer-separation/21306/1" />
+<meta name="twitter:url" content="https://ethresear.ch/t/towards-attester-includer-separation/21306/1" />
+<meta property="og:title" content="Towards Attester-Includer Separation" />
+<meta name="twitter:title" content="Towards Attester-Includer Separation" />
+<meta property="og:description" content="^Rare picture of an includer, chilling and effortlessly collecting rewards for improving Ethereum’s censorship resistance.  by Thomas Thiery - December 17th, 2024  Thanks to Julian Ma and Barnabé Monnot, Terence Tsao and Jacob Kaufmann for feedback and discussions on this post.  Introduction Lately I’ve been stumbling upon more and more discussions and research around incentives for transaction inclusion via FOCIL EIP-7805, state vs. inclusion preconfirmations, and further separating protocol..." />
+<meta name="twitter:description" content="^Rare picture of an includer, chilling and effortlessly collecting rewards for improving Ethereum’s censorship resistance.  by Thomas Thiery - December 17th, 2024  Thanks to Julian Ma and Barnabé Monnot, Terence Tsao and Jacob Kaufmann for feedback and discussions on this post.  Introduction Lately I’ve been stumbling upon more and more discussions and research around incentives for transaction inclusion via FOCIL EIP-7805, state vs. inclusion preconfirmations, and further separating protocol..." />
+<meta property="og:article:section" content="Proof-of-Stake" />
+<meta property="og:article:section:color" content="3AB54A" />
+<meta name="twitter:label1" value="Reading time" />
+<meta name="twitter:data1" value="7 mins 🕑" />
+<meta name="twitter:label2" value="Likes" />
+<meta name="twitter:data2" value="18 ❤" />
+<meta property="article:published_time" content="2024-12-20T12:02:27+00:00" />
+<meta property="og:ignore_canonical" content="true" />
+
+
+    
+  </head>
+  <body class="crawler ">
+    
+    <header>
+  <a href="/">Ethereum Research</a>
+</header>
+
+    <div id="main-outlet" class="wrap" role="main">
+        <div id="topic-title">
+    <h1>
+      <a href="/t/towards-attester-includer-separation/21306">Towards Attester-Includer Separation</a>
+    </h1>
+
+      <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
+          <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="/c/proof-of-stake/5" class="badge-wrapper bullet" itemprop="item">
+              <span class='badge-category-bg' style='background-color: #3AB54A'></span>
+              <span class='badge-category clear-badge'>
+                <span class='category-name' itemprop='name'>Proof-of-Stake</span>
+              </span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </span>
+      </div>
+
+  </div>
+
+  
+
+    <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+      <meta itemprop='headline' content='Towards Attester-Includer Separation'>
+      <link itemprop='url' href='https://ethresear.ch/t/towards-attester-includer-separation/21306'>
+      <meta itemprop='datePublished' content='2024-12-20T12:02:27Z'>
+        <meta itemprop='articleSection' content='Proof-of-Stake'>
+      <meta itemprop='keywords' content=''>
+      <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop='name' content='Ethereum Foundation'>
+          <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+            <meta itemprop='url' content='https://ethresear.ch/uploads/default/original/2X/8/84d109b2d8dd6bc4fe5255cd44fc429e5649da32.png'>
+          </div>
+      </div>
+
+
+          <div id='post_1'  class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/soispoke'><span itemprop='name'>soispoke</span></a>
+                
+              </span>
+
+                <link itemprop="mainEntityOfPage" href="https://ethresear.ch/t/towards-attester-includer-separation/21306">
+
+                <link itemprop="image" href="https://ethresear.ch/uploads/default/original/3X/4/2/42eec809c897c5cf696a014a8c53b46f35f78c02.jpeg">
+
+              <span class="crawler-post-infos">
+                  <time  datetime='2024-12-20T12:02:27Z' class='post-time'>
+                    December 20, 2024, 12:02pm
+                  </time>
+                  <meta itemprop='dateModified' content='2024-12-20T12:03:57Z'>
+              <span itemprop='position'>1</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/4/2/42eec809c897c5cf696a014a8c53b46f35f78c02.jpeg" data-download-href="https://ethresear.ch/uploads/default/42eec809c897c5cf696a014a8c53b46f35f78c02" title="Screenshot 2024-12-17 at 10.44.05"><img src="https://ethresear.ch/uploads/default/optimized/3X/4/2/42eec809c897c5cf696a014a8c53b46f35f78c02_2_498x500.jpeg" alt="Screenshot 2024-12-17 at 10.44.05" data-base62-sha1="9y76bMeGTK9928KIaHsyeYznoOe" width="498" height="500" srcset="https://ethresear.ch/uploads/default/optimized/3X/4/2/42eec809c897c5cf696a014a8c53b46f35f78c02_2_498x500.jpeg, https://ethresear.ch/uploads/default/optimized/3X/4/2/42eec809c897c5cf696a014a8c53b46f35f78c02_2_747x750.jpeg 1.5x, https://ethresear.ch/uploads/default/optimized/3X/4/2/42eec809c897c5cf696a014a8c53b46f35f78c02_2_996x1000.jpeg 2x" data-dominant-color="9D917C"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">Screenshot 2024-12-17 at 10.44.05</span><span class="informations">1556×1562 318 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p><em>^Rare picture of an includer, chilling and effortlessly collecting rewards for improving Ethereum’s censorship resistance.</em></p>
+<p><em>by <a href="https://x.com/soispoke" rel="noopener nofollow ugc">Thomas Thiery</a></em> - December 17th, 2024</p>
+<p>Thanks to <a href="https://x.com/_julianma" rel="noopener nofollow ugc">Julian Ma</a> and <a href="https://x.com/barnabemonnot" rel="noopener nofollow ugc">Barnabé Monnot</a>, <a href="https://x.com/terencechain" rel="noopener nofollow ugc">Terence Tsao</a> and <a href="https://x.com/jacobykaufmann" rel="noopener nofollow ugc">Jacob Kaufmann</a> for feedback and discussions on this post.</p>
+<h1><a name="p-51884-introduction-1" class="anchor" href="#p-51884-introduction-1"></a>Introduction</h1>
+<p>Lately I’ve been stumbling upon more and more discussions and research around incentives for transaction inclusion via <a href="https://eips.ethereum.org/EIPS/eip-7805" rel="noopener nofollow ugc">FOCIL EIP-7805</a>, state vs. inclusion <a href="https://www.youtube.com/playlist?list=PLJqWcTqh_zKHDFarAcF29QfdMlUpReZrR" rel="noopener nofollow ugc">preconfirmations</a>, and further separating protocol <a href="https://ethresear.ch/t/unbundling-staking-towards-rainbow-staking/18683">roles</a> and <a href="https://mirror.xyz/barnabe.eth/QJ6W0mmyOwjec-2zuH6lZb0iEI2aYFB9gE-LHWIMzjQ" rel="noopener nofollow ugc">duties</a>.  It has become increasingly clear to me that thinking from first principles about state and inclusion as two orthogonal dimensions could be useful in guiding future protocol development.</p>
+<p><em>Disclaimer: In this post, I’ll use simplified, somewhat caricature-like definitions to differentiate inclusion transactions from state transactions, acknowledging that in practice there is much more nuance.</em></p>
+<h2><a name="p-51884-informal-definitions-properties-and-life-cycles-2" class="anchor" href="#p-51884-informal-definitions-properties-and-life-cycles-2"></a><strong>Informal definitions, properties and life cycles</strong></h2>
+<h3><a name="p-51884-inclusion-transactions-3" class="anchor" href="#p-51884-inclusion-transactions-3"></a><strong>Inclusion transactions</strong></h3>
+<p>By <strong>inclusion transactions</strong>, I mean <em><strong>order-invariant</strong> transactions (h/t James Prestwich) whose outcome remains the same regardless of the state on which they are executed</em>; the only important factor is that they are included somewhere in the block. Examples include making a payment at a coffee shop or transferring tokens to a friend.</p>
+<p>Because of their order-invariant property, <strong>inclusion transactions</strong> are typically sent to the public mempool. Publicly disclosing transaction information before inclusion is acceptable since no one can exploit these transactions (e.g., by frontrunning), as they don’t intrinsically carry Maximal Extractable Value (MEV). To be considered valid for inclusion, these transactions must pay the <code>base fee</code> for each unit of gas consumed.</p>
+<p>In a post-EIP-7805 world, inclusion transactions would mostly be included in Ethereum blocks by multiple IL proposers via FOCIL (using inclusion rules like time pending in the mempool, or priority fee ordering). By being publicly broadcast to the mempool, these transactions benefit from increased chances that one of multiple IL proposers will include them via their inclusion lists.</p>
+<h3><a name="p-51884-state-transactions-4" class="anchor" href="#p-51884-state-transactions-4"></a><strong>State transactions</strong></h3>
+<p>By <strong>state transactions</strong>, I mean <em><strong>order-dependent</strong> transactions whose outcomes change based on the state at the time of execution</em>. For example, a transaction performing a token swap on an automated market maker like Uniswap.</p>
+<p><strong>State transactions</strong> originating from regular users potentially carry Maximal Extractable Value (MEV) and can be exploited by searchers—for example, through frontrunning or sandwich attacks—if their content is publicly available before inclusion. These transactions are often time-sensitive and benefit from being sent through private channels to ensure MEV protection and/or receive rebates. When state transactions carry MEV and are made available to sophisticated parties like searchers, whether willingly or unwillingly, they are usually bundled together with other transactions to extract the MEV opportunity they create. Note that state transactions can also originate from sophisticated parties themselves; for example, arbitrageurs who take advantage of price differences between different exchanges to make a profit. In both cases, when state transactions generate MEV opportunities, they are usually accompanied by tips to validators (in the form of <code>priority fees</code> or by using <a href="https://docs.flashbots.net/flashbots-auction/advanced/coinbase-payment" rel="noopener nofollow ugc">coinbase transfers</a>) in addition to the <code>base fee</code>.</p>
+<p>Because FOCIL does not provide any guarantees on transaction ordering or inclusion during network congestion (i.e., when blocks are full), we can assume that the market structure for state transactions wouldn’t change much in a post-EIP-7805 world.</p>
+<blockquote>
+<p>Here’s a brief recap of the main differences between inclusion and state transactions:</p>
+<ul>
+<li><strong>Inclusion transactions</strong>:<br>
+- Pay <code>base fees</code> to be considered for inclusion in the block.<br>
+- Do not use <code>priority fees</code> to signal order preferences.<br>
+- Benefit from being publicly broadcast to a large number of parties.<br>
+- Do not have to rely on sophisticated actors for inclusion.</li>
+<li><strong>State transactions</strong>:<br>
+- Pay <code>base fees</code> to be considered for inclusion in the block.<br>
+- Add <code>priority fees</code> to express preferences regarding the specific state on which they would like to be executed, which corresponds to a particular position in the block.<br>
+- Benefit from being sent privately to one or a few sophisticated parties.</li>
+</ul>
+</blockquote>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/0/3/03a416a65a12f994c473f6199d3c94adc78e03b9.jpeg" data-download-href="https://ethresear.ch/uploads/default/03a416a65a12f994c473f6199d3c94adc78e03b9" title="Meme Generator from Attester-Includer Separation"><img src="https://ethresear.ch/uploads/default/original/3X/0/3/03a416a65a12f994c473f6199d3c94adc78e03b9.jpeg" alt="Meme Generator from Attester-Includer Separation" data-base62-sha1="wcZoU05yeqfsFXOm2UYbivFV6V" width="500" height="500"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">Meme Generator from Attester-Includer Separation</span><span class="informations">500×500 61.8 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p><em><strong>Note:</strong> An inclusion transaction might pay priority fees for reasons unrelated to order preferences. For example, it may need to compensate the block producer for <a href="https://ethresear.ch/t/reducing-latency-games-by-levelling-the-playing-field-on-block-size-for-pbs/19356">additional resource usage</a>—such as the extra propagation time required by blobs. Priority fees can also signal a desire for faster inclusion rather than a specific placement in the block. In other words, even if a transaction does not care about its position, it may be willing to pay more to reduce delays and be included sooner (e.g., blob transactions, fraud proof transactions).</em></p>
+<h2><a name="p-51884-zooming-in-on-fees-5" class="anchor" href="#p-51884-zooming-in-on-fees-5"></a>Zooming in on Fees</h2>
+<h3><a name="p-51884-base-and-priority-fees-6" class="anchor" href="#p-51884-base-and-priority-fees-6"></a>Base and Priority Fees</h3>
+<p>Since EIP-1559 was implemented, all transactions—both inclusion and state transactions—must pay <code>base fees</code> to be considered for inclusion in a block. <code>Priority fees</code>, on the other hand, can serve different purposes depending on whether there is network congestion:</p>
+<ul>
+<li><strong>No Congestion</strong>: When there is enough space in the block to include all pending transactions:
+<ul>
+<li><strong>Inclusion transactions</strong> do not generally need to pay priority fees since they will be included as long as they pay the base fee and do not care about being inserted at a specific position in the block.</li>
+<li><strong>State transactions</strong> will pay priority fees to incentivize the block producer to execute them on a particular state.</li>
+</ul>
+</li>
+<li><strong>Congestion</strong>:
+<ul>
+<li><strong>Inclusion transactions</strong> might then choose to add priority fees to increase their chances of being included in the next block—for example, ahead of other inclusion transactions— rather than waiting until the network is no longer congested.</li>
+<li><strong>State transactions</strong> will use priority fees regardless of whether there is network congestion.</li>
+</ul>
+</li>
+</ul>
+<p>The interesting takeaway here is that the boundary between state and inclusion transactions blurs during periods of congestion. When there isn’t enough space for every transaction, simply wanting to be included anywhere in a given block conceptually becomes very similar to wanting to be executed on a specific state. <code>Priority fees</code> can thus be thought of as a one-size-fits-all mechanism to incentivize block producers and secure an advantageous position in a block.</p>
+<p>However, there is another obvious reason a transaction might not be included in a block even without congestion: <strong>censorship</strong>.</p>
+<h3><a name="p-51884-costs-of-censorship-7" class="anchor" href="#p-51884-costs-of-censorship-7"></a>Costs of censorship</h3>
+<p>In a post-EIP-7805 world, there are still a couple of ways to censor a transaction:</p>
+<ul>
+<li>
+<p><strong>Block Stuffing:</strong> Given FOCIL’s conditional and anywhere-in-block properties, the proposer can stuff its block up to the gas limit in order to exclude the transaction and still satisfy the IL conditions. To estimate the cost of stuffing multiple consecutive blocks, I used the following formula:</p>
+<div class="math">
+\text{Block Stuffing Cost} = (\text{Gas Limit} - \text{Gas Used}) \times \text{Base Fees} \times \left( \frac{1}{0.125} \times 1.125^N - 1 \right)
+</div>
+<p>where <span class="math">N</span> is the number of consecutive blocks.</p>
+<p>The figure below estimates the average costs of block stuffing over the past three months (based on <a href="https://dune.com/queries/4276649/7188464/" rel="noopener nofollow ugc">this Dune query</a>), highlighting how market conditions and base fees influence them, and illustrating how stuffing multiple blocks in a row becomes exponentially more expensive for the attacker.<br>
+<div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/0/6/06c2d7ba769bb72dc80f77b87be839dd867237b4.png" data-download-href="https://ethresear.ch/uploads/default/06c2d7ba769bb72dc80f77b87be839dd867237b4" title="Dec 9 Screenshot from Attester-Includer Separation"><img src="https://ethresear.ch/uploads/default/optimized/3X/0/6/06c2d7ba769bb72dc80f77b87be839dd867237b4_2_690x203.png" alt="Dec 9 Screenshot from Attester-Includer Separation" data-base62-sha1="XOjqy6SPETwbmfnBge7WrU462w" width="690" height="203" srcset="https://ethresear.ch/uploads/default/optimized/3X/0/6/06c2d7ba769bb72dc80f77b87be839dd867237b4_2_690x203.png, https://ethresear.ch/uploads/default/optimized/3X/0/6/06c2d7ba769bb72dc80f77b87be839dd867237b4_2_1035x304.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/0/6/06c2d7ba769bb72dc80f77b87be839dd867237b4_2_1380x406.png 2x" data-dominant-color="F0E9EC"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">Dec 9 Screenshot from Attester-Includer Separation</span><span class="informations">1986×586 66.9 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+</li>
+<li>
+<p><strong>Missing slot</strong>: Alternatively, the proposer can choose to skip block proposal for their assigned slot, causing them to forgo both consensus (issuance) and execution (MEV) layer rewards, which amount to approximately <code>0.04 ETH</code> combined per block <a href="https://dune.com/queries/4448080/7444283/" rel="noopener nofollow ugc">on average during the past three months</a>.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/1/f/1f100c37d3f0732403c4c731cd11e9332a16e030.png" data-download-href="https://ethresear.ch/uploads/default/1f100c37d3f0732403c4c731cd11e9332a16e030" title="Screenshot 2024-12-18 at 18.21.35"><img src="https://ethresear.ch/uploads/default/optimized/3X/1/f/1f100c37d3f0732403c4c731cd11e9332a16e030_2_690x204.png" alt="Screenshot 2024-12-18 at 18.21.35" data-base62-sha1="4qNbo47NoxQZS4lhzeAxX9m33Ms" width="690" height="204" srcset="https://ethresear.ch/uploads/default/optimized/3X/1/f/1f100c37d3f0732403c4c731cd11e9332a16e030_2_690x204.png, https://ethresear.ch/uploads/default/optimized/3X/1/f/1f100c37d3f0732403c4c731cd11e9332a16e030_2_1035x306.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/1/f/1f100c37d3f0732403c4c731cd11e9332a16e030_2_1380x408.png 2x" data-dominant-color="E4CDCE"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">Screenshot 2024-12-18 at 18.21.35</span><span class="informations">1986×588 37.7 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+</li>
+</ul>
+<p><em>Note that in both cases above, increasing a transaction’s <code>priority fees</code> makes it more costly for the proposer to exclude it.</em></p>
+<ul>
+<li><strong>IL committee bribing</strong>:  Lastly, an obvious way to censor a transaction is to convince all IL proposers not to include it in their ILs. Under EIP-7805, IL proposers are not rewarded for including transactions in their ILs. In practice, convincing all IL proposers in a committee to act dishonestly and against the ethos of the Ethereum network might be difficult. With FOCIL, we only need one member of the committee to act honestly and include all transactions without censoring for the mechanism to work as expected. However, in theory, an attacker could offer a very small bribe to all 16 committee members to exclude a given transaction. If the IL proposers are rational, they might accept any bribe greater than zero.</li>
+</ul>
+<p><em>By relying on the altruistic behavior of IL proposers, there is no way to control the cost they incur when censoring a transaction.</em></p>
+<div class="md-table">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Block Stuffing</th>
+<th>Missing Slot</th>
+<th>IL committee bribing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cost of censorship</td>
+<td><code>0.02 to 0.4 ETH</code></td>
+<td><code>∼ 0.1 ETH</code></td>
+<td><code>&gt; 0 ETH</code></td>
+</tr>
+</tbody>
+</table>
+</div><h2><a name="p-51884-wat-do-8" class="anchor" href="#p-51884-wat-do-8"></a>Wat do?</h2>
+<h2><a name="p-51884-inclusion-fees-9" class="anchor" href="#p-51884-inclusion-fees-9"></a><strong>Inclusion fees</strong></h2>
+<p>Given the distinct properties and life cycles of state and inclusion transactions—and the imbalance where users can tip the proposer but cannot affect the cost incurred by IL proposers when censoring transactions in protocol—one option is introducing an independent inclusion fee (IF) and reward mechanism to increase inclusion guarantees and cost of censorship, while preserving the role of priority fees (PF) as proposer tips.</p>
+<p>This approach allows users to craft their transactions based on network conditions (base fees) while controlling how much they are willing to pay for <strong>(1)</strong> Being executed on a specific <strong>state</strong> via PFs and <strong>(2)</strong> Increasing their <strong>inclusion</strong> guarantees via IFs, or both. In the diagram below, you can see how transactions are sent either privately to the block producer or to the public mempool, and are specifying both priority and inclusion fees. We assume that transactions are added to inclusion lists (ILs) and sorted in descending order based on inclusion fees (more on this in the next section). The block producer then orders the full payload—by default according to priority fees or in any other order depending on MEV opportunities—incorporating transactions from ILs and those they received privately.</p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/4/5/458e427b697fce606bf034ad7638c3e2e969d83b.png" data-download-href="https://ethresear.ch/uploads/default/458e427b697fce606bf034ad7638c3e2e969d83b" title="Nov 21 Screenshot from Attester-Includer Separation"><img src="https://ethresear.ch/uploads/default/optimized/3X/4/5/458e427b697fce606bf034ad7638c3e2e969d83b_2_690x289.png" alt="Nov 21 Screenshot from Attester-Includer Separation" data-base62-sha1="9VjJB55bQQqNPBmHljRKRSz0Ub1" width="690" height="289" srcset="https://ethresear.ch/uploads/default/optimized/3X/4/5/458e427b697fce606bf034ad7638c3e2e969d83b_2_690x289.png, https://ethresear.ch/uploads/default/optimized/3X/4/5/458e427b697fce606bf034ad7638c3e2e969d83b_2_1035x433.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/4/5/458e427b697fce606bf034ad7638c3e2e969d83b_2_1380x578.png 2x" data-dominant-color="ECECEB"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">Nov 21 Screenshot from Attester-Includer Separation</span><span class="informations">1872×786 101 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<h3><a name="p-51884-reward-mechanism-10" class="anchor" href="#p-51884-reward-mechanism-10"></a><strong>Reward</strong> <strong>mechanism</strong></h3>
+<p>A simple way to distribute inclusion fees among IL proposers is to allocate them proportionally based on their contributions, rewarding only those who included the transactions in their ILs (i.e., <a href="https://arxiv.org/abs/2301.13321" rel="noopener nofollow ugc">conditional tips</a>). This leads to greater incentives to include transactions no one else wants to include (e.g., “censorable transactions”).</p>
+<p>In the example above, IL Proposer 1 included all pending transactions from the mempool. Their rewards would thus be calculated as follows:</p>
+<ul>
+<li><strong>Transaction g:</strong> Inclusion fee of 6 divided by 4 proposers <span class="math">= 6 ⁄ 4 = 1.5</span></li>
+<li><strong>Transaction d:</strong> Inclusion fee of 4 divided by 3 proposers <span class="math">= 4 ⁄ 3 ≈ 1.333</span></li>
+<li><strong>Transaction e:</strong> Inclusion fee of 1 divided by 3 proposers <span class="math">= 1 ⁄ 3 ≈ 0.333</span></li>
+<li><strong>Transaction f:</strong> Inclusion fee of 0 divided by 4 proposers <span class="math">= 0 ⁄ 4 = 0</span></li>
+</ul>
+<p>Adding these up, IL Proposer 1 would receive approximately  <strong><span class="math">1.5 + 1.333 + 0.333  + 0 = 3.166</span></strong> in rewards for including these transactions in its IL.</p>
+<p>Alternative approaches to rewarding IL proposers include using issuance rather than fees,  <a href="https://warpcast.com/pintail/0x8233d2f5" rel="noopener nofollow ugc">weighting rewards based on past performance</a>. It is also important that any such reward mechanism be independent of the existing Transaction Fee Mechanisms (TFMs)—in other words, separate from both the base fee and the priority fee. Attempting to repurpose the base fee to reward IL proposers is not incentive-compatible because EIP-1559’s economic design relies on burning the base fee to prevent block producers from manipulating transaction inclusion and inflating fees for personal gain. By ensuring that the base fee is never directly redistributed, the system maintains a balanced incentive structure. Similarly, relying on a model that redirects priority fees to IL proposers fails under network congestion, as block producers would then have a greater incentive to include non-IL transactions for higher direct rewards.</p>
+<h2><a name="p-51884-roles-and-participants-11" class="anchor" href="#p-51884-roles-and-participants-11"></a>Roles and participants</h2>
+<p>Is it possible—and desirable— to go further and separate protocol participants who are tasked with transaction inclusion (IL committee members) from those who focus on valuable state transactions (proposers)? Let’s now imagine a post-FOCIL, post-APS (Attester-Proposer Separation) world. In this scenario, we still have IL proposers including transactions from the public mempool in their inclusion lists and being rewarded via inclusion fees. However, there’s now a separation between attesters/the beacon proposer, the execution proposer and the builder (whether PBS is enshrined in the protocol or not is not relevant for this part of the discussion).</p>
+<p><strong>Here’s a quick overview of each participant’s responsibilities:</strong></p>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/1/a/1a5912c06b48482ca41ba5572740ef21bcf301bb.jpeg" data-download-href="https://ethresear.ch/uploads/default/1a5912c06b48482ca41ba5572740ef21bcf301bb" title="Nov 19 Screenshot from Attester-Includer Separation"><img src="https://ethresear.ch/uploads/default/optimized/3X/1/a/1a5912c06b48482ca41ba5572740ef21bcf301bb_2_545x500.jpeg" alt="Nov 19 Screenshot from Attester-Includer Separation" data-base62-sha1="3L5fFI866b3N6gwhoDZA8fYTOIz" width="545" height="500" srcset="https://ethresear.ch/uploads/default/optimized/3X/1/a/1a5912c06b48482ca41ba5572740ef21bcf301bb_2_545x500.jpeg, https://ethresear.ch/uploads/default/optimized/3X/1/a/1a5912c06b48482ca41ba5572740ef21bcf301bb_2_817x750.jpeg 1.5x, https://ethresear.ch/uploads/default/original/3X/1/a/1a5912c06b48482ca41ba5572740ef21bcf301bb.jpeg 2x" data-dominant-color="F9F9F8"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">Nov 19 Screenshot from Attester-Includer Separation</span><span class="informations">1041×954 72.6 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<blockquote>
+<ul>
+<li><strong>IL Committee Members</strong>:<br>
+- <strong>Level of Sophistication</strong>: <em>Low</em> – IL proposers create Inclusion Lists (ILs) containing transactions pending in the public mempool.<br>
+- <strong>Capital Requirements</strong>:<br>
+- <em>Medium</em> – From 1 ETH to 2,048 ETH if/when <a href="https://eips.ethereum.org/EIPS/eip-7251" rel="noopener nofollow ugc">maxEB</a> and minEB are implemented.<br>
+- <em>Heavy</em> — Capital is staked, locked upfront, and at risk of being slashed for other forms of misbehavior (e.g., proposing more than one distinct block at the same height), but not for failing IL-specific duties (e.g., IL equivocation) at least in the current version of FOCIL.</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li><strong>Beacon Proposer</strong>:<br>
+- <strong>Level of Sophistication</strong>: <em>Low</em> – Determines the head of the chain according to its local view and proposes the beacon block, which includes all consensus-related information such as the block header, attestations, withdrawals, deposits, and slashing penalties. Post-APS, beacon proposers are not incentivized to play timing games and can stay unsophisticated.<br>
+- <strong>Capital Requirements</strong>:<br>
+- <em>Medium</em> – From 1 ETH to 2,048 ETH if/when maxEB and minEB are implemented.<br>
+- <em>Heavy</em> — Capital is staked, locked upfront, and put at risk of being slashed (e.g., for proposing more than one distinct block at the same height).</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li><strong>Attesters</strong>:<br>
+- <strong>Level of Sophistication</strong>: <em>Low</em> – Ensure that both the consensus and execution information contained in the full block are valid according to their views. They vote for the block if it passes all validity checks, such as being built on the correct head, containing valid transactions, and satisfying IL conditions.<br>
+- <strong>Capital Requirements</strong>:<br>
+- <em>Medium</em> – From 1 ETH to 2,048 ETH if/when maxEB and minEB are implemented.<br>
+- <em>Heavy</em> — Capital is staked, locked upfront, and put at risk of being slashed (e.g., for attesting to different head blocks).</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li><strong>Execution Proposer</strong> <em>(Assuming the execution proposer does not outsource block production to a builder)</em>:<br>
+- <strong>Level of Sophistication</strong>: <em>High</em> – Responsible for proposing a complete and valid execution payload to the network, with final authority over transaction inclusion and ordering, provided that the execution payload includes IL transactions. Must operate sophisticated infrastructure to implement complex strategies and efficiently extract MEV.<br>
+- <strong>Capital Requirements</strong>:<br>
+- <em>High</em> – Requires sufficient capital to secure execution proposing rights, to successfully execute advanced MEV strategies, such as non-atomic arbitrages and provide additional services like pre-confirmations.<br>
+- <em>Heavy</em> - Execution proposers also need slashable capital to ensure they’re disincentivized from misbehavior, but this requirement comes into play <em>after</em> they’ve been selected (in contrast to attesters and beaucon proposers). At that point, they must gather the necessary capital to secure pre-confirmations, cover missed slot penalties, or pay their bids.</li>
+</ul>
+</blockquote>
+
+<p>Interestingly, by separating attesters from proposers, APS also effectively separates execution proposers from IL committee members. However, in the next section, we argue that IL committee members should be considered a separate class of participants. Because their responsibilities are limited in complexity and they are not directly involved in the system’s economic security, they don’t need to be subject to the same capital requirements as attesters.</p>
+<h3><a name="p-51884-attester-includer-separation-12" class="anchor" href="#p-51884-attester-includer-separation-12"></a>Attester-Includer Separation</h3>
+<p><div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/f/f/ffa05a37c0b9b788141ddc3944402063b7f2d2d0.jpeg" data-download-href="https://ethresear.ch/uploads/default/ffa05a37c0b9b788141ddc3944402063b7f2d2d0" title="Attester Includer Separation"><img src="https://ethresear.ch/uploads/default/optimized/3X/f/f/ffa05a37c0b9b788141ddc3944402063b7f2d2d0_2_684x500.jpeg" alt="Attester Includer Separation" data-base62-sha1="Atnj7Ap4YR9DZUon4TEpwKdauFG" width="684" height="500" srcset="https://ethresear.ch/uploads/default/optimized/3X/f/f/ffa05a37c0b9b788141ddc3944402063b7f2d2d0_2_684x500.jpeg, https://ethresear.ch/uploads/default/optimized/3X/f/f/ffa05a37c0b9b788141ddc3944402063b7f2d2d0_2_1026x750.jpeg 1.5x, https://ethresear.ch/uploads/default/optimized/3X/f/f/ffa05a37c0b9b788141ddc3944402063b7f2d2d0_2_1368x1000.jpeg 2x" data-dominant-color="9C9348"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">Attester Includer Separation</span><span class="informations">2000×1461 219 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div><br>
+<em>h/t Barnabé</em></p>
+<p>Building on the idea of unbundling roles to better align them with protocol duties, and drawing inspiration from tiered staking models like <a href="https://ethresear.ch/t/unbundling-staking-towards-rainbow-staking/18683">Rainbow Staking</a> and validator selection mechanisms such as <a href="https://ethresear.ch/t/orbit-ssf-solo-staking-friendly-validator-set-management-for-ssf/19928">Orbit</a>, we propose further separating attesters from IL committee members (includers).</p>
+<p>Thinking from first principles, we would want both attesters and includers to be geographically decentralized and unsophisticated. However, there are some crucial differences between these sets of participants regarding capital requirements and the importance of their roles in securing the network:</p>
+<ul>
+<li><strong>Attesters</strong>:
+<ul>
+<li><strong>Security</strong>: Overall, attesters play an extremely crucial role in securing the network by participating in consensus and ensuring liveness and finality. This critical role comes with some constraints. For example, it is important to avoid rotating attesters too quickly, as <a href="https://ethresear.ch/t/reorg-resilience-and-security-in-post-ssf-lmd-ghost/14164">it might not be optimally secure from a consensus perspective</a>. Similarly, we do not want validators to enter or exit the active set of attesters too rapidly, which is why we have withdrawal and deposit queues.</li>
+<li><strong>Capital requirements</strong>: We want attesters to consolidate by maximizing the balance of a single validator (e.g., up to 2,048 ETH) instead of running multiple instances with lower balances (e.g., 32 ETH). This consolidation enables us to achieve high levels of economic security with a manageable number of participants, and facilitates moving towards faster finality (e.g., <a href="https://ethresear.ch/t/3-slot-finality-ssf-is-not-about-single-slot/20927">3SF</a>). Additionally, attesters must have at least some amount of ETH at stake to allow for slashing in cases where they do not fulfill their duties, whether intentionally or not. This means their capital needs to be staked and locked upfront (i.e., heavy).</li>
+</ul>
+</li>
+<li><strong>IL Committee Members</strong>:
+<ul>
+<li><strong>Security</strong>: IL committee members are not involved with consensus and don’t play a role in securing the network. They are only tasked to improve censorship resistance by including transactions in ILs using their local view of the public mempool. Moreover, we only need <em>one-out-of-n</em> IL proposers to honestly build its IL for FOCIL to be effective and impose constraints on what transactions builders have to include in their blocks.</li>
+<li><strong>Capital Requirements</strong>: Ideally, we want very low barriers to entry so that anyone wishing to contribute to Ethereum’s censorship resistance can easily do so with 0.01 ETH for example, or just enough to ensure Sybil resistance and prevent participants to “just signing up” but then being offline. The IL committee also rotates every slot, so there is potentially no need for queues or penalties other than missing rewards if an inclusion fee of sorts exists.</li>
+</ul>
+</li>
+</ul>
+<p><strong>The question is</strong>: Do these differences justify moving towards two independent sets of participants, each fulfilling a specific duty, or should it remain the same set of participants?<br>
+<div class="lightbox-wrapper"><a class="lightbox" href="https://ethresear.ch/uploads/default/original/3X/7/d/7dd163c48298cfcc1a93c701ab91bb9b462466eb.png" data-download-href="https://ethresear.ch/uploads/default/7dd163c48298cfcc1a93c701ab91bb9b462466eb" title="Dec 9 Screenshot from Attester-Includer Separation (1)"><img src="https://ethresear.ch/uploads/default/optimized/3X/7/d/7dd163c48298cfcc1a93c701ab91bb9b462466eb_2_690x448.png" alt="Dec 9 Screenshot from Attester-Includer Separation (1)" data-base62-sha1="hX2iy9fK6uRZUJA0GX2RNyMKg6D" width="690" height="448" srcset="https://ethresear.ch/uploads/default/optimized/3X/7/d/7dd163c48298cfcc1a93c701ab91bb9b462466eb_2_690x448.png, https://ethresear.ch/uploads/default/optimized/3X/7/d/7dd163c48298cfcc1a93c701ab91bb9b462466eb_2_1035x672.png 1.5x, https://ethresear.ch/uploads/default/optimized/3X/7/d/7dd163c48298cfcc1a93c701ab91bb9b462466eb_2_1380x896.png 2x" data-dominant-color="FAFAF9"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">Dec 9 Screenshot from Attester-Includer Separation (1)</span><span class="informations">1526×992 66.6 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+<p><strong>We argue that it does. By allowing anyone to join and contribute to Ethereum’s censorship resistance as an “includer”—with minimal hardware requirements (e.g., a smartwatch), a simple, low-friction user experience (no queues), as well as <em>light</em> and <em>minimal</em> capital requirements—and by rewarding them with an independent transaction fee mechanism (inclusion fees), the network can self-regulate based on the level of censorship. If many transactions are being censored, users can raise inclusion fees, thereby increasing the cost of censorship. As these higher fees get distributed among includers, more individuals will be incentivized to participate in creating inclusion lists (ILs), ultimately improving Ethereum’s censorship resistance. Lastly, includers should also be able to participate in improving the network’s censorship-resistant properties and uphold chain neutrality without publicly revealing their preferences via the specific transactions included in their lists. To this end, we can leverage <a href="https://ethresear.ch/t/anonymous-inclusion-lists-anon-ils/19627">anonymous ILs</a>, using a combination of linkable ring signatures and anonymous broadcast protocols to protect their identities.</strong></p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="13" />
+              <span class='post-likes'>13 Likes</span>
+            </div>
+
+                <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/three-tier-staking-3ts-unbundling-attesters-includers-and-execution-proposers/21648">Three-Tier staking (3TS) - Unbundling Attesters, Includers and Execution Proposers</a>
+                        <meta itemprop='position' content='21'>
+                      </div>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/paths-to-ssf-revisited/22052">Paths to SSF revisited</a>
+                        <meta itemprop='position' content='22'>
+                      </div>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/zkfocil-inclusion-list-privacy-using-linkable-ring-signatures/21688">zkFOCIL: Inclusion List Privacy using Linkable Ring Signatures</a>
+                        <meta itemprop='position' content='23'>
+                      </div>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/a-pragmatic-path-towards-validity-only-partial-statelessness-vops/22236">A pragmatic path towards Validity-Only Partial Statelessness (VOPS)</a>
+                        <meta itemprop='position' content='24'>
+                      </div>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/a-local-node-favoring-delta-to-the-scaling-roadmap/22368/27">A local-node-favoring delta to the scaling roadmap</a>
+                        <meta itemprop='position' content='25'>
+                      </div>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="https://ethresear.ch/t/rainbow-roles-incentives-abps-focilr-as/21826">Rainbow roles &amp; incentives: ABPS + FOCILR + AS</a>
+                        <meta itemprop='position' content='26'>
+                      </div>
+                </div>
+          </div>
+          <div id='post_2' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/Nero_eth'><span itemprop='name'>Nero_eth</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2024-12-20T13:34:08Z' class='post-time'>
+                    December 20, 2024,  1:34pm
+                  </time>
+                  <meta itemprop='dateModified' content='2024-12-20T13:34:08Z'>
+              <span itemprop='position'>2</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Great write-up! I really like the concept of splitting the validator role into smaller, specialized components. This approach could enable more focused improvements across different areas.</p>
+<p>The idea of includers is a cool one, but I think we should explore compensating them through issuance rather than requiring potentially censored parties to pay higher fees for inclusion.</p>
+<p>From the user’s perspective, the inclusion fee seems a bit odd. For example, as a user willing to spend <span class="math">x</span> on my transaction, I have two options:</p>
+<ol>
+<li>Pay <span class="math">x</span> via the priority fee (no inclusion fee).</li>
+<li>Pay <span class="math">x</span> via the inclusion fee (no priority fee).</li>
+</ol>
+<p>As a result, I can choose who to compensate for inclusion: the includer or the proposer. Currently, the proposer receives the payment, which makes sense as they secure the network and arguably deserve it.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="4" />
+              <span class='post-likes'>4 Likes</span>
+            </div>
+
+          </div>
+          <div id='post_4' itemprop='comment' itemscope itemtype='http://schema.org/Comment' class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" rel='nofollow' href='https://ethresear.ch/u/soispoke'><span itemprop='name'>soispoke</span></a>
+                
+              </span>
+
+
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='2024-12-26T20:17:40Z' class='post-time'>
+                    December 26, 2024,  8:17pm
+                  </time>
+                  <meta itemprop='dateModified' content='2024-12-26T20:17:40Z'>
+              <span itemprop='position'>4</span>
+              </span>
+            </div>
+            <div class='post' itemprop='text'>
+              <p>Thanks for the feedback <a class="mention" href="/u/nero_eth">@Nero_eth</a>!</p>
+<p>From the user’s perspective, adding an independent inclusion fee means you can specifically choose to allocate <span class="math">x</span> to:</p>
+<ol>
+<li>The proposer, to express a preference (usually regarding the state on which you want your transaction to be executed)</li>
+<li>The includers, so the cost of censoring your transaction increases</li>
+<li>Or both (e.g., 1/3 of <span class="math">x</span> goes to the proposer, 2/3 goes to includers)</li>
+</ol>
+<p>Alternatively, you could think of a mechanism that “transfers” fees to either the proposer or includers based on who included a given transaction. While the details obviously need to be worked out rigorously, a significant advantage of using inclusion fees, imo, is the dynamic I described here:</p>
+<aside class="quote no-group quote-modified" data-username="soispoke" data-post="1" data-topic="21306">
+<div class="title">
+<div class="quote-controls"></div>
+<img loading="lazy" alt="" width="24" height="24" src="https://ethresear.ch/user_avatar/ethresear.ch/soispoke/48/12076_2.png" class="avatar"> soispoke:</div>
+<blockquote>
+<p> The network can self-regulate based on the level of censorship. If many transactions are being censored, users can raise inclusion fees, thereby increasing the cost of censorship. As these higher fees get distributed among includers, more individuals will be incentivized to participate in creating inclusion lists (ILs), ultimately improving Ethereum’s censorship resistance. </p>
+</blockquote>
+</aside>
+<p>I don’t think the same dynamic can be achieved with issuance since there isn’t an objective criterion to determine whether a transaction is being censored or not. What’s nice with issuance, of course, is the guaranteed payment, so you always have some parties willing to participate in the mechanism (although what we want to incentivize is making “good” lists, not just making lists). But it also comes with choosing a specific issuance curve, etc., which we know is tricky and opinionated.</p>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="1" />
+              <span class='post-likes'>1 Like</span>
+            </div>
+
+          </div>
+    </div>
+
+
+    
+
+
+
+
+    </div>
+    <footer class="container wrap">
+  <nav class='crawler-nav'>
+    <ul>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/' itemprop="url">Home </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/categories' itemprop="url">Categories </a>
+        </span>
+      </li>
+      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <span itemprop='name'>
+          <a href='/guidelines' itemprop="url">Guidelines </a>
+        </span>
+      </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/tos' itemprop="url">Terms of Service </a>
+          </span>
+        </li>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='/privacy' itemprop="url">Privacy Policy </a>
+          </span>
+        </li>
+    </ul>
+  </nav>
+  <p class='powered-by-link'>Powered by <a href="https://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled</p>
+</footer>
+
+    
+    
+  </body>
+  
+</html>

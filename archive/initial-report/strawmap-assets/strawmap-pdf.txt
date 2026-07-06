@@ -1,0 +1,364 @@
+2026
+Glamsterdam
+
+sustainability
+→ hardness
+
+EVM
+→ hardness
+
+cryptography
+→ hardness
+
+J*
+
+K*
+
+slots
+finality
+roles
+
+SFI
+
+SFI
+
+ePBS
+
+FOCIL
+
+1M attestations
+per slot
+
+snail
+issuance
+
+attester-proposer
+separation
+
+distributed
+block building
+
+beacon & lean
+specs merge
+
+tech debt
+reset
+
+51% attack
+auto-recovery
+
+post quantum
+heartbeat
+
+PQ leanXMSS
+attestations
+
+VDF
+randomness
+
+real-time
+CL proofs
+
+secret
+proposers
+
+specs
+quantum
+
+Consensus
+Layer (CL)
+
+EIP
+
+teragas L2
+1 Gbyte/sec
+
+data availability increases
+EIP
+
+blob
+streaming
+
+leanVM
+
+remove blob
+transaction type
+
+short-dated
+blob futures
+
+gas
+
+quantum
+
+local blob
+reconstruction
+
+Data
+Layer (DL)
+
+gigagas L1
+1 Ggas/sec
+
+gossip
+
+gas limit increases
+ethp2p
+broadcast
+evm-asm
+canonical guest
+CFI
+Glamsterdam
+repricing
+SFI
+BALs
+
+optional
+2-of-3 proofs
+data
+repricing
+
+ethp2p
+unification
+EIP
+EIP
+
+mandatory
+1-of-1 proofs
+EIP
+multidimensional
+pricing
+
+leanDA
+block sampling
+
+partial
+binary tree
+
+validity-only
+partial state
+
+state-asm
+EIP
+EVMify long-tail
+precompiles
+CFI
+frame
+transactions
+EIP
+keyed nonces &
+recent roots
+
+G* (n+1)
+
+H* (n+2)
+
+pureth
+purges
+ephemeral
+keys
+
+I* (n+3)
+
+CL
+north star
+
+DL
+north star
+
+EL
+north star
+
+CL
+headliner
+
+DL
+headliner
+
+EL
+headliner
+
+CL
+onchain
+
+DL
+onchain
+
+EL
+onchain
+
+CL
+offchain
+
+DL
+offchain
+
+EL
+offchain
+
+native
+rollups
+
+EIP
+
+sharded
+mempool
+EIP
+
+long-dated
+gas futures
+
+Execution
+Layer (EL)
+
+endgame
+state
+
+decentralized
+state
+
+EIP
+
+zkzkRISC-V
+frames
+PQ leanSPHINCS
+transactions
+
+J* (n+4)
+
+lean privacy
+wormholes
+
+K* (n+5)
+
+privacy
+mempool
+
+encrypted
+mempool
+
+L* (n+6)
+
+longer term
+
+EIP
+
+cross-layer
+north star
+DISCLAIMERS
+→ strawman: work-in-progress rough consensus
+→ EF takes: not authoritative or representative
+→
+emoji: uncertainty about ever shipping upgrade
+cross-layer
+offchain
+
+updated
+Jun 26, 2026
+
+fast L1
+finality in seconds
+
+slot duration decreases
+
+proofs
+write
+
+north stars
+
+EIP
+
+features
+
+read
+
+longer term
+
+1-round
+finality
+
+post quantum
+pubkey registry
+
+cell-level
+deltas
+
+L*
+
+decoupled
+consensus
+
+modernized
+beacon specs
+
+sparse
+blobpool
+
+2029
+
+proofs
+of custody
+
+zkEVM
+
+throughput
+→ performance
+
+I*
+
+2028-29
+
+post quantum L1
+hash-based
+
+pricing
+
+types
+→ hardness
+
+2028
+
+PQ leanDA
+sampling
+
+state
+
+throughput
+→ performance
+
+EIP
+
+Hegotá
+
+fast
+confirmation
+
+ISA
+
+cryptography
+→ hardness
+
+2027-28
+
+quick
+slots
+
+quantum
+
+accessibility
+→ hardness
+
+EIP
+
+privacy
+
+latency
+→ performance
+
+2027
+
+private L1
+shielded transfers
+north stars
+
+

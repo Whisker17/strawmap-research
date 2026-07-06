@@ -1,0 +1,306 @@
+[
+  {
+    "i": 1,
+    "url": "https://fastconfirm.it",
+    "file": ".omo/ulw-research/20260706-004216/sources/01-fastconfirm-it.html",
+    "bytes": 43497,
+    "status": "HTTP/2 200 ",
+    "title": "FCR — Fast Confirmation Rule for Ethereum | Single-Slot Confirmation"
+  },
+  {
+    "i": 2,
+    "url": "https://eips.ethereum.org/EIPS/eip-7773",
+    "file": ".omo/ulw-research/20260706-004216/sources/02-eips-ethereum-org-EIPS-eip-7773.html",
+    "bytes": 21717,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7773: Hardfork Meta - Glamsterdam"
+  },
+  {
+    "i": 3,
+    "url": "https://eips.ethereum.org/EIPS/eip-8081",
+    "file": ".omo/ulw-research/20260706-004216/sources/03-eips-ethereum-org-EIPS-eip-8081.html",
+    "bytes": 17796,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8081: Hardfork Meta - Hegotá"
+  },
+  {
+    "i": 4,
+    "url": "https://eips.ethereum.org/EIPS/eip-8070",
+    "file": ".omo/ulw-research/20260706-004216/sources/04-eips-ethereum-org-EIPS-eip-8070.html",
+    "bytes": 47277,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8070: eth/72 - Sparse Blobpool"
+  },
+  {
+    "i": 5,
+    "url": "https://eip.tools/eip/8136",
+    "file": ".omo/ulw-research/20260706-004216/sources/05-eip-tools-eip-8136.html",
+    "bytes": 81836,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8136: Cell-Level Deltas for Data Column Broadcast | EIP.tools"
+  },
+  {
+    "i": 6,
+    "url": "https://misilva73.github.io/hegota-repricings/",
+    "file": ".omo/ulw-research/20260706-004216/sources/06-misilva73-github-io-hegota-repricings.html",
+    "bytes": 24782,
+    "status": "HTTP/2 200 ",
+    "title": "Hegota Repricings"
+  },
+  {
+    "i": 12,
+    "url": "https://eips.ethereum.org/EIPS/eip-8198",
+    "file": ".omo/ulw-research/20260706-004216/sources/12-eips-ethereum-org-EIPS-eip-8198.html",
+    "bytes": 31241,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8198: Quick Slots"
+  },
+  {
+    "i": 13,
+    "url": "https://github.com/ethp2p/ethp2p",
+    "file": ".omo/ulw-research/20260706-004216/sources/13-github-com-ethp2p-ethp2p.html",
+    "bytes": 318219,
+    "status": "HTTP/2 200 ",
+    "title": "GitHub - ethp2p/ethp2p: ethp2p is a next-generation p2p networking stack purpose-built for Ethereum · GitHub"
+  },
+  {
+    "i": 14,
+    "url": "https://ethresear.ch/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040",
+    "file": ".omo/ulw-research/20260706-004216/sources/14-ethresear-ch-t-exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ether.html",
+    "bytes": 92405,
+    "status": "HTTP/2 200 ",
+    "title": "Exploring the Design Space for a Post-Quantum Public Key Registry for Ethereum Validators - Cryptography - Ethereum Research"
+  },
+  {
+    "i": 15,
+    "url": "https://protocol.ethereum.foundation",
+    "file": ".omo/ulw-research/20260706-004216/sources/15-protocol-ethereum-foundation.html",
+    "bytes": 209142,
+    "status": "HTTP/2 200 ",
+    "title": "Protocol at Ethereum Foundation"
+  },
+  {
+    "i": 16,
+    "url": "https://ethresear.ch/t/why-ethereum-needs-a-dynamically-available-protocol/24418#p-59055-a-near-term-benefit-post-quantum-readiness-and-post-quantum-heartbeat-6",
+    "file": ".omo/ulw-research/20260706-004216/sources/16-ethresear-ch-t-why-ethereum-needs-a-dynamically-available-protocol-24418.html",
+    "bytes": 47643,
+    "status": "HTTP/2 200 ",
+    "title": "Why Ethereum Needs a Dynamically Available Protocol - Consensus - Ethereum Research"
+  },
+  {
+    "i": 17,
+    "url": "https://ethresear.ch/t/a-pragmatic-path-towards-validity-only-partial-statelessness-vops/22236",
+    "file": ".omo/ulw-research/20260706-004216/sources/17-ethresear-ch-t-a-pragmatic-path-towards-validity-only-partial-statelessness-vops-22236.html",
+    "bytes": 110472,
+    "status": "HTTP/2 200 ",
+    "title": "A pragmatic path towards Validity-Only Partial Statelessness (VOPS) - Execution Layer Research - Ethereum Research"
+  },
+  {
+    "i": 18,
+    "url": "https://github.com/Verified-zkEVM/evm-asm",
+    "file": ".omo/ulw-research/20260706-004216/sources/18-github-com-Verified-zkEVM-evm-asm.html",
+    "bytes": 459109,
+    "status": "HTTP/2 200 ",
+    "title": "GitHub - Verified-zkEVM/evm-asm · GitHub"
+  },
+  {
+    "i": 19,
+    "url": "https://ethresear.ch/t/hyper-scaling-state-by-creating-new-forms-of-state/24052",
+    "file": ".omo/ulw-research/20260706-004216/sources/19-ethresear-ch-t-hyper-scaling-state-by-creating-new-forms-of-state-24052.html",
+    "bytes": 88691,
+    "status": "HTTP/2 200 ",
+    "title": "Hyper-scaling state by creating new forms of state - Ethereum Research"
+  },
+  {
+    "i": 20,
+    "url": "https://ethresear.ch/t/unblocking-faster-finality-with-decoupled-consensus/24527/1",
+    "file": ".omo/ulw-research/20260706-004216/sources/20-ethresear-ch-t-unblocking-faster-finality-with-decoupled-consensus-24527-1.html",
+    "bytes": 51195,
+    "status": "HTTP/2 200 ",
+    "title": "Unblocking faster finality with decoupled consensus - Consensus - Ethereum Research"
+  },
+  {
+    "i": 21,
+    "url": "https://ethresear.ch/t/towards-attester-includer-separation/21306/1",
+    "file": ".omo/ulw-research/20260706-004216/sources/21-ethresear-ch-t-towards-attester-includer-separation-21306-1.html",
+    "bytes": 55972,
+    "status": "HTTP/2 200 ",
+    "title": "Towards Attester-Includer Separation - Proof-of-Stake - Ethereum Research"
+  },
+  {
+    "i": 22,
+    "url": "https://eips.ethereum.org/EIPS/eip-7732",
+    "file": ".omo/ulw-research/20260706-004216/sources/22-eips-ethereum-org-EIPS-eip-7732.html",
+    "bytes": 72590,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7732: Enshrined Proposer-Builder Separation"
+  },
+  {
+    "i": 23,
+    "url": "https://eips.ethereum.org/EIPS/eip-7805",
+    "file": ".omo/ulw-research/20260706-004216/sources/23-eips-ethereum-org-EIPS-eip-7805.html",
+    "bytes": 40642,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7805: Fork-choice enforced Inclusion Lists (FOCIL)"
+  },
+  {
+    "i": 24,
+    "url": "https://eips.ethereum.org/EIPS/eip-8079",
+    "file": ".omo/ulw-research/20260706-004216/sources/24-eips-ethereum-org-EIPS-eip-8079.html",
+    "bytes": 26131,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8079: Native rollups"
+  },
+  {
+    "i": 25,
+    "url": "https://hackmd.io/@gMH0wL_0Sr69C7I7inO8MQ/B125sCUtZx",
+    "file": ".omo/ulw-research/20260706-004216/sources/25-hackmd-io-gMH0wL-0Sr69C7I7inO8MQ-B125sCUtZx.html",
+    "bytes": 115479,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-Blob-streaming - HackMD"
+  },
+  {
+    "i": 26,
+    "url": "https://github.com/leanEthereum/leanMultisig",
+    "file": ".omo/ulw-research/20260706-004216/sources/26-github-com-leanEthereum-leanMultisig.html",
+    "bytes": 315671,
+    "status": "HTTP/2 200 ",
+    "title": "GitHub - leanEthereum/leanVM: Minimal zkVM for Ethereum. · GitHub"
+  },
+  {
+    "i": 27,
+    "url": "https://docs.google.com/document/d/e/2PACX-1vRtpbntq45GCTG3srzetWDkjsF1d-60iXL1rVeumnJW-Gbm343oV5Xvm3O6rALKJjXgr4mpL1a0uT4t/pub",
+    "file": ".omo/ulw-research/20260706-004216/sources/27-docs-google-com-document-d-e-2PACX-1vRtpbntq45GCTG3srzetWDkjsF1d-60iXL1rVeumnJW-Gbm343oV5X.html",
+    "bytes": 9122,
+    "status": "HTTP/2 401 ",
+    "title": ""
+  },
+  {
+    "i": 28,
+    "url": "https://eips.ethereum.org/EIPS/eip-8025",
+    "file": ".omo/ulw-research/20260706-004216/sources/28-eips-ethereum-org-EIPS-eip-8025.html",
+    "bytes": 15544,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8025: Optional Execution Proofs"
+  },
+  {
+    "i": 29,
+    "url": "https://eips.ethereum.org/EIPS/eip-7928",
+    "file": ".omo/ulw-research/20260706-004216/sources/29-eips-ethereum-org-EIPS-eip-7928.html",
+    "bytes": 81574,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7928: Block-Level Access Lists"
+  },
+  {
+    "i": 30,
+    "url": "https://eips.ethereum.org/EIPS/eip-8007",
+    "file": ".omo/ulw-research/20260706-004216/sources/30-eips-ethereum-org-EIPS-eip-8007.html",
+    "bytes": 36434,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8007: Glamsterdam Gas Repricings"
+  },
+  {
+    "i": 31,
+    "url": "https://eips.ethereum.org/EIPS/eip-7938",
+    "file": ".omo/ulw-research/20260706-004216/sources/31-eips-ethereum-org-EIPS-eip-7938.html",
+    "bytes": 17464,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7938: Exponential Gas Limit Increase"
+  },
+  {
+    "i": 32,
+    "url": "https://eips.ethereum.org/EIPS/eip-8142",
+    "file": ".omo/ulw-research/20260706-004216/sources/32-eips-ethereum-org-EIPS-eip-8142.html",
+    "bytes": 91069,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8142: Block-in-Blobs (BiB)"
+  },
+  {
+    "i": 33,
+    "url": "https://eips.ethereum.org/EIPS/eip-7919",
+    "file": ".omo/ulw-research/20260706-004216/sources/33-eips-ethereum-org-EIPS-eip-7919.html",
+    "bytes": 20977,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7919: Pureth Meta"
+  },
+  {
+    "i": 34,
+    "url": "https://notes.ethereum.org/@yannvon/S1wIxIDqbe",
+    "file": ".omo/ulw-research/20260706-004216/sources/34-notes-ethereum-org-yannvon-S1wIxIDqbe.html",
+    "bytes": 65496,
+    "status": "HTTP/2 200 ",
+    "title": "All You Need to Know About One-Round Finality - HackMD"
+  },
+  {
+    "i": 35,
+    "url": "https://eips.ethereum.org/EIPS/eip-7999",
+    "file": ".omo/ulw-research/20260706-004216/sources/35-eips-ethereum-org-EIPS-eip-7999.html",
+    "bytes": 107627,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-7999: Unified multidimensional fee market"
+  },
+  {
+    "i": 36,
+    "url": "https://ethresear.ch/t/achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstraction/24273",
+    "file": ".omo/ulw-research/20260706-004216/sources/36-ethresear-ch-t-achieving-quantum-safety-through-ephemeral-key-pairs-and-account-abstractio.html",
+    "bytes": 31992,
+    "status": "HTTP/2 200 ",
+    "title": "Achieving Quantum Safety Through Ephemeral Key Pairs and Account Abstraction - Cryptography - Ethereum Research"
+  },
+  {
+    "i": 37,
+    "url": "https://eips.ethereum.org/EIPS/eip-8200",
+    "file": ".omo/ulw-research/20260706-004216/sources/37-eips-ethereum-org-EIPS-eip-8200.html",
+    "bytes": 25491,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8200: EVMification"
+  },
+  {
+    "i": 38,
+    "url": "https://eips.ethereum.org/EIPS/eip-8250",
+    "file": ".omo/ulw-research/20260706-004216/sources/38-eips-ethereum-org-EIPS-eip-8250.html",
+    "bytes": 49136,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8250: Keyed Nonces for Frame Transactions"
+  },
+  {
+    "i": 39,
+    "url": "https://eips.ethereum.org/EIPS/eip-8272",
+    "file": ".omo/ulw-research/20260706-004216/sources/39-eips-ethereum-org-EIPS-eip-8272.html",
+    "bytes": 49228,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8272: Recent Roots for Frame Transactions"
+  },
+  {
+    "i": 40,
+    "url": "https://eips.ethereum.org/EIPS/eip-8141",
+    "file": ".omo/ulw-research/20260706-004216/sources/40-eips-ethereum-org-EIPS-eip-8141.html",
+    "bytes": 137898,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8141: Frame Transaction"
+  },
+  {
+    "i": 41,
+    "url": "https://ethereum-magicians.org/t/long-term-l1-execution-layer-proposal-replace-the-evm-with-risc-v/23617",
+    "file": ".omo/ulw-research/20260706-004216/sources/41-ethereum-magicians-org-t-long-term-l1-execution-layer-proposal-replace-the-evm-with-risc-v.html",
+    "bytes": 81142,
+    "status": "HTTP/2 200 ",
+    "title": "Long-term L1 execution layer proposal: replace the EVM with RISC-V - Primordial Soup - Fellowship of Ethereum Magicians"
+  },
+  {
+    "i": 42,
+    "url": "https://eips.ethereum.org/EIPS/eip-8077",
+    "file": ".omo/ulw-research/20260706-004216/sources/42-eips-ethereum-org-EIPS-eip-8077.html",
+    "bytes": 21792,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8077: eth/XX - announce transactions with nonce"
+  },
+  {
+    "i": 43,
+    "url": "https://eips.ethereum.org/EIPS/eip-8184",
+    "file": ".omo/ulw-research/20260706-004216/sources/43-eips-ethereum-org-EIPS-eip-8184.html",
+    "bytes": 114485,
+    "status": "HTTP/2 200 ",
+    "title": "EIP-8184: LUCID encrypted mempool"
+  }
+]
