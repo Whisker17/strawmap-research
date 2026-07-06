@@ -81,7 +81,6 @@ export type Synthesis = {
 }
 
 export type ResearchData = {
-  readonly generatedAt: string
   readonly metrics: MetricSet
   readonly reports: readonly Report[]
   readonly dependencies: readonly Dependency[]

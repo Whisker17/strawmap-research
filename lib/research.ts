@@ -1,5 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
+import { cache } from "react"
 import {
   excerpt,
   parseBullets,
@@ -140,7 +141,7 @@ function readReports(layerByPath: ReadonlyMap<string, string>): readonly Report[
     })
 }
 
-export function getResearchData(): ResearchData {
+export const getResearchData = cache((): ResearchData => {
   const indexMarkdown = fs.readFileSync(path.join(process.cwd(), "INDEX.md"), "utf8")
   const verifyMarkdown = readEvidenceFile("verify-report.md")
   const sourceLedgerMarkdown = readEvidenceFile("source-ledger.md")
@@ -162,7 +163,6 @@ export function getResearchData(): ResearchData {
   )
 
   return {
-    generatedAt: new Date().toISOString(),
     metrics: buildMetrics(verifyMarkdown, sourceUrls),
     reports: readReports(layerByPath),
     dependencies: parseMarkdownTable(indexSections["关键依赖关系"] ?? "").map(
@@ -183,7 +183,7 @@ export function getResearchData(): ResearchData {
     synthesis: buildSynthesis(synthesisMarkdown),
     sourceHosts: Array.from(new Set(sourceUrls.map(urlHost))).sort(),
   }
-}
+})
 
 export function getReportBySlug(slug: string): Report | undefined {
   return getResearchData().reports.find((report) => report.slug === slug)

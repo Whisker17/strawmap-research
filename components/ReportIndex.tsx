@@ -1,6 +1,14 @@
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
-import type { ReportSummary } from "@/lib/types"
+import type { LayerId, ReportSummary } from "@/lib/types"
+
+const indexGroups: readonly (readonly [LayerId, string])[] = [
+  ["consensus", "共识"],
+  ["data", "数据"],
+  ["execution", "执行"],
+  ["account", "账户/隐私"],
+  ["appendix", "附录"],
+]
 
 export function ReportIndex({
   reports,
@@ -15,27 +23,38 @@ export function ReportIndex({
         <span>Reports</span>
         <strong>{reports.length}</strong>
       </div>
-      <ol>
-        {reports.map((report) => (
-          <li key={report.slug}>
-            <Link
-              aria-current={activeSlug === report.slug ? "page" : undefined}
-              className="report-row"
-              data-group={report.group}
-              href={`/reports/${report.slug}`}
-            >
-              <span className="report-number">{report.number}</span>
-              <span className="report-row-copy">
-                <span>{report.shortTitle}</span>
-                <small>
-                  {report.layer} · {report.sourceCount} sources
-                </small>
-              </span>
-              <ArrowRight aria-hidden="true" size={15} />
-            </Link>
-          </li>
-        ))}
-      </ol>
+      {indexGroups.map(([group, label]) => {
+        const groupReports = reports.filter((report) => report.group === group)
+        if (groupReports.length === 0) return null
+        return (
+          <section aria-label={label} className="report-index-group" key={group}>
+            <span className="report-group-label" data-group={group}>
+              {label}
+            </span>
+            <ol>
+              {groupReports.map((report) => (
+                <li key={report.slug}>
+                  <Link
+                    aria-current={activeSlug === report.slug ? "page" : undefined}
+                    className="report-row"
+                    data-group={report.group}
+                    href={`/reports/${report.slug}`}
+                  >
+                    <span className="report-number">{report.number}</span>
+                    <span className="report-row-copy">
+                      <span>{report.shortTitle}</span>
+                      <small>
+                        {report.layer} · {report.sourceCount} sources
+                      </small>
+                    </span>
+                    <ArrowRight aria-hidden="true" size={15} />
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      })}
     </nav>
   )
 }

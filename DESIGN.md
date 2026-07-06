@@ -91,8 +91,9 @@ All spacing derives from a 4px base unit.
 ### Grid
 
 - Max content width: 1440px.
-- Overview desktop shell: 280px index rail + fluid atlas + 320px evidence rail.
-- Report desktop shell: 280px report index + 760px reader + 300px source/context rail.
+- Wide desktop (≥1440px) overview shell: 264px index rail + fluid atlas + 300px evidence rail.
+- Wide desktop (≥1440px) report shell: 264px report index + 760px reader + 300px source/context rail.
+- Standard desktop (1120–1439px): two columns — index rail + main content; the evidence/source rail becomes a full-width band below the main column with its blocks laid out in responsive columns. This keeps the reader at full width on 1280/1366 laptops.
 - Tablet: overview rail becomes a top dossier index; evidence rail drops below the main atlas.
 - Report tablet/mobile: the reader appears before the report index so the selected research remains the primary task.
 - Overview mobile: the atlas appears before the report index so the project thesis and layer map are the first-viewport anchor.
