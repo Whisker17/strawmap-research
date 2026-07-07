@@ -19,14 +19,39 @@ post quantum L1、hash-based signatures、PQ validator pubkey registry、post qu
 | Secret proposers / Whisk | proposer 身份提前暴露，易被 DoS | shuffle-based SSLE 隐藏 proposer。[Whisk](https://ethresear.ch/t/whisk-a-practical-shuffle-based-ssle-protocol-for-ethereum/11763) | 减少 pre-targeting 与 proposer DoS |
 | 51% attack auto-recovery | 多数攻击后在线节点难以一致判断及时链 | timeliness detectors 判断 block 是否 timely。[timeliness detectors](https://ethresear.ch/t/timeliness-detectors-and-51-attack-recovery-in-blockchains/6925) | 攻击后恢复更有协议依据，但依赖 synchrony 假设 |
 
+## 深入机制拆解
+### PQ key registry / PQ heartbeat
+- PQ migration 不能等到量子威胁临近时一次性替换 key：validator 需要先有登记、绑定和激活 PQ public key 的路径，避免全网同时迁移。[PQ registry](https://ethresear.ch/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040)
+- PQ heartbeat 的现实动机是签名大小和聚合能力：如果 PQ 签名不能像 BLS 一样聚合，小 committee fast path 会比全验证者 PQ finality 更早可行。[dynamic availability](https://ethresear.ch/t/why-ethereum-needs-a-dynamically-available-protocol/24418)
+- 官方 PQ 路线把 leanXMSS、leanVM、leanSig/leanMultisig 写成证明压缩和聚合方向，而不是最终参数承诺。[quantum resistance](https://ethereum.org/roadmap/future-proofing/quantum-resistance/)
+
+### Whisk / SSLE / randomness
+- Whisk/EIP-7441 的目标是 single secret leader election：在 proposer 出块前隐藏其身份，降低攻击者按 slot 顺序定点 DoS 的能力。[EIP-7441](https://eips.ethereum.org/EIPS/eip-7441)
+- Ethereum.org 的 secret leader election 页面把 Whisk 描述成 commit secret、shuffle commitments、再映射到 slots 的流程。[secret leader election](https://ethereum.org/roadmap/secret-leader-election)
+- 但当前 Whisk 依赖的密码假设并不天然 PQ-safe，EF cryptography research 已把 PQ SSLE 作为单独研究问题处理。[PQ SSLE](https://crypto.ethereum.org/blog/pq-ssle)
+
+### Recovery / timeliness
+- VDF randomness 试图降低 RANDAO last-revealer bias，但会引入硬件、延迟和替代方案治理问题。[VDF beacon](https://ethresear.ch/t/minimal-vdf-randomness-beacon/3566)
+- Timeliness detectors 处理的是多数攻击或网络扰动后“哪条链及时”的判断依据，让恢复不完全依赖社交协调。[timeliness detectors](https://ethresear.ch/t/timeliness-detectors-and-51-attack-recovery-in-blockchains/6925)
+- 这些机制都依赖 synchrony 假设、参数选择和客户端一致实现，不能写成自动恢复按钮。
+
 ## 当前瓶颈
-长期看，BLS/ECDSA、curve-based proofs、公开 proposer、RANDAO bias、以及多数攻击后的协调恢复都是安全债务。PQ 最大瓶颈不是“找一个签名算法”，而是 validator identity、签名大小、aggregation、proof compression 和迁移顺序。
+- 长期看，BLS/ECDSA、curve-based proofs、公开 proposer、RANDAO bias、以及多数攻击后的协调恢复都是安全债务。
+- PQ 最大瓶颈不是“找一个签名算法”，而是 validator identity、签名大小、aggregation、proof compression 和迁移顺序。
+- Proposer 身份提前公开会放大定点 DoS，尤其在短 slot 和高价值 slot 场景下更敏感。
+- 多数攻击后的恢复需要协议内可判断的 timely-chain 语义，否则仍容易退回社会协调。
 
 ## 优化机制
-PQ 路线采用 staged migration：账户层先通过 AA/Frame tx 获得 signature agility；CL 先做 key registry；fast path 用小 heartbeat；full finality 与 real-time proofs 后续跟进。韧性路线则用 VDF/Whisk/timeliness detectors 保护 randomness、leader privacy 和 attack recovery。
+- PQ 路线采用 staged migration：账户层先获得 signature agility，CL 先做 key registry，再用 PQ heartbeat 试水 fast path。
+- leanVM/leanSig/leanMultisig 方向通过证明压缩和聚合降低大 PQ 签名的通信与验证成本。
+- Whisk/SSLE 通过隐藏未来 proposer 身份降低顺序 DoS 风险。
+- VDF 和 timeliness detectors 分别改善 randomness bias 和攻击后恢复判断。
 
 ## 未来效果
-成功后，Ethereum 可逐步降低量子风险，减少 proposer DoS 面，提升极端攻击后的恢复确定性。最重要的变化是安全语义分层：PQ heartbeat 可能早于 full PQ finality，账户 PQ 可能早于 validator PQ。
+- Ethereum 可逐步降低量子风险，但迁移会分层完成，而不是一次性“全网 PQ”。
+- Proposer 更难被提前定位，短 slot 与高价值 slot 下的 DoS 面会下降。
+- 攻击后恢复会有更多协议依据，但仍受 synchrony、客户端实现和治理流程约束。
+- 新瓶颈会转向 PQ key lifecycle、stateful signature 操作纪律、proof 参数和 SSLE 的 PQ 替代。
 
 ## 依赖与先后关系
 本报告与 03 validator-scale、13 frame tx、11 proving substrates 强相关。leanVM/leanSig 是研究实现信号，不是生产级协议参数。`specs quantum` 应映射到 PQ roadmap / Lean Ethereum，而非独立 EIP。
@@ -35,7 +60,10 @@ PQ 路线采用 staged migration：账户层先通过 AA/Frame tx 获得 signatu
 PQ signature statefulness、XMSS key management、proof security parameters、VDF 硬件假设、Whisk anonymity set、timeliness synchrony bounds 都未完全定案。不要把 leanVM benchmark 写成协议保证。
 
 ## 对 Mantle 的影响
-Mantle 的桥、finality、proof-stack 都会受 L1 PQ migration 影响。若 L1 先有 PQ heartbeat 再有 full PQ finality，Mantle 需要在风险模型里分开描述“快速确认层的 PQ readiness”和“最终结算层的 PQ readiness”。SP1/zkVM 方向也应跟踪 hash-based proof/signature compatibility。
+- Mantle 的桥、finality、proof stack 都会受 L1 PQ migration 影响。
+- 如果 L1 先有 PQ heartbeat 再有 full PQ finality，Mantle 需要分开描述“快速确认层 PQ readiness”和“最终结算层 PQ readiness”。
+- Proposer DoS 面下降会增强 L1 结算可用性，间接改善 Mantle batch posting、proof posting 和恢复策略。
+- SP1/zkVM 与长期 prover stack 应跟踪 hash-based proof/signature compatibility，避免未来只在执行证明上 ZK 化、在认证/共识假设上滞后。
 
 ## 建议 Mantle 关注
 - 内部安全模型增加 PQ migration timeline watchlist。
@@ -48,6 +76,9 @@ Mantle 的桥、finality、proof-stack 都会受 L1 PQ migration 影响。若 L1
 - https://pq.ethereum.org/
 - https://ethresear.ch/t/exploring-the-design-space-for-a-post-quantum-public-key-registry-for-ethereum-validators/25040
 - https://ethresear.ch/t/why-ethereum-needs-a-dynamically-available-protocol/24418
+- https://ethereum.org/roadmap/secret-leader-election
+- https://eips.ethereum.org/EIPS/eip-7441
+- https://crypto.ethereum.org/blog/pq-ssle
 - https://blog.ethereum.org/2025/07/31/lean-ethereum
 - https://github.com/leanEthereum/leanVM
 - https://github.com/leanEthereum/leanSig

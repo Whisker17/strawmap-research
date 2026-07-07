@@ -18,14 +18,39 @@ BALs 解决的是“执行前不知道会读写哪些状态”的隐藏瓶颈。
 | EIP-8279 | BAL bytes 可能绕过 tx-content byte floors | runtime metering BAL bytes 并纳入 floor accumulator。[EIP-8279](https://eips.ethereum.org/EIPS/eip-8279) | 避免 BAL 变成新 cheap-byte channel |
 | EIP-8268 | 部分状态节点需要 post-block storage roots | 给 BAL 增加 per-account storage root 信息。[EIP-8268](https://eips.ethereum.org/EIPS/eip-8268) | 更完整的 state reconstruction / verification |
 
+## 深入机制拆解
+### EIP-7928：把 state access 从隐式执行路径变成 block artifact
+- BAL 的核心不是“交易自带 access list”，而是 block producer 对整个 block 触达账户、storage slot、code 和 balance 的声明，并由 header commitment 绑定。
+- 验证者仍会执行 block，但可以在执行前知道访问面，提前做 state prefetch、disk scheduling、parallel worker partition 和 witness planning。
+- 如果 producer 提供的 BAL 与执行实际访问不一致，block 无效；因此 BAL 是 consensus-critical metadata，不是 RPC 便利索引。
+
+### BAL transport / healing：为什么配套 EIP 很重要
+- EIP-8159 处理的是 BAL 如何通过 p2p 获取，否则 header committed 但节点拿不到 BAL，会把 sync/healing 卡在外部数据路径上。
+- EIP-8189 把 snap healing 从逐 trie node 追索转向利用 block-level diff，目标是减少“我知道缺状态但不知道该向谁要什么”的恢复成本。
+- EIP-8268 补充 storage root 信息，是为了让状态重建和 verification 更完整，尤其对 proof-heavy execution 和 external prover 更重要。
+
+### BAL repricing：metadata 也会成为资源
+- 一旦 BAL 成为必需数据，它本身就可能被滥用成 cheap-byte channel，尤其在 gas limit 上升后更明显。
+- EIP-8279 将 BAL bytes 纳入 runtime metering/floor accumulator，是为了避免应用把数据从 tx calldata 挪到 BAL 相关路径规避 byte floors。
+- 这意味着 BAL 不只是性能优化，也会改变合约访问模式、state-heavy workload 和 prover witness 成本的度量方式。
+
 ## 当前瓶颈
-执行客户端今天常在执行过程中才发现需要哪些 state，导致 disk reads、prefetch、parallel execution 和 root computation 很难提前安排。对高 gas block、proof-heavy execution、statelessness 来说，这个隐藏访问面会成为瓶颈。
+- 隐式访问：客户端执行到某条 opcode 时才知道要读哪个 account/slot，I/O 和 witness 无法提前排程。
+- 并行困难：没有 block-level dependency map 时，交易间读写冲突只能边执行边发现，worker 利用率不稳定。
+- Proof 输入不稳定：prover 需要完整 state/witness，但当前路径更像 execution side effect，不是标准化输入。
+- Sync/healing 粗糙：缺状态时常要向 trie 层逐步追索，恢复路径慢且难以验证完整性。
 
 ## 优化机制
-BAL 把访问列表提升到 block 级别，并由 header commitment 绑定。节点可以在执行前拿到访问面，在执行后检查准确性。BAL transport/healing/repricing/storage-root extensions 构成一个小生态，而不是单个 EIP 孤立运行。
+- EIP-7928 提供 header-committed BAL，让 block 的 state footprint 成为可验证对象。
+- EIP-8159 提供网络获取路径，避免 BAL 只存在于 proposer/client 本地。
+- EIP-8189 和 EIP-8268 把 BAL 用在 state healing 与重建上，让 sync/prover/RPC 都能复用同一访问面。
+- EIP-8279 给 BAL bytes 定价，避免 BAL 成为扩容后的新攻击面。
 
 ## 未来效果
-客户端可更好并行读盘、验证和重建状态；proof systems 可用 BAL 预先规划 witnesses；sync/healing 可从 trie-node hunting 走向 block diff。BALs 也是 mandatory proof/BiB 的前提之一，因为 proof-heavy validation 不再默认每个 validator 重执行得到这些数据。
+- 执行客户端：更稳定地预取状态、拆分并行任务、压缩 state root critical path。
+- Prover：可提前生成 witness manifest，减少证明前“重新发现访问面”的工作。
+- RPC/indexer：可基于 block-level diff 改善状态重建与可验证服务。
+- Protocol：为 mandatory proofs、Block-in-Blobs 和 partial statelessness 提供 state-availability plumbing。
 
 ## 依赖与先后关系
 EIP-7928 作为 Glamsterdam scheduled item 是基础；EIP-8159 和 EIP-8189 已进入 Glamsterdam CFI networking；EIP-7862/8279/8268 是后续配套。EIP-8279 依赖 EIP-7928，proof-heavy execution / EIP-8142 也依赖 BAL availability。[EIP-7773](https://eips.ethereum.org/EIPS/eip-7773), [EIP-8142](https://eips.ethereum.org/EIPS/eip-8142)
@@ -34,7 +59,10 @@ EIP-7928 作为 Glamsterdam scheduled item 是基础；EIP-8159 和 EIP-8189 已
 风险包括 phantom storage reads griefing、BAL size propagation、validation overhead、cheap-byte bypass、以及应用对 gas repricing 的敏感性。BALs 不是无成本 metadata，它会成为新的网络与定价对象。
 
 ## 对 Mantle 的影响
-Mantle prover 可以用 BAL-like state access profile 提前构建 witness；L2 workload profiling 可用它理解高 storage workload；未来若 L1/rollup proof interface 标准化，BAL/payload 分离 transport 可能成为 Mantle prover/derivation pipeline 的兼容点。
+- Prover pipeline：Mantle 可以提前抽象 `state access manifest`，把 witness planning 从 prover 内部细节提升为可观测 artifact。
+- 成本分析：用 BAL-like profiling 识别高 storage slot churn、高 account touch、高 cold-access 的 workload，提前评估 byte/state repricing 冲击。
+- DA/derivation：如果未来 L1 proof-heavy execution 要求 payload 与 BAL availability，Mantle 的 derivation pipeline 也需要明确哪些数据必须可重放。
+- 生态沟通：BALs 应被解释成“让高吞吐和证明更可验证的底层结构”，而不是直接降低用户 gas 的功能。
 
 ## 建议 Mantle 关注
 - 在 prover pipeline 中预留 explicit state access list / witness manifest 抽象。

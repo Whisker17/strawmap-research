@@ -1165,9 +1165,18 @@ svg {
   margin-bottom: var(--space-2);
 }
 
+.lens-card .markdown-content {
+  font-size: 14px;
+  line-height: 1.64;
+}
+
 .lens-card .markdown-content p {
   font-size: 14px;
-  line-height: 1.68;
+  line-height: 1.64;
+}
+
+.lens-card .markdown-content ul {
+  padding-left: var(--space-4);
 }
 
 .optimization-table {
@@ -1198,6 +1207,7 @@ svg {
   color: var(--text-secondary);
   font-size: 16px;
   line-height: 1.78;
+  overflow-wrap: anywhere;
 }
 
 .markdown-content p,
@@ -1210,6 +1220,15 @@ svg {
   color: var(--text-primary);
   line-height: 1.35;
   margin: var(--space-5) 0 var(--space-2);
+}
+
+.markdown-content li {
+  margin-top: var(--space-2);
+  padding-left: var(--space-1);
+}
+
+.markdown-content li:first-child {
+  margin-top: 0;
 }
 
 .markdown-content a {
@@ -1225,6 +1244,7 @@ svg {
   color: var(--text-primary);
   font-family: "SF Mono", ui-monospace, monospace;
   font-size: 0.9em;
+  overflow-wrap: anywhere;
   padding: 0 var(--space-1);
 }
 
@@ -1238,6 +1258,7 @@ svg {
 
 .markdown-table-wrap {
   margin-top: var(--space-4);
+  overscroll-behavior-x: contain;
   overflow-x: auto;
 }
 
