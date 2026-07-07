@@ -9,14 +9,14 @@ type ReportPageProps = {
 }
 
 export function generateStaticParams() {
-  return getResearchData("en").reports.map((report) => ({
+  return getResearchData("zh").reports.map((report) => ({
     slug: report.slug,
   }))
 }
 
 export async function generateMetadata({ params }: ReportPageProps): Promise<Metadata> {
   const { slug } = await params
-  const report = getReportBySlug("en", slug)
+  const report = getReportBySlug("zh", slug)
   if (report === undefined) return {}
   return {
     title: `${report.shortTitle} | Ethereum Strawmap Dossier`,
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: ReportPageProps): Promise<Met
   }
 }
 
-export default async function ReportPage({ params }: ReportPageProps) {
+export default async function ChineseReportPage({ params }: ReportPageProps) {
   const { slug } = await params
-  return <ReportScreen locale="en" slug={slug} />
+  return <ReportScreen locale="zh" slug={slug} />
 }

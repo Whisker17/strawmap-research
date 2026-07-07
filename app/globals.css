@@ -175,6 +175,19 @@ svg {
     inset 0 -2px 0 var(--group-accent);
 }
 
+.header-links .locale-toggle {
+  background: var(--surface-ink);
+  border-radius: var(--radius-card);
+  color: var(--surface-paper);
+  font-weight: 600;
+  margin-left: var(--space-2);
+}
+
+.header-links .locale-toggle:hover {
+  background: color-mix(in srgb, var(--surface-ink) 86%, var(--surface-paper));
+  color: var(--surface-paper);
+}
+
 /* ---------- Shared primitives ---------- */
 
 .eyebrow,

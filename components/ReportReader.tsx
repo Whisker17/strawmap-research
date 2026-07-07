@@ -1,18 +1,16 @@
 import { ArrowLeft, ExternalLink } from "lucide-react"
 import Link from "next/link"
+import { type Locale, localePath, ui } from "@/lib/i18n"
 import { sections } from "@/lib/markdown"
 import { getLayerGuide } from "@/lib/roadmap"
 import type { Report } from "@/lib/types"
 import { MarkdownContent } from "./MarkdownContent"
 
-const lens = [
-  ["瓶颈是什么", "bottleneck"],
-  ["怎么优化", "mechanism"],
-  ["未来效果", "futureEffect"],
-  ["Mantle 影响", "mantleImpact"],
-] as const
+const lensKeys = ["bottleneck", "mechanism", "futureEffect", "mantleImpact"] as const
 
-function reportLensValue(report: Report, key: (typeof lens)[number][1]): string {
+type LensKey = (typeof lensKeys)[number]
+
+function reportLensValue(report: Report, key: LensKey): string {
   switch (key) {
     case "bottleneck":
       return report.bottleneck
@@ -25,13 +23,33 @@ function reportLensValue(report: Report, key: (typeof lens)[number][1]): string 
   }
 }
 
-export function ReportReader({ report }: { readonly report: Report }) {
+export function ReportReader({
+  report,
+  locale,
+}: {
+  readonly report: Report
+  readonly locale: Locale
+}) {
+  const strings = ui[locale]
+  const excludedSections = new Set([
+    "Sources",
+    strings.breakdownTitle,
+    "逐项拆解",
+    "Item-by-Item Breakdown",
+  ])
   const reportSections = sections(report.markdown).filter(
-    (section) => section.title !== "Sources" && section.title !== "逐项拆解",
+    (section) => !excludedSections.has(section.title),
   )
-  const guide = getLayerGuide(report.group)
-  const backHref = guide === undefined ? "/" : `/layers/${guide.id}`
-  const backLabel = guide === undefined ? "返回首页" : `返回${guide.label}导读`
+  const guide = getLayerGuide(locale, report.group)
+  const backHref =
+    guide === undefined ? localePath(locale, "/") : localePath(locale, `/layers/${guide.id}`)
+  const backLabel = guide === undefined ? strings.backToHome : strings.backToLayerGuide(guide.label)
+  const lensLabels: Readonly<Record<LensKey, string>> = {
+    bottleneck: strings.lensBottleneck,
+    mechanism: strings.lensMechanism,
+    futureEffect: strings.lensFutureEffect,
+    mantleImpact: strings.lensMantleImpact,
+  }
 
   return (
     <article className="report-reader" id="content">
@@ -47,13 +65,13 @@ export function ReportReader({ report }: { readonly report: Report }) {
         {report.caveat.length > 0 ? <p className="report-caveat">{report.caveat}</p> : null}
       </header>
 
-      <section className="lens-grid" aria-label="四问速览">
-        {lens.map(([label, key]) => {
+      <section className="lens-grid" aria-label={strings.lensSectionLabel}>
+        {lensKeys.map((key) => {
           const value = reportLensValue(report, key)
           if (value.length === 0) return null
           return (
             <div className="lens-card" key={key}>
-              <span>{label}</span>
+              <span>{lensLabels[key]}</span>
               <MarkdownContent markdown={value} />
             </div>
           )
@@ -62,13 +80,13 @@ export function ReportReader({ report }: { readonly report: Report }) {
 
       {report.optimizations.length > 0 ? (
         <section className="optimization-table" aria-labelledby="optimization-title">
-          <span className="eyebrow">Optimization breakdown</span>
-          <h2 id="optimization-title">逐项拆解</h2>
+          <span className="eyebrow">{strings.breakdownEyebrow}</span>
+          <h2 id="optimization-title">{strings.breakdownTitle}</h2>
           <MarkdownContent markdown={tableToMarkdown(report.optimizations)} />
         </section>
       ) : null}
 
-      <section className="report-section-stream" aria-label="报告正文">
+      <section className="report-section-stream" aria-label={strings.reportBodyLabel}>
         {reportSections.map((section) => (
           <section className="reader-section" key={section.title}>
             <h2>{section.title}</h2>
@@ -80,9 +98,17 @@ export function ReportReader({ report }: { readonly report: Report }) {
   )
 }
 
-export function SourceRail({ report }: { readonly report: Report }) {
+export function SourceRail({
+  report,
+  locale,
+}: {
+  readonly report: Report
+  readonly locale: Locale
+}) {
+  const strings = ui[locale]
+
   return (
-    <aside className="source-rail" aria-label="报告来源">
+    <aside className="source-rail" aria-label={strings.sourcesRailLabel}>
       <div className="panel-title">
         <span>Sources</span>
         <strong>{report.sources.length}</strong>

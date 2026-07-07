@@ -69,7 +69,8 @@ export type LayerDirection = {
 export type LayerGuide = {
   readonly id: GuideLayerId
   readonly label: string
-  readonly enLabel: string
+  readonly navLabel: string
+  readonly kicker: string
   readonly accent: string
   readonly tagline: string
   readonly role: readonly string[]

@@ -1,23 +1,40 @@
 import { AlertTriangle, ArrowLeft, ArrowRight, Compass, FileText } from "lucide-react"
 import Link from "next/link"
-import { layerGuides } from "@/lib/roadmap"
+import { type Locale, localePath, ui } from "@/lib/i18n"
+import { layerGuidesByLocale } from "@/lib/roadmap"
 import type { LayerGuide, ReportSummary } from "@/lib/types"
 
 function reportByNumber(reports: readonly ReportSummary[], number: string) {
   return reports.find((report) => report.number === number)
 }
 
-export function LayerHero({ guide }: { readonly guide: LayerGuide }) {
+function splitLimit(limit: string): readonly [string, string] {
+  const cjkIndex = limit.indexOf("：")
+  if (cjkIndex > 0) return [limit.slice(0, cjkIndex), limit.slice(cjkIndex + 1)]
+  const asciiIndex = limit.indexOf(": ")
+  if (asciiIndex > 0) return [limit.slice(0, asciiIndex), limit.slice(asciiIndex + 2)]
+  return [limit, ""]
+}
+
+export function LayerHero({
+  guide,
+  locale,
+}: {
+  readonly guide: LayerGuide
+  readonly locale: Locale
+}) {
+  const strings = ui[locale]
+
   return (
     <section className="layer-hero" data-group={guide.id} aria-labelledby="layer-title">
-      <Link className="back-link" href="/">
+      <Link className="back-link" href={localePath(locale, "/")}>
         <ArrowLeft aria-hidden="true" size={16} />
-        返回首页
+        {strings.backToHome}
       </Link>
-      <span className="layer-hero-en">{guide.enLabel}</span>
+      <span className="layer-hero-en">{guide.kicker}</span>
       <h1 id="layer-title">{guide.label}</h1>
       <div className="layer-role">
-        <h2>这一层做了什么</h2>
+        <h2>{strings.layerRoleTitle}</h2>
         {guide.role.map((paragraph) => (
           <p key={paragraph}>{paragraph}</p>
         ))}
@@ -26,23 +43,31 @@ export function LayerHero({ guide }: { readonly guide: LayerGuide }) {
   )
 }
 
-export function LayerLimits({ guide }: { readonly guide: LayerGuide }) {
+export function LayerLimits({
+  guide,
+  locale,
+}: {
+  readonly guide: LayerGuide
+  readonly locale: Locale
+}) {
+  const strings = ui[locale]
+
   return (
     <section className="layer-limits" aria-labelledby="layer-limits-title">
       <div className="section-heading">
         <AlertTriangle aria-hidden="true" size={20} />
         <div>
-          <span className="eyebrow">Why change</span>
-          <h2 id="layer-limits-title">现在的缺陷与限制</h2>
+          <span className="eyebrow">{strings.limitsEyebrow}</span>
+          <h2 id="layer-limits-title">{strings.limitsTitle}</h2>
         </div>
       </div>
       <ul className="limit-list">
         {guide.limits.map((limit) => {
-          const [head, ...rest] = limit.split("：")
+          const [head, rest] = splitLimit(limit)
           return (
             <li key={limit}>
               <strong>{head}</strong>
-              {rest.length > 0 ? <p>{rest.join("：")}</p> : null}
+              {rest.length > 0 ? <p>{rest}</p> : null}
             </li>
           )
         })}
@@ -54,17 +79,21 @@ export function LayerLimits({ guide }: { readonly guide: LayerGuide }) {
 export function LayerDirections({
   guide,
   reports,
+  locale,
 }: {
   readonly guide: LayerGuide
   readonly reports: readonly ReportSummary[]
+  readonly locale: Locale
 }) {
+  const strings = ui[locale]
+
   return (
     <section className="layer-directions" aria-labelledby="layer-directions-title">
       <div className="section-heading">
         <Compass aria-hidden="true" size={20} />
         <div>
-          <span className="eyebrow">Where it goes</span>
-          <h2 id="layer-directions-title">未来的优化方向</h2>
+          <span className="eyebrow">{strings.directionsEyebrow}</span>
+          <h2 id="layer-directions-title">{strings.directionsTitle}</h2>
         </div>
       </div>
       <div className="direction-list">
@@ -88,7 +117,7 @@ export function LayerDirections({
                   <Link
                     className="direction-report-link"
                     data-group={report.group}
-                    href={`/reports/${report.slug}`}
+                    href={localePath(locale, `/reports/${report.slug}`)}
                     key={number}
                   >
                     <span className="report-number">{number}</span>
@@ -108,10 +137,13 @@ export function LayerDirections({
 export function LayerReports({
   guide,
   reports,
+  locale,
 }: {
   readonly guide: LayerGuide
   readonly reports: readonly ReportSummary[]
+  readonly locale: Locale
 }) {
+  const strings = ui[locale]
   const layerReports = reports.filter((report) => report.group === guide.id)
 
   return (
@@ -119,8 +151,8 @@ export function LayerReports({
       <div className="section-heading">
         <FileText aria-hidden="true" size={20} />
         <div>
-          <span className="eyebrow">Deep dives</span>
-          <h2 id="layer-reports-title">本层的研究报告</h2>
+          <span className="eyebrow">{strings.layerReportsEyebrow}</span>
+          <h2 id="layer-reports-title">{strings.layerReportsTitle}</h2>
         </div>
       </div>
       <div className="report-card-grid">
@@ -128,7 +160,7 @@ export function LayerReports({
           <Link
             className="report-card"
             data-group={report.group}
-            href={`/reports/${report.slug}`}
+            href={localePath(locale, `/reports/${report.slug}`)}
             key={report.slug}
           >
             <span className="report-card-number">{report.number}</span>
@@ -144,18 +176,26 @@ export function LayerReports({
   )
 }
 
-export function LayerPager({ guide }: { readonly guide: LayerGuide }) {
-  const index = layerGuides.findIndex((candidate) => candidate.id === guide.id)
-  const previous = layerGuides[index - 1]
-  const next = layerGuides[index + 1]
+export function LayerPager({
+  guide,
+  locale,
+}: {
+  readonly guide: LayerGuide
+  readonly locale: Locale
+}) {
+  const strings = ui[locale]
+  const guides = layerGuidesByLocale[locale]
+  const index = guides.findIndex((candidate) => candidate.id === guide.id)
+  const previous = guides[index - 1]
+  const next = guides[index + 1]
 
   return (
-    <nav aria-label="相邻阅读线" className="layer-pager">
+    <nav aria-label={strings.pagerLabel} className="layer-pager">
       {previous !== undefined ? (
-        <Link className="pager-link" href={`/layers/${previous.id}`}>
+        <Link className="pager-link" href={localePath(locale, `/layers/${previous.id}`)}>
           <ArrowLeft aria-hidden="true" size={15} />
           <span>
-            <small>上一条阅读线</small>
+            <small>{strings.pagerPrevious}</small>
             {previous.label}
           </span>
         </Link>
@@ -163,18 +203,18 @@ export function LayerPager({ guide }: { readonly guide: LayerGuide }) {
         <span aria-hidden="true" />
       )}
       {next !== undefined ? (
-        <Link className="pager-link pager-next" href={`/layers/${next.id}`}>
+        <Link className="pager-link pager-next" href={localePath(locale, `/layers/${next.id}`)}>
           <span>
-            <small>下一条阅读线</small>
+            <small>{strings.pagerNext}</small>
             {next.label}
           </span>
           <ArrowRight aria-hidden="true" size={15} />
         </Link>
       ) : (
-        <Link className="pager-link pager-next" href="/synthesis">
+        <Link className="pager-link pager-next" href={localePath(locale, "/synthesis")}>
           <span>
-            <small>读完四条线之后</small>
-            综合结论与证据
+            <small>{strings.pagerAfterLayers}</small>
+            {strings.pagerSynthesis}
           </span>
           <ArrowRight aria-hidden="true" size={15} />
         </Link>

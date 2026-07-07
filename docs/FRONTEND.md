@@ -36,6 +36,21 @@ Use these project settings:
 - Build Command: `pnpm build`
 - Output: Next.js default
 
+## i18n
+
+The site is bilingual. English is the default locale and lives at the root paths;
+Chinese mirrors the full route tree under `/zh/...`. The header has a one-click
+language toggle that links to the equivalent page in the other locale.
+
+- UI strings: `lib/i18n.ts` (`ui` dictionary, `localePath` helper).
+- Layer-guide and Mantle-track copy: `lib/roadmap.ts` (`layerGuidesByLocale`,
+  `mantleTracksByLocale`).
+- Research content: Chinese sources are `reports/*.md`, `INDEX.md`, `SYNTHESIS.md`;
+  English translations are `reports/en/*.md`, `INDEX.en.md`, `SYNTHESIS.en.md` with
+  the same filenames/slugs and a fixed section-heading mapping (see
+  `contentConfigs` in `lib/research.ts`). Keep both locales in sync when editing
+  report content — the parser keys off exact `## ` heading strings per locale.
+
 ## Information Architecture
 
 The site is a guided reading flow rather than a single dashboard:

@@ -4,10 +4,13 @@ export default function NotFoundPage() {
   return (
     <main className="not-found-page">
       <span className="eyebrow">404</span>
-      <h1>没有找到这份报告</h1>
-      <p>当前 dossier 只包含根目录研究包里的 14 份主报告和 2 个附录。</p>
+      <h1>Page not found</h1>
+      <p>
+        This dossier only contains the 14 main reports and 2 appendices from the research pack.
+        <span lang="zh-Hans">（当前站点只包含研究包里的 14 份主报告和 2 个附录。）</span>
+      </p>
       <Link className="primary-link" href="/">
-        返回图册
+        Back to the atlas
       </Link>
     </main>
   )

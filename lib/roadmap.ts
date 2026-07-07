@@ -1,10 +1,12 @@
+import type { Locale } from "./i18n"
 import type { GuideLayerId, LayerGuide, MantleTrack } from "./types"
 
-export const layerGuides: readonly LayerGuide[] = [
+const layerGuidesZh: readonly LayerGuide[] = [
   {
     id: "consensus",
     label: "共识层",
-    enLabel: "Consensus Layer (CL)",
+    navLabel: "共识层",
+    kicker: "Consensus Layer (CL)",
     accent: "violet",
     tagline: "确认、终局性与验证者集合——决定一笔交易什么时候算数。",
     role: [
@@ -53,7 +55,8 @@ export const layerGuides: readonly LayerGuide[] = [
   {
     id: "data",
     label: "数据层",
-    enLabel: "Data Layer (DL)",
+    navLabel: "数据层",
+    kicker: "Data Layer (DL)",
     accent: "teal",
     tagline: "Blob 与数据可用性——决定 rollup 的成本与规模上限。",
     role: [
@@ -94,7 +97,8 @@ export const layerGuides: readonly LayerGuide[] = [
   {
     id: "execution",
     label: "执行层",
-    enLabel: "Execution Layer (EL)",
+    navLabel: "执行层",
+    kicker: "Execution Layer (EL)",
     accent: "amber",
     tagline: "EVM、状态与证明——决定 L1 能跑多快、能被谁验证。",
     role: [
@@ -150,7 +154,8 @@ export const layerGuides: readonly LayerGuide[] = [
   {
     id: "account",
     label: "账户 / 隐私层",
-    enLabel: "Accounts & Privacy",
+    navLabel: "账户/隐私层",
+    kicker: "Accounts & Privacy",
     accent: "green",
     tagline: "交易格式、认证与隐私——决定用户以什么方式进入这条链。",
     role: [
@@ -183,15 +188,198 @@ export const layerGuides: readonly LayerGuide[] = [
   },
 ]
 
-export function getLayerGuide(id: string): LayerGuide | undefined {
-  return layerGuides.find((guide) => guide.id === id)
-}
+const layerGuidesEn: readonly LayerGuide[] = [
+  {
+    id: "consensus",
+    label: "Consensus Layer",
+    navLabel: "Consensus",
+    kicker: "CL",
+    accent: "violet",
+    tagline:
+      "Confirmation, finality, and the validator set — this layer decides when a transaction counts.",
+    role: [
+      "The consensus layer keeps hundreds of thousands of validators worldwide in agreement on what the next block is and which blocks can never be rolled back. It sets the cadence of block proposal, attestation, and finality, and defines the division of labor between proposers, attesters, and builders.",
+      "How long users wait before treating a transaction as irreversible — and how many confirmations exchanges and bridges require — is ultimately decided by this layer.",
+    ],
+    limits: [
+      "Confirmation is slow: 12-second slots and finality after roughly two epochs (about 13 minutes) fall far short of the seconds-level irreversibility exchanges and L2 bridges expect.",
+      "Roles are entangled: the proposer handles both consensus and the execution payload in-protocol, the MEV supply chain (mev-boost) runs outside the protocol, and censorship resistance currently rests on out-of-protocol social consensus.",
+      "Scale and tech debt: signature aggregation for a validator set approaching one million is pushing network limits, the issuance curve still encourages the set to grow, and an aging beacon spec makes every change expensive.",
+      "Cryptography has a deadline: BLS signatures are not quantum-resistant, and the entire voting and aggregation pipeline must be replaced before quantum threats mature.",
+    ],
+    directions: [
+      {
+        id: "fast-finality",
+        title: "Faster confirmation and finality",
+        northStar: "Fast L1 · finality in seconds",
+        summary:
+          "The fast confirmation rule first delivers strong confirmation within seconds without touching the slot; quick slots then shorten the slot itself, and decoupled consensus plus 1-round finality push finality proper into the seconds range.",
+        reportNumbers: ["01"],
+      },
+      {
+        id: "block-production",
+        title: "Block-production role separation and censorship resistance",
+        summary:
+          "ePBS (scheduled for Glamsterdam) pulls the execution payload out of the consensus hot path, and FOCIL (scheduled for Hegotá) adds protocol-level forced-inclusion lists; the longer-term direction is attester-proposer separation and distributed block building.",
+        reportNumbers: ["02"],
+      },
+      {
+        id: "validator-scale",
+        title: "Validator scale, issuance, and lean specs",
+        summary:
+          "Snail issuance uses lower issuance to bound the validator set, while the beacon & lean specs merge and a tech-debt reset clear spec debt — opening the way for million-scale attestation and shorter slots.",
+        reportNumbers: ["03"],
+      },
+      {
+        id: "pq-resilience",
+        title: "Post-quantum cryptography and consensus resilience",
+        summary:
+          "A PQ pubkey registry and post-quantum heartbeat pave the signature migration path, leanXMSS attestations are the target scheme, and mechanisms like 51%-attack auto-recovery improve the chain's ability to heal after an attack.",
+        reportNumbers: ["04"],
+      },
+    ],
+    reportNumbers: ["01", "02", "03", "04"],
+  },
+  {
+    id: "data",
+    label: "Data Layer",
+    navLabel: "Data",
+    kicker: "DL",
+    accent: "teal",
+    tagline:
+      "Blobs and data availability — this layer sets the cost and scale ceiling for rollups.",
+    role: [
+      "The data layer answers where rollups and applications publish their data, and how the network guarantees anyone can download and verify that data when needed. Since EIP-4844 introduced blobs, it has been the primary data-availability (DA) channel for L2s.",
+      "Blob capacity and pricing directly shape rollup cost structures — including Mantle's current DA strategy of Ethereum blobs as the main path with calldata as fallback.",
+    ],
+    limits: [
+      "Capacity is still orders of magnitude short: PeerDAS and BPO are live on mainnet, but current blob throughput is roughly three orders of magnitude away from the teragas L2 (1 GByte/s) north star.",
+      "The network is the next bottleneck: more and bigger blobs put growing load on mempool propagation, sampling, and reconstruction — once capacity is solved, the problem immediately becomes propagation and custody.",
+      "Pricing lacks dimensions: blob fees swing violently, and calldata fallback and other resources are not priced by real consumption, so scaling headroom can be eaten by whichever resource is cheapest to abuse.",
+    ],
+    directions: [
+      {
+        id: "da-capacity",
+        title: "Continuously rising DA capacity",
+        northStar: "Teragas L2 · 1 GByte/sec",
+        summary:
+          "PeerDAS replaces full downloads with sampling, removing single-node bandwidth from the capacity formula; BPO (blob-parameter-only) forks let blob counts step up on their own cadence, outside major hard forks.",
+        reportNumbers: ["05"],
+      },
+      {
+        id: "propagation-custody",
+        title: "Propagation, custody, and streaming",
+        summary:
+          "Sparse blobpool, cell-level deltas, and local blob reconstruction cut propagation overhead; blob streaming and proofs of custody keep larger blobs reliably hosted, spot-checked, and verifiable.",
+        reportNumbers: ["06"],
+      },
+      {
+        id: "resource-pricing",
+        title: "Resource pricing and fee markets",
+        summary:
+          "Multidimensional fees, byte floors, and blob futures price blobs, calldata, and state separately — preventing cheap-resource blowback after scaling and letting rollups hedge data-cost volatility.",
+        reportNumbers: ["07"],
+      },
+    ],
+    reportNumbers: ["05", "06", "07"],
+  },
+  {
+    id: "execution",
+    label: "Execution Layer",
+    navLabel: "Execution",
+    kicker: "EL",
+    accent: "amber",
+    tagline:
+      "The EVM, state, and proofs — this layer decides how fast L1 can run and who can verify it.",
+    role: [
+      "The execution layer is where the EVM runs: executing transactions, updating the world state, maintaining every account and contract. Its security model today is universal re-execution — every full node replays every transaction — which delivers the strongest verifiability and the hardest ceiling.",
+      "The strawmap's bet for this layer is a shift from everyone re-executes to explicit data plus proof verification, so throughput is no longer bounded by the slowest home node.",
+    ],
+    limits: [
+      "Throughput is locked by the replay model: every gas-limit raise must confirm that the slowest nodes can still keep up with execution, state access, and block propagation.",
+      "State access is implicit: without actually executing a transaction you cannot know which accounts and storage it touches, so validation cannot be parallelized and stateless witnesses are hard to generate.",
+      "State grows without bound: accounts and storage only accumulate, raising the disk and sync bar for full nodes year after year.",
+      "The EVM is prover-unfriendly: long-tail precompiles, dynamic jumps, and a hash-heavy state trie keep zk proving costs high.",
+    ],
+    directions: [
+      {
+        id: "gigagas",
+        title: "Gas-limit raises and P2P scaling",
+        northStar: "Gigagas L1 · 1 Ggas/sec",
+        summary:
+          "Stepwise gas-limit increases, paired with ethp2p broadcast/unification and a sharded mempool, keep execution throughput gains from being dragged down by block and transaction propagation.",
+        reportNumbers: ["08"],
+      },
+      {
+        id: "bals",
+        title: "BALs: explicit state access",
+        summary:
+          "Block-level access lists (scheduled for Glamsterdam) make a block declare up front which state it reads and writes, unlocking parallel validation, faster state sync, and witness generation — the foundation for almost every later execution-layer upgrade.",
+        reportNumbers: ["09"],
+      },
+      {
+        id: "proof-heavy",
+        title: "Proof-heavy execution and native rollups",
+        summary:
+          "Moving from optional 2-of-3 proofs to mandatory 1-of-1 proofs lets nodes verify proofs instead of replaying transactions; native rollups let L2s reuse L1's proven EVM directly, aligning their security with L1.",
+        reportNumbers: ["10"],
+      },
+      {
+        id: "evm-hardening",
+        title: "EVM hardening and proving substrates",
+        summary:
+          "evm-asm, EVMifying long-tail precompiles, pureth purges, and zkzkRISC-V frames converge the EVM into a prover-friendly minimal core, cutting proving cost and implementation divergence.",
+        reportNumbers: ["11"],
+      },
+      {
+        id: "state-growth",
+        title: "State growth, statelessness, and purges",
+        summary:
+          "Partial binary tree, state-asm, decentralized state, and endgame state contain state growth and restructure the state trie — turning 'store all state' from a single-machine duty into a network one.",
+        reportNumbers: ["12"],
+      },
+    ],
+    reportNumbers: ["08", "09", "10", "11", "12"],
+  },
+  {
+    id: "account",
+    label: "Accounts & Privacy",
+    navLabel: "Accounts",
+    kicker: "EL · cryptography / privacy rows",
+    accent: "green",
+    tagline:
+      "Transaction format, authentication, and privacy — this layer decides how users enter the chain.",
+    role: [
+      "This line decides what a transaction looks like, who can authorize it, and how much the world sees before it confirms. Today's answer: EOAs + single ECDSA signatures + a global incrementing nonce + a fully public mempool — the entry point for all user interaction.",
+      "On the original strawmap these items sit inside the execution layer's cryptography and privacy rows; this research pulls them out as their own reading line because they face the same set of user-side problems.",
+    ],
+    limits: [
+      "The account model is rigid: a single signature algorithm (not quantum-resistant) plus a global nonce forces account abstraction, gas sponsorship, and batched or parallel submission to be built outside the protocol.",
+      "Zero pre-confirmation privacy: transactions are fully visible in the public mempool, making MEV extraction and front-running structural income; flows that need privacy currently have to leave L1.",
+      "Authentication is hard to upgrade: signature schemes are hard-coded into the transaction format, so any new algorithm — including post-quantum ones — waits for a transaction-type-level hard fork.",
+    ],
+    directions: [
+      {
+        id: "frame-tx",
+        title: "Frame transactions and account modernization",
+        summary:
+          "Frame transactions (CFI) give transactions an extensible envelope; keyed nonces & recent roots solve parallel submission and replay protection, while ephemeral keys and PQ leanSPHINCS make signature schemes swappable.",
+        reportNumbers: ["13"],
+      },
+      {
+        id: "private-l1",
+        title: "Private L1: encrypted mempool and shielded transfers",
+        northStar: "Private L1 · shielded transfers",
+        summary:
+          "A privacy mempool and encrypted mempool switch off pre-confirmation visibility, squeezing front-running at the source; lean privacy wormholes and shielded transfers are the longer-term privacy north stars.",
+        reportNumbers: ["14"],
+      },
+    ],
+    reportNumbers: ["13", "14"],
+  },
+]
 
-export function layerHref(id: GuideLayerId): string {
-  return `/layers/${id}`
-}
-
-export const mantleTracks: readonly MantleTrack[] = [
+const mantleTracksZh: readonly MantleTrack[] = [
   {
     id: "da",
     label: "DA / Blob 路径",
@@ -217,3 +405,48 @@ export const mantleTracks: readonly MantleTrack[] = [
     reports: ["01", "10", "13"],
   },
 ]
+
+const mantleTracksEn: readonly MantleTrack[] = [
+  {
+    id: "da",
+    label: "DA / blob path",
+    body: "Re-model capacity, fallback, the Arsia L1 data fee, and BPO cadence around Ethereum blobs/calldata as the primary DA.",
+    reports: ["05", "06", "07", "10"],
+  },
+  {
+    id: "proof",
+    label: "Proof / native rollup",
+    body: "Evaluate the OP Succinct/SP1 production path, BAL availability, BiB payload data, and native-rollup compatibility separately.",
+    reports: ["09", "10", "11", "12"],
+  },
+  {
+    id: "sequencer",
+    label: "Sequencer / MEV",
+    body: "L1 forced inclusion and the encrypted mempool will raise user expectations for L2 forced transactions, fair sequencing, and privacy boundaries.",
+    reports: ["02", "13", "14"],
+  },
+  {
+    id: "product",
+    label: "Product / UX",
+    body: "Present L1 fast-confirmed, L1 finalized, L2 proven, and withdrawal-ready as distinct states instead of blending different security levels.",
+    reports: ["01", "10", "13"],
+  },
+]
+
+export const layerGuidesByLocale: Readonly<Record<Locale, readonly LayerGuide[]>> = {
+  zh: layerGuidesZh,
+  en: layerGuidesEn,
+}
+
+export const mantleTracksByLocale: Readonly<Record<Locale, readonly MantleTrack[]>> = {
+  zh: mantleTracksZh,
+  en: mantleTracksEn,
+}
+
+export function getLayerGuide(locale: Locale, id: string): LayerGuide | undefined {
+  return layerGuidesByLocale[locale].find((guide) => guide.id === id)
+}
+
+export function layerHref(id: GuideLayerId): string {
+  return `/layers/${id}`
+}

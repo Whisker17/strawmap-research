@@ -9,12 +9,12 @@ type LayerPageProps = {
 }
 
 export function generateStaticParams() {
-  return layerGuidesByLocale.en.map((guide) => ({ id: guide.id }))
+  return layerGuidesByLocale.zh.map((guide) => ({ id: guide.id }))
 }
 
 export async function generateMetadata({ params }: LayerPageProps): Promise<Metadata> {
   const { id } = await params
-  const guide = getLayerGuide("en", id)
+  const guide = getLayerGuide("zh", id)
   if (guide === undefined) return {}
   return {
     title: `${guide.label} | Ethereum Strawmap Dossier`,
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: LayerPageProps): Promise<Meta
   }
 }
 
-export default async function LayerPage({ params }: LayerPageProps) {
+export default async function ChineseLayerPage({ params }: LayerPageProps) {
   const { id } = await params
-  return <LayerScreen layerId={id} locale="en" />
+  return <LayerScreen layerId={id} locale="zh" />
 }
